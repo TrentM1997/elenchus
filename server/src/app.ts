@@ -1,32 +1,28 @@
 import express, { Request, Response } from 'express';
-import cors from 'cors';
 const app = express();
+import cors from 'cors';
 import fetch from 'node-fetch';
 import { bingArticles, bingGeneral } from '../endpoints/bingApi';
 import pkg from 'pg';
 
-app.use(function (req, res, next) {
-    res.header(
-        'Access-Control-Allow-Methods',
-        'OPTIONS, HEAD, GET, PUT, POST, DELETE'
-    );
-    res.header(
-        'Access-Control-Allow-Headers',
-        'Origin, X-Requested-With, Content-Type, Accept'
-    );
-    next();
-});
+const allowedOrigins = ['http://localhost:5173'];
+app.use(
+	cors({
+		origin: function (origin, callback) {
+			// Check if the origin is allowed or a CORS bypass
+			if (!origin || allowedOrigins.includes(origin)) {
+				callback(null, true);
+			} else {
+				callback(new Error('Not allowed by CORS'));
+			}
+		},
+	})
+);
 
-//const corsOptions: object = {
-//		origin: 'http://localhost:5173'
-//}
-
-// app.use(cors(corsOptions))
-
- const { Client } = pkg;
- const client = new Client(
- 	'postgresql://said:LWK2SWytsTGJFYIyWHBP3Q@cluster0-14450.7tt.aws-us-east-1.cockroachlabs.cloud:26257/elenchus?sslmode=verify-full'
- )
+const { Client } = pkg;
+const client = new Client(
+	'postgresql://said:LWK2SWytsTGJFYIyWHBP3Q@cluster0-14450.7tt.aws-us-east-1.cockroachlabs.cloud:26257/elenchus?sslmode=verify-full'
+);
 client
 	.connect()
 	.then(() => console.log('Connected to the Elenchus Database'))
@@ -66,5 +62,5 @@ app.listen(port, () => {
 	return console.log(`Express is listening at http://localhost:${port}`);
 });
 
-console.log("test")
-console.log("log")
+console.log('test');
+console.log('log');
