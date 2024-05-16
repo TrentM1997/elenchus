@@ -27,64 +27,40 @@ export default function SearchBox() {
 			Accept: 'application/json',
 			'Content-Type': 'application/json',
 		},
-		body: JSON.stringify(query),
+		body: JSON.stringify({ q: query }),
 	};
 
 	const hostname = import.meta.env.VITE_SERVER_HOSTNAME;
-	console.log(hostname);
-
-	console.log(import.meta.env);
-
-	//const url: string = `http://localhost:5001/search/articles?q=${options}`;
-
-	// Goal: take localhost 5001, set up proxy for it so we can use this port without declaring it inside the file and exposing it
-
-	// const fetchBingApi = async () => {
-	// 	try {
-	// 		const response = await fetch(`/search/articles?q=${query}`, options);
-	// 		console.log(response);
-	// 		if (!response.ok) {
-	// 			throw new Error('There was a network response issue!');
-	// 		}
-	// 		const jsonResponse = await response.json();
-	// 		setArticles(jsonResponse);
-	// 		console.log(jsonResponse);
-	// 	} catch (err) {
-	// 		console.log({ 'Fetch Failed': err });
-	// 	}
-	// };
 
 	const fetchBingApi = async () => {
-		axios
-			.get(`http://localhost:5001/search/articles?q=${query}`)
-			.then((response) => {
-				console.log(response.data[0]);
-			})
-			.catch((error) => {
-				if (error.response) {
-					console.error('error responded with status: ', error.response.status);
-				} else if (error.request) {
-					console.error('Error setting up request:', error.message);
-				}
-				console.error('error fetching info', error);
-			});
+		try {
+			const response = await axios.get(`http://localhost:5001/search/articles?q=${query}`);
+			console.log(response.data[0]);
+			setArticles(response.data);
+		} catch (error) {
+			if (error.response) {
+				console.error('Error responded with status:', error.response.status);
+			} else if (error.request) {
+				console.error('Error setting up request:', error.message);
+			} else {
+				console.error('Error fetching data:', error.message);
+			}
+		}
 	};
 
-	// const fetchBingApi = () => {
-	// 	fetch(`http://localhost:5001/search/articles?q=${query}`)
-	// 		.then((response) => {
-	// 			return response.json();
-	// 		})
-	// 		.then((data) => {
-	// 			console.log(data);
-	// 		})
-	// 		.catch((err) => {
-	// 			console.error('error fetching data ', err);
-	// 		});
-	// };
+
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		if (query && query.trim() !== '') {
+			setIsSubmitted(true);
+		} else {
+			console.error('Query is empty');
+		}
+	};
+
 
 	useEffect(() => {
-		if (isSubmitted) {
+		if (isSubmitted && query && query.trim() !== '') {
 			fetchBingApi();
 		}
 	}, [isSubmitted]);
@@ -97,10 +73,6 @@ export default function SearchBox() {
 		}, 5000);
 	};
 
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		setIsSubmitted(true);
-	};
 
 	return (
 		<section className='p-8'>
