@@ -1,7 +1,5 @@
 import { useState, useEffect, FormEvent } from "react"
 
-const server = import.meta.env.PUBLIC_SERVER_PORT;
-
 interface Articles {
   obj: any
 }
@@ -73,7 +71,7 @@ const fetchBingApi = async () => {
   bg-gradientup rounded-[3rem]">
     <div className="text-center max-w-xl md:mx-auto">
       <h2 className="text-3xl tracking-tight font-light lg:text-4xl text-white">
-        Let's investigate <span className="block text-zinc-400">We never lose by learning</span>
+        Let's investigate <span className="block text-zinc-400">we never lose by learning</span>
       </h2>
       <p className="mt-5 text-white">
        Feel free to write your own search terms,
@@ -88,6 +86,7 @@ const fetchBingApi = async () => {
       onSubmit={handleSubmit}
       >
       <input 
+      autoComplete="off"
       onChange={handleQuery}
       type="text" 
       name="q" 
