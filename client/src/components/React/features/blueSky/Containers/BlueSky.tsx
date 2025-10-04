@@ -51,13 +51,13 @@ export default function BlueSky({ context }: BlueSkyProps) {
   return (
     <div
 
-      className="lg:p-8 w-full relative opacity-0 animate-fade-in animation-delay-200ms transition-opacity ease-in"
+      className="lg:p-8 w-full relative opacity-0 animate-fade-blur animation-delay-200ms transition-opacity ease-in"
     >
-      <div className='mt-12 md:mt-6 p-4 w-full py-6 mx-auto md:px-12 lg:px-0 xl:px-6  2xl:max-w-7xl h-full'
+      <div className='mt-12 md:mt-6 p-4 w-full py-6 mx-auto md:px-12 lg:px-0  2xl:max-w-7xl h-full'
       >
         <div className="bg-gradientup mx-auto flex flex-col p-6 lg:p-0 shrink-0 
-        grow rounded-4xl w-full h-auto md:max-w-5xl 2xl:min-w-6xl 
-        2xl:max-w-7xl relative overflow-hidden"
+        grow rounded-4xl w-full h-auto md:max-w-5xl lg:max-w-6xl 2xl:min-w-6xl 
+        xl:max-w-7xl relative overflow-hidden"
         >
           {context === 'investigate' &&
             <CloseBlueSky />
@@ -68,7 +68,7 @@ export default function BlueSky({ context }: BlueSkyProps) {
             />
           </BlueSkyHeader>
 
-          <ErrorBoundary fallback={'Error occured'}
+          <ErrorBoundary
           >
             <FeedContainer
               key={'postsfetched'}

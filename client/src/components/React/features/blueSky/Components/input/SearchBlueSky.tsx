@@ -29,7 +29,7 @@ export default function SearchBlueSky() {
 
     return (
         <div
-            className="relative flex w-fit items-center px-1">
+            className="relative flex w-full lg:w-88 items-center">
             <form
                 className="bg-white/10 text-white w-full h-fit
                          border-none md:h-10 md:p-0 2xl:px-0 rounded-full relative
@@ -40,10 +40,10 @@ export default function SearchBlueSky() {
                     autoComplete="off"
                     type="text"
                     name="q"
-                    className="bg-transparent text-white max-w-44 lg:max-w-full lg:w-52 h-fit 
+                    className="bg-transparent text-white w-full lg:w-96 h-fit 
                          border-none md:h-12 p-2 rounded-full relative focus:ring-0
                          transition-colors text-base md:text-lg font-light flex items-center placeholder-slate-300"
-                    placeholder="search BlueSky" />
+                    placeholder="search posts" />
                 <button
                     onClick={(e) => submitForPosts(e)}
                     type="submit"

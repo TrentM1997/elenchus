@@ -13,12 +13,10 @@ export default function NextButton({ }) {
   const { step, denied } = stepper
   const { idea } = pov
   const { gettingHelp } = help
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
-
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const handleStep = () => {
-    window.dispatchEvent(new CustomEvent('nextStepClick'))
+    window.dispatchEvent(new CustomEvent('nextStepClick'));
     if (denied === false && idea !== '') {
       dispatch(increment())
       dispatch(selectPost(null))

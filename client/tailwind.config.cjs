@@ -98,13 +98,38 @@ module.exports = {
         scroller: "scroller 35s linear infinite",
         scroller2: "scroller2 25s linear infinite",
         "fade-in": "fade-in 0.5s linear forwards",
-        "shimmer": "shimmer 2s infinite linear",
-        'stroke-shimmer': 'stroke-shimmer 1.25s linear infinite'
+        "shimmer": "shimmer 3s infinite linear",
+        "fade-up": "fadeUp 0.3s linear forwards",
+        "fade-blur": "fadeBlur 0.5s linear forwards",
+        "fade-skew": "fadeBlur 0.5s linear forwards",
+        "fade-clip": "fadeBlur 0.5s linear forwards"
       },
       keyframes: {
-        'stroke-shimmer': {
-          to: { 'stroke-dashoffset': '-200' },
+        fadeUp: {
+          '0%': { opacity: '0', transform: 'translateY(8px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
         },
+        fadeBlur: {
+          '0%': { opacity: '0', filter: 'blur(6px)' },
+          '100%': { opacity: '1', filter: 'blur(0)' },
+        },
+        fadeScale: {
+          '0%': { opacity: '0', transform: 'scale(0.985)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        fadeClip: {
+          '0%': { opacity: '0', clipPath: 'inset(0 0 100% 0)' },
+          '100%': { opacity: '1', clipPath: 'inset(0 0 0 0)' },
+        },
+        fadeSkew: {
+          '0%': { opacity: '0', transform: 'translateY(8px) skewY(2deg)' },
+          '100%': { opacity: '1', transform: 'translateY(0) skewY(0)' },
+        },
+        fadeLong: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+
         pulsedot: {
           '0%': {
             transform: 'scale(0.8)',
@@ -123,8 +148,8 @@ module.exports = {
           },
         },
         shimmer: {
-          '0%': { 'background-position': '-200% 0' },
-          '100%': { 'background-position': '200% 0' },
+          '0%': { 'background-position': '-200% -200%' },
+          '100%': { 'background-position': '200% 200%' },
         },
         wiggle: {
           '0%, 100%': { transform: 'rotate(-3deg)' },

@@ -1,64 +1,45 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import StepsEditor from "../../../../../Shared/TipTap/StepsEditor"
 import { getIdea } from "@/ReduxToolKit/Reducers/Investigate/UserPOV"
 import { acceptedInput, denyIncrement } from "@/ReduxToolKit/Reducers/Investigate/Steps"
 import { useSelector, useDispatch } from "react-redux"
 import { RootState } from "@/ReduxToolKit/store"
-import { motion } from "framer-motion"
+import { distance, motion } from "framer-motion"
 import { variants } from "@/motion/variants"
 import Requirements from "../inputs/Requirements"
+import { useCheckFirstStep } from "@/hooks/useCheckFirstStep"
 
 export default function Step1() {
       const investigateState = useSelector((state: RootState) => state.investigation)
       const selected = useSelector((state: RootState) => state.bluesky.selected);
       const [nextClicked, setNextClicked] = useState<boolean>(false);
-      const { showBlueSkySearch } = investigateState.display;
       const { stepper, pov } = investigateState
-      const { acceptInput, denied } = stepper
+      const { denied } = stepper
       const { idea } = pov
+      useCheckFirstStep();
       const dispatch = useDispatch()
       const chosenTake = selected ? selected : idea;
-
-      let wordCount = (statement: string) => {
-            if (statement !== '') {
-                  let trimmed: string[] = statement.trim().split(' ')
-                  return trimmed.length
+      const status = useMemo((): boolean | null => {
+            if (denied) {
+                  return false;
+            } else if (denied === false) {
+                  return true;
+            } else {
+                  return null;
             }
-      };
+      }, [denied]);
+
 
       useEffect(() => {
 
-            if (selected && idea !== null) return
+            if (nextClicked && (!idea)) dispatch(denyIncrement(true))
 
             window.addEventListener('nextStepClick', () => {
                   setNextClicked(true)
             })
 
-            let words: number = null
-            if (nextClicked && idea !== null) {
-                  words = wordCount(idea);
-            }
 
-            if (selected && idea !== '') {
-                  dispatch(acceptedInput(true))
-            } else if (selected && idea === '') {
-                  dispatch(acceptedInput(false))
-            }
-
-            if (selected) {
-                  words = wordCount(idea)
-            }
-
-
-            if (words < 5 && words !== null) {
-                  dispatch(denyIncrement(true))
-                  dispatch(acceptedInput(false))
-            } else if (words >= 5 && words !== null) {
-                  dispatch(denyIncrement(false))
-                  dispatch(acceptedInput(true))
-            }
-
-      }, [idea, acceptInput, nextClicked, showBlueSkySearch, selected, denied]);
+      }, [idea, selected]);
 
 
       return (
@@ -74,7 +55,7 @@ export default function Step1() {
                         className={`w-full max-w-full overflow-hidden grow-0 max-h-full min-h-44
                         pb-8 sm:pb-7 box-border relative`}>
                         <StepsEditor context={chosenTake} setterFunction={getIdea} />
-                        <Requirements acceptInput={acceptInput} />
+                        <Requirements acceptInput={status} />
                   </div>
             </motion.div>
       );
