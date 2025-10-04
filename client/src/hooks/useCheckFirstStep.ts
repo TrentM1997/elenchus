@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
 import { AppDispatch, type RootState } from "@/ReduxToolKit/store";
@@ -32,7 +32,7 @@ export function useCheckFirstStep() {
 
     }, [idea]);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (idea === '' || idea === null) {
             dispatch(denyIncrement(null));
             return;
