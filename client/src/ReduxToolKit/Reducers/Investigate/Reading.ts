@@ -28,13 +28,30 @@ export const GetArticleContent = createAsyncThunk('content/getArticleContent',
             return thunkAPi.rejectWithValue(error.message)
         }
     }
-)
+);
+
+export interface Article {
+    title: string,
+    provider: string,
+    authors: string[] | string,
+    article_url: string,
+    image_url: string,
+    date_published: string,
+    fallbackDate: string | null,
+    summary: any,
+    full_text: string,
+    logo: string,
+    id: number | null,
+    factual_reporting?: string | null,
+    bias?: Bias,
+    country?: string | null
+}
 
 
 interface ReadingState {
 
     getContent: boolean | null,
-    articles: Array<any> | null,
+    articles: Array<Article> | null,
     failedNotifications: Array<any> | null,
     currentStory: number | null,
     reading: boolean | null,

@@ -44,7 +44,7 @@ declare global {
   }
 
   interface ArticleType {
-    datePublished: string,
+    article_pub_date: string,
     description: string,
     image: Image
     keywords: string[]
@@ -112,7 +112,7 @@ declare global {
     authors: string[] | string,
     article_url: string,
     image_url: string,
-    date: string,
+    date_published: string,
     fallbackDate: string | null,
     summary: any,
     text: string,

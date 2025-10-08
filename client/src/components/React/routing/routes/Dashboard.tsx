@@ -28,21 +28,16 @@ export default function Dashboard(): JSX.Element {
 
 
     return (
-        <article
+        <main
             className={
                 `w-full h-auto grid relative grid-cols-1 
-            ease-in-out md:grid-cols-[auto,1fr] md:pt-8
+            ease-in-out md:grid-cols-[auto,1fr] md:pt-8 min-h-dvh
             transition-opacity
             ${signingOut
                     ? 'opacity-50 pointer-events-none'
                     : 'opacity-100 pointer-events-auto'
                 } 
             `}>
-
-            <AnimatePresence>
-                {signingOut && <SignOutModal />}
-            </AnimatePresence>
-
             {!isMobile &&
                 <Suspense fallback={<SidebarLoader />}>
                     <SideBar />
@@ -57,10 +52,9 @@ export default function Dashboard(): JSX.Element {
 
             <Display />
 
-            {(displayThisArticle || displayThisInvestigation) &&
-                <ViewSavedContent />
-            }
-
-        </article>
+            <AnimatePresence>
+                {signingOut && <SignOutModal />}
+            </AnimatePresence>
+        </main>
     )
 };

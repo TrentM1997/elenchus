@@ -2,7 +2,7 @@ import { AppError } from "@/helpers/errors/normalizeError"
 
 interface ErrMessageInterface {
     message: AppError,
-    onRetry: Function
+    onRetry?: Function
 }
 
 export default function ErrMessage({ message, onRetry }: ErrMessageInterface) {

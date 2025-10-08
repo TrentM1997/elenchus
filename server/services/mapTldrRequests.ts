@@ -37,12 +37,20 @@ export async function mapTldrRequests(articles: TldrRequest[], failed: FailedAtt
             }
 
             const data = await response.json();
+
+            data.provider = article.source;
+            data.full_text = data.article_text;
+            data.title = article.title;
+            data.image_url = article.image.img
             data.logo = article.logo;
             data.source = article.source;
-            data.date = article.date;
+            data.date_published = data.article_pub_date;
             data.bias = biasRatings?.bias ?? null;
             data.country = biasRatings?.country ?? null;
             data.factual_reporting = biasRatings?.factual_reporting ?? null;
+            console.log({
+                Data: data.date_published
+            });
             const decodedData: ScrapedArticle = decodeItem(data);
             decodedData.article_authors = cleanseAuthorList(decodedData.article_authors);
             return decodedData;

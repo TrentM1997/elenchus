@@ -46,7 +46,7 @@ export async function newsApi(req: Request, res: Response) {
                 description: a.description ?? '',
                 keywords: [[]],
                 provider: a.source.name,
-                datePublished,
+                date_published: datePublished ?? null,
             };
         });
         const shapedArticles = mapped.map((article: any) => {

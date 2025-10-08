@@ -6,7 +6,12 @@ import WikiTermExtract from "../../../features/WikiExtract/components/WikiTermEx
 import TermModalContainer from "@/components/React/features/WikiExtract/components/popovers/containers/TermModalContainer";
 import TermModal from "@/components/React/features/WikiExtract/components/popovers/modals/TermModal";
 
-export default function FullText({ article_text, article_url }) {
+interface FullTextProps {
+    article_text: string,
+    article_url: string
+};
+
+export default function FullText({ article_text, article_url }: FullTextProps) {
     const investigateState = useSelector((state: RootState) => state.investigation);
     const dispatch = useDispatch<AppDispatch>();
     const { wikiModalStages } = investigateState.wiki;

@@ -1,14 +1,14 @@
 import { RootState } from "@/ReduxToolKit/store";
 import { createSlice, createAsyncThunk, createSelector } from "@reduxjs/toolkit";
-
+import type { Article } from "../Investigate/Reading";
 
 interface UserContent {
     status: string,
-    userArticles: SavedArticle[],
+    userArticles: Article[] | null,
     articleMap: Map<number, any> | null
     error: any,
     contextForSupabase: string | null,
-    ArticleToReview: any,
+    ArticleToReview: Article | null,
     deletingArticle: boolean,
 }
 
@@ -38,6 +38,7 @@ export const fetchSavedArticles = createAsyncThunk(
                 throw new Error(`Failed to fetch articles: ${response.statusText}`);
             }
             const results = await response.json();
+            console.log(results);
             return results;
 
         } catch (error) {

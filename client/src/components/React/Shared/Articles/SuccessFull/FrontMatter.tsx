@@ -1,9 +1,12 @@
 import { formatDate } from "@/helpers/Presentation";
+import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 
-export default function FrontMatter({ article }) {
+interface FrontMatterProps {
+    article: Article
+}
 
+export default function FrontMatter({ article }: FrontMatterProps) {
     const aspectClass = "w-[400px] aspect-[16/9] rounded-2xl lg:rounded-3xl sm:aspect-[2/1] lg:aspect-[3/2] w-full object-cover";
-    const dateFormatted = article.date ? formatDate(article.date) : formatDate(article.date_published);
 
 
     return (
@@ -15,7 +18,7 @@ export default function FrontMatter({ article }) {
                     loading="lazy"
                     className={`${aspectClass} bg-mirage`}
                     width="400"
-                    src={article.article_image}
+                    src={article.image_url}
                 />
             </div>
 
@@ -24,14 +27,14 @@ export default function FrontMatter({ article }) {
                     <h3
 
                         className="text-xl md:text-base tracking-tight font-light xl:text-xl text-white/80  transition-all duration-200 ease-in-out">
-                        {article.article_title}
+                        {article.title}
                     </h3>
                 </div>
                 <div>
                     <p className="text-blue-400 text-xs">
-                        {article.source} <span>
-                            <span className="text-zinc-400">-</span> <time className="text-zinc-400 transition-all ease-in-out duration-200" dateTime={article.article_pub_date}>
-                                {dateFormatted ? dateFormatted : article.article_pub_date}
+                        {article.provider} <span>
+                            <span className="text-zinc-400">-</span> <time className="text-zinc-400 transition-all ease-in-out duration-200" dateTime={article.date_published}>
+                                {article.date_published}
                             </time>
                         </span>
                     </p>

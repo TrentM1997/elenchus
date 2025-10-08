@@ -36,7 +36,7 @@ export function useSaveArticle({ article, isSaved }: SaveHookParams): SaveArticl
             image_url: article.article_image,
             text: article.article_text,
             authors: article.article_authors,
-            date: article.date_published ? article.date_published : article.article_pub_date,
+            date_published: article.date_published ? article.date_published : article.article_pub_date,
             article_url: article.article_url,
             summary: article.summary,
             fallbackDate: article.article_pub_date,

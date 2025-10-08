@@ -3,6 +3,7 @@ import { RootState } from "@/ReduxToolKit/store"
 import { useSelector } from "react-redux"
 import type { Extracts } from "@/ReduxToolKit/Reducers/Investigate/Review";
 import { TermList } from "./TermList";
+import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary";
 
 export interface TermsTypes {
   wikipedia_extracts: Extracts[],
@@ -17,8 +18,8 @@ export function Terms(): JSX.Element | null {
 
 
   return (
-    <section className="w-full xl:w-4/5 mx-auto">
-      <div className="mx-auto py-12 md:px-12 px-8 items-center w-full">
+    <section className="w-full lg:max-w-5xl xl:max-w-5xl 2xl:max-w-7xl">
+      <div className="mx-auto py-12 px-4 items-center w-full">
         <div>
           <span className="text-blue-400">From Wikipedia</span>
           <h2 className="text-3xl tracking-tight mt-6 font-light lg:text-4xl text-white">
@@ -28,9 +29,9 @@ export function Terms(): JSX.Element | null {
             Here are the terms you looked up from within your articles while immersed in research
           </p>
         </div>
-
-        {wikipedia_extracts && <TermList wikipedia_extracts={wikipedia_extracts} excess={excess} />}
-        {wikipedia_extracts && wikipedia_extracts.length < 1 && <ErrMessage message={errorMessage} />}
+        <ErrorBoundary>
+          {wikipedia_extracts && <TermList wikipedia_extracts={wikipedia_extracts} excess={excess} />}
+        </ErrorBoundary>
       </div>
     </section>
   );

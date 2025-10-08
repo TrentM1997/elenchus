@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux"
-import { SourcesFromResearch } from "../Details/SourcesUsed"
+import { SourcesFromResearch } from "../Details/sources/SourcesUsed"
 import { RootState } from "@/ReduxToolKit/store"
 import { useLayoutEffect } from "react"
 import { getInvestigationSources } from "@/services/supabase/SupabaseData"
@@ -40,11 +40,11 @@ export default function ResearchReview() {
 
     return (
         <section
-            className="h-full w-full
-         relative animate-fade-in duration-200">
+            className="h-full min-h-dvh w-full
+          animate-fade-in duration-200">
             <DetailView backTo={backTo} />
-            <div className="w-full h-full overscroll-contain overflow-y-scroll no-scrollbar grow flex flex-col gap-y-20 items-center justify-center">
-                <ErrorBoundary fallback={<LostData />}>
+            <div className="w-full h-full pb-20 overscroll-contain overflow-y-scroll no-scrollbar grow flex flex-col gap-y-20 items-center justify-start">
+                <ErrorBoundary>
                     <DetailsTable />
                     <SourcesFromResearch />
                     <Terms />

@@ -3,13 +3,18 @@ import { motion } from 'framer-motion';
 import ScrolltoTop from '../../../../../helpers/ScrollToTop';
 import ArticleHeader from './ArticleHeader';
 import ArticleContent from './ArticleContent';
+import type { Article } from '@/ReduxToolKit/Reducers/Investigate/Reading';
 
+interface ArticleProps {
+    articleData: Article | null,
+    investigating?: any
+}
 
-export default function Article({ articleData, investigating }) {
+export default function Article({ articleData, investigating }: ArticleProps) {
     const [fullStory, setFullStory] = useState<boolean>(true);
     const {
         article_url,
-        article_text,
+        full_text,
     } = articleData;
 
 
@@ -43,7 +48,7 @@ export default function Article({ articleData, investigating }) {
             />
             <ArticleContent
                 article_url={article_url}
-                article_text={article_text}
+                article_text={full_text}
                 fullStory={fullStory}
             />
         </motion.div>

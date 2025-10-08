@@ -19,12 +19,17 @@ function Tabs(): JSX.Element | null {
         displaySavedArticles,
         displayAccountManagement,
         displayDashboard,
+        displayThisArticle,
+        displayThisInvestigation
     } = useSelector((state: RootState) => state.profileNav, shallowEqual);
 
-
+    const savedContentRendered: boolean = (displayThisArticle || displayThisInvestigation);
 
     return (
-        <>
+        <motion.div
+            style={savedContentRendered ? { opacity: 0, pointerEvents: 'none', zIndex: -1 } : null}
+            className="absolute inset-0"
+            variants={variants} initial='closed' animate='open' exit='closed' transition={{ type: 'tween', duration: 0.2 }}>
             <ErrorBoundary>
                 <AnimatePresence mode="wait">
                     {displayDashboard && <Metrics key='dashboard' />}
@@ -53,7 +58,7 @@ function Tabs(): JSX.Element | null {
                 </AnimatePresence>
             </ErrorBoundary>
 
-        </>
+        </motion.div>
 
     )
 };

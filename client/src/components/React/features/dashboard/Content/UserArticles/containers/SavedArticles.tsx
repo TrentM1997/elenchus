@@ -11,7 +11,6 @@ export default function SavedArticles({ }) {
     const hasArticles: boolean = Array.isArray(userArticles) && (userArticles.length > 0);
 
 
-
     return (
         <motion.section
             variants={delays}

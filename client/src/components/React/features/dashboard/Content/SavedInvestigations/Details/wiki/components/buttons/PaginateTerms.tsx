@@ -1,4 +1,5 @@
 import React, { SetStateAction } from "react"
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 
 interface TermPaginate {
@@ -9,6 +10,7 @@ interface TermPaginate {
 }
 
 export default function PaginateTerms({ page, setPage, excess }: TermPaginate): JSX.Element | null {
+    const isMobile = useIsMobile();
 
     const scrollToNext = (index: number, snapPoints) => {
 
@@ -48,7 +50,7 @@ export default function PaginateTerms({ page, setPage, excess }: TermPaginate): 
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-4 pb-6 border-b border-white/10">
-            {excess && <div className="lg:inline-flex items-center inline-flex lg:col-start-4 lg:ml-auto lg:px-2 mb-4 order-last space-x-2">
+            {excess && (!isMobile) && <div className="lg:inline-flex items-center inline-flex lg:col-start-4 lg:ml-auto lg:px-2 mb-4 order-last space-x-2">
                 <button onClick={handleBackClick} type="button" className={`bg-white/5 hover:bg-white/10 focus:bg-transparent 
               rounded-2xl inline-flex items-center text-center p-4 ring-1 ring-white/10 ${excess ? 'text-white' : 'text-zinc-600'}`}>
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

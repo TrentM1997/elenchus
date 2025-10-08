@@ -18,6 +18,16 @@ type ImgProps = React.ImgHTMLAttributes<HTMLImageElement> & {
 };
 
 
+interface DataToSend {
+    url: string;
+    source: string;
+    date: string;
+    logo: string;
+    title: string;
+    image: Image;
+};
+
+
 const ArticleLink = memo(({ article, index, removingModal }: LinkProps) => {
     const investigateState = useSelector((state: RootState) => state.investigation);
     const dispatch = useDispatch();
@@ -31,10 +41,10 @@ const ArticleLink = memo(({ article, index, removingModal }: LinkProps) => {
     const thumbnail = article.image.img ?? fallbackImage;
     const mute: boolean = chosenArticles.length === 3;
 
-    const dataForServer = {
+    const dataForServer: DataToSend = {
         url: article.url,
         source: article.provider,
-        date: article.datePublished,
+        date: article.article_pub_date,
         logo: article.logo,
         title: article.name,
         image: image

@@ -13,22 +13,6 @@ export default function ArticleReview() {
     const savedArticle = useSelector((state: RootState) => state.userdata.ArticleToReview);
     if (!savedArticle) return null;
     const dispatch = useDispatch<AppDispatch>();
-    const displayData = {
-        summary: savedArticle.summary,
-        article_image: savedArticle.image_url,
-        article_url: savedArticle.url,
-        article_title: savedArticle.title,
-        date: null,
-        article_pub_date: savedArticle.date,
-        article_authors: savedArticle.authors,
-        article_text: savedArticle.full_text,
-        logo: null,
-        source: savedArticle.provider,
-        bias: savedArticle.bias,
-        factual_reporting: savedArticle.factual_reporting
-    };
-
-
 
     const backTo = () => {
         dispatch(presentArticles());
@@ -43,19 +27,19 @@ export default function ArticleReview() {
             animate='open'
             exit='closed'
             transition={{ type: 'tween', duration: 0.4, delay: 0.7 }}
-            className="min-h-dvh md:px-8 scroll-smooth w-full
-                        mx-auto mt-0 md:mt-6 relative">
+            className="min-h-dvh h-dvh pb-32 w-full flex items-center justify-center overflow-hidden
+                        mx-auto relative mt-16 mt:pt-12 xl:mt-8">
             <DetailView backTo={backTo} />
 
             <main
-                className="xl:max-w-7xl xl:w-4/5 lg:w-3/4 md:w-4/5 sm:w-3/4 mt-16 sm:mt-12 w-80 h-full mx-auto 
-                 transition-all duration-1000 animate-fade-in mb-12
+                className="2xl:max-w-7xl xl:w-4/5 lg:w-3/4 md:w-4/5 grow
+                sm:w-3/4  w-80 h-full overflow-y-auto no-scrollbar scroll-smooth scrollbar-gutter-stable-both overscroll-contain
                  xl:px-24
                  ">
                 <ErrorBoundary>
-                    {displayData &&
+                    {savedArticle &&
                         <Suspense fallback={<ArticleSkeleton />}>
-                            <Article articleData={displayData} investigating={false} />
+                            <Article articleData={savedArticle} investigating={false} />
                         </Suspense>
                     }
                 </ErrorBoundary>
