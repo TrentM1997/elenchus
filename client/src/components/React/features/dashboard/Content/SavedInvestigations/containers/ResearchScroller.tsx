@@ -22,7 +22,8 @@ export default function ResearchScroller() {
 
     return (
         <div
-            className="relative px-4 md:px-0 w-full flex items-stretch justify-center h-svh overflow-x-hidden hover:shadow-[0_0_10px_rgba(255,255,255,0.03)] ease-[cubic-bezier(.2,.6,.2,1)] transition-shadow duration-200"
+            className="relative px-4 md:px-0 w-full flex items-stretch justify-center h-svh pt-1.5
+            overflow-x-hidden hover:shadow-[0_0_10px_rgba(255,255,255,0.03)] ease-[cubic-bezier(.2,.6,.2,1)] transition-shadow duration-200"
         >
             <Virtuoso
                 style={{

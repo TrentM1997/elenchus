@@ -11,7 +11,7 @@ function DeskTopMenu() {
         ${signingOut ? 'opacity-50 pointer-events-none' : 'opacity-100 pointer-events-auto'}
         `}>
             <div className="md:w-dvw mx-auto">
-                <div className="w-full shadow-black mt-0 py-1 mx-auto border-b
+                <div className="w-full mt-0 py-1 mx-auto border-b
 			 border-white/10 shadow-thick backdrop-blur-xl backdrop-filter
 			 md:items-center h-fit">
                     <DesktopNavOptions />
