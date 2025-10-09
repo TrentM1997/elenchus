@@ -1,4 +1,5 @@
-import { SavedArticle, SupabaseUser } from "@/env";
+import { SupabaseUser } from "@/env";
+import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 
 
 
@@ -163,8 +164,9 @@ export const newUser = async (
 };
 
 
+
 export const saveArticle = async (
-    dataToSave: SavedArticle,
+    dataToSave: Article,
     articleExists?: boolean,
 ): Promise<SaveArticleResponse | null> => {
 

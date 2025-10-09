@@ -8,20 +8,21 @@ import { createPortal } from "react-dom";
 import { AuthNotificationProps } from "@/env";
 
 
-export default function AuthNotification({ complete, setterFunction, status }: AuthNotificationProps) {
+export default function AuthNotification({ status, setStatus, action }: AuthNotificationProps) {
 
     useEffect(() => {
 
-        const timer = setTimeout(() => {
-            if (complete !== null) {
-                setterFunction(prev => !prev);
-            };
+        const timer = window.setTimeout(() => {
+            if (status !== null) {
+                setStatus(null);
+
+            }
 
         }, 2000);
 
         return () => clearTimeout(timer);
 
-    }, [complete, setterFunction]);
+    }, [status]);
 
 
     const notification = (
@@ -37,16 +38,14 @@ export default function AuthNotification({ complete, setterFunction, status }: A
             <div key='title' className="flex w-full h-full items-center justify-between">
                 <div key='titleContainer' className="w-auto h-fit">
                     <p className="text-white font-light text-sm">
-                        {complete === null && status.pending}
-                        {complete === true && status.successful}
-                        {complete === false && status.failed}
+                        {`${action} ${status}`}
                     </p>
                 </div>
                 <div className="w-auto h-fit relative">
                     {<AnimatePresence mode="wait">
-                        {complete === null && <Pending />}
-                        {complete === true && <Success />}
-                        {complete === false && <Failed />}
+                        {status === "pending" && <Pending key={'pending-status'} />}
+                        {status === "success" && <Success key={'success-status'} />}
+                        {status === "failed" && <Failed key={'failed-status'} />}
                     </AnimatePresence>}
                 </div>
             </div>

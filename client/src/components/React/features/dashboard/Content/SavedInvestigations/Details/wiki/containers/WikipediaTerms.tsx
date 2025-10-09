@@ -4,6 +4,7 @@ import { useSelector } from "react-redux"
 import type { Extracts } from "@/ReduxToolKit/Reducers/Investigate/Review";
 import { TermList } from "./TermList";
 import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary";
+import NoSavedExtracts from "../fallbacks/NoSavedExtracts";
 
 export interface TermsTypes {
   wikipedia_extracts: Extracts[],
@@ -14,8 +15,6 @@ export function Terms(): JSX.Element | null {
   const research = useSelector((state: RootState) => state.userWork.investigationToReview);
   const { wikipedia_extracts } = research;
   const excess: boolean | null = wikipedia_extracts ? wikipedia_extracts.length > 4 : null;
-  const errorMessage = "No extracts were saved while reading articles";
-
 
   return (
     <section className="w-full lg:max-w-5xl xl:max-w-5xl 2xl:max-w-7xl">
@@ -30,7 +29,10 @@ export function Terms(): JSX.Element | null {
           </p>
         </div>
         <ErrorBoundary>
-          {wikipedia_extracts && <TermList wikipedia_extracts={wikipedia_extracts} excess={excess} />}
+          {Array.isArray(wikipedia_extracts) && (wikipedia_extracts.length > 0)
+            ? <TermList wikipedia_extracts={wikipedia_extracts} excess={excess} />
+            : <NoSavedExtracts />
+          }
         </ErrorBoundary>
       </div>
     </section>

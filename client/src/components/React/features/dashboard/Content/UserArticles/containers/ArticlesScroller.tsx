@@ -17,6 +17,8 @@ import { useSkeletons } from "@/hooks/useSkeletons";
 import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";
 import type { CSSProperties } from "react";
 import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary";
+import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
+import { SigninStatus } from "@/hooks/useSignIn";
 
 
 export interface RenderingValues {
@@ -24,23 +26,21 @@ export interface RenderingValues {
     numSkeletons: number | null
 };
 
-export default function ArticlesScroller(): JSX.Element | null {
-    const userArticles: SavedArticle[] | null = useSelector((state: RootState) => state.userdata.userArticles);
+export default function ArticlesScroller({ handleArticleSelection }): JSX.Element | null {
+    const userArticles: Article[] | null = useSelector((state: RootState) => state.userdata.userArticles);
     const sortedArticles = useMemo(() => {
         const artcs = userArticles
             ? userArticles.slice()
             : null;
-        const sorted = artcs?.sort((a: SavedArticle, b: SavedArticle) => b.id - a.id);
+        const sorted = artcs?.sort((a: Article, b: Article) => b.id - a.id);
         return sorted;
     }, []);
     if (!sortedArticles) return null;
     const { visible, fullyLoaded, loadMore, numSkeletons } = useVirtuoso(sortedArticles);
     const { fastScroll, clockScrollSpeed } = useSkeletons(180);
     const { boxShadow, onScrollHandler } = useScrollWithShadow();
-    const [deleting, setDeleting] = useState<boolean>(false);
     const [deletedIds, setDeletedIds] = useState<Set<number>>(new Set());
-    const [deleted, setDeleted] = useState<boolean | null>(null);
-    const dispatch = useDispatch<AppDispatch>();
+    const [status, setStatus] = useState<SigninStatus>(null);
 
     const rendering_values: RenderingValues = useMemo(() => {
         const context = {
@@ -52,7 +52,7 @@ export default function ArticlesScroller(): JSX.Element | null {
 
 
     const articleScrollerStyles: CSSProperties = {
-        height: '93%',
+        height: '94.5%',
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -62,16 +62,6 @@ export default function ArticlesScroller(): JSX.Element | null {
         overflowX: 'hidden',
         boxShadow: boxShadow
     };
-
-    const cleanup = () => {
-        setDeleted(null);
-    };
-
-    const handleArticleSelection = useCallback((article: SavedArticle) => () => {
-        dispatch(readSavedArticle(article));
-        dispatch(presentThisArticle());
-    }, [dispatch]);
-
 
     const markIds = (id: number, deleted: boolean) => {
         setDeletedIds(prev => {
@@ -83,38 +73,34 @@ export default function ArticlesScroller(): JSX.Element | null {
 
 
     const deleteHandler = useCallback(
-        async (article: SavedArticle): Promise<void> => {
-            if (deleting) return;
-            setDeleting(true);
+        async (article: Article): Promise<void> => {
+            if (status) return;
 
             try {
                 const results = await saveArticle(article, true);
                 if (results.data.message === "Deleted") {
-                    setDeleted(true);
+                    setStatus('success')
                     markIds(article.id, true)
-                } else if (results.data.message === "Saved") {
-                    setDeleted(false);
                 } else {
-                    setDeleted(false);
+                    setStatus('failed')
                 };
 
             } catch (err) {
-                setDeleted(false);
+                setStatus('failed');
                 console.error(err);
             };
-        }, [deleting]);
+        }, [status]);
 
     return (
         <div
-            className="relative w-dvw md:w-full xl:w-[1100px] 2xl:w-[1250px] mx-auto h-dvh overflow-x-hidden px-2"
+            className="relative w-dvw md:w-full xl:w-[1100px] 2xl:w-[1250px] mx-auto h-dvh overflow-x-hidden px-2 mt-2 md:hover:shadow-[0_0_10px_rgba(255,255,255,0.03)] transition-shadow duration-200 ease-[cubic-bezier(.2,.6,.2,1)]"
         >
             <AnimatePresence>
-                {deleting &&
+                {status &&
                     <AuthNotification
-                        complete={deleted}
-                        status={deleteArticleStatus}
-                        setterFunction={setDeleting}
-                        redirect={cleanup}
+                        status={status}
+                        setStatus={setStatus}
+                        action="Deleting"
                     />}
             </AnimatePresence>
 
@@ -131,7 +117,7 @@ export default function ArticlesScroller(): JSX.Element | null {
                         </ArticleSaved>)
                     }}
                     style={articleScrollerStyles}
-                    className="no-scrollbar scrollbar-gutter:stable overscroll-contain"
+                    className="no-scrollbar scrollbar-gutter:stable overscroll-contain transition-shadow ease-[cubic-bezier(.2,.6,.2,1)]"
                     data={visible}
                     endReached={loadMore}
                     increaseViewportBy={800}

@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
-import { loginStatus } from "@/components/React/session/notifications/AuthStatus";
 import AuthNotification from "@/components/React/session/notifications/AuthNotification";
 import ScrolltoTop from "@/helpers/ScrollToTop";
 import LoginOperations from "@/components/React/session/forms/containers/LoginOperations";
 import { useCheckCredentials } from "@/hooks/useCheckCredentials";
 import { useSignIn } from "@/hooks/useSignIn";
+import { useSelector } from "react-redux";
+import { RootState } from "@/ReduxToolKit/store";
 
 export default function Login(): JSX.Element {
+    const activeSession = useSelector((state: RootState) => state.auth.activeSession);
     const [userEmail, setUserEmail] = useState<string | null>(null);
     const [userPassword, setUserPassword] = useState<string | null>(null);
-    const { loggingIn, setLoggingIn, successful } = useSignIn(userEmail, userPassword);
+    const { status, setStatus } = useSignIn(userEmail, userPassword);
     const { acceptedInput, validEmail } = useCheckCredentials(userEmail, userPassword);
     const navigate = useNavigate();
 
@@ -19,14 +21,15 @@ export default function Login(): JSX.Element {
     const submitAuth = async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
         e.preventDefault();
         if ((acceptedInput === true) && (userPassword)) {
-            setLoggingIn(true)
+            setStatus("pending")
         }
     };
 
     useEffect(() => {
+        if (!activeSession) return;
 
         const timer = window.setTimeout(() => {
-            if (successful === true) {
+            if (activeSession) {
                 navigate('/');
             };
         }, 1000);
@@ -35,7 +38,7 @@ export default function Login(): JSX.Element {
             clearTimeout(timer);
         };
 
-    }, [successful]);
+    }, [status]);
 
 
     return (
@@ -44,11 +47,11 @@ export default function Login(): JSX.Element {
         >
             <ScrolltoTop />
             <AnimatePresence>
-                {loggingIn &&
+                {status &&
                     <AuthNotification
-                        complete={successful}
-                        setterFunction={setLoggingIn}
-                        status={loginStatus}
+                        status={status}
+                        setStatus={setStatus}
+                        action="Login"
                     />
                 }
             </AnimatePresence>
@@ -61,7 +64,7 @@ export default function Login(): JSX.Element {
                 </div>
                 <LoginOperations
                     submitAuth={submitAuth}
-                    successful={successful}
+                    status={status}
                     setUserEmail={setUserEmail}
                     setUserPassword={setUserPassword}
                     validEmail={validEmail}

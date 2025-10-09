@@ -17,8 +17,8 @@ export function useScrollWithShadow() {
         const isBetween = scrollTop > 0 && clientHeight < scrollHeight - scrollTop;
 
         let boxShadow = 'none';
-        const top = 'inset 0 12px 5px -5px rgb(1 2 3 / 1)';
-        const bottom = 'inset 0 -20px 9px -5px rgb(1 2 3 / 1)';
+        const top = 'inset 0 10px 5px -6px rgba(255,255,255,0.08)';
+        const bottom = 'inset 0 -10px 5px -5px rgba(255,255,255,0.08)';
 
         if (isTop) {
             boxShadow = bottom;

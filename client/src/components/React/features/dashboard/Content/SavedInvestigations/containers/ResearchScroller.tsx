@@ -5,7 +5,7 @@ import { RootState } from "@/ReduxToolKit/store";
 import PriorInvestigation from "../components/InvestigationSaved";
 import InvestigationSkeletons, { InvestigationSkeleton } from "../skeletons/InvestigationSkeletons";
 import { useState, useRef } from "react";
-
+import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";
 
 export default function ResearchScroller() {
     const [inSeek, setInSeek] = useState<boolean>(false)
@@ -13,6 +13,7 @@ export default function ResearchScroller() {
     const newArr = Array.isArray(investigations) ? [...investigations] : [];
     const timeline = newArr.sort((a, b) => b.id - a.id);
     const { visible, fullyLoaded, loadMore } = useVirtuoso(timeline);
+    const { boxShadow, onScrollHandler } = useScrollWithShadow();
     const scrollRef = useRef<number | null>(null)
     const enter_velocity: number = 550;
     const exit_velocity: number = 10;
@@ -21,17 +22,18 @@ export default function ResearchScroller() {
 
     return (
         <div
-            className="relative w-full h-svh overflow-x-hidden px-4"
+            className="relative px-4 md:px-0 w-full flex items-stretch justify-center h-svh overflow-x-hidden hover:shadow-[0_0_10px_rgba(255,255,255,0.03)] ease-[cubic-bezier(.2,.6,.2,1)] transition-shadow duration-200"
         >
             <Virtuoso
                 style={{
-                    height: '100%', width: '100%', display: 'flex', overflowX: 'hidden', overscrollBehavior: 'contain',
-                    flexDirection: 'column', alignItems: 'start', justifyContent: 'end'
+                    height: '94%', width: '100%', display: 'flex', overflowX: 'hidden', overscrollBehavior: 'contain',
+                    flexDirection: 'column', alignItems: 'center', justifyContent: 'end', boxShadow: boxShadow
                 }}
-                className="no-scrollbar 2xl:gap-y-12"
+                className="no-scrollbar"
+                onScroll={onScrollHandler}
                 data={visible}
                 endReached={loadMore}
-                increaseViewportBy={400}
+                increaseViewportBy={600}
                 context={{ fullyLoaded, inSeek }}
                 components={{ Footer: InvestigationSkeletons, ScrollSeekPlaceholder: InvestigationSkeleton }}
                 itemContent={(_, investigation, inSeek) => {

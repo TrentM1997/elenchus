@@ -1,9 +1,10 @@
 import React from "react";
 import TrashTooltip from "../../features/dashboard/Content/UserArticles/tooltips/TrashTooltip";
+import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 
 interface Trash {
-    deleteHandler?: (article: SavedArticle) => Promise<void>,
-    article: SavedArticle,
+    deleteHandler?: (article: Article) => Promise<void>,
+    article: Article,
     articleDeleted: boolean
 };
 

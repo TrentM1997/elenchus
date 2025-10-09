@@ -1,7 +1,7 @@
 import LoginForm from "../AuthForms/LoginForm";
 import OAuthLogins from "../InputFields/OauthLogins";
 
-export default function LoginOperations({ submitAuth, successful, setUserEmail, setUserPassword, validEmail, acceptedInput }) {
+export default function LoginOperations({ submitAuth, status, setUserEmail, setUserPassword, validEmail, acceptedInput, }) {
 
     return (
         <div
@@ -10,7 +10,6 @@ export default function LoginOperations({ submitAuth, successful, setUserEmail, 
         >
             <LoginForm
                 submitAuth={submitAuth}
-                successful={successful}
                 setUserEmail={setUserEmail}
                 setUserPassword={setUserPassword}
                 validEmail={validEmail}

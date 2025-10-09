@@ -12,6 +12,7 @@ import StatsSkeleton from "@/components/React/features/charts/skeletons/StatsSke
 import MetricsFallback from "../wrappers/MetricsFallback";
 import StatsWorker from '@/services/workers/statsWorker.js?worker';
 import StatsFallback from "../../../charts/ChartFallbacks/StatsFallback";
+import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";
 const StatsSection = lazy(() => import('../../../charts/ResearchStats/StatsSection'));
 
 
@@ -19,6 +20,7 @@ export default function Metrics() {
     const { userResearch, stats } = useSelector((state: RootState) => state.userWork, shallowEqual);
     const hasInvestigations: boolean = Array.isArray(userResearch) && (userResearch.length > 0);
     const statsPopulated: boolean = Object.values(stats).some((el: number) => el !== null);
+    const { boxShadow, onScrollHandler } = useScrollWithShadow();
     const calcRef = useRef<boolean | null>(null);
     const dispatch = useDispatch<AppDispatch>();
 
@@ -63,20 +65,28 @@ export default function Metrics() {
             animate='open'
             exit='closed'
             transition={{ type: 'tween', duration: 0.2 }}
-            className="w-auto mx-auto h-full min-h-dvh relative md:right-0 md:bottom-0 flex 
-            flex-col gap-y-20 2xl:gap-y-24 justify-center xl:justify-start 
-            items-center 2xl:px-52 grow 2xl:pb-96 p-4 md:p-0"
+            className="w-auto mx-auto h-[94.5%] relative mt-6
+             2xl:mx-52 grow p-4 md:p-0"
         >
             <ScrolltoTop
             />
 
-            <ChartJsWrapper />
 
-            <Suspense fallback={<StatsSkeleton />}>
-                {statsPopulated && <StatsSection />}
-            </Suspense>
+            <article onScroll={onScrollHandler} style={{ boxShadow: boxShadow }} className="h-full w-full flex flex-col justify-start items-center gap-y-24 
+            
+            overflow-y-auto no-scrollbar scrollbar-gutter-stable-both scroll-smooth overscroll-contain">
 
-            {(calcRef.current === false) && <StatsFallback />}
+                <ChartJsWrapper />
+
+                <Suspense fallback={<StatsSkeleton />}>
+                    {statsPopulated && <StatsSection />}
+                </Suspense>
+
+                {(calcRef.current === false) && <StatsFallback />}
+            </article>
+
+
+
         </motion.section>
     );
 };

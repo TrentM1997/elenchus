@@ -3,9 +3,10 @@
 
 import { Session } from "@supabase/supabase-js";
 import { Extracts } from "./ReduxToolKit/Reducers/Investigate/Review";
-import React, { ReactEventHandler, ReactNode } from "react";
+import React, { ReactEventHandler, ReactNode, SetStateAction } from "react";
 import { ActionCreatorWithoutPayload } from "@reduxjs/toolkit";
 import { User } from "@supabase/supabase-js";
+import { SigninStatus } from "./hooks/useSignIn";
 
 declare global {
   interface ImportMetaEnv {
@@ -252,10 +253,13 @@ declare global {
   }
 
   interface AuthNotificationProps {
-    complete: boolean | null,
-    setterFunction: any,
-    status: AuthStatus,
+    complete?: boolean | null,
+    setterFunction?: any,
+    status?: SigninStatus,
     redirect?: Function,
+    loginStatus?: SigninStatus,
+    setStatus?: React.Dispatch<SetStateAction<SigninStatus>>,
+    action?: string
   }
 
 
@@ -317,12 +321,14 @@ declare global {
   }
 
   interface LoginFormProps {
-    successful: boolean | null,
+    successful?: boolean | null,
     acceptedInput: boolean | null,
     setUserPassword: (userPassword: string) => void,
     setUserEmail: (userEmail: string) => void,
     validEmail: boolean | null,
-    submitAuth: (e: React.MouseEvent<HTMLButtonElement>) => Promise<void>
+    submitAuth: (e: React.MouseEvent<HTMLButtonElement>) => Promise<void>,
+    status?: SigninStatus,
+
   }
 
   interface DashboardOption {

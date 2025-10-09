@@ -30,8 +30,8 @@ export default function Dashboard(): JSX.Element {
     return (
         <main
             className={
-                `w-full h-auto grid relative grid-cols-1 
-            ease-in-out md:grid-cols-[auto,1fr] md:pt-8 min-h-dvh
+                `w-full h-full grid relative grid-cols-1 
+            ease-in-out md:grid-cols-[auto,1fr] md:pt-6 min-h-dvh
             transition-opacity
             ${signingOut
                     ? 'opacity-50 pointer-events-none'

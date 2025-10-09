@@ -1,10 +1,11 @@
 import Trash from "@/components/React/Shared/IconComponents/Trash";
 import React from "react"
 import ImageSkeleton from "../skeletons/ImageSkeleton";
+import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 
 interface SavedThumbnail {
-    article: SavedArticle,
-    deleteHandler: (article: SavedArticle) => Promise<void>,
+    article: Article,
+    deleteHandler: (article: Article) => Promise<void>,
     articleDeleted: boolean,
     fastScroll: boolean
 };

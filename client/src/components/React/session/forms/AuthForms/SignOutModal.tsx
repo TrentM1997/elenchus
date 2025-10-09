@@ -5,19 +5,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState, useRef } from "react";
 import { fetchSignOut } from "@/services/supabase/SupabaseData";
 import AuthNotification from "@/components/React/session/notifications/AuthNotification";
-import { signOutStatus } from "@/components/React/session/notifications/AuthStatus";
 import { useNavigate } from "react-router-dom";
+import { SigninStatus } from "@/hooks/useSignIn";
 
 const variants = {
     closed: { opacity: 0 },
     open: { opacity: 1, transition: { type: 'tween', delay: 0.3, duration: 0.2 } }
 }
 
-
-
 export default function SignOutModal(): JSX.Element {
-    const [signingOut, setSigningOut] = useState<boolean>(false);
-    const [success, setSuccess] = useState<boolean | null>(null);
+    const [status, setStatus] = useState<SigninStatus>(null);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const timerRef = useRef(null);
@@ -40,10 +37,10 @@ export default function SignOutModal(): JSX.Element {
 
                 const data: SignOutResponse = await fetchSignOut();
                 if (data.loggedOut === true) {
-                    setSuccess(true);
+                    setStatus("success");
                     goHome();
                 } else {
-                    setSuccess(false)
+                    setStatus('failed');
                 }
 
             } catch (error) {
@@ -52,10 +49,10 @@ export default function SignOutModal(): JSX.Element {
 
         };
 
-        if (signingOut) {
+        if (status === 'pending') {
             executeSignOut();
         };
-    }, [signingOut]);
+    }, [status]);
 
 
     const modal = (
@@ -69,7 +66,7 @@ export default function SignOutModal(): JSX.Element {
         sm:gap-y-10 sm:p-10 lg:col-span-2 lg:flex-row lg:items-center bg-ebony mt-2 
         shadow-inset text-center">
             <AnimatePresence>
-                {signingOut !== false && <AuthNotification complete={success} setterFunction={setSigningOut} status={signOutStatus} />}
+                {status && <AuthNotification status={status} setStatus={setStatus} action="Sign out" />}
             </AnimatePresence>
             <div className="lg:min-w-0 lg:flex-1 max-w-sm mx-auto">
                 <p className="text-white xl:text-4xl">Sign out</p>
@@ -82,7 +79,7 @@ export default function SignOutModal(): JSX.Element {
 
                     <motion.button whileTap={{ scale: 0.95 }}
                         transition={{ type: 'tween', duration: 0.2 }}
-                        onClick={() => setSigningOut(true)} type="button"
+                        onClick={() => setStatus('pending')} type="button"
                         className="text-sm py-2 w-full px-6 md:px-4 border md:focus:ring-2 rounded-full border-transparent 
                     bg-white md:hover:bg-white/10 text-black duration-200 md:focus:ring-offset-2 md:focus:ring-white 
                     md:hover:text-white inline-flex items-center justify-center ring-1 ring-transparent">
