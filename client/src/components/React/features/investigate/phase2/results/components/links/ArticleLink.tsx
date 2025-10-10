@@ -89,8 +89,8 @@ const ArticleLink = memo(({ article, index, removingModal }: LinkProps) => {
             lg:w-72 lg:h-72 md:h-60 md:w-60 sm:w-52 sm:h-52 h-72 w-76
             relative rounded-3xl sm:rounded-xl md:rounded-3xl text-white 
             ${mute && !isHilighted && !showGetArticlesModal ? 'opacity-30 pointer-events-none' : 'pointer-events-auto opacity-80 hover:opacity-100'}
-             transition-all ease-in-out 
-            duration-200 overflow-y-hidden overflow-x-hidden
+             transition-all ease-[cubic-bezier(.25,.8,.25,1)] 
+            duration-300 overflow-y-hidden overflow-x-hidden
             ${showGetArticlesModal && isHilighted ? 'opacity-75' : ''}
             ${isHilighted && (!showGetArticlesModal) && (!removingModal) ? "shadow-blue-bottom bg-ebony" : "shadow-material bg-mirage"}`}
         >

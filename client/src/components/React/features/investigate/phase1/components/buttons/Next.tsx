@@ -43,7 +43,7 @@ export default function NextButton({ }) {
       exit={{ opacity: 0, scale: 0 }}
       whileHover={{ scale: 1.1 }}
       transition={{ type: 'tween', duration: 0.2 }}
-      className={`relative h-auto w-auto justify-self-end self-center ${step >= 4 || gettingHelp ? 'pointer-events-none' : 'pointer-events-auto'}`}
+      className={`relative ease-soft h-auto w-auto justify-self-end self-center ${step >= 4 || gettingHelp ? 'pointer-events-none' : 'pointer-events-auto'}`}
     >
       <button
         onClick={handleStep}

@@ -5,6 +5,10 @@ module.exports = {
   content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
   theme: {
     extend: {
+      transitionTimingFunction: {
+        'soft': 'cubic-bezier(.2,.6,.2,1)',
+        'snappy': 'cubic-bezier(.25,.8,.25,1)',
+      },
       animation: {
         wiggle: 'wiggle 1s ease-in-out 3',
         pulsedot: 'pulsedot 1.5s ease-in-out infinite',

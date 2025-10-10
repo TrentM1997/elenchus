@@ -15,10 +15,11 @@ export default function BackButton({ }) {
             className="relative h-auto w-auto 
         my-auto justify-self-start self-center" >
             <motion.div
-                className="self-center"
+                className="self-center ease-soft"
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0 }}
+                whileHover={{ scale: 1.1 }}
                 transition={{ type: 'tween', duration: 0.2 }}
             >
                 <button
