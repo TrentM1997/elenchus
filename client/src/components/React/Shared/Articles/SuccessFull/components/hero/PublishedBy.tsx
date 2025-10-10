@@ -1,17 +1,32 @@
-import React from "react";
+import React, { useMemo } from "react";
 import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
+import fallback from '../../../../../../../../public/images/logos/fallback.svg';
+import { LOGOS } from "@/helpers/lookup/logos";
+
+const slugLogo = (s: string) => {
+    const item = s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    return item;
+};
 
 interface DatePubProps {
     article: Article
 };
 
 function PublishedBy({ article }: DatePubProps): JSX.Element | null {
+    const providerSlug = useMemo(() => slugLogo(article.provider ?? ""), [article.provider]);
+    const dashboardPath = useMemo(() => {
+
+        const altPath = article.logo || LOGOS[providerSlug] || fallback.src;
+        return altPath;
+    }, [article]);
+
+    console.log(providerSlug)
 
 
     return (
         <div className="p-4 flex flex-row items-center justify-start gap-x-2 h-12">
             <div className="w-8 h-8 flex items-center justify-center z-10 opacity-100">
-                <img src={article.logo} />
+                <img src={dashboardPath} />
             </div>
             <a
                 href={article.article_url}

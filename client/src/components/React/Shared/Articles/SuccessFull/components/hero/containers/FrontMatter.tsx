@@ -1,9 +1,9 @@
 import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
-import ArticleImage from "./ArticleImage";
+import ArticleImage from "../ArticleImage";
 import ArticleMetaData from "./ArticleMetaData";
 import React from "react";
-import ArticleTitle from "./ArticleTitle";
-import PublishedBy from "./PublishedBy";
+import ArticleTitle from "../ArticleTitle";
+import PublishedBy from "../PublishedBy";
 
 interface FrontMatterProps {
     article: Article

@@ -34,5 +34,4 @@ function SourceInfo({ article }: SourceInfoProps): JSX.Element | null {
     );
 };
 
-
 export default React.memo(SourceInfo);

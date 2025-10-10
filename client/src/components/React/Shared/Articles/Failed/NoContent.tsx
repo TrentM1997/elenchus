@@ -1,13 +1,9 @@
-import { motion } from "framer-motion"
 
-export default function NoContent() {
+export default function NoContent(): JSX.Element | null {
 
     return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            key='noContent'
+        <div
+            className="opacity-0 animate-fade-blur animation-delay-200ms transition-opacity"
         >
             <div className="w-full h-full flex items-center justify-center">
                 <div className="w-fit h-fit flex flex-col justify-center items-center gap-y-8 py-24">
@@ -31,6 +27,6 @@ export default function NoContent() {
                     </p>
                 </div>
             </div>
-        </motion.div>
-    )
-}
+        </div>
+    );
+};

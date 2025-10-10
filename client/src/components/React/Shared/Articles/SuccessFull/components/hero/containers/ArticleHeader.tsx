@@ -1,16 +1,33 @@
-import MoreButton from "../../buttons/MoreButton";
-import SaveArticle from '../../buttons/SaveArticle';
+import MoreButton from "../../../../buttons/MoreButton";
+import SaveArticle from '../../../../buttons/SaveArticle';
 import FrontMatter from "./FrontMatter";
 import { useState } from "react";
+import { motion } from "framer-motion";
+import ScrolltoTop from "@/helpers/ScrollToTop";
 
-export default function ArticleHeader({ articleData, investigating }) {
+export default function ArticleHeader({ articleData, investigating }): JSX.Element | null {
     const [open, setOpen] = useState<boolean>(false)
 
 
     return (
-        <header
+        <motion.header
+            initial={{ opacity: 0 }}
+            animate={{
+                opacity: 1, transition: {
+                    delay: 0.2,
+                    type: 'tween',
+                    duration: 0.3
+                }
+            }}
+            exit={{
+                opacity: 0,
+                transition: {
+                    duration: 0.1
+                }
+            }}
             className="border-b border-white/10"
         >
+            <ScrolltoTop />
             <section
                 className="flex flex-col gap-y-2 md:flex-row 
             md:gap-x-4 items-center w-full h-full mx-auto pb-3"
@@ -43,6 +60,6 @@ export default function ArticleHeader({ articleData, investigating }) {
                     </div>
                 </article>
             </section>
-        </header>
+        </motion.header>
     );
 };
