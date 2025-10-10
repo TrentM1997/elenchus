@@ -2,9 +2,9 @@ import { AppDispatch, RootState } from "@/ReduxToolKit/store"
 import { useDispatch, useSelector } from "react-redux"
 import { getModalPosition, modalStages } from "@/ReduxToolKit/Reducers/Investigate/WikipediaSlice";
 import { AnimatePresence } from "framer-motion";
-import WikiTermExtract from "../../../features/WikiExtract/components/WikiTermExtract";
 import TermModalContainer from "@/components/React/features/WikiExtract/components/popovers/containers/TermModalContainer";
 import TermModal from "@/components/React/features/WikiExtract/components/popovers/modals/TermModal";
+import WikiTermExtract from "@/components/React/features/WikiExtract/components/WikiTermExtract";
 
 interface FullTextProps {
     article_text: string,

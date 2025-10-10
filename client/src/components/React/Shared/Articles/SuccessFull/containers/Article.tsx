@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import ScrolltoTop from '../../../../../helpers/ScrollToTop';
-import ArticleHeader from './ArticleHeader';
-import ArticleContent from './ArticleContent';
+import { AnimatePresence, motion } from 'framer-motion';
+import ScrolltoTop from '../../../../../../helpers/ScrollToTop';
+import ArticleHeader from '../components/ArticleHeader';
+import ArticleContent from '../components/ArticleContent';
 import type { Article } from '@/ReduxToolKit/Reducers/Investigate/Reading';
 
 interface ArticleProps {
@@ -12,18 +12,15 @@ interface ArticleProps {
 
 export default function Article({ articleData, investigating }: ArticleProps) {
     const [fullStory, setFullStory] = useState<boolean>(true);
-    const {
-        article_url,
-        full_text,
-    } = articleData;
+    const { article_url, full_text } = articleData;
 
 
     return (
         <motion.div
-            layout
             initial={{ opacity: 0 }}
             animate={{
                 opacity: 1, transition: {
+                    delay: 0.2,
                     type: 'tween',
                     duration: 0.3
                 }

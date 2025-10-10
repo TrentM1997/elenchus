@@ -1,5 +1,5 @@
-import MoreButton from "../buttons/MoreButton";
-import SaveArticle from '../buttons/SaveArticle';
+import MoreButton from "../../buttons/MoreButton";
+import SaveArticle from '../../buttons/SaveArticle';
 import FrontMatter from "./FrontMatter";
 import { useState } from "react";
 
