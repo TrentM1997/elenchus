@@ -5,10 +5,18 @@ import StoryPaginate from "../buttons/StoryPaginate";
 import { useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
 import GetInfo from "../buttons/GetInfo";
+import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
+import { useMemo } from "react";
 
 export default function ControlPanel({ }) {
-    const investigateState = useSelector((state: RootState) => state.investigation)
-    const showContent = investigateState.display
+    const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
+    const showContent = investigateState.display;
+    const { read } = investigateState;
+    const { ContentStatus, articles } = read;
+    const failedExtraction = useMemo(() => {
+        const failed: boolean = (ContentStatus === 'fulfilled') && (Array.isArray(articles)) && (articles.length === 0);
+        return failed;
+    }, [ContentStatus, articles]);
 
     return (
         <div className="fixed 2xl:left-16 2xl:bottom-16 xl:left-4 xl:bottom-10 lg:left-6 lg:bottom-6 
@@ -17,16 +25,25 @@ export default function ControlPanel({ }) {
 
 
             <div className="shrink-0 lg:rounded-l-full w-fit h-auto px-2 py-0.5  md:py-1.5 xl:px-2 2xl:px-2.5  md:hover:bg-border_gray transition-all ease-in-out lg:border-r border-border_gray flex justify-center">
-                <ReturnToSearch />
+                <ReturnToSearch failed={failedExtraction} />
             </div>
 
-            <div className="shrink-0 w-fit h-auto py-0.5 px-2 md:py-1.5 xl:px-2 2xl:px-2.5 md:hover:bg-border_gray transition-all ease-in-out flex justify-center lg:border-r border-border_gray">
+            <div className={`${failedExtraction ? 'pointer-events-none opacity-30' : 'pointer-events-auto opacity-100 md:hover:bg-border_gray'}
+            shrink-0 w-fit h-auto py-0.5 px-2 md:py-1.5 xl:px-2 2xl:px-2.5
+              transition-opacity ease-in-out flex justify-center lg:border-r 
+              border-border_gray`}>
                 <FinishedReading />
             </div>
-            <div className="hidden lg:flex shrink-0 w-fit h-auto px-2.5 xl:px-2.5 md:hover:bg-border_gray transition-all ease-in-out justify-center items-center lg:border-r lg:border-0 border-border_gray">
+            <div className={`${failedExtraction ? 'pointer-events-none opacity-30' : 'pointer-events-auto opacity-100 md:hover:bg-border_gray'}
+            hidden lg:flex shrink-0 w-fit h-auto px-2.5 xl:px-2.5 
+             transition-all ease-in-out justify-center items-center 
+            lg:border-r lg:border-0 border-border_gray`}>
                 <GetInfo />
             </div>
-            <div className="shrink-0 w-fit h-auto lg:rounded-r-full px-2.5 py-0.5 xl:px-2.5 md:hover:bg-border_gray transition-all ease-in-out flex justify-center lg:border-0 border-border_gray">
+            <div className={`${failedExtraction ? 'pointer-events-none opacity-30' : 'pointer-events-auto opacity-100 md:hover:bg-border_gray'}
+            shrink-0 w-fit h-auto lg:rounded-r-full px-2.5 py-0.5 xl:px-2.5
+            transition-opacity ease-in-out flex justify-center 
+             lg:border-0 border-border_gray`}>
                 <TakeNotes />
             </div>
             {showContent && <div className="flex justify-center lg:hidden grow shrink-0 w-fit h-auto py-1.5 xl:px-2 2xl:px-2.5 lg:hover:bg-border_gray transition-all ease-in-out lg:border-0 border-border_gray">

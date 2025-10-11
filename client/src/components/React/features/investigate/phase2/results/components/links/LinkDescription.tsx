@@ -1,6 +1,17 @@
-import { limitString } from "@/helpers/Presentation"
+import { limitString } from "@/helpers/Presentation";
+import { slugLogo } from "@/components/React/Shared/Articles/SuccessFull/components/hero/PublishedBy";
+import { LOGOS } from "@/helpers/lookup/logos";
+import { useMemo } from "react";
+
 
 export default function LinkDescription({ isPriority, isHilighted, provider, logo, description }) {
+    const providerSlug = useMemo(() => slugLogo(provider ?? ""), [logo]);
+    const logoPath = useMemo(() => {
+        console.log(LOGOS[providerSlug]);
+        const altPath = LOGOS[providerSlug] ?? logo;
+        return altPath;
+    }, [provider]);
+
 
     const formattedDescription = limitString(description);
 
@@ -12,7 +23,7 @@ export default function LinkDescription({ isPriority, isHilighted, provider, log
                         className="lg:h-8 lg:w-8 xs:h-6 xs:w-6"
                         loading={isPriority ? 'eager' : 'lazy'}
                         decoding={isPriority ? 'sync' : 'async'}
-                        src={logo}
+                        src={logoPath}
                         alt=""
                     />
                 </div>

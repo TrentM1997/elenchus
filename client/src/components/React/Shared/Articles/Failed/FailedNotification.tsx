@@ -53,8 +53,8 @@ export default function FailedNotification({ notification }) {
         <motion.li
             key={notification.title}
             layout
-            initial={{ opacity: 0, y: 50, scale: 0.3 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
+            initial={{ opacity: 1, y: 300, scale: 0.3 }}
+            animate={{ opacity: 1, y: 0, scale: 1, transition: { type: 'tween', delay: 0.5, duration: 0.3 } }}
             exit={{ opacity: 0, scale: 0.5, transition: { type: 'tween', duration: 0.15 } }}
             className="relative w-80 md:max-w-80 lg:max-w-96 lg:w-96 md:w-96 sm:h-32 z-50 xl:max-w-[29rem] h-auto bg-gradient-to-tr from-ebony to-mirage shadow-material rounded-2xl xl:pb-12 lg:py-2 flex content-start"
         >

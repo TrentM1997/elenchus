@@ -9,7 +9,7 @@ export default function Page({ pageContent }) {
     const investigateState = useSelector((state: RootState) => state.investigation);
     const { search } = investigateState;
     const { status } = search;
-    const test = [null, null];
+
 
     return (
         <motion.ol

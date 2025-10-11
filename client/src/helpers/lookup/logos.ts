@@ -1,3 +1,5 @@
+
+
 export const LOGOS: Record<string, string> = (() => {
     const modules = import.meta.glob('../../../public/images/logos/*.{svg,png}', {
         eager: true,

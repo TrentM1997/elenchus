@@ -23,7 +23,7 @@ export default function NoContent(): JSX.Element | null {
                         Unfortunately we couldn't retrieve the content from those sources
                     </h1>
                     <p className="text-zinc-400 font-light tracking-tight text-sm 2xl:text-xl">
-                        Some websites block content extraction, which may prevent summaries from being generated
+                        Some websites block content extraction, which may prevent articles from being generated
                     </p>
                 </div>
             </div>

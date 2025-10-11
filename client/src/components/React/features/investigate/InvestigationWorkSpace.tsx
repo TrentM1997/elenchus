@@ -10,6 +10,7 @@ const Content = lazy(() => import('@/components/React/features/investigate/share
 import Notes from '@/components/React/features/investigate/notes/Notes';
 import BlueSkySkeleton from '@/components/React/features/blueSky/skeletons/BlueSkySkeleton';
 import PanelContainer from "@/components/React/features/investigate/phase3/controls/containers/PanelContainer";
+import DelayedFallback from '../../Shared/fallbacks/DelayedFallback';
 
 export default function InvestigationWorkSpace() {
     const investigateState = useSelector((state: RootState) => state.investigation);
@@ -64,8 +65,9 @@ export default function InvestigationWorkSpace() {
                     key={'HeroContainer'} />
             }
 
+
             {showBlueSkySearch &&
-                <Suspense fallback={<BlueSkySkeleton context={'investigate'} />}>
+                <Suspense fallback={<DelayedFallback><BlueSkySkeleton context={'investigate'} /></DelayedFallback>}>
                     <BlueSkyPosts context={'investigate'} />
                 </Suspense>
             }

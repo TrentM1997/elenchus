@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { useTooltipFlags } from "@/hooks/useTooltipFlags";
 
 
-export function FinishedReading({ }) {
+export function FinishedReading() {
     const investigateState = useSelector((state: RootState) => state.investigation)
     const { showReadingTooltip } = investigateState.display
     const { summaries } = investigateState.read;

@@ -1,17 +1,33 @@
 import { useDispatch } from "react-redux"
 import { displayReturnModal } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer"
 import { useSelector } from "react-redux"
-import { RootState } from "@/ReduxToolKit/store"
+import { RootState } from "@/ReduxToolKit/store";
+import { AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
+import BackToSearchTooltip from "../tooltips/BackToSearchTooltip";
 
-export default function ReturnToSearch() {
-    const investigateState = useSelector((state: RootState) => state.investigation)
+interface ReturnToSearchProps {
+    failed: boolean
+};
+
+export default function ReturnToSearch({ failed }: ReturnToSearchProps): JSX.Element | null {
+    const [showBackTooltip, setShowBackTooltip] = useState<boolean>(false);
+    const investigateState = useSelector((state: RootState) => state.investigation);
     const { showReadingTooltip } = investigateState.display
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
 
     const handleReturn = () => {
         dispatch(displayReturnModal(true))
     };
+
+    useEffect(() => {
+        if (!failed) return;
+
+        setShowBackTooltip(true);
+
+    }, [failed]);
+
 
 
     return (
@@ -20,6 +36,11 @@ export default function ReturnToSearch() {
         duration-300 xs:max-w-8 xs:max-h-8 xl:max-w-7 xl:max-h-7 2xl:max-w-8 
         2xl:max-h-8 p-0.5 ease-in-out group relative"
         >
+            <AnimatePresence>
+                {showBackTooltip && <BackToSearchTooltip setShowBackTooltip={setShowBackTooltip} />}
+            </AnimatePresence>
+
+
             {!showReadingTooltip && <div className="absolute p-1 bg-white z-50 opacity-0 transition-all duration-200 ease-in-out 
             md:group-hover:opacity-100 bottom-12 -right-5
             rounded-md items-center border border-astro_gray shadow-thick after:content-[''] after:absolute after:bottom-[-10px] after:left-1/2 

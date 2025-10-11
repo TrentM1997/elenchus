@@ -1,7 +1,7 @@
 import FailedLoading from "../Failed/FailedLoading";
 import { useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { recordSources } from "@/ReduxToolKit/Reducers/UserContent/SaveInvestigationSlice";
 import RenderArticles from "@/components/React/features/investigate/phase3/components/RenderArticles";
@@ -19,6 +19,14 @@ export default function ArticleContainer({ }) {
   const { articles, failedNotifications, ContentStatus } = read;
   const firstRecordedSources = useRef<string>("");
   const dispatch = useDispatch();
+
+  const showNotifications = useMemo((): boolean => {
+    const hasFailed = (Array.isArray(failedNotifications)) && (failedNotifications.length > 0);
+    const fulfilled = (ContentStatus === 'fulfilled');
+    const show = hasFailed && fulfilled;
+    return show;
+  }, [ContentStatus, failedNotifications]);
+
 
 
   useEffect(() => {
@@ -58,7 +66,7 @@ export default function ArticleContainer({ }) {
     >
       <RenderArticles
       />
-      {ContentStatus === 'fulfilled' &&
+      {showNotifications &&
         <FailedLoading
         />
       }

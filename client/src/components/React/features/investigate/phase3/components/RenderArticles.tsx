@@ -13,7 +13,10 @@ export default function RenderArticles(): JSX.Element | null {
     const { read } = investigateState;
     const { articles, currentStory, ContentStatus } = read;
     const renderArticle = Array.isArray(articles) && (articles.length > 0);
-    const noResults = (ContentStatus === 'fulfilled') && (Array.isArray(articles)) && (articles.length === 0);
+    const noResults = useMemo(() => {
+        const failed: boolean = (ContentStatus === 'fulfilled') && (Array.isArray(articles)) && (articles.length === 0);
+        return failed;
+    }, [ContentStatus, articles])
     const showLoader = useMemo((): boolean => {
         const shouldShowLoader: boolean = (ContentStatus === 'pending');
         return shouldShowLoader;

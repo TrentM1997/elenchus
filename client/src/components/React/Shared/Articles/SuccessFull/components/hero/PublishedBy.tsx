@@ -3,8 +3,8 @@ import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 import fallback from '../../../../../../../../public/images/logos/fallback.svg';
 import { LOGOS } from "@/helpers/lookup/logos";
 
-const slugLogo = (s: string) => {
-    const item = s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+export const slugLogo = (s: string) => {
+    const item = s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "").replace(/(^-|-$)/g, "");
     return item;
 };
 
