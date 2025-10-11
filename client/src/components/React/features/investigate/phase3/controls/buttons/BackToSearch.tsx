@@ -14,16 +14,12 @@ export function BackToSearch({ }) {
     const dispatch = useDispatch();
 
     const goBack = (): void => {
-        dispatch(clearChosenArticles());
         dispatch(displayArticleContent(false));
         dispatch(displayReturnModal(false));
         dispatch(displaySearch(true));
     };
 
-    const cleanUp = (): void => {
-        dispatch(resetReadingSlice())
-        dispatch(resetResults())
-    };
+
 
 
 
@@ -31,11 +27,9 @@ export function BackToSearch({ }) {
 
         if (!returning) return;
 
-        if (returning) cleanUp();
-
-        const timer = setTimeout(() => {
+        const timer = window.setTimeout(() => {
             goBack();
-        }, 200);
+        }, 100);
 
         return () => {
             clearTimeout(timer);
@@ -71,7 +65,7 @@ export function BackToSearch({ }) {
                             <button onClick={() => { dispatch(displayReturnModal(false)) }} type="button" className="text-base min-w-36 py-2 w-full px-4 border focus:ring-2 rounded-full border-transparent bg-white hover:bg-white/10 text-black duration-200 focus:ring-offset-2 focus:ring-white hover:text-white inline-flex items-center justify-center ring-1 ring-transparent">
                                 No
                             </button>
-                            <button onClick={() => setReturning(prev => !prev)} type="button" className="text-base py-2 min-w-36 w-full px-4 border focus:ring-2 rounded-full border-transparent bg-white hover:bg-white/10 text-black duration-200 focus:ring-offset-2 focus:ring-white hover:text-white inline-flex items-center justify-center ring-1 ring-transparent">
+                            <button onClick={() => setReturning(true)} type="button" className="text-base py-2 min-w-36 w-full px-4 border focus:ring-2 rounded-full border-transparent bg-white hover:bg-white/10 text-black duration-200 focus:ring-offset-2 focus:ring-white hover:text-white inline-flex items-center justify-center ring-1 ring-transparent">
                                 Yes
                             </button>
                         </div>

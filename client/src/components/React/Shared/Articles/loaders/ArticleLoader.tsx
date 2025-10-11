@@ -10,17 +10,10 @@ export default function ArticleLoader(): JSX.Element | null {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, transition: { type: 'tween', duration: 0.2, delay: 0.2 } }}
             exit={{ opacity: 0, transition: { type: 'tween', duration: 0.2, delay: 0 } }}
-            className='w-full h-auto mx-auto flex flex-col-reverse items-start md:items-center fixed bg-black inset-0 md:left-0'>
+            className='w-full h-dvh mx-auto flex flex-col items-center justify-center fixed bg-black pointer-events-none overflow-hidden z-[35] inset-0 md:left-0'>
 
-            <header className='w-2/3 h-fit mx-auto justify-center 2xl:-translate-y-40 xl:-translate-y-72 lg:-translate-y-80'>
-                <h1
-                    className='block max-w-3/4 h-fit font-light text-center text-sm tracking-tight md:text-3xl xl:text-4xl text-zinc-400 animate-pulse'
-                >Gathering the chosen articles
-
-                </h1>
-            </header>
-            <div className="w-full h-fit flex justify-center">
-                <div className="w-4/5 md:w-3/5 h-auto xl:-translate-x-8 2xl:translate-y-14 xl:-translate-y-52 lg:-translate-y-44 transition-all duration-200 ease-in-out">
+            <div className="w-auto h-auto flex flex-col items-center justify-start relative">
+                <div className="w-88 lg:w-128 h-auto transition-all duration-200 ease-in-out">
                     <Lottie
 
                         animationData={vortex}
@@ -29,7 +22,18 @@ export default function ArticleLoader(): JSX.Element | null {
                         style={{ height: '100%', width: '100%' }}
                     />
                 </div>
+                <header className='w-auto h-fit mx-auto justify-center'>
+                    <h1
+                        className='w-auto h-fit text-center text-base tracking-tight md:text-3xl xl:text-3xl inline-block bg-gradient-to-r from-zinc-600 via-zinc-200 to-zinc-600 
+         bg-[length:200%_100%] bg-clip-text text-transparent animate-shimmer'
+                    >Gathering the chosen articles
+
+                    </h1>
+                </header>
             </div>
+
+
+
         </motion.div>
     );
 }

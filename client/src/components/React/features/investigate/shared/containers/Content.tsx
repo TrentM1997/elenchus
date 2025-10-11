@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
 import ScrolltoTop from "@/helpers/ScrollToTop";
 import ArticleContainer from "@/components/React/Shared/Articles/containers/ArticleContainer";
+import { useMemo } from "react";
 
 export default function Content() {
     const investigateState = useSelector((state: RootState) => state.investigation);
@@ -26,6 +27,20 @@ export default function Content() {
         status
     } = search;
 
+    const animateSearch = useMemo((): boolean => {
+
+        const firstCondition: boolean = ((showSearch) && (status !== 'idle'));
+        const secondCondition: boolean = (!showContent);
+        const show: boolean = firstCondition && secondCondition;
+        return show;
+
+    }, [showSearch, status]);
+
+    const animateArticles = useMemo(() => {
+        const show: boolean = (showContent) && (!animateSearch);
+        return show;
+    }, [animateSearch, showContent]);
+
     return (
         <motion.div
             initial={{ opacity: 1 }}
@@ -42,21 +57,21 @@ export default function Content() {
                 className="relative 2xl:max-w-7xl w-full min-h-full flex flex-col justify-center box-border mx-auto">
                 <AnimatePresence mode="wait">
 
-                    {showSearch && status !== 'idle' ?
+                    {animateSearch &&
                         <motion.div
                             key='links'
                             style={{ position: 'relative' }}
                             initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
+                            animate={{ opacity: 1, transition: { type: 'tween', duration: 0.25, delay: 0.5 } }}
+                            exit={{ opacity: 0, transition: { type: 'tween', duration: 0.25, delay: 0 } }}
                             transition={{ type: 'tween', duration: 0.5 }}
                             className="w-full min-h-screen lg:pb-96"
                         >
                             <SearchResults />
 
-                        </motion.div> : null}
+                        </motion.div>}
 
-                    {(showContent) &&
+                    {animateArticles &&
                         <motion.div
                             key='articles'
                             style={{ position: 'relative' }}

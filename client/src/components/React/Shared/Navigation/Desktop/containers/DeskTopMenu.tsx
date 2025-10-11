@@ -13,7 +13,7 @@ function DeskTopMenu() {
             <div className="md:w-dvw mx-auto">
                 <div className="w-full mt-0 py-1 mx-auto border-b
 			 border-white/10 shadow-thick backdrop-blur-xl backdrop-filter
-			 md:items-center h-fit">
+			 md:items-center h-11">
                     <DesktopNavOptions />
                 </div>
             </div>

@@ -83,8 +83,11 @@ export default function Search({ }) {
     }
   }, []);
 
+
   return (
-    <div className="block box-border min-w-full max-w-full mx-auto md:px-2 2xl:h-full no-scrollbar">
+    <div
+      className="opacity-0 animate-fade-skew animation-delay-300ms transition-opacity relative
+      ease-soft min-w-full max-w-full mx-auto md:px-2 2xl:h-full no-scrollbar">
       <div
         className="text-center w-full md:mx-auto">
         <div

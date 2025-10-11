@@ -47,7 +47,7 @@ export default function InvestigationWorkSpace() {
         <section
             ref={containerRef}
             id='workspace'
-            className={`w-full h-auto flex flex-col grow 
+            className={`w-full h-auto flex flex-col grow
             justify-start items-center transition-opacity duration-200 
             ${showGetArticlesModal
                     ? 'delay-0 opacity-50 pointer-events-none'

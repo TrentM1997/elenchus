@@ -6,6 +6,7 @@ import Article from "@/components/React/Shared/Articles/SuccessFull/containers/A
 import ArticleLoader from "@/components/React/Shared/Articles/loaders/ArticleLoader";
 import NoContent from "@/components/React/Shared/Articles/Failed/NoContent";
 import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
+import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary";
 
 export default function RenderArticles(): JSX.Element | null {
     const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
@@ -23,22 +24,27 @@ export default function RenderArticles(): JSX.Element | null {
         <main
 
             className="2xl:max-w-6xl h-full w-full mx-auto 
-                  mb-12 flex flex-col pt-8">
+                  mb-12 flex flex-col">
             <div
                 className="w-full min-h-screen mx-auto relative 
                 grow shrink-0"
             >
-                <AnimatePresence mode="wait" initial={false}>
-                    {showLoader && <ArticleLoader key="loading-articles" />}
-                    {(!showLoader) && (renderArticle) &&
-                        (articles[currentStory]) &&
-                        <Article
-                            key="article"
-                            articleData={articles[currentStory]}
-                            investigating={true}
-                        />
-                    }
-                </AnimatePresence>
+                <ErrorBoundary>
+
+                    <AnimatePresence mode="wait" initial={false}>
+                        {showLoader && <ArticleLoader key="loading-articles" />}
+                        {(!showLoader) && (renderArticle) &&
+                            (articles[currentStory]) &&
+                            <Article
+                                key="article"
+                                articleData={articles[currentStory]}
+                                investigating={true}
+                            />
+                        }
+                    </AnimatePresence>
+                </ErrorBoundary>
+
+
 
                 {noResults && <NoContent key='noResults' />}
 

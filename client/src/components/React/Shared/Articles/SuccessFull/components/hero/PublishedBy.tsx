@@ -20,7 +20,6 @@ function PublishedBy({ article }: DatePubProps): JSX.Element | null {
         return altPath;
     }, [article]);
 
-    console.log(providerSlug)
 
 
     return (

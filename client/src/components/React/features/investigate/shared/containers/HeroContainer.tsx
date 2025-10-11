@@ -7,16 +7,49 @@ import ScrolltoTop from "@/helpers/ScrollToTop"
 import { AnimatePresence, motion } from "framer-motion"
 import { useSelector } from "react-redux"
 import { RootState } from "@/ReduxToolKit/store"
+import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer"
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 
 export default function HeroContainer({
 }) {
-    const investigateState = useSelector((state: RootState) => state.investigation)
-    const { display } = investigateState
-    const { showMindMap, showSearch, showWrapUp, showCompletion, showResults, showWorkModal } = display
+    const [spacerHeight, setSpacerHeight] = useState<number | null>(null);
+    const [shouldMeasure, setShouldMeasure] = useState<boolean>(false);
+    const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
+    const { display, read } = investigateState
+    const { showMindMap, showSearch, showWrapUp, showCompletion, showResults, showWorkModal } = display;
+    const { articles, ContentStatus } = read;
+    const heightRef = useRef(null);
+    const showSpacerDiv = useMemo(() => {
+        const hasRetrievedArticles: boolean = (ContentStatus === 'fulfilled');
+        const show: boolean = hasRetrievedArticles && (!showSearch);
+        return show;
+    }, [articles, showSearch]);
+
+
+    useLayoutEffect(() => {
+        if (!shouldMeasure || !showSearch) return;
+        const node = heightRef.current;
+        const ro = new ResizeObserver(([e]) => {
+            setSpacerHeight(Math.ceil(e.contentRect.height));
+        });
+
+        const t = requestAnimationFrame(() => ro.observe(node));
+
+        return () => {
+            cancelAnimationFrame(t);
+            ro.disconnect();
+        };
+    }, [shouldMeasure]);
+
+    useEffect(() => {
+
+        if (!showSearch) setShouldMeasure(false);
+
+    }, [showSearch]);
 
 
     return (
-        <section className={`w-dvw h-full shrink-0 mx-auto transition-opacity duration-200 ease-in-out 
+        <section className={`w-dvw h-full shrink-0 mx-auto transition-opacity duration-200 ease-in-out
         flex items-center
         ${showWorkModal ? 'opacity-50' : 'opacity-100'}`}>
             <AnimatePresence mode="wait">
@@ -37,20 +70,34 @@ export default function HeroContainer({
 
                 </motion.div>)}
 
-                {showSearch ?
+                {showSearch &&
                     (<motion.div
+                        ref={heightRef}
                         key='Search'
                         initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
+                        animate={{ opacity: 1, transition: { type: 'tween', duration: 0.2, delay: 0.5 } }}
                         exit={{ opacity: 0 }}
                         transition={{ type: 'tween', duration: 0.2 }}
-                        className={`w-full h-fit mx-auto`}
+                        className={`w-full h-auto mx-auto relative`}
+                        onAnimationComplete={() => {
+                            setShouldMeasure(true)
+                        }}
                     >
                         <SearchHero
                         />
                         <ScrolltoTop />
 
-                    </motion.div>) : null}
+                    </motion.div>)}
+
+                {showSpacerDiv && <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0 }}
+                    transition={{ type: 'tween', duration: 0.3, delay: 0.2 }}
+                    key="spacer-div"
+                    style={{ height: spacerHeight }}
+                />
+                }
 
                 {showWrapUp && <motion.div
                     key='WrapUp'

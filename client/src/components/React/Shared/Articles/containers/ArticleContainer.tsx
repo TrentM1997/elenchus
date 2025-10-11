@@ -1,13 +1,14 @@
 import FailedLoading from "../Failed/FailedLoading";
 import { useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { recordSources } from "@/ReduxToolKit/Reducers/UserContent/SaveInvestigationSlice";
-import ErrorBoundary from "../../ErrorBoundaries/ErrorBoundary";
-import ErrMessage from "@/components/React/Shared/ErrorBoundaries/messages/ErrMessage";
 import RenderArticles from "@/components/React/features/investigate/phase3/components/RenderArticles";
 import { getSourcesToRecord, canUpdateSources } from "@/services/RecordSources";
+import { clearChosenArticles } from "@/ReduxToolKit/Reducers/Investigate/ChosenArticles";
+import { resetResults } from "@/ReduxToolKit/Reducers/Investigate/SearchResults";
+import { resetReadingSlice } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 
 export default function ArticleContainer({ }) {
   const investigateState = useSelector((state: RootState) => state.investigation);
@@ -21,6 +22,16 @@ export default function ArticleContainer({ }) {
 
 
   useEffect(() => {
+
+    return () => {
+      dispatch(clearChosenArticles());
+      dispatch(resetResults());
+      dispatch(resetReadingSlice());
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+
 
     const executeRecordSources = () => {
       const data = getSourcesToRecord(articles, failedNotifications);
@@ -40,20 +51,18 @@ export default function ArticleContainer({ }) {
 
 
   return (
-    <ErrorBoundary fallback={<ErrMessage message={"Woops, something broke :/"} />}>
-      <div
-        className="min-h-screen h-full 2xl:max-w-7xl xl:max-w-5xl 
+    <div
+      className="min-h-screen h-full 2xl:max-w-7xl xl:max-w-5xl
       lg:max-w-3xl md:max-w-3xl xs:px-2 md:px-8 scroll-smooth
-      inset mx-auto border-white/10 xs:mt-10 xl:mt-12 relative"
-      >
-        <RenderArticles
+      inset mx-auto border-white/10 relative"
+    >
+      <RenderArticles
+      />
+      {ContentStatus === 'fulfilled' &&
+        <FailedLoading
         />
-        {ContentStatus === 'fulfilled' &&
-          <FailedLoading
-          />
-        }
-      </div>
-    </ErrorBoundary>
+      }
+    </div>
   )
 }
 

@@ -1,13 +1,15 @@
 import MoreButton from "../../../../buttons/MoreButton";
 import SaveArticle from '../../../../buttons/SaveArticle';
-import FrontMatter from "./FrontMatter";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import ScrolltoTop from "@/helpers/ScrollToTop";
+import ArticleMetaData from "./ArticleMetaData";
+import { useIsMobile } from "@/hooks/useIsMobile";
+import ArticleImage from "../ArticleImage";
 
 export default function ArticleHeader({ articleData, investigating }): JSX.Element | null {
     const [open, setOpen] = useState<boolean>(false)
-
+    const isMobile = useIsMobile();
 
     return (
         <motion.header
@@ -30,16 +32,19 @@ export default function ArticleHeader({ articleData, investigating }): JSX.Eleme
             <ScrolltoTop />
             <section
                 className="flex flex-col gap-y-2 md:flex-row 
-            md:gap-x-4 items-center w-full h-full mx-auto pb-3"
+            md:gap-x-4 items-stretch w-full h-full mx-auto mb-3"
             >
                 <article
-                    className="w-full h-full flex items-center 
-                justify-between self-end pt-4 md:pt-0"
+                    className="w-full h-full flex flex-col gap-y-4 xl:flex-row items-start xl:items-center xl:gap-x-4 xl:gap-y-0
+                justify-between self-end"
                 >
-                    <FrontMatter article={articleData} />
+                    <ArticleImage article={articleData} />
+                    <ArticleMetaData article={articleData} />
+
+
                     <div
-                        className="self-end w-auto h-full flex
-                        flex-col gap-y-1 md:gap-y-4 items-center"
+                        className="self-end w-auto h-full flex translate-y-1 xl:translate-y-0
+                        flex-col gap-y-0 md:gap-y-4 items-center"
                     >
                         <div
                             className="w-auto h-auto flex justify-start"

@@ -12,7 +12,7 @@ function FullSavedArticle({ article }: FullSavedArticleProps): JSX.Element {
 
     return (
         <main className="relative top-0 left-0 right-0 flex flex-col grow px-4
-                 w-full lg:max-w-lg xl:max-w-4xl min-h-screen scrollbar-hide
+                 w-full md:max-w-xl lg:max-w-3xl xl:max-w-4xl min-h-screen scrollbar-hide
                  bg-black transition-all duration-200 ease-in-out">
             <ArticleHeader articleData={article} investigating={false} />
             <ArticleContent article_text={article.full_text} article_url={article.article_url} />

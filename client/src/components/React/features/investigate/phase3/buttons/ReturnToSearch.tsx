@@ -2,7 +2,6 @@ import { useDispatch } from "react-redux"
 import { displayReturnModal } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer"
 import { useSelector } from "react-redux"
 import { RootState } from "@/ReduxToolKit/store"
-import { incrementStoryBy } from "@/ReduxToolKit/Reducers/Investigate/Reading"
 
 export default function ReturnToSearch() {
     const investigateState = useSelector((state: RootState) => state.investigation)
@@ -11,10 +10,8 @@ export default function ReturnToSearch() {
 
 
     const handleReturn = () => {
-        dispatch(incrementStoryBy(0))
         dispatch(displayReturnModal(true))
-
-    }
+    };
 
 
     return (

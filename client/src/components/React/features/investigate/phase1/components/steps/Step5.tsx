@@ -41,12 +41,12 @@ export default function Step5() {
                         <div className="w-fit h-auto">
                             <button
                                 onClick={beginSearch}
-                                className="bg-white/10 rounded-full group 2xl:-translate-x-1 mb-2 sm:mb-0
+                                className="bg-white hover:bg-white/10 rounded-full group 2xl:-translate-x-1 mb-2 sm:mb-0
                             w-32 h-8 xl:w-44 xl:h-10 mx-auto flex items-center 
-                            text-center hover:bg-white/20 transition-all duration-200 ease-in-out shadow-sm">
+                            text-center transition-all duration-300 ease-soft shadow-sm">
                                 <div className="w-full h-full flex justify-between items-center">
                                     <div className="w-auto h-auto mx-auto">
-                                        <p className="text-white group-hover:text-white font-light text-sm text-center xl:text-lg w-fit">
+                                        <p className="text-black group-hover:text-white font-light text-sm text-center xl:text-lg w-fit">
                                             Get Started <span className="ml-2">&#8594;</span>
                                         </p>
                                     </div>
