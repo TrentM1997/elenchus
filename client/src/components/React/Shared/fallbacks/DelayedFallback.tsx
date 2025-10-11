@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 interface DelayFallback {
     delay?: number,
-    children: React.ReactNode
+    children: React.ReactNode | React.ReactNode[]
 };
 
 export default function DelayedFallback({ delay = 150, children }: DelayFallback): JSX.Element | null {

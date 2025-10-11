@@ -8,6 +8,7 @@ import { getBiasSnapshot, getReportingRatings } from "@/ReduxToolKit/Reducers/Us
 import BiasWebWorker from '@/services/workers/biasSnapshot.js?worker';
 import IntegrityWebWorker from '@/services/workers/integrityWorker.js?worker';
 import ChartJsSkeleton from "@/components/React/features/charts/skeletons/DonutSkeleton";
+import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback";
 const BiasChart = lazy(() => import('@/components/React/features/charts/DonutChart/BiasChart'))
 const IntegrityChart = lazy(() => import('@/components/React/features/charts/PieChart/IntegrityChart'));
 
@@ -67,18 +68,23 @@ export default function ChartJsWrapper() {
 
     return (
         <>
-            <Suspense fallback={<ChartJsSkeleton>
-                <DonutSkeletonChart />
-            </ChartJsSkeleton>}>
+            <Suspense fallback={<DelayedFallback>
+                <ChartJsSkeleton>
+                    <DonutSkeletonChart />
+                </ChartJsSkeleton>
+            </DelayedFallback>}>
                 {Array.isArray(biasRatings) &&
                     (biasRatings.length > 0) && <BiasChart />}
             </Suspense>
 
 
             <Suspense fallback={
-                <ChartJsSkeleton>
-                    <PieSkeleton />
-                </ChartJsSkeleton>
+                <DelayedFallback>
+                    <ChartJsSkeleton>
+                        <PieSkeleton />
+                    </ChartJsSkeleton>
+                </DelayedFallback>
+
             }>
                 {Array.isArray(ratingData) && (ratingData.length > 0) &&
                     <IntegrityChart />}

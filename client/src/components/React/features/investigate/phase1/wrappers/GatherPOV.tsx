@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
 import StepWizard from "@/components/React/features/investigate/phase1/components/stepWizard/containers/StepWizard";
 import ComponentLoader from "@/components/React/Shared/Loaders/ComponentLoader";
+import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback";
 const WindowWrapper = lazy(() => import('./WindowWrapper'));
 
 export default function GatherPOV(): JSX.Element {
@@ -17,7 +18,7 @@ export default function GatherPOV(): JSX.Element {
             <StepWizard />
 
             {showBlueSkySearch === false &&
-                <Suspense fallback={<ComponentLoader />}>
+                <Suspense fallback={<DelayedFallback><ComponentLoader /></DelayedFallback>}>
                     <WindowWrapper />
                 </Suspense>}
         </main>

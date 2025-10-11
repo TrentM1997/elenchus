@@ -11,6 +11,7 @@ import AppWindowIcon from "@/components/React/Shared/IconComponents/AppWindowIco
 import { variants } from "@/motion/variants";
 import React from "react";
 import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary";
+import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback";
 
 
 function Tabs(): JSX.Element | null {
@@ -25,6 +26,7 @@ function Tabs(): JSX.Element | null {
 
     const savedContentRendered: boolean = (displayThisArticle || displayThisInvestigation);
 
+
     return (
         <motion.div
             style={savedContentRendered ? { opacity: 0, pointerEvents: 'none', zIndex: -1 } : null}
@@ -37,16 +39,18 @@ function Tabs(): JSX.Element | null {
                     {displayAccountManagement && <AccManagement key='settings' />}
 
                     {displaySavedArticles &&
-                        <Suspense fallback={<DisplayLoader key='articles-loader'><AppWindowIcon /></DisplayLoader>}>
+                        <Suspense fallback={<DelayedFallback><DisplayLoader><AppWindowIcon /></DisplayLoader></DelayedFallback>}>
                             <SavedArticles key='articles' />
                         </Suspense>
                     }
                     {displaySavedInvestigations &&
                         <Suspense
                             fallback={
-                                <DisplayLoader key='research-loader'>
-                                    <AppWindowIcon />
-                                </DisplayLoader>
+                                <DelayedFallback>
+                                    <DisplayLoader>
+                                        <AppWindowIcon />
+                                    </DisplayLoader>
+                                </DelayedFallback>
                             }
                         >
                             <SavedResearchLayout

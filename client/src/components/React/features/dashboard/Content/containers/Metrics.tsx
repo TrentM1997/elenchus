@@ -13,6 +13,7 @@ import MetricsFallback from "../wrappers/MetricsFallback";
 import StatsWorker from '@/services/workers/statsWorker.js?worker';
 import StatsFallback from "../../../charts/ChartFallbacks/StatsFallback";
 import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";
+import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback";
 const StatsSection = lazy(() => import('../../../charts/ResearchStats/StatsSection'));
 
 
@@ -78,7 +79,7 @@ export default function Metrics() {
 
                 <ChartJsWrapper />
 
-                <Suspense fallback={<StatsSkeleton />}>
+                <Suspense fallback={<DelayedFallback><StatsSkeleton /></DelayedFallback>}>
                     {statsPopulated && <StatsSection />}
                 </Suspense>
 

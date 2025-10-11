@@ -9,6 +9,7 @@ import { AnimatePresence } from "framer-motion";
 import SignOutModal from "../../session/forms/AuthForms/SignOutModal";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import ViewSavedContent from "../../features/dashboard/Content/containers/ViewSavedContent";
+import DelayedFallback from "../../Shared/fallbacks/DelayedFallback";
 const MobileProfileNav = lazy(() => import('../../features/dashboard/ProfileNavigation/mobile/ProfileMenu'));
 const SideBar = lazy(() => import('../../features/dashboard/ProfileNavigation/SideBar/Sidebar'));
 
@@ -39,13 +40,13 @@ export default function Dashboard(): JSX.Element {
                 } 
             `}>
             {!isMobile &&
-                <Suspense fallback={<SidebarLoader />}>
+                <Suspense fallback={<DelayedFallback><SidebarLoader /></DelayedFallback>}>
                     <SideBar />
                 </Suspense>
             }
 
             {isMobile &&
-                <Suspense fallback={<FooterBarLoader />}>
+                <Suspense fallback={<DelayedFallback><FooterBarLoader /></DelayedFallback>}>
                     <MobileProfileNav />
                 </Suspense>
             }
