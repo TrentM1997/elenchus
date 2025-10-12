@@ -35,12 +35,13 @@ export default function Step2() {
 
       <div className="w-full flex items-center justify-center h-auto md:h-full">
 
-        <div className="flex w-fit items-center justify-center xs:gap-x-16 xl:gap-x-36 box-border">
+        <div className="flex w-fit items-center justify-center xs:gap-x-16 xl:gap-x-36 box-border  md:bg-black/65 md:backdrop-blur-sm md:border md:border-outline md:shadow-elev-1 p-3.5 rounded-3xl">
           <div
-            className="flex flex-col md:gap-y-4 xs:gap-y-1 items-center justify-center text-center my-auto"
+            className="flex flex-col md:gap-y-3 xs:gap-y-1 items-center justify-center text-center my-auto "
           >
             <header className="w-full">
-              <h1 className="2xl:text-xl xl:text-lg lg:text-base md:text-sm md:text-left text-xs  font-light tracking tight text-slate-400 mb-2">I would describe my feelings towards the idea as ...</h1>
+              <h1 className="2xl:text-xl xl:text-lg lg:text-base md:text-sm md:text-left text-xs  
+              font-light tracking tight text-slate-300 mb-2">I would describe my feelings towards the idea as ...</h1>
             </header>
             {opinions.map((opinion) => (
               <Biases key={opinion} opinion={opinion} biases={biases} getPOV={getPOV} />

@@ -3,12 +3,16 @@ import { SidebarItemData } from "@/env";
 import { useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
 import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function SidebarItem({ item }: { item: SidebarItemData }) {
     const state: InvestigateState = useSelector((state: RootState) => state.investigation);
     const { step } = state.stepper;
     const [hasInput, setHasInput] = useState<boolean>(item.data ? true : false);
+    const active = useMemo(() => {
+        const isActive: boolean = (item.step - 1) === step;
+        return isActive;
+    }, [step, item.step])
 
     useEffect(() => {
 
@@ -21,7 +25,7 @@ export default function SidebarItem({ item }: { item: SidebarItemData }) {
     }, [item.data])
 
     return (
-        <li className={`${(item.step - 1) === step ? 'bg-white/5' : 'bg-black/60'}
+        <li className={`transition-colors shadow-drops duration-700 ease-soft ${active ? 'bg-white/5' : 'bg-black/60'}
          w-full h-fit flex items-center overflow-hidden rounded-xl p-1 relative`}>
             <HasInput hasInput={hasInput} />
             <ItemText data={item.data} title={item.title} itemStep={item.step} />

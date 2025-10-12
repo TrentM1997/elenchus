@@ -32,9 +32,6 @@ export default function Pages() {
             transition={{ type: 'tween', duration: 0.2 }}
             className="relative min-h-dvh h-full flex flex-col justify-center items-center grow w-full"
         >
-            <AnimatePresence>
-                {status === 'pending' && <LinkSkeletons key={'linkSkeletons'} />}
-            </AnimatePresence>
 
             <div className="relative min-h-full grow w-full h-full">
                 <AnimatePresence mode="wait">

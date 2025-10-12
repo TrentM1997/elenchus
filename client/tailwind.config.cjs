@@ -176,20 +176,12 @@ module.exports = {
           },
         },
         scroller: {
-          "0%": {
-            transform: "translateY(10em)",
-          },
-          "100%": {
-            transform: "translateY(-20em)",
-          },
+          from: { transform: 'translate3d(0, var(--scroll-start, 10em), 0)' },
+          to: { transform: 'translate3d(0, calc(var(--scroll-end, -20em)), 0)' },
         },
         scroller2: {
-          "0%": {
-            transform: "translateY(10em)",
-          },
-          "100%": {
-            transform: "translateY(-20em)",
-          },
+          from: { transform: 'translate3d(0, var(--scroll-start, 10em), 0)' },
+          to: { transform: 'translate3d(0, calc(var(--scroll-end, -20em)), 0)' },
         },
         "fade-in": {
           from: {
@@ -212,6 +204,17 @@ module.exports = {
       },
       boxShadow: {
         "drops": "rgba(0, 0, 0, 0.16) 0px 1px 4px;",
+        'elev-1': `
+      0 1px 0 0 rgba(255,255,255,0.06) inset, /* hairline */
+      0 2px 8px rgba(0,0,0,0.35),              /* ambient */
+      0 1px 2px rgba(0,0,0,0.5)                /* key */
+    `,
+        // hovered/active
+        'elev-2': `
+      0 1px 0 0 rgba(255,255,255,0.08) inset,
+      0 6px 20px rgba(0,0,0,0.45),
+      0 2px 6px rgba(0,0,0,0.6)
+    `,
         "material": 'rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px',
         "material_2": "rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;",
         "blue-top": "0 -10px 20px -2px rgba(59, 130, 246, 0.5), 0 -6px 12px -4px rgba(59, 130, 246, 0.5)",
@@ -222,7 +225,7 @@ module.exports = {
       },
       colors: {
 
-
+        outline: 'rgba(255,255,255,0.06)',
         button_gray: '#374151',
         gray_map: '#323B49',
         pearl: "#EDEADE",
@@ -275,6 +278,12 @@ module.exports = {
     },
     function ({ addUtilities }) {
       const newUtilities = {
+        '.animation-paused': {
+          'animation-play-state': 'paused',
+        },
+        '.animation-running': {
+          'animation-play-state': 'running',
+        },
         '.scroll-shadow': {
           position: 'relative',
           overflowY: 'auto',

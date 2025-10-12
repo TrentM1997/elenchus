@@ -13,10 +13,10 @@ export default function Biases({ opinion, biases, getPOV }) {
             <div
                 className={`bg-white/10 lg:text-base lg:text-[0.8rem] text-xs sm:text-sm tracking-tight
                                 rounded-4xl w-72 lg:w-96 lg:h-14 h-11 2xl:min-w-128 2xl:max-w-128 2xl:h-16 xl:h-14 xl:min-w-96
-                                cursor-pointer md:hover:bg-white/20 md:hover:text-white transition-all duration-200 ease-in-out
+                                cursor-pointer md:hover:bg-white/20 md:hover:text-white transition-all duration-200 ease-soft
                                 flex justify-between items-center lg:px-4 xs:px-2 grow-0 gap-3
                                 ${biases === null && 'text-white'}
-                                ${biases && opinion === biases && 'text-white'}
+                                ${biases && opinion === biases && 'text-white bg-white/20'}
                                 ${biases && opinion !== biases && 'text-zinc-500'}
                                 `}
                 data-set={opinion}

@@ -7,11 +7,9 @@ import { useMemo } from "react";
 export default function LinkDescription({ isPriority, isHilighted, provider, logo, description }) {
     const providerSlug = useMemo(() => slugLogo(provider ?? ""), [logo]);
     const logoPath = useMemo(() => {
-        console.log(LOGOS[providerSlug]);
         const altPath = LOGOS[providerSlug] ?? logo;
         return altPath;
     }, [provider]);
-
 
     const formattedDescription = limitString(description);
 

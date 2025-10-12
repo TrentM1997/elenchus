@@ -19,12 +19,7 @@ export default function LinkSkeletons({ }) {
                     2xl:w-full mx-auto justify-items-center
                     grid grid-cols-1 sm:grid-cols-3 grid-flow-row 
                     2xl:gap-y-10 2xl:gap-x-0 gap-2">
-            <DelayedFallback>
-                {Array(9).fill(0).map((_, i) => <LinkPlaceholder key={i} />)}
-            </DelayedFallback>
-
-
-
+            {Array(9).fill(0).map((_, i) => <LinkPlaceholder key={i} />)}
         </motion.div>
 
     )

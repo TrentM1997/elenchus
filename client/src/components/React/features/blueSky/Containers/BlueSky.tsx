@@ -4,6 +4,7 @@ import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
 import ErrorBoundary from "../../../Shared/ErrorBoundaries/ErrorBoundary";
 import { variants } from "@/motion/variants";
+import { getPopoverPost, selectPost } from "@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice";
 import SearchBlueSky from "../Components/input/SearchBlueSky";
 import BlueSkyHeader from "../Components/BlueSkyHeader";
 import CloseBlueSky from "../Components/buttons/CloseBlueSky";
@@ -43,7 +44,10 @@ export default function BlueSky({ context }: BlueSkyProps) {
 
     }, 300);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer)
+      dispatch(selectPost(null));
+    }
 
   }, [idea, shouldRedirect]);
 
@@ -51,7 +55,7 @@ export default function BlueSky({ context }: BlueSkyProps) {
   return (
     <div
 
-      className="lg:p-8 w-full relative opacity-0 animate-fade-blur animation-delay-200ms transition-opacity ease-in"
+      className="lg:p-8 w-full relative will-change-[opacity] opacity-0 animate-fade-up animation-delay-200ms transition-opacity ease-in"
     >
       <div className='mt-12 md:mt-6 p-4 w-full py-6 mx-auto md:px-12 lg:px-0  2xl:max-w-7xl h-full'
       >

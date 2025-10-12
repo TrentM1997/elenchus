@@ -12,7 +12,6 @@ export default function SelectedPost(): JSX.Element {
 
         return () => {
             dispatch(getPopoverPost(null));
-            dispatch(selectPost(null));
         }
     }, []);
 

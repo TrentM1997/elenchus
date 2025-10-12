@@ -28,7 +28,7 @@ interface DataToSend {
 };
 
 
-const ArticleLink = memo(({ article, index, removingModal }: LinkProps) => {
+export default function ArticleLink({ article, index, removingModal }: LinkProps) {
     const investigateState = useSelector((state: RootState) => state.investigation);
     const dispatch = useDispatch();
     const { getArticle, display } = investigateState;
@@ -113,6 +113,4 @@ const ArticleLink = memo(({ article, index, removingModal }: LinkProps) => {
             />
         </li>
     );
-});
-
-export default ArticleLink;
+};

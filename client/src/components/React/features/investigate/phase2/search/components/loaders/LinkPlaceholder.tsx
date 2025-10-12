@@ -1,6 +1,8 @@
 
 export default function LinkPlaceholder() {
 
+    console.log('rendering')
+
     return (
         <li
             className={`group cursor-pointer box-border list-none xl:min-h-72 xl:max-h-72 xl:min-w-80 xl:max-w-80

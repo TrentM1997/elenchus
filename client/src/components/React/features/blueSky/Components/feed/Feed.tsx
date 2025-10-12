@@ -53,13 +53,10 @@ export default function Feed({ posts }: FeedProps): React.ReactNode {
         style={{
           animationPlayState: selected ? 'paused' : 'running'
         }}
-        className='items-center space-x-6 pb-12 lg:pb-0 lg:space-x-8 animate-scroller2 
+        className='items-center space-x-6 pb-12 lg:pb-0 lg:space-x-8 animate-scroller2 group
           md:animate-none relative lg:px-4 mx-auto grid grid-cols-1 lg:grid-cols-2'>
         <div
-          style={{
-            animationPlayState: selected ? 'paused' : 'running'
-          }}
-          className={`relative flex-shrink-0 h-full items-center animate-scroller2`}>
+          className={`relative transform-gpu will-change-transform flex-shrink-0 h-full items-center animate-scroller2 ${selected ? 'animation-paused' : 'animation-running hover:animation-paused'}`}>
 
           {firstHalf !== null &&
             <Scroller
@@ -69,10 +66,7 @@ export default function Feed({ posts }: FeedProps): React.ReactNode {
           }
         </div>
         <div
-          style={{
-            animationPlayState: selected ? 'paused' : 'running'
-          }}
-          className={`relative flex-shrink-0 h-full items-center animate-scroller`}>
+          className={`relative transform-gpu will-change-transform flex-shrink-0 h-full items-center animate-scroller ${selected ? 'animation-paused' : 'animation-running hover:animation-paused'}`}>
 
           {secondHalf !== null &&
             <Scroller

@@ -57,7 +57,7 @@ export default function InvestigationWorkSpace() {
         >
 
             {!idea && showOptions &&
-                <InputOptions />
+                <InputOptions key='input-options' />
             }
 
             {showBlueSkySearch === false && (showOptions === false) &&
@@ -74,12 +74,13 @@ export default function InvestigationWorkSpace() {
 
             {!showMindMap &&
                 <Suspense
-                    fallback={<ComponentLoader />}
+                    key={'content-container'}
+                    fallback={<DelayedFallback><ComponentLoader /></DelayedFallback>}
                 >
                     <Content />
                 </Suspense>
             }
-            <PanelContainer />
+            <PanelContainer key='control-panel-container' />
 
             <AnimatePresence>
                 {takingNotes &&

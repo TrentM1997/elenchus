@@ -42,23 +42,25 @@ export default function Step2({ containerWidth }: any) {
       animate='open'
       exit='closed'
       transition={{ type: 'tween', duration: 0.2 }}
-      className="grid grid-cols-2 justify-between items-center w-full h-full box-border 
+      className="grid grid-cols-2 justify-between md:gap-x-2 items-center w-full h-full box-border 
       absolute inset-0"
     >
       <div
-        className="flex flex-col md:gap-y-2 xs:gap-y-1 items-center text-center my-auto"
+        className="flex flex-col md:gap-y-2 2xl:gap-y-2.5 gap-y-1 items-center text-center my-auto md:bg-black/65 md:backdrop-blur-sm md:border md:border-outline md:shadow-elev-1
+        
+           rounded-3xl md:p-2"
       >
         <header className="w-full">
-          <h1 className="2xl:text-2xl xl:text-xl md:text-sm text-center text-xs  font-light tracking tight text-slate-400 mb-2">Your Perspective</h1>
+          <h1 className="2xl:text-xl xl:text-xl lg:text-lg md:text-sm text-center text-xs font-light tracking tight text-white mb-2">Your Perspective</h1>
         </header>
         {opinions.map((opinion) => (
           <Perspective key={opinion} opinion={opinion} perspective={perspective} getPOV={getPOV} />
         ))}
       </div>
 
-      <div className="flex flex-col md:gap-y-2 xs:gap-y-1 items-center text-center my-auto">
+      <div className="flex flex-col md:gap-y-2 2xl:gap-y-2.5 xs:gap-y-1 items-center text-center my-auto md:backdrop-blur-sm md:border md:border-outline md:shadow-elev-1 md:bg-black/65 md:rounded-3xl md:p-2">
         <header className="w-full">
-          <h1 className="2xl:text-2xl xl:text-xl md:text-sm text-center text-xs font-light tracking tight text-slate-400 mb-2">Prior Knowledge</h1>
+          <h1 className="2xl:text-xl xl:text-xl lg:text-lg md:text-sm text-center text-xs font-light tracking tight text-white mb-2">Prior Knowledge</h1>
         </header>
         {expertiseArray.map((item) => (
           <Expertise key={item} item={item} expertise={expertise} assignKnowledge={assignKnowledge} />
