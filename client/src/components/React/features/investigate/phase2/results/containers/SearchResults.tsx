@@ -2,11 +2,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
 import { useEffect, useMemo } from "react";
-import { getPages, incrementPageBy } from "@/ReduxToolKit/Reducers/Investigate/SearchResults";
+import { getPages } from "@/ReduxToolKit/Reducers/Investigate/SearchResults";
 import { formPages } from "@/helpers/Presentation";
-import LinkPagination from "../components/buttons/LinkPagination";
 import Pages from "./Pages";
-import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary";
 import SearchFailed from "../errors/SearchFailed";
 import { searchResultsVariants } from "@/motion/variants";
 import ResultsPending from "../pending/ResultsPending";
@@ -15,7 +13,7 @@ import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReduce
 export default function SearchResults() {
     const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation)
     const { search } = investigateState
-    const { articleOptions, status, pages } = search
+    const { articleOptions, status } = search
     const dispatch = useDispatch();
     const renderFallback = useMemo((): boolean => {
         const loaded = (status === 'fulfilled') || (!articleOptions);
@@ -23,11 +21,11 @@ export default function SearchResults() {
         return (loaded && empty);
     }, [status, articleOptions]);
 
-    const renderPagination = useMemo(() => {
-        const hasPages = ((Array.isArray(articleOptions)) && (Array.isArray(pages)) && (pages.length > 1));
-        const hasLoaded = status === 'fulfilled';
-        return (hasPages && hasLoaded);
-    }, [pages, status]);
+    const renderPending = useMemo(() => {
+        const isPending = (status === 'pending');
+        const empty = (!articleOptions);
+        return (empty && isPending);
+    }, [status, articleOptions]);
 
     useEffect(() => {
 
@@ -54,19 +52,13 @@ export default function SearchResults() {
             <div
                 className="h-full w-full flex flex-col gap-y-4 justify-start items-center mx-auto relative"
             >
-                <AnimatePresence>
-                    {renderPagination && <LinkPagination key={'linkPagination'} />}
-
-                </AnimatePresence>
 
                 <AnimatePresence mode="wait"
                 >
+                    {renderPending && <ResultsPending key={'loading search results'} />}
 
 
-                    {status === 'pending' && <ResultsPending key={'loading search results'} />}
-
-
-                    {status === 'fulfilled' &&
+                    {!renderPending &&
                         <Pages key={'pages'} />
                     }
 

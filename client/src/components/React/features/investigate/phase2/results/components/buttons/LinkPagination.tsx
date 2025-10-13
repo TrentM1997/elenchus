@@ -53,10 +53,9 @@ export default function LinkPagination(): React.ReactNode {
         <motion.div
             variants={variants}
             initial='closed'
-            animate='open'
+            animate={{ opacity: 1, transition: { type: 'tween', duration: 0.2 } }}
             exit='closed'
-            transition={{ type: 'tween', duration: 0.2 }}
-            className="w-auto h-full flex items-start justify-center py-2 ease-soft">
+            className="w-auto h-full flex items-start justify-center py-2">
             <div
                 className={`relatvie w-full h-fit flex justify-center md:gap-x-6 mx-auto items-center`}>
                 <div className={`${Array.isArray(pages) && (pages.length) > 1 ? 'opacity-100' : 'opacity-0'} transition-opacity duration-200 ease-in-out row flex`}>
