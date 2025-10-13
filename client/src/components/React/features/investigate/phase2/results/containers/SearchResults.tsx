@@ -50,7 +50,7 @@ export default function SearchResults() {
             className="h-full w-full min-h-screen grow pt-4 mb-44 md:mb-0"
         >
             <div
-                className="h-full w-full flex flex-col gap-y-4 justify-start items-center mx-auto relative"
+                className="h-full w-full flex flex-col justify-start items-center mx-auto relative"
             >
 
                 <AnimatePresence mode="wait"
