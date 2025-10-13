@@ -1,16 +1,16 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { ArticleType } from "@/env";
-import { fetchArticles } from "@/helpers/FetchRequests";
+import { ArticleOptionsFetch, fetchArticles } from "@/helpers/FetchRequests";
 
-export const RetrieveArticles = createAsyncThunk(
+export const RetrieveArticles = createAsyncThunk<ArticleOptionsFetch, { query: string, timeout?: number }>(
     'investigate/fetchArticles',
-    async (query: string, thunkAPI) => {
+    async ({ query, timeout }, thunkAPI) => {
 
         try {
-            const response = await fetchArticles(query)
+            const response = await fetchArticles(query, timeout, thunkAPI.signal);
 
             if (!response) {
-                throw new Error(`Unable to query endpoint for article links: ${response.statusText}`);
+                throw new Error(`Unable to query endpoint for article links`);
             }
             if (response) {
                 return response;
@@ -26,21 +26,26 @@ export const RetrieveArticles = createAsyncThunk(
     }
 );
 
+export type Status = 'idle' | 'pending' | 'fulfilled' | 'rejected';
 
-interface ArticleArrayType {
+export type Page = Array<ArticleType>;
+
+interface SearchResults {
     articleOptions: Array<ArticleType> | null,
     optionsMap: Map<string, ArticleType> | null,
-    status: string,
-    pages: any,
-    currentPage: number | null
+    status: Status,
+    pages: Array<Page> | null,
+    currentPage: number | null,
+    activeRequestId: string | null
 }
 
-const initialState: ArticleArrayType = {
+const initialState: SearchResults = {
     articleOptions: null,
     optionsMap: null,
     status: 'idle',
     pages: null,
-    currentPage: 0
+    currentPage: 0,
+    activeRequestId: null
 };
 
 
@@ -77,14 +82,22 @@ export const SearchResultsSlice = createSlice({
     extraReducers: (builder) => {
 
         builder.addCase(RetrieveArticles.pending, (state, action) => {
+            state.activeRequestId = action.meta.requestId
             state.status = 'pending';
+            state.articleOptions = null;
+            state.optionsMap = null;
+            state.currentPage = 0;
         }),
             builder.addCase(RetrieveArticles.fulfilled, (state, action) => {
+                if (state.activeRequestId !== action.meta.requestId) return;
                 state.status = 'fulfilled';
                 state.articleOptions = action.payload.data;
+                state.activeRequestId = null;
             }),
             builder.addCase(RetrieveArticles.rejected, (state, action) => {
+                if (state.activeRequestId !== action.meta.requestId) return;
                 state.status = 'rejected';
+                state.activeRequestId = null;
             })
     }
 })

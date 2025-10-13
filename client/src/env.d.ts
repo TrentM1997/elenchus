@@ -58,6 +58,7 @@ declare global {
   interface OptionsTypes {
     method: string,
     headers: HeadersInit,
+    signal?: AbortSignal
   }
 
   interface ForSummaryData {

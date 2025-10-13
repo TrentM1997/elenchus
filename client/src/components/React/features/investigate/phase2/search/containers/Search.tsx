@@ -12,6 +12,7 @@ export default function Search({ }) {
   const lastCommitedInput = useRef<string | null>(null);
   const draftRef = useRef<string | null>(null);
   const timerRef = useRef<number | null>(null);
+  const inFlightRef = useRef<{ abort: () => void } | null>(null);
 
   const recordQuery = (raw: string): boolean => {
     const q = normalize(raw);
@@ -48,11 +49,14 @@ export default function Search({ }) {
   };
 
   const send = () => {
+    inFlightRef.current?.abort();
+    inFlightRef.current = new AbortController();
     const q = draftRef.current;
     if (!q) return;
     dispatch(clearChosenArticles());
     dispatch(resetArticles());
-    dispatch(RetrieveArticles(q));
+    const thunkPromise = dispatch(RetrieveArticles({ query: q, timeout: 5000 }));
+    inFlightRef.current = thunkPromise as unknown as { abort: () => void }
     lastCommitedInput.current = q;
   };
 
@@ -77,6 +81,9 @@ export default function Search({ }) {
   useEffect(() => {
 
     return () => {
+      if (inFlightRef.current !== null) {
+        inFlightRef.current.abort();
+      }
       if (timerRef.current !== null) {
         clearTimeout(timerRef.current);
       };

@@ -2,7 +2,8 @@ import { decrementPage, incrementPageBy } from "@/ReduxToolKit/Reducers/Investig
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/ReduxToolKit/store"
 import { useEffect, useState } from "react"
-
+import { motion } from "framer-motion"
+import { variants } from "@/motion/variants"
 
 export default function LinkPagination(): React.ReactNode {
     const investigateState = useSelector((state: RootState) => state.investigation)
@@ -49,7 +50,13 @@ export default function LinkPagination(): React.ReactNode {
 
 
     return (
-        <div className="w-auto h-full flex items-start justify-center py-2">
+        <motion.div
+            variants={variants}
+            initial='closed'
+            animate='open'
+            exit='closed'
+            transition={{ type: 'tween', duration: 0.2 }}
+            className="w-auto h-full flex items-start justify-center py-2 ease-soft">
             <div
                 className={`relatvie w-full h-fit flex justify-center md:gap-x-6 mx-auto items-center`}>
                 <div className={`${Array.isArray(pages) && (pages.length) > 1 ? 'opacity-100' : 'opacity-0'} transition-opacity duration-200 ease-in-out row flex`}>
@@ -89,7 +96,7 @@ export default function LinkPagination(): React.ReactNode {
                 </div>
             </div>
 
-        </div>
+        </motion.div>
 
     )
 }

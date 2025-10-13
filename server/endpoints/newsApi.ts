@@ -11,7 +11,13 @@ const NEWSAPI_KEY = process.env.NEWS_API as string;
 const logoMapData = new Map(Object.entries(logoMap));
 
 
-export async function newsApi(req: Request, res: Response) {
+interface NewsAPI {
+    message: string,
+    data: any
+}
+
+
+export async function newsApi(req: Request, res: Response): Promise<void> {
     console.log('/newsArticles hit')
 
     try {
@@ -30,11 +36,11 @@ export async function newsApi(req: Request, res: Response) {
         const r = await fetch(url.toString(), { headers: { 'X-Api-Key': NEWSAPI_KEY } });
         if (!r.ok) {
             const text = await r.text();
-            return res.status(r.status).json({ error: text || r.statusText });
+            res.status(r.status).json({ message: text || r.statusText, data: null });
+            return;
         }
 
         const json = await r.json();
-        console.log(json)
 
         const mapped = (json.articles ?? []).map((a: any) => {
             const d = new Date(a.publishedAt);
@@ -64,13 +70,11 @@ export async function newsApi(req: Request, res: Response) {
             return (decodeItem(article));
         });
 
-        const lookup = new Map(decoded.map((item: any) => [item.url, item]));
-
-        console.log(lookup.size);
-
-        return res.json({ date: null, data: decoded, optionsLookup: lookup });
+        res.status(200).json({ message: "success", data: decoded });
+        return;
     } catch (err) {
         console.error('newsApiArticles error:', err);
-        return res.status(500).json({ error: 'Failed to fetch articles' });
-    }
+        res.status(500).json({ message: "failed", data: null });
+        return;
+    };
 };

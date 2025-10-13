@@ -80,7 +80,8 @@ export const searchResultsVariants = {
         transition: {
             duration: 0.2,
             type: 'tween',
-            delay: 0.3
+            delay: 0.3,
+            ease: [0.33, 0, 0.67, 1]
         }
     },
     closed: {
@@ -88,7 +89,8 @@ export const searchResultsVariants = {
         transition: {
             duration: 0.2,
             type: 'tween',
-            delay: 0
+            delay: 0,
+            ease: [0.33, 0, 0.67, 1]
         }
     }
 }

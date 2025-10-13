@@ -1,7 +1,6 @@
 
-export default function LinkPlaceholder() {
+export default function LinkPlaceholder(): JSX.Element | null {
 
-    console.log('rendering')
 
     return (
         <li

@@ -6,10 +6,39 @@ const options: OptionsTypes = {
         Accept: 'application/json',
         'Content-Type': 'application/json',
     },
-}
+};
 
-export async function fetchArticles(query: string): Promise<any> {
+export interface ArticleOptionsFetch {
+    message: string,
+    data: ArticleType[] | null,
+    errorType?: 'timeout' | 'abort' | 'http' | 'network';
+    status?: number;
+    errorMessage?: string;
+};
+
+export async function fetchArticles(query: string, timeout?: number, externalSignal?: AbortSignal): Promise<ArticleOptionsFetch> {
+    const controller: AbortController = new AbortController();
+    const signal: AbortSignal = controller.signal;
     const searchingFor = encodeURIComponent(query);
+    let onExternalAbort: (() => void) | undefined;
+    const options: OptionsTypes = {
+        method: 'GET',
+        signal: signal,
+        headers: {
+            Accept: 'application/json',
+        },
+    };
+
+    if (externalSignal && externalSignal.aborted) {
+        controller.abort("cancelled externally");
+    } else if (externalSignal) {
+        onExternalAbort = () => controller.abort('cancelled externally');
+        externalSignal.addEventListener('abort', onExternalAbort, { once: true });
+    };
+
+    const timer = window.setTimeout(() => {
+        controller.abort("Fetch exceeded the maximum time limit");
+    }, timeout ?? 5000);
 
     try {
         const response = await fetch(`/newsArticles?q=${searchingFor}`, options
@@ -17,15 +46,23 @@ export async function fetchArticles(query: string): Promise<any> {
         if (!response.ok) {
             throw new Error(`There was a network response issue! - ${response.status} - ${response.statusText}`)
         }
-        const jsonResponse = await response.json();
+        const jsonResponse: ArticleOptionsFetch = await response.json();
         if (jsonResponse) {
             return jsonResponse;
         }
     } catch (err) {
         if (err) {
-            console.error(err);
-            return { ok: false, data: null };
+            if (err.name === 'AbortError') {
+                console.log({ AbortError: err });
+                return { message: 'failed', data: null };
+            } else {
+                console.error(err);
+                return { message: 'failed', data: null };
+            }
         };
+    } finally {
+        if (onExternalAbort) externalSignal?.removeEventListener('abort', onExternalAbort);
+        clearTimeout(timer);
     };
 };
 
