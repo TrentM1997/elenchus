@@ -93,6 +93,18 @@ export const searchResultsVariants = {
             ease: [0.33, 0, 0.67, 1]
         }
     }
-}
+};
+
+
+export const pagesVariants = {
+    show: {
+        opacity: 1,
+        transition: { type: 'tween', duration: 0.4, ease: 'easeInOut', delay: 0.4 }
+    },
+    hide: {
+        opacity: 0,
+        transition: { type: 'tween', duration: 0.4, ease: 'easeInOut' }
+    }
+};
 
 

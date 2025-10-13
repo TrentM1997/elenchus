@@ -6,17 +6,8 @@ import { useMemo } from "react";
 import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
 import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary";
 import LinkPagination from "../components/buttons/LinkPagination";
+import { pagesVariants } from "@/motion/variants";
 
-const variants = {
-    show: {
-        opacity: 1,
-        transition: { type: 'tween', duration: 0.4, ease: 'easeInOut', delay: 0.4 }
-    },
-    hide: {
-        opacity: 0,
-        transition: { type: 'tween', duration: 0.4, ease: 'easeInOut' }
-    }
-};
 
 
 export default function Pages() {
@@ -36,7 +27,7 @@ export default function Pages() {
     return (
         <motion.div
             key='pagesOfLinks'
-            variants={variants}
+            variants={pagesVariants}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, transition: { type: 'tween', duration: 0.3, ease: [0.33, 0, 0.67, 1] } }}
             exit={{ opacity: 0, transition: { type: 'tween', duration: 0.2, ease: [0.65, 0, 0.35, 1] } }}

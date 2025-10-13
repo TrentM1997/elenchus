@@ -16,7 +16,7 @@ export default function ResultsPending(): JSX.Element | null {
             <DelayedFallback>
                 <div className="flex items-center justify-center absolute inset-0">
                     <h1 className="inline-block bg-gradient-to-r from-zinc-600 via-zinc-200 to-zinc-600 
-         bg-[length:200%_100%] bg-clip-text text-transparent animate-shimmer text-lg w-fit h-fit xl:text-2xl">
+         bg-[length:200%_100%] bg-clip-text text-transparent animate-shimmer text-lg w-fit h-fit lg:text-2xl">
                         Results pending...
                     </h1>
                 </div>
