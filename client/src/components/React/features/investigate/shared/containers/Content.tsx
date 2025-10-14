@@ -42,10 +42,11 @@ export default function Content() {
         return show;
     }, [animateSearch, showContent]);
 
+
     return (
         <motion.div
             initial={{ opacity: 1 }}
-            animate={{ opacity: showBackToSearchModal || showGetArticlesModal || showSelectTooltip ? 0.3 : 1 }}
+            animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ type: 'tween', duration: 0.2 }}
             className={`${showBackToSearchModal || showGetArticlesModal || showSelectWarning || showSelectTooltip ? 'pointer-events-none' : 'pointer-events-auto'}

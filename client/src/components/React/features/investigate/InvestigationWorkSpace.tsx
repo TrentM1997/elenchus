@@ -50,9 +50,7 @@ export default function InvestigationWorkSpace() {
             id='workspace'
             className={`w-full h-auto flex flex-col grow
             justify-start items-center transition-opacity duration-200 
-            ${showGetArticlesModal
-                    ? 'delay-0 opacity-50 pointer-events-none'
-                    : 'delay-500 opacity-100 pointer-events-auto'}
+            
             `}
         >
 
@@ -72,14 +70,12 @@ export default function InvestigationWorkSpace() {
                 </Suspense>
             }
 
-            {!showMindMap &&
-                <Suspense
-                    key={'content-container'}
-                    fallback={<DelayedFallback><ComponentLoader /></DelayedFallback>}
-                >
-                    <Content />
-                </Suspense>
-            }
+            <Suspense
+                key={'content-container'}
+                fallback={<DelayedFallback><ComponentLoader /></DelayedFallback>}
+            >
+                <Content />
+            </Suspense>
             <PanelContainer key='control-panel-container' />
 
             <AnimatePresence>

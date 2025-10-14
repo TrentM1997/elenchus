@@ -7,6 +7,7 @@ import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReduce
 import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary";
 import LinkPagination from "../components/buttons/LinkPagination";
 import { pagesVariants } from "@/motion/variants";
+import ResultsSpacer from "../components/skeletons/ResultsSpacer";
 
 
 
@@ -28,27 +29,23 @@ export default function Pages() {
         <motion.div
             key='pagesOfLinks'
             variants={pagesVariants}
-            initial={{ opacity: 0 }}
+            initial={false}
             animate={{ opacity: 1, transition: { type: 'tween', duration: 0.3, ease: [0.33, 0, 0.67, 1] } }}
             exit={{ opacity: 0, transition: { type: 'tween', duration: 0.2, ease: [0.65, 0, 0.35, 1] } }}
-            className="relative min-h-dvh inset-0 h-full flex flex-col gap-y-4 justify-center items-center grow w-full"
+            className="relative min-h-dvh inset-0 h-full flex flex-col justify-center items-center grow w-full"
         >
 
             <ErrorBoundary>
 
-                <AnimatePresence>
-                    {renderPagination && (<LinkPagination />)}
-                </AnimatePresence>
+                {renderPagination ? (<LinkPagination />) : <ResultsSpacer />}
 
                 <div className="relative min-h-full grow w-full h-full">
-                    <AnimatePresence mode="wait">
-                        {renderLinks && (pages[currentPage]) &&
-                            <Page
-                                key={`page${currentPage}`}
-                                pageContent={pages[currentPage]}
-                            />
-                        }
-                    </AnimatePresence>
+                    {renderLinks && (pages[currentPage]) &&
+                        <Page
+                            key={`page${currentPage}`}
+                            pageContent={pages[currentPage]}
+                        />
+                    }
                 </div>
             </ErrorBoundary>
 
