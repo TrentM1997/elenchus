@@ -9,12 +9,15 @@ import SearchFailed from "../errors/SearchFailed";
 import { searchResultsVariants } from "@/motion/variants";
 import ResultsPending from "../pending/ResultsPending";
 import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
+import { useMinTimeVisible } from "@/hooks/useMinTimeVisible";
+import SelectLinks from "../components/selection/SelectLinks";
 
 export default function SearchResults() {
     const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation)
     const { search } = investigateState
     const { articleOptions, status } = search
     const dispatch = useDispatch();
+    const visible = useMinTimeVisible((status === 'pending'), 150, 800);
     const renderFallback = useMemo((): boolean => {
         const loaded = (status === 'fulfilled') || (!articleOptions);
         const empty = (Array.isArray(articleOptions)) && (articleOptions.length === 0);
@@ -55,10 +58,10 @@ export default function SearchResults() {
 
                 <AnimatePresence mode="wait"
                 >
-                    {renderPending && <ResultsPending key={'loading search results'} />}
+                    {visible && <ResultsPending key={'loading search results'} />}
 
 
-                    {!renderPending &&
+                    {!renderPending && (!visible) &&
                         <Pages key={'pages'} />
                     }
 
@@ -68,6 +71,8 @@ export default function SearchResults() {
                     <SearchFailed key="no-results" />
                 }
             </div>
+
+            <SelectLinks />
         </motion.div>
 
 

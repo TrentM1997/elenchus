@@ -3,7 +3,6 @@ import { RootState } from "@/ReduxToolKit/store";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/ReduxToolKit/store";
 import InvestigationWorkSpace from "@/components/React/features/investigate/InvestigationWorkSpace";
-import SelectLinks from "@/components/React/features/investigate/phase2/results/components/selection/SelectLinks";
 import { displaySelectTooltip } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer";
 import { useBodyLock } from "@/hooks/useBodyLock";
 
@@ -47,8 +46,6 @@ export default function InvestigateContainer() {
       {/* Core workspace for search and article content */}
       <InvestigationWorkSpace />
 
-      {/* Footer bar with selected article logic */}
-      <SelectLinks />
 
     </main>
   );

@@ -4,21 +4,30 @@ import { RootState } from "@/ReduxToolKit/store";
 import { displayGetArticlesModal, displaySelectionWarning, displaySelectTooltip } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer";
 import { AppDispatch } from "@/ReduxToolKit/store";
 import SelectionRequired from "../../../notifications/SelectionRequired";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import GuideSelectingArticles from "@/components/React/features/investigate/shared/tooltips/GuideSelectingArticles";
 import { useTooltipFlags } from "@/hooks/useTooltipFlags";
+import { useMinTimeVisible } from "@/hooks/useMinTimeVisible";
+import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
 
 
 export default function SelectLinks() {
   const investigateState = useSelector((state: RootState) => state.investigation);
   const { display, search } = investigateState;
-  const { articleOptions } = search;
+  const { articleOptions, status } = search;
   const { showSelectTooltip } = display;
   const { getArticle } = investigateState;
   const { showSelectWarning, showGetArticlesModal } = investigateState.display;
   const { chosenArticles } = getArticle;
   const { getFlags, setFlag } = useTooltipFlags();
   const dispatch = useDispatch<AppDispatch>();
+  const visible = useMinTimeVisible((status === 'pending'), 150, 1000);
+
+  const showSelectBar = useMemo((): boolean => {
+    const loaded: boolean = Array.isArray(articleOptions) && (articleOptions.length > 0) && (!showGetArticlesModal)
+    const fallbackUnmounted = (visible === false);
+    return (loaded && fallbackUnmounted);
+  }, [status, articleOptions, visible, showGetArticlesModal]);
 
 
   useEffect(() => {
@@ -34,14 +43,12 @@ export default function SelectLinks() {
 
   return (
     <AnimatePresence>
-      {Array.isArray(articleOptions) &&
-        (articleOptions.length > 0) &&
-        (!showGetArticlesModal) &&
+      {showSelectBar &&
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 50 }}
-          transition={{ type: "tween", duration: 0.2, delay: 0.6 }}
+          transition={{ type: "tween", duration: 0.2, delay: 0.2, ease: [0.33, 0, 0.67, 1] }}
           className={`${showGetArticlesModal ? 'pointer-events-none' : 'pointer-events-auto'}
            bg-ebony fixed bottom-0 right-0 left-0 border-t border-border_gray
         text-white font-light tracking-tight flex 2xl:gap-x-16 py-4 gap-x-4 md:px-16 cursor-pointer
@@ -71,6 +78,8 @@ export default function SelectLinks() {
 
 
 function RetrieveChosenArticles({ chosenArticles }) {
+  const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
+  const { showGetArticlesModal } = investigateState.display;
   const dispatch = useDispatch<AppDispatch>()
 
   const handleSummaries = () => {
@@ -84,7 +93,7 @@ function RetrieveChosenArticles({ chosenArticles }) {
 
   return (
     <div >
-      <button className="group">
+      <button className={`group ${showGetArticlesModal ? 'pointer-events-none' : 'pointer-events-auto'}`}>
         <div
           onClick={handleSummaries}
           className="flex items-center justify-center bg-white

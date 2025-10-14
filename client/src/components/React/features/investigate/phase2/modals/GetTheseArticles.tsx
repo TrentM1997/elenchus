@@ -1,4 +1,4 @@
-import { motion } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import { createPortal } from "react-dom"
 import { GetArticleContent } from "@/ReduxToolKit/Reducers/Investigate/Reading"
 import { useAppdispatch } from "@/hooks/appDispatch"
@@ -51,10 +51,11 @@ export function GetTheseArticles() {
             initial="closed"
             animate="open"
             exit="closed"
-            transition={{ type: 'tween', duration: 0.25, ease: 'easeInOut' }}
-            className="fixed inset-0 flex items-center justify-center p-4"
+            transition={{ type: 'tween', duration: 0.25, ease: [0.33, 0, 0.67, 1] }}
+            className="fixed inset-0 flex items-start md:py-36 xl:py-14 justify-center p-4"
         >
-            <div className="flex flex-col items-center gap-6 rounded-3xl p-2 md:p-8 lg:p-4 w-[95dvw] sm:w-11/12 lg:w-4/5 xl:w-5/6 2xl:max-w-6xl h-auto
+            <div className="opacity-0 animate-fade-skew animation-delay-400ms transition-opacity ease-soft flex 
+            flex-col items-center gap-6 rounded-3xl p-2 md:p-8 lg:p-4 w-[95dvw] sm:w-11/12 lg:w-4/5 xl:w-5/6 2xl:max-w-6xl h-auto
      sm:gap-y-10 sm:p-10 bg-black border border-border_gray mt-2 
      shadow-material text-center">
                 <div className="mx-auto flex flex-col gap-y-2 lg:gap-y-12 w-full items-end h-full">

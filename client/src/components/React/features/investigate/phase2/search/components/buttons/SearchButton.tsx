@@ -1,10 +1,13 @@
 import { useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
 import Loader from "@/components/React/Shared/Loaders/Loader";
+import { useMinTimeVisible } from "@/hooks/useMinTimeVisible";
+import type { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
 
 export default function SearchButton() {
-    const investigateState = useSelector((state: RootState) => state.investigation);
+    const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
     const { status } = investigateState.search;
+    const spinnerVisible = useMinTimeVisible((status === 'pending'), 150, 800);
 
     return (
         <button type="submit"
@@ -13,7 +16,7 @@ export default function SearchButton() {
             }
         >
             {
-                status === 'pending' ? <Loader />
+                spinnerVisible ? <Loader />
                     : <svg
                         className="text-white h-4 w-4 relative
                        bottom-0 right-2 fill-current"

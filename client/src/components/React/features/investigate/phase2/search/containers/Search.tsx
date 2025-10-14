@@ -1,5 +1,5 @@
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/ReduxToolKit/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/ReduxToolKit/store";
 import { useEffect, useRef } from "react";
 import { RetrieveArticles, resetArticles } from "@/ReduxToolKit/Reducers/Investigate/SearchResults";
 import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary";
