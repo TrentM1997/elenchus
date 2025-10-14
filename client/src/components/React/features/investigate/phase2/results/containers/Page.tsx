@@ -11,7 +11,7 @@ function Page({ pageContent }) {
     return (
         <ol
             className="relative h-full no-scrollbar py-2
-            transform-gpu opacity-0 animate-fade-skew animation-delay-200ms transition-opacity will-change-[opacity] ease-soft
+            opacity-0 animate-fade-clip animation-delay-200ms transition-opacity ease-soft
             w-full xl:max-w-6xl 2xl:w-full mx-auto justify-items-center
             grid grid-cols-1 sm:grid-cols-3 grid-flow-row 2xl:gap-y-6 2xl:gap-x-0 gap-2">
             {(Array.isArray(pageContent)) && (pageContent.length > 0) &&
