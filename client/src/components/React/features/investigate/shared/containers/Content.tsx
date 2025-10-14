@@ -6,9 +6,10 @@ import { RootState } from "@/ReduxToolKit/store";
 import ScrolltoTop from "@/helpers/ScrollToTop";
 import ArticleContainer from "@/components/React/Shared/Articles/containers/ArticleContainer";
 import { useMemo } from "react";
+import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
 
 export default function Content() {
-    const investigateState = useSelector((state: RootState) => state.investigation);
+    const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
     const { wikiModalStages } = investigateState.wiki;
     const {
         search,
@@ -44,7 +45,7 @@ export default function Content() {
     return (
         <motion.div
             initial={{ opacity: 1 }}
-            animate={{ opacity: showBackToSearchModal || showGetArticlesModal || showSelectWarning || showSelectTooltip ? 0.3 : 1 }}
+            animate={{ opacity: showBackToSearchModal || showGetArticlesModal || showSelectTooltip ? 0.3 : 1 }}
             exit={{ opacity: 0 }}
             transition={{ type: 'tween', duration: 0.2 }}
             className={`${showBackToSearchModal || showGetArticlesModal || showSelectWarning || showSelectTooltip ? 'pointer-events-none' : 'pointer-events-auto'}

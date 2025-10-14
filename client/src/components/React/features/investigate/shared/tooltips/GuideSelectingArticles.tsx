@@ -3,20 +3,12 @@ import { motion } from "framer-motion"
 import { useDispatch, useSelector } from "react-redux"
 import { displaySelectTooltip } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer"
 import { RootState } from "@/ReduxToolKit/store"
+import { variants } from "@/motion/variants"
+import React from "react"
 
-const variants = {
-    closed: {
-        opacity: 0,
-        scale: 0,
-    },
-    open: {
-        opacity: 1,
-        scale: 1
 
-    }
-}
 
-export default function GuideSelectingArticles({ }) {
+function GuideSelectingArticles({ }) {
     const investigateState = useSelector((state: RootState) => state.investigation)
     const { showSelectTooltip } = investigateState.display
     const dispatch = useDispatch()
@@ -56,3 +48,5 @@ export default function GuideSelectingArticles({ }) {
         </motion.div>
     )
 };
+
+export default React.memo(GuideSelectingArticles);

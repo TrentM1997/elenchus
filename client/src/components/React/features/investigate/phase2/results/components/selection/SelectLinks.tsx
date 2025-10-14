@@ -1,23 +1,20 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
-import { displayGetArticlesModal, displaySelectionWarning, displaySelectTooltip } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer";
 import { AppDispatch } from "@/ReduxToolKit/store";
-import SelectionRequired from "../../../notifications/SelectionRequired";
-import { useEffect, useMemo } from "react";
-import GuideSelectingArticles from "@/components/React/features/investigate/shared/tooltips/GuideSelectingArticles";
+import { useMemo } from "react";
 import { useTooltipFlags } from "@/hooks/useTooltipFlags";
 import { useMinTimeVisible } from "@/hooks/useMinTimeVisible";
 import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
-
+import RetrieveChosenArticles from "./buttons/RetrieveChosenArticles";
+import SelectTooltipWrapper from "./tooltips/SelectTooltipWrapper";
 
 export default function SelectLinks() {
-  const investigateState = useSelector((state: RootState) => state.investigation);
-  const { display, search } = investigateState;
+  const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
+  const { search } = investigateState;
   const { articleOptions, status } = search;
-  const { showSelectTooltip } = display;
   const { getArticle } = investigateState;
-  const { showSelectWarning, showGetArticlesModal } = investigateState.display;
+  const { showGetArticlesModal } = investigateState.display;
   const { chosenArticles } = getArticle;
   const { getFlags, setFlag } = useTooltipFlags();
   const dispatch = useDispatch<AppDispatch>();
@@ -30,16 +27,6 @@ export default function SelectLinks() {
   }, [status, articleOptions, visible, showGetArticlesModal]);
 
 
-  useEffect(() => {
-    const flags = getFlags();
-
-    if (flags.selectingTooltip === false) {
-      dispatch(displaySelectTooltip(true));
-      setFlag('selectingTooltip', true);
-    };
-
-  }, [getFlags, setFlag, dispatch]);
-
 
   return (
     <AnimatePresence>
@@ -49,24 +36,18 @@ export default function SelectLinks() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 50 }}
           transition={{ type: "tween", duration: 0.2, delay: 0.2, ease: [0.33, 0, 0.67, 1] }}
-          className={`${showGetArticlesModal ? 'pointer-events-none' : 'pointer-events-auto'}
+          className={`
            bg-ebony fixed bottom-0 right-0 left-0 border-t border-border_gray
         text-white font-light tracking-tight flex 2xl:gap-x-16 py-4 gap-x-4 md:px-16 cursor-pointer
          mx-auto z-40 justify-center 2xl:justify-end content-center`
           }>
-          {showSelectWarning &&
-            <SelectionRequired />
-          }
-          {showSelectTooltip &&
-            !showSelectWarning &&
-            <GuideSelectingArticles
-            />
-          }
+
+          <SelectTooltipWrapper />
+
           <OptionsCeiling
             chosenArticles={chosenArticles}
           />
           <RetrieveChosenArticles
-            chosenArticles={chosenArticles}
           />
         </motion.div>
       }
@@ -77,41 +58,6 @@ export default function SelectLinks() {
 };
 
 
-function RetrieveChosenArticles({ chosenArticles }) {
-  const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
-  const { showGetArticlesModal } = investigateState.display;
-  const dispatch = useDispatch<AppDispatch>()
-
-  const handleSummaries = () => {
-    if (chosenArticles.length > 0) {
-      dispatch(displayGetArticlesModal(true))
-    } else {
-      dispatch(displaySelectionWarning(true))
-    }
-  };
-
-
-  return (
-    <div >
-      <button className={`group ${showGetArticlesModal ? 'pointer-events-none' : 'pointer-events-auto'}`}>
-        <div
-          onClick={handleSummaries}
-          className="flex items-center justify-center bg-white
-                  flex-nowrap rounded-3xl transition-all ease-in-out duration-200 text-black px-5 py-2 w-full h-auto
-              group-hover:bg-mirage group-hover:text-white
-              top-2.5 text-base">
-          <div className="w-full">
-            <p className="text-black text-sm font-normal sm:text-base md:text-lg group-hover:text-white 
-                    text-nowrap transition-all duration-200 ease-in-out">
-              Retrieve these articles &rarr;
-            </p>
-          </div>
-        </div>
-
-      </button>
-    </div>
-  );
-};
 
 
 
