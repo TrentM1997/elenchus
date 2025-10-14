@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion"
+import { motion } from "framer-motion"
 import { useSelector } from "react-redux"
 import Page from "./Page"
 import { RootState } from "@/ReduxToolKit/store"
@@ -8,13 +8,14 @@ import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBounda
 import LinkPagination from "../components/buttons/LinkPagination";
 import { pagesVariants } from "@/motion/variants";
 import ResultsSpacer from "../components/skeletons/ResultsSpacer";
-
+import { useTransitionedIndex } from "@/hooks/useTransitionedIndex";
 
 
 export default function Pages() {
     const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation)
     const { search } = investigateState
-    const { currentPage, pages, status, articleOptions } = search;
+    const { pages, status, articleOptions } = search;
+    const { isPending, displayed } = useTransitionedIndex({});
     const renderLinks = useMemo(() => {
         const canMap = Array.isArray(pages) && (pages.length > 0);
         return canMap
@@ -37,20 +38,18 @@ export default function Pages() {
 
             <ErrorBoundary>
 
-                {renderPagination ? (<LinkPagination />) : <ResultsSpacer />}
+                {renderPagination ? (<LinkPagination disabled={isPending} />) : <ResultsSpacer />}
 
                 <div className="relative min-h-full grow w-full h-full">
-                    {renderLinks && (pages[currentPage]) &&
+                    {renderLinks && (pages[displayed]) &&
                         <Page
-                            key={`page${currentPage}`}
-                            pageContent={pages[currentPage]}
+                            key={`page${displayed}`}
+                            pageContent={pages[displayed]}
                         />
                     }
                 </div>
             </ErrorBoundary>
 
-
-
         </motion.div>
-    )
-}
+    );
+};

@@ -6,7 +6,11 @@ import DecrementPage from "./DecrementPage"
 import IncrementPage from "./IncrementPage"
 import { useCallback } from "react"
 
-export default function LinkPagination(): React.ReactNode {
+interface LinkPaginationProps {
+    disabled: boolean | null
+};
+
+export default function LinkPagination({ disabled }: LinkPaginationProps): React.ReactNode {
     const investigateState = useSelector((state: RootState) => state.investigation)
     const { search } = investigateState
     const { currentPage, pages } = search
@@ -40,14 +44,14 @@ export default function LinkPagination(): React.ReactNode {
             <div
                 className={`relatvie w-full h-fit flex justify-center md:gap-x-6 mx-auto items-center`}>
                 <div className={`row flex`}>
-                    <DecrementPage decrement={decrement} />
+                    <DecrementPage disabled={disabled} decrement={decrement} />
 
                     {Array.isArray(pages) && (pages.length) > 0
                         && pages.map((_, index: number) => (
                             <PageButton key={`button ${index + 1}`} currentPage={currentPage} index={index} handleNumberedClick={handleNumberedClick} />
                         )
                         )}
-                    <IncrementPage increment={increment} />
+                    <IncrementPage disabled={disabled} increment={increment} />
                 </div>
             </div>
 
