@@ -5,8 +5,42 @@ import LinkPlaceholder from "../../search/components/loaders/LinkPlaceholder";
 import React from "react";
 import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback";
 import ScrolltoTop from "@/helpers/ScrollToTop";
+import type { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
+import type { RootState } from "@/ReduxToolKit/store";
+import type { AppDispatch } from "@/ReduxToolKit/store";
+import { useSelector, useDispatch } from "react-redux";
+import type { SelectedArticle } from "@/env";
+import { choose, discard } from "@/ReduxToolKit/Reducers/Investigate/ChosenArticles";
 
 function Page({ pageContent }) {
+    const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
+    const dispatch = useDispatch<AppDispatch>();
+    const { getArticle, display } = investigateState;
+    const { chosenArticles } = getArticle;
+    const { showGetArticlesModal } = display;
+
+
+    const chooseArticle = (article: ArticleType): void => {
+
+        const dataForServer: SelectedArticle = {
+            url: article.url,
+            source: article.provider,
+            date: article.article_pub_date,
+            logo: article.logo,
+            title: article.name,
+            image: article.image.img
+        };
+
+        const exists = chosenArticles.some(((chosen: SelectedArticle) => chosen.url === article.url));
+
+        if (!exists && chosenArticles.length <= 2) {
+            dispatch(choose(dataForServer));
+
+        } else if (exists) {
+            const locatedAt = chosenArticles.findIndex((chosen => chosen.url === article.url))
+            dispatch(discard(locatedAt))
+        }
+    };
 
     return (
         <ol
@@ -16,8 +50,8 @@ function Page({ pageContent }) {
             grid grid-cols-1 sm:grid-cols-3 grid-flow-row 2xl:gap-y-6 2xl:gap-x-0 gap-2">
             {(Array.isArray(pageContent)) && (pageContent.length > 0) &&
                 pageContent.map((article, index) => (
-                    <Suspense key={article.url + index.toString()} fallback={<DelayedFallback><LinkPlaceholder /></DelayedFallback>}>
-                        <ArticleLink article={article} index={index} />
+                    <Suspense key={`${index}{${article.url}}`} fallback={<DelayedFallback><LinkPlaceholder /></DelayedFallback>}>
+                        <ArticleLink inModal={false} showGetArticlesModal={showGetArticlesModal} chosenArticles={chosenArticles} mute={(chosenArticles?.length === 3)} chooseArticle={chooseArticle} isPriority={(index <= 8)} article={article} index={index} />
                     </Suspense>
                 ))
             }

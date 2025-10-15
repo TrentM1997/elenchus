@@ -277,7 +277,12 @@ declare global {
     article: ArticleType,
     index: number,
     removingModal?: boolean
-
+    isPriority?: boolean,
+    chooseArticle?: (article: ArticleType) => void,
+    showGetArticlesModal?: boolean,
+    mute?: boolean,
+    chosenArticles?: Array<SelectedArticle>,
+    inModal?: boolean
   }
 
   interface SavedResponse {

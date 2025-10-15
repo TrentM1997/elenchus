@@ -51,7 +51,7 @@ export default function DisplayThese({ fetching }) {
              w-full h-full relative overflow-y-auto no-scrollbar z-40 transition-all duration-200 ease-in-out sm:flex-row sm:flex-wrap flex flex-col items-center justify-start sm:justify-center sm:gap-x-3">
                 {selected?.length && chosenArticles?.length && boxShadow
                     ? selected.map((article, i) => (
-                        <ArticleLink key={article.url} article={article} index={i} removingModal={fetching} />
+                        <ArticleLink inModal={true} chosenArticles={chosenArticles} key={article.url} article={article} index={i} removingModal={fetching} />
                     ))
                     : null}
             </div>

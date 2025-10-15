@@ -1,11 +1,7 @@
-import { ArticleType } from "@/env"
-import { useSelector, useDispatch } from "react-redux"
-import { RootState } from "@/ReduxToolKit/store"
-import { choose, discard, } from "@/ReduxToolKit/Reducers/Investigate/ChosenArticles"
-import { memo } from "react"
 import LinkThumbnail from "./LinkThumbnail"
 import LinkTitle from "./LinkTitle"
 import LinkDescription from "./LinkDescription"
+import React from "react";
 
 type FetchPriority = 'high' | 'low' | 'auto';
 
@@ -18,39 +14,12 @@ type ImgProps = React.ImgHTMLAttributes<HTMLImageElement> & {
 };
 
 
-interface DataToSend {
-    url: string;
-    source: string;
-    date: string;
-    logo: string;
-    title: string;
-    image: Image;
-};
-
-
-export default function ArticleLink({ article, index, removingModal }: LinkProps) {
-    const investigateState = useSelector((state: RootState) => state.investigation);
-    const dispatch = useDispatch();
-    const { getArticle, display } = investigateState;
-    const { showGetArticlesModal } = display;
-    const { chosenArticles } = getArticle;
-    const isPriority: boolean = index >= 8;
-    const { name, provider, image, description, logo } = article;
-    const isHilighted = chosenArticles.some(item => item.url === article.url)
+function ArticleLink({ article, inModal, isPriority, chooseArticle, showGetArticlesModal, mute, chosenArticles }: LinkProps) {
+    const { name, provider, description, logo } = article;
+    const chosen = chosenArticles.some((item: SelectedArticle) => item.url === article.url);
     const fallbackImage = '/images/logos/fallback.jpg';
     const thumbnail = article.image.img ?? fallbackImage;
-    const mute: boolean = chosenArticles.length === 3;
-
-    const dataForServer: DataToSend = {
-        url: article.url,
-        source: article.provider,
-        date: article.article_pub_date,
-        logo: article.logo,
-        title: article.name,
-        image: image
-    };
-
-
+    const highlight = (chosen && (!inModal));
     const imgProps: ImgProps = {
         src: thumbnail,
         alt: name,
@@ -66,19 +35,6 @@ export default function ArticleLink({ article, index, removingModal }: LinkProps
     };
 
 
-    const chooseArticle = (article: ArticleType) => {
-
-        const exists = chosenArticles.some(((chosen: ArticleType) => chosen.url === article.url));
-
-        if (!exists && chosenArticles.length <= 2) {
-            dispatch(choose(dataForServer));
-
-        } else if (exists) {
-            const locatedAt = chosenArticles.findIndex((chosen => chosen.url === article.url))
-            dispatch(discard(locatedAt))
-        }
-    };
-
     return (
         <li
 
@@ -88,11 +44,11 @@ export default function ArticleLink({ article, index, removingModal }: LinkProps
             xl:min-h-72 xl:max-h-72 xl:min-w-80 xl:max-w-80
             lg:w-72 lg:h-72 md:h-60 md:w-60 sm:w-52 sm:h-52 h-72 w-76
             relative rounded-3xl sm:rounded-xl md:rounded-3xl text-white 
-            ${mute && !isHilighted && !showGetArticlesModal ? 'opacity-30 pointer-events-none' : 'pointer-events-auto opacity-80 hover:opacity-100'}
+            ${mute && !chosen && !showGetArticlesModal ? 'opacity-30 pointer-events-none' : 'pointer-events-auto opacity-80 hover:opacity-100'}
              transition-all ease-[cubic-bezier(.25,.8,.25,1)] 
             duration-300 overflow-y-hidden overflow-x-hidden
-            ${showGetArticlesModal && isHilighted ? 'opacity-75' : ''}
-            ${isHilighted && (!showGetArticlesModal) && (!removingModal) ? "shadow-blue-bottom bg-ebony" : "shadow-material bg-mirage"}`}
+            ${inModal && chosen ? 'opacity-75' : ''}
+            ${highlight ? "shadow-blue-bottom bg-ebony" : "shadow-material bg-mirage"}`}
         >
 
             <div className='relative w-full overflow-hidden
@@ -106,7 +62,7 @@ export default function ArticleLink({ article, index, removingModal }: LinkProps
             </div>
             <LinkDescription
                 isPriority={isPriority}
-                isHilighted={isHilighted}
+                chosen={chosen}
                 logo={logo}
                 provider={provider}
                 description={description}
@@ -114,3 +70,6 @@ export default function ArticleLink({ article, index, removingModal }: LinkProps
         </li>
     );
 };
+
+
+export default React.memo(ArticleLink);

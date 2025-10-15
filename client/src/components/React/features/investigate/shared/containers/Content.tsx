@@ -67,7 +67,7 @@ export default function Content() {
                             animate={{ opacity: 1, transition: { type: 'tween', duration: 0.25, delay: 0.5 } }}
                             exit={{ opacity: 0, transition: { type: 'tween', duration: 0.25, delay: 0 } }}
                             transition={{ type: 'tween', duration: 0.5 }}
-                            className="w-full min-h-screen lg:pb-96"
+                            className="w-full min-h-screen mx-auto lg:pb-96"
                         >
                             <SearchResults />
 
@@ -80,7 +80,7 @@ export default function Content() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: showReadingTooltip ? 0.5 : 1, transition: { type: 'tween', duration: 0.2, delay: 0.3 } }}
                             exit={{ opacity: 0, transition: { type: 'tween', duration: 0.2, delay: 0 } }}
-                            className="min-h-screen 2xl:max-w-5xl xl:max-w-4xl mx-auto lg:pb-96"
+                            className="min-h-screen w-full mx-auto lg:pb-96"
                         >
                             <ArticleContainer />
                             <ScrolltoTop key='scroll' />

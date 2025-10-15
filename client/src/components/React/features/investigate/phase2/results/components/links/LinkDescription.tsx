@@ -2,9 +2,17 @@ import { limitString } from "@/helpers/Presentation";
 import { slugLogo } from "@/components/React/Shared/Articles/SuccessFull/components/hero/PublishedBy";
 import { LOGOS } from "@/helpers/lookup/logos";
 import { useMemo } from "react";
+import React from "react";
 
+interface LinkDescription {
+    isPriority?: boolean,
+    chosen?: boolean,
+    provider?: string,
+    logo?: string,
+    description?: string
+};
 
-export default function LinkDescription({ isPriority, isHilighted, provider, logo, description }) {
+function LinkDescription({ isPriority, chosen, provider, logo, description }: LinkDescription) {
     const providerSlug = useMemo(() => slugLogo(provider ?? ""), [logo]);
     const logoPath = useMemo(() => {
         const altPath = LOGOS[providerSlug] ?? logo;
@@ -30,7 +38,7 @@ export default function LinkDescription({ isPriority, isHilighted, provider, log
                     {provider}
                 </div>
             </div>
-            <div className={`h-full ${isHilighted ? 'opacity-100' : ''}`}>
+            <div className={`h-full ${chosen ? 'opacity-100' : ''}`}>
                 <blockquote className='relative px-4'>
                     <p className='lg:text-sm text-base sm:text-xs text-left transition-colors duration-100 font-serif font-light'>
                         {formattedDescription}
@@ -39,4 +47,7 @@ export default function LinkDescription({ isPriority, isHilighted, provider, log
             </div>
         </div>
     )
-}
+};
+
+
+export default React.memo(LinkDescription);

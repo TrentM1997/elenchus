@@ -41,7 +41,7 @@ export async function mapTldrRequests(articles: TldrRequest[], failed: FailedAtt
             data.provider = article.source;
             data.full_text = data.article_text;
             data.title = article.title;
-            data.image_url = article.image.img
+            data.image_url = article.image
             data.logo = article.logo;
             data.source = article.source;
             data.date_published = data.article_pub_date;

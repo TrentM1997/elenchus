@@ -11,7 +11,7 @@ function Maxchosen({ }: MaxChosen): JSX.Element | null {
 
 
     const modal = (
-        <motion.div className="fixed z-50 bottom-24 xl:right-128 2xl:right-16
+        <motion.div className="fixed z-50 bottom-24 right-2 md:right-52 lg:right-60 xl:right-128 2xl:right-16
             w-72 h-32 p-3 bg-slate-200 rounded-lg flex flex-col items-center
         border border-astro_gray shadow-material"
             variants={variants}

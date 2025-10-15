@@ -1,7 +1,11 @@
+import React from "react";
 
 
+interface LinkTitle {
+    name?: string
+};
 
-export default function LinkTitle({ name }) {
+function LinkTitle({ name }: LinkTitle) {
 
     return (
         <div className='relative z-10 p-4'>
@@ -14,4 +18,7 @@ export default function LinkTitle({ name }) {
             </div>
         </div>
     )
-}
+};
+
+
+export default React.memo(LinkTitle);

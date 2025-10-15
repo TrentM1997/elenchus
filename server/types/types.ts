@@ -179,11 +179,7 @@ export interface TldrRequest {
     date: string,
     logo: string,
     title: string,
-    image: {
-        img: string,
-        height: any,
-        width: any
-    },
+    image: string
 };
 
 
