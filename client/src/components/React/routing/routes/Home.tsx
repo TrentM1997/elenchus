@@ -7,17 +7,22 @@ import SignOutModal from '../../session/forms/AuthForms/SignOutModal';
 import AnimationWrapper from '../../features/LandingPage/containers/AnimationWrapper';
 import { getStoredPosts, searchBlueSky } from '@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice';
 import { useDispatch } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useBodyLock } from '@/hooks/useBodyLock';
+import { AnimatePresence } from 'framer-motion';
+import ArticleExtractionToast from '../../Shared/modals/ArticleExtactionToast';
+import type { ExtractionToast } from '../../app/App';
 
 export default function Home({ }) {
     const signingOut = useSelector((state: RootState) => state.auth.signOut);
     const popoverPost = useSelector((state: RootState) => state.bluesky.popoverPost);
     const posts = useSelector((state: RootState) => state.bluesky.posts);
+    const [showToast, setShowToast] = useState<boolean>(false);
     const dispatch = useDispatch<AppDispatch>();
     useBodyLock();
 
     useEffect(() => {
+
         const stored = localStorage.getItem('bsPosts');
 
         if (stored && !posts) {
@@ -29,6 +34,22 @@ export default function Home({ }) {
     }, []);
 
 
+    useEffect(() => {
+        const TOASTKEY = 'extraction-toast:v1';
+        let parsed: ExtractionToast | null;
+        try {
+            const raw = window.sessionStorage.getItem(TOASTKEY);
+            if (raw) {
+                parsed = JSON.parse(raw);
+                if (parsed.shownToast === false) { setShowToast(true) };
+            }
+        } catch {
+            console.error('session storage may be corrupted');
+        }
+
+    }, [])
+
+
     return (
         <section className={`flex h-auto flex-col w-full grow transition-opacity duration-200 delay-200 ease-in-out scroll-smooth thin-gray-scrollbar
          ${signingOut || popoverPost ? 'opacity-50 pointer-events-none' : 'opacity-100 pointer-events-auto'}
@@ -36,6 +57,9 @@ export default function Home({ }) {
             {signingOut &&
                 <SignOutModal />
             }
+            <AnimatePresence>
+                {showToast && <ArticleExtractionToast setShowToast={setShowToast} />}
+            </AnimatePresence>
 
             <HeroImage />
             <Challenge />

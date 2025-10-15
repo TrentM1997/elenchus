@@ -22,8 +22,12 @@ function LinkDescription({ isPriority, chosen, provider, logo, description }: Li
     const formattedDescription = limitString(description);
 
     return (
-        <div className="relative w-full mx-auto flex flex-col gap-8 sm:gap-3 md:gap-5 lg:gap-8 h-auto box-border pt-2">
-            <div className="flex gap-4 items-center relative px-4">
+        <div className="relative w-full mx-auto p-2 flex flex-col gap-8 sm:gap-3 md:gap-5 lg:gap-2 h-auto box-border">
+            <div className="inline-flex items-center gap-1.5
+h-10 px-2 rounded-full
+bg-white/10 ring-1 ring-white/15
+backdrop-blur-sm
+text-[11px] font-medium tracking-wide text-white/90">
                 <div>
                     <img
                         className="lg:h-8 lg:w-8 xs:h-6 xs:w-6"
@@ -34,13 +38,13 @@ function LinkDescription({ isPriority, chosen, provider, logo, description }: Li
                     />
                 </div>
 
-                <div className='h-full text-lg sm:text-xs text-left lg:text-sm xl:text-base font-serif text-white'>
+                <div className='group-hover:text-blue-400 transition-colors ease-soft duration-200 h-fit text-lg sm:text-xs text-left lg:text-sm xl:text-base font-serif text-white'>
                     {provider}
                 </div>
             </div>
             <div className={`h-full ${chosen ? 'opacity-100' : ''}`}>
-                <blockquote className='relative px-4'>
-                    <p className='lg:text-sm text-base sm:text-xs text-left transition-colors duration-100 font-serif font-light'>
+                <blockquote className='relative'>
+                    <p className='lg:text-sm text-zinc-400 text-base sm:text-xs text-left transition-colors duration-100 font-serif font-light'>
                         {formattedDescription}
                     </p>
                 </blockquote>

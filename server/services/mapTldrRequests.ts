@@ -1,3 +1,9 @@
+const envUrl = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(envUrl)
+const envPath = path.resolve(__dirname, '../../.env');
+import { TLDR_KEY } from '../src/Config.js';
+import * as path from 'path'
+import { fileURLToPath } from 'url';
 import { FailedAttempt, MappedTldrRequests, ScrapedArticle, TldrRequest } from "../types/types";
 import cleanseAuthorList from '../helpers/authorCleanup.js';
 import decodeItem from '../helpers/decodeItem.js';
@@ -6,10 +12,11 @@ import { cleanURL } from '../helpers/cleanUrl.js';
 import { delay } from '../helpers/throttle.js';
 import { getPromiseValues } from '../helpers/getPromiseValues.js';
 
-export async function mapTldrRequests(articles: TldrRequest[], failed: FailedAttempt[], TLDR_KEY: string, url: string, api_host: string): Promise<MappedTldrRequests> {
+export async function mapTldrRequests(articles: TldrRequest[], failed: FailedAttempt[]): Promise<MappedTldrRequests> {
 
     const dataMap = articles.map(async (article, index): Promise<ScrapedArticle | null> => {
 
+        const url = 'https://tldrthis.p.rapidapi.com/v1/model/abstractive/summarize-url/';
         const santizedSource = article.source.trim();
         const biasRatings = await getMediaBiases(santizedSource);
         const urlClean = cleanURL(article.url);
@@ -20,13 +27,14 @@ export async function mapTldrRequests(articles: TldrRequest[], failed: FailedAtt
                 method: 'POST',
                 headers: {
                     'x-rapidapi-key': TLDR_KEY,
-                    'x-rapidapi-host': api_host,
+                    'x-rapidapi-host': 'tldrthis.p.rapidapi.com',
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     url: urlClean,
-                    num_sentences: 5,
-                    is_detailed: true,
+                    is_detailed: false,
+                    min_length: 100,
+                    max_length: 300,
                 })
             });
 

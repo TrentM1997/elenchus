@@ -21,16 +21,10 @@ export const tldrSummary = async (req: Request, res: Response): Promise<void> =>
     };
 
 
-    const url = 'https://tldrthis.p.rapidapi.com/v1/model/abstractive/summarize-url/';
-    const api_host = 'tldrthis.p.rapidapi.com';
-
     try {
         const results: MappedTldrRequests = await mapTldrRequests(
             articles,
             failed,
-            TLDR_KEY,
-            url,
-            api_host
         );
 
         res.status(200).json(results);
