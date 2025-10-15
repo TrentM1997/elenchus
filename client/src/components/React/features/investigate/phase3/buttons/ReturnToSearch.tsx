@@ -5,13 +5,16 @@ import { RootState } from "@/ReduxToolKit/store";
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import BackToSearchTooltip from "../tooltips/BackToSearchTooltip";
+import type { ExtractionToast } from "@/components/React/app/App";
 
 interface ReturnToSearchProps {
     failed: boolean
 };
 
+export type TooltipType = 'failed' | 'service-down';
+
 export default function ReturnToSearch({ failed }: ReturnToSearchProps): JSX.Element | null {
-    const [showBackTooltip, setShowBackTooltip] = useState<boolean>(false);
+    const [showBackTooltip, setShowBackTooltip] = useState<TooltipType | null>(null);
     const investigateState = useSelector((state: RootState) => state.investigation);
     const { showReadingTooltip } = investigateState.display
     const dispatch = useDispatch();
@@ -24,20 +27,29 @@ export default function ReturnToSearch({ failed }: ReturnToSearchProps): JSX.Ele
     useEffect(() => {
         if (!failed) return;
 
-        setShowBackTooltip(true);
+        const TOASTKEY = 'extraction-toast:v1';
+        try {
+            const toast = window.sessionStorage.getItem(TOASTKEY) ?? null;
+            setShowBackTooltip(toast ? 'service-down' : 'failed');
+        } catch {
+            setShowBackTooltip('failed');
+        };
 
     }, [failed]);
 
 
 
     return (
-        <button onClick={handleReturn}
+        <button
+            aria-label="Return to search"
+            title="Return to search"
+            onClick={handleReturn}
             className="my-auto mx-auto rounded-lg transition-all 
         duration-300 xs:max-w-8 xs:max-h-8 xl:max-w-7 xl:max-h-7 2xl:max-w-8 
         2xl:max-h-8 p-0.5 ease-in-out group relative"
         >
             <AnimatePresence>
-                {showBackTooltip && <BackToSearchTooltip setShowBackTooltip={setShowBackTooltip} />}
+                {showBackTooltip && <BackToSearchTooltip id={showBackTooltip} setShowBackTooltip={setShowBackTooltip} />}
             </AnimatePresence>
 
 

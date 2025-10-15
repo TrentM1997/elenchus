@@ -26,7 +26,7 @@ export default function ArticleExtractionToast({ setShowToast }): JSX.Element | 
             variants={variants}
             initial={'closed'}
             animate={{ opacity: 1, transition: { type: 'tween', duration: 0.2, delay: 0.5, ease: [0.33, 0, 0.67, 1] } }}
-            exit={{ opacity: 1, scale: 0, transition: { type: 'tween', duration: 0.2, delay: 0.15, ease: [0.33, 0, 0.67, 1] } }}
+            exit={{ opacity: 1, scale: 0, transition: { type: 'tween', duration: 0.25, ease: [0.33, 0, 0.67, 1] } }}
             className="fixed inset-0 flex items-center justify-center bg-black/60 pointer-events-auto">
             <div className="w-88 h-88 lg:h-88 lg:w-96 rounded-3xl p-6 bg-black border opacity-0 animate-fade-blur animation-delay-400ms transition-opacity ease-soft will-change-[opacity] transform-gpu border-border_gray">
                 <div className="flex flex-col items-center h-full justify-between">

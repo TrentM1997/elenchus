@@ -38,11 +38,10 @@ export default function Home({ }) {
         const TOASTKEY = 'extraction-toast:v1';
         let parsed: ExtractionToast | null;
         try {
-            const raw = window.sessionStorage.getItem(TOASTKEY);
-            if (raw) {
-                parsed = JSON.parse(raw);
-                if (parsed.shownToast === false) { setShowToast(true) };
-            }
+            const raw = window.sessionStorage.getItem(TOASTKEY) ?? null;
+            parsed = JSON.parse(raw) ?? null;
+            //parsed.shownToast initializes to false
+            setShowToast(!parsed.shownToast);
         } catch {
             console.error('session storage may be corrupted');
         }
