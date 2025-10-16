@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
 
-export default function InvestigationsFallback() {
+export default function NoSavedContentFallback(): JSX.Element | null {
+
     return (
-        <div className="flex flex-col md:w-128 mt-24 mx-auto items-center justify-center h-full p-8 bg-gradientdown rounded-3xl text-center space-y-4 animate-fade-in">
+        <div className="flex flex-col md:w-128 mt-24 mx-auto items-center justify-center w-88 h-96 p-8 bg-gradientdown rounded-3xl text-center space-y-4 animate-fade-in">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="w-12 h-12 text-zinc-500"
@@ -19,11 +20,11 @@ export default function InvestigationsFallback() {
             </svg>
 
             <h3 className="text-2xl font-semibold text-white">
-                No investigations yet
+                No saved content yet
             </h3>
 
             <p className="text-zinc-300 max-w-sm">
-                Dive into the details of an online debate or a burning question you have, and save your research to build a timeline of your research
+                Dive into the details of an online debate or a burning question you have, and save your research. Once you save some articles and investigations, here you'll see graphs to see the trends in your research over time.
             </p>
 
             <Link

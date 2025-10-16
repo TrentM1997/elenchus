@@ -17,6 +17,7 @@ import { newUser } from "@/services/supabase/SupabaseData"
 import { newAccStatus } from "@/components/React/session/notifications/AuthStatus"
 import AuthNotification from "@/components/React/session/notifications/AuthNotification";
 import { authenticate } from "@/ReduxToolKit/Reducers/Athentication/Authentication"
+import { SigninStatus } from "@/hooks/useSignIn"
 
 
 export default function Signup() {
@@ -24,7 +25,7 @@ export default function Signup() {
     const [acceptedInput, setAcceptedInput] = useState<boolean>(null)
     const [first_pw_valid, setValidFirstPassword] = useState<boolean>(null)
     const [canSubmit, setCanSubmit] = useState<boolean>(null)
-    const [creating, setCreating] = useState<boolean>(false)
+    const [status, setStatus] = useState<SigninStatus>('idle');
     const [createdUser, setCreatedUser] = useState<boolean>(null)
     const [emailValid, setEmailValid] = useState<boolean>(null)
     const [errorMessage, setErrorMessage] = useState<string>(null)
@@ -51,17 +52,19 @@ export default function Signup() {
     const checkInput = () => {
         requiredInput(newEmail, firstPassword, setValidFirstPassword)
     }
-
     const createUser = async () => {
-        setCreating(true)
         if (canSubmit) {
+            setStatus('pending');
+            console.log('triggered')
             try {
                 const data = await newUser(newEmail, firstPassword, setCreatedUser, setCanSubmit, setAcceptedInput, setErrorMessage, setValidFirstPassword);
                 if (data) {
                     dispatch(authenticate(true));
+                    setStatus('success')
                 };
             } catch (error) {
                 console.error(error);
+                setStatus('failed');
             }
         } else {
             setAcceptedInput(false)
@@ -73,7 +76,7 @@ export default function Signup() {
 
         e.preventDefault()
 
-
+        console.log(emailValid)
         if (emailValid && canSubmit) {
             createUser()
         } else {
@@ -112,8 +115,8 @@ export default function Signup() {
         if (!activeSession) return;
 
         const timer = setTimeout(() => {
-            navigate('/Profile')
-        }, 1000);
+            navigate('/dashboard')
+        }, 2500);
 
         return () => clearTimeout(timer);
     }, [activeSession]);
@@ -123,7 +126,7 @@ export default function Signup() {
         <ErrorBoundary>
             <section className="lg:p-8 min-h-dvh overflow-hidden bg-black animate-fade-in relative">
                 <AnimatePresence>
-                    {creating && <AuthNotification setterFunction={setCreating} complete={createdUser} status={newAccStatus} />}
+                    {(status !== 'idle') && <AuthNotification action="Account creation" status={status} setterFunction={setStatus} />}
                 </AnimatePresence>
                 <div className="mx-auto 2xl:max-w-7xl py-12 sm:py-24 lg:px-16 md:px-12 px-8 xl:px-36">
                     <div className="border-b pb-4 sm:pb-12">

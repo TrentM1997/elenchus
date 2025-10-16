@@ -10,14 +10,15 @@ import { useNavigate } from "react-router-dom";
 import { clearAuthSlice } from "@/ReduxToolKit/Reducers/Athentication/Authentication";
 import { confirmFirstPassword, emailValidation } from "@/helpers/validation";
 import { variants } from "@/motion/variants";
-import { deleteAccount } from "@/services/supabase/SupabaseData";
+import { deleteAccount, DeleteAccountRes } from "@/services/supabase/SupabaseData";
+import { SigninStatus } from "@/hooks/useSignIn";
 
 export default function DeleteUserAccount({ }) {
     const [password, setPassword] = useState<string>(null)
     const [email, setEmail] = useState<string>(null)
     const [deleting, setDeleting] = useState<boolean>(null)
-    const [deleteSuccessful, setDeleteSuccessful] = useState<boolean>(null)
-    const [showInput, setShowInput] = useState<boolean>(null)
+    const [deleteStatus, setDeleteStatus] = useState<SigninStatus>('idle');
+    const [showInput, setShowInput] = useState<boolean>(false)
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -33,38 +34,40 @@ export default function DeleteUserAccount({ }) {
 
 
 
-    useEffect(() => {
+    const excecuteDelete = async () => {
 
+        const valid = emailValidation(email);
+        const passes = confirmFirstPassword(password);
 
-        const handleDelete = async () => {
-            const valid = emailValidation(email);
-            const passes = confirmFirstPassword(password);
-
-            if (valid && passes) {
-                const data = await deleteAccount(email, password);
-
-                if (data) {
-                    setDeleteSuccessful(true)
+        if (valid && passes) {
+            try {
+                const data: DeleteAccountRes = await deleteAccount(email, password);
+                const res = data?.message ?? null;
+                if (res === 'User deleted successfully.') {
+                    setDeleteStatus('success');
                 } else {
-                    setDeleteSuccessful(false)
+                    setDeleteStatus('failed')
                 }
-            };
-        };
 
-        if (deleting) {
-            handleDelete();
+            } catch {
+                setDeleteStatus('failed');
+            }
+        } else {
+            alert('email and password required to delete account');
         }
+    };
 
-    }, [email, password, deleting]);
+
+
 
 
     useEffect(() => {
 
-        if (deleteSuccessful) {
+        if (deleteStatus === 'success') {
             dispatch(clearAuthSlice())
             removeModal()
         }
-    }, [deleteSuccessful])
+    }, [deleteStatus]);
 
 
 
@@ -84,23 +87,24 @@ export default function DeleteUserAccount({ }) {
                 <p className="text-white lg:text-3xl font-light tracking-tight">Delete Account</p>
                 <p className="mt-4">
                     <span className="text-2xl font-lighter text-white" />
-                    <span className="text-base font-medium text-zinc-400">{showInput ? 'Enter your password below to delete your account' : "This action cannot be undone"}</span><br></br>
+                    <span className="text-base font-medium text-zinc-400">{(deleteStatus === 'idle') ? 'Enter your password below to delete your account' : "This action cannot be undone"}</span><br></br>
                 </p>
                 <p className="mx-auto mt-6 text-sm text-white" />
-                {deleteSuccessful === false && <div className="w-full h-auto mx-auto">
+                {(deleteStatus === 'failed') && <div className="w-full h-auto mx-auto">
                     <h1 className="text-base text-red-500 my-4 font-light tracking-tight">
                         Invalid email or password
                     </h1></div>}
-                {deleting === null && !showInput && <DeleteAccountButtons setShowInput={setShowInput} />}
-                {showInput === true &&
+                {(deleteStatus === 'idle') && !showInput && <DeleteAccountButtons setShowInput={setShowInput} />}
+                {(showInput) && (deleteStatus === 'idle') &&
                     <EnterUserCredentials
+                        excecuteDelete={excecuteDelete}
+                        setDeleteStatus={setDeleteStatus}
                         setEmail={setEmail}
                         setPassword={setPassword}
-                        setDeleting={setDeleting}
                         setShowInput={setShowInput}
                     />}
-                {deleting === true && <PendingDeletion />}
-                {deleteSuccessful === true && <Deleted />}
+                {(deleteStatus === 'pending') && <PendingDeletion />}
+                {(deleteStatus === 'success') && <Deleted />}
 
 
             </div>
@@ -115,7 +119,7 @@ export default function DeleteUserAccount({ }) {
 }
 
 
-function EnterUserCredentials({ setShowInput, setDeleting, setEmail, setPassword }) {
+function EnterUserCredentials({ setShowInput, setDeleteStatus, setEmail, setPassword, excecuteDelete }) {
 
 
 
@@ -131,7 +135,8 @@ function EnterUserCredentials({ setShowInput, setDeleting, setEmail, setPassword
     }
 
     const deleteClicked = () => {
-        setDeleting(true);
+        setDeleteStatus('pending');
+        excecuteDelete();
         setShowInput(false)
     };
 

@@ -41,22 +41,13 @@ export const requiredInput = (emailString: string, passwordString: string, sette
 }
 
 
-export const emailValidation = (emailEvaluated: string, setter?: Function): boolean => {
+export const emailValidation = (emailEvaluated: string): boolean => {
 
     const validateEmail = /[A-Za-z0-9\._%+\-]+@[A-Za-z0-9\.\-]+\.[A-Za-z]{2,}/gm
 
     const isValidEmail = validateEmail.test(emailEvaluated)
 
-    if (isValidEmail) {
-        setter(true)
-        return true
-    } else if (isValidEmail === false && emailEvaluated !== '') {
-        setter(false)
-        return false
-    } else if (emailEvaluated === '' || emailEvaluated === null) {
-        setter(null)
-        return false
-    }
+    return isValidEmail;
 
 }
 
@@ -91,10 +82,10 @@ export const confirmFirstPassword = (firstEntry: string, setter?: Function): boo
     const noSpecialChars = checkSpecialChars(splitPW);
 
     if (!noSpecialChars && longEnough) {
-        setter(true)
+        setter ? setter(true) : null;
         return true
     } else {
-        setter(false)
+        setter ? setter(false) : null;
         return false
     };
 };

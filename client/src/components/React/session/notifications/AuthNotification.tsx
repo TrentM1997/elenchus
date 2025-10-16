@@ -13,11 +13,7 @@ export default function AuthNotification({ status, setStatus, action }: AuthNoti
     useEffect(() => {
 
         const timer = window.setTimeout(() => {
-            if (status !== null) {
-                setStatus(null);
-
-            }
-
+            setStatus('idle');
         }, 2000);
 
         return () => clearTimeout(timer);

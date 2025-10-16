@@ -254,8 +254,10 @@ declare global {
   }
 
   interface AuthNotificationProps {
+    id?: 'login' | 'signout',
     complete?: boolean | null,
     setterFunction?: any,
+    authStatus?: AuthStatus,
     status?: SigninStatus,
     redirect?: Function,
     loginStatus?: SigninStatus,

@@ -31,11 +31,10 @@ export default function SavedArticles({ }) {
             <div
                 className="w-full md:px-0 2xl:px-2 gap-3 h-full md:mt-12 xl:mt-4 flex justify-center md:justify-end">
 
-                <ArticlesScroller
+                {hasArticles ? <ArticlesScroller
                     handleArticleSelection={handleArticleSelection}
-                />
+                /> : <NoSavedArticles key={'noSavedArticles'} />}
             </div>
-            {!hasArticles && <NoSavedArticles key='noSavedArticles' />}
 
         </motion.section>
     );

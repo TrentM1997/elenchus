@@ -295,13 +295,20 @@ export const pwReset = async (email: string, newPassword: string): Promise<Supab
 };
 
 
-export const deleteAccount = async (email: string, password: string): Promise<boolean> => {
+export interface DeleteAccountRes {
+    message: 'User deleted successfully.' | 'Invalid Credentials' | 'Email and password are required.' | 'Failed to connect to the database';
+}
+
+export const deleteAccount = async (email: string, password: string): Promise<DeleteAccountRes | null> => {
+    if (!email || !password) return null;
+
     try {
-        const deletion = await fetch(`/deleteUser`, {
+        const deletion = await fetch('/deleteUser', {
             method: 'POST',
             credentials: 'include',
             headers: {
-                Accept: 'application/json'
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
             },
             body: JSON.stringify({
                 email: email,
@@ -310,19 +317,15 @@ export const deleteAccount = async (email: string, password: string): Promise<bo
         });
 
         if (!deletion.ok) {
-            throw new Error('Failed to connect to the database')
+            throw new Error(`Error fetching endpoint: ${deletion.statusText}`);
         }
 
         const response = await deletion.json()
-        if (response.message === 'User deleted successfully.') {
-            return true;
-        } else {
-            return false;
-        }
+        return { message: response.message }
 
     } catch (error) {
         console.error(error);
-        return false;
+        return { message: 'Failed to connect to the database' };
     };
 }
 

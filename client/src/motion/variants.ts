@@ -10,6 +10,7 @@ export const headerTransitions = {
     closed: { opacity: 0, transition: { duration: 0.2, delay: 0, type: 'tween' } }
 };
 
+export const softEase: Array<number> = [0.33, 0, 0.67, 1];
 
 export const hideTop = {
     show: {

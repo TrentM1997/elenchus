@@ -22,11 +22,12 @@ export const ChartSlice = createSlice({
         },
         getBiasSnapshot: (state: Chart, action: PayloadAction<number[]>) => {
             state.biasRatings = action.payload;
-        }
+        },
+        clearCharts: (state: Chart) => state = initialState
     }
 });
 
 
-export const { getReportingRatings, getBiasSnapshot } = ChartSlice.actions;
+export const { getReportingRatings, getBiasSnapshot, clearCharts } = ChartSlice.actions;
 
 export default ChartSlice.reducer;

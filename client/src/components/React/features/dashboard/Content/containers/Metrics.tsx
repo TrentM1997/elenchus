@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { lazy, Suspense, useRef } from "react";
+import { lazy, Suspense, useMemo, useRef } from "react";
 import ScrolltoTop from "@/helpers/ScrollToTop";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { RootState, AppDispatch } from "@/ReduxToolKit/store";
@@ -9,7 +9,7 @@ import { getStatsBreakdown } from "@/ReduxToolKit/Reducers/UserContent/UserInves
 import type { StatBreakdownTypes } from "@/env";
 import ChartJsWrapper from "../UserCharts/ChartJsWrapper";
 import StatsSkeleton from "@/components/React/features/charts/skeletons/StatsSkeleton";
-import MetricsFallback from "../wrappers/MetricsFallback";
+import NoSavedContentFallback from "../../fallbacks/NoSavedContentFallback";
 import StatsWorker from '@/services/workers/statsWorker.js?worker';
 import StatsFallback from "../../../charts/ChartFallbacks/StatsFallback";
 import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";
@@ -18,8 +18,13 @@ const StatsSection = lazy(() => import('../../../charts/ResearchStats/StatsSecti
 
 
 export default function Metrics() {
+    const userArticles = useSelector((state: RootState) => { state.userdata.userArticles });
     const { userResearch, stats } = useSelector((state: RootState) => state.userWork, shallowEqual);
     const hasInvestigations: boolean = Array.isArray(userResearch) && (userResearch.length > 0);
+    const hasArticles: boolean = Array.isArray(userArticles) && (userArticles.length > 0);
+    const displayFallback = useMemo(() => {
+        return (!hasArticles && !hasInvestigations);
+    }, [userArticles, userResearch]);
     const statsPopulated: boolean = Object.values(stats).some((el: number) => el !== null);
     const { boxShadow, onScrollHandler } = useScrollWithShadow();
     const calcRef = useRef<boolean | null>(null);
@@ -58,6 +63,8 @@ export default function Metrics() {
 
     }, [userResearch]);
 
+    console.log(displayFallback)
+
     return (
         <motion.section
             key={"dashboard"}
@@ -77,8 +84,9 @@ export default function Metrics() {
             
             overflow-y-auto no-scrollbar scrollbar-gutter-stable-both scroll-smooth overscroll-contain">
 
-                <ChartJsWrapper />
+                {displayFallback && <NoSavedContentFallback />}
 
+                <ChartJsWrapper />
                 <Suspense fallback={<DelayedFallback><StatsSkeleton /></DelayedFallback>}>
                     {statsPopulated && <StatsSection />}
                 </Suspense>

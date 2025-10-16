@@ -1,7 +1,6 @@
 import { RootState } from "@/ReduxToolKit/store"
 import { useSelector } from "react-redux"
 import { motion, AnimatePresence } from "framer-motion"
-import ScrolltoTop from "@/helpers/ScrollToTop"
 import InvestigationsFallback from "../fallbacks/InvestigationsFallback"
 import { investigationsVariants } from "@/motion/variants"
 import ResearchScroller from "./ResearchScroller"
