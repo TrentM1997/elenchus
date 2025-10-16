@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { SigninStatus } from "@/hooks/useSignIn";
 import { clearCharts } from "@/ReduxToolKit/Reducers/UserContent/ChartSlice";
 import { clearUser } from "@/ReduxToolKit/Reducers/UserContent/UserContentReducer";
+import { useClearUser } from "@/hooks/useClearUser";
 
 const variants = {
     closed: { opacity: 0 },
@@ -17,22 +18,21 @@ const variants = {
 
 export default function SignOutModal(): JSX.Element {
     const [status, setStatus] = useState<SigninStatus>('idle');
+    const [executeClearUser, setExcecuteClearUser] = useState<boolean>(false);
+    useClearUser(executeClearUser);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const timerRef = useRef(null);
 
     const goHome = () => {
         timerRef.current = window.setTimeout(() => {
-            dispatch(showSignOut());
             dispatch(clearAuthSlice());
-            dispatch(clearCharts());
-            dispatch(clearUser());
             navigate('/');
             timerRef.current = null;
         }, 2500);
     };
 
-
+    useEffect(() => { }, [status]);
 
     useEffect(() => {
 
@@ -42,6 +42,7 @@ export default function SignOutModal(): JSX.Element {
                 const data: SignOutResponse = await fetchSignOut();
                 if (data.loggedOut === true) {
                     setStatus("success");
+                    setExcecuteClearUser(true);
                     goHome();
                 } else {
                     setStatus('failed');

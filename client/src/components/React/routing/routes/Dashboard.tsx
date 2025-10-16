@@ -1,6 +1,6 @@
 import { useSelector, shallowEqual } from "react-redux";
 import { useIsMobile } from "@/hooks/useIsMobile";
-import { lazy, Suspense, useMemo } from "react";
+import { lazy, Suspense, useMemo, useState } from "react";
 import { RootState } from "@/ReduxToolKit/store";
 import Display from "../../features/dashboard/Content/containers/Display";
 import FooterBarLoader from "../../features/dashboard/ProfileNavigation/skeletons/FooterBarSkeleton";
@@ -10,22 +10,14 @@ import SignOutModal from "../../session/forms/AuthForms/SignOutModal";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import ViewSavedContent from "../../features/dashboard/Content/containers/ViewSavedContent";
 import DelayedFallback from "../../Shared/fallbacks/DelayedFallback";
+import { SigninStatus } from "@/hooks/useSignIn";
 const MobileProfileNav = lazy(() => import('../../features/dashboard/ProfileNavigation/mobile/ProfileMenu'));
 const SideBar = lazy(() => import('../../features/dashboard/ProfileNavigation/SideBar/Sidebar'));
 
 
 export default function Dashboard(): JSX.Element {
     const isMobile = useIsMobile();
-    const { signingOut, activeSession } = useSelector((state: RootState) => state.auth, shallowEqual);
-    const navigate: NavigateFunction = useNavigate();
-    const { displayThisArticle, displayThisInvestigation } = useSelector(
-        (s: RootState) => ({
-            displayThisArticle: s.profileNav.displayThisArticle,
-            displayThisInvestigation: s.profileNav.displayThisInvestigation,
-        }),
-        shallowEqual
-    );
-
+    const { signingOut } = useSelector((state: RootState) => state.auth, shallowEqual);
 
 
     return (
