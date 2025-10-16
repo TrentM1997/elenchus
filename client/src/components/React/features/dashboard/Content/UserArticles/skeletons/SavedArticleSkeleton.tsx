@@ -12,7 +12,8 @@ export default function SavedArticleSkeleton(): JSX.Element {
       2xl:w-full mx-auto group opacity-90"
         >
             <div
-                className="bg-white/5
+                className="bg-[length:200%_100%] 
+         bg-[linear-gradient(110deg,#1a1c23_8%,#2b2f3a_18%,#1a1c23_33%)] animate-shimmer
         flex flex-col-reverse justify-center
             sm:flex-row max-h-full rounded-3xl
             overflow-hidden

@@ -12,33 +12,26 @@ interface SkeletonMap {
 function SkeletonMap({ context }: SkeletonMap): JSX.Element | null {
 
     const { fullyLoaded, numSkeletons } = context;
-    const footer_height: string | null = useMemo((): string | null => {
-        let h: string | null = null;
-        if (fullyLoaded) {
-            h = '0'
-        } else if (numSkeletons < 4) {
-            h = 'auto'
-        } else {
-            h = 'dvh';
-        };
-        return h;
-    }, [numSkeletons, fullyLoaded]);
+    const SKELETON_HEIGHT: number = 240;
+    const MAP_HEIGHT: number = (numSkeletons * SKELETON_HEIGHT);
+    const reservedSpace: number = fullyLoaded ? 0 : MAP_HEIGHT;
 
     return (
         <div
             id='skeleton-loaders'
+            style={{ height: reservedSpace }}
             className={`relative w-auto flex
-             mx-auto flex-col items-center justify-start transition-opacity duration-200 ease-inf
-             h-${footer_height}
+             mx-auto flex-col items-center justify-start transition-opacity duration-200 ease-soft
+             transform-gpu will-change-[opacity]
              ${fullyLoaded ? 'opacity-0' : 'opacity-100'}
              `}
         >
             {!fullyLoaded &&
-                Array.from({ length: numSkeletons }, (_, i) => (<SavedArticleSkeleton key={i} />))
+                Array.from({ length: numSkeletons ?? 0 }, (_, i) => (<SavedArticleSkeleton key={i} />))
             }
         </div>
     );
 };
 
 
-export default React.memo(SkeletonMap)
+export default React.memo(SkeletonMap);

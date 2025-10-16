@@ -108,6 +108,7 @@ export default function ArticlesScroller({ handleArticleSelection }): JSX.Elemen
             <ErrorBoundary>
                 <Virtuoso
                     onScroll={onScrollHandler}
+                    defaultItemHeight={240}
                     components={{ Footer: SkeletonMap }}
                     computeItemKey={(_, article) => article.id}
                     itemContent={(_, article) => {

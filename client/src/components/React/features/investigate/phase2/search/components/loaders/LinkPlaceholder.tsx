@@ -7,8 +7,8 @@ export default function LinkPlaceholder(): JSX.Element | null {
         <li
             className={`group cursor-pointer box-border list-none xl:min-h-72 xl:max-h-72 xl:min-w-80 xl:max-w-80
         lg:w-72 lg:h-72 md:h-60 md:w-60 sm:w-52 sm:h-52 h-80 w-80
-        relative rounded-xl md:rounded-3xl text-white
-        md:opacity-85 transition-all ease-in-out duration-200 overflow-y-hidden overflow-x-hidden
+        relative rounded-xl md:rounded-3xl text-white opacity-0 animate-fade-in transform-opacity ease-soft 
+        md:opacity-85 duration-200 overflow-y-hidden overflow-x-hidden
         shadow-material bg-white/15
       `}
         >
