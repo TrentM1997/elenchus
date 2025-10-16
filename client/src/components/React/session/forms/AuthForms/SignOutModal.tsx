@@ -7,6 +7,8 @@ import { fetchSignOut } from "@/services/supabase/SupabaseData";
 import AuthNotification from "@/components/React/session/notifications/AuthNotification";
 import { useNavigate } from "react-router-dom";
 import { SigninStatus } from "@/hooks/useSignIn";
+import { clearCharts } from "@/ReduxToolKit/Reducers/UserContent/ChartSlice";
+import { clearUser } from "@/ReduxToolKit/Reducers/UserContent/UserContentReducer";
 
 const variants = {
     closed: { opacity: 0 },
@@ -14,7 +16,7 @@ const variants = {
 }
 
 export default function SignOutModal(): JSX.Element {
-    const [status, setStatus] = useState<SigninStatus>(null);
+    const [status, setStatus] = useState<SigninStatus>('idle');
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const timerRef = useRef(null);
@@ -23,9 +25,11 @@ export default function SignOutModal(): JSX.Element {
         timerRef.current = window.setTimeout(() => {
             dispatch(showSignOut());
             dispatch(clearAuthSlice());
+            dispatch(clearCharts());
+            dispatch(clearUser());
             navigate('/');
             timerRef.current = null;
-        }, 1500);
+        }, 2500);
     };
 
 
@@ -66,7 +70,7 @@ export default function SignOutModal(): JSX.Element {
         sm:gap-y-10 sm:p-10 lg:col-span-2 lg:flex-row lg:items-center bg-ebony mt-2 
         shadow-inset text-center">
             <AnimatePresence>
-                {status && <AuthNotification status={status} setStatus={setStatus} action="Sign out" />}
+                {(status !== 'idle') && <AuthNotification id="signout" status={status} setStatus={setStatus} action="Sign out" />}
             </AnimatePresence>
             <div className="lg:min-w-0 lg:flex-1 max-w-sm mx-auto">
                 <p className="text-white xl:text-4xl">Sign out</p>

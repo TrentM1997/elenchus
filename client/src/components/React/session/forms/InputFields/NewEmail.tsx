@@ -10,7 +10,8 @@ export default function NewEmail({ emailValid, enterValidEmail, setEmailValid })
 
     const checkEmail = () => {
 
-        emailValidation(newEmail, setEmailValid)
+        const valid = emailValidation(newEmail);
+        setEmailValid(valid);
     }
 
 

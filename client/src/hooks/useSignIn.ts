@@ -6,19 +6,20 @@ import { populateArticles } from "@/ReduxToolKit/Reducers/UserContent/UserConten
 import { populateResearch } from "@/ReduxToolKit/Reducers/UserContent/UserInvestigations"
 import { authenticate } from "@/ReduxToolKit/Reducers/Athentication/Authentication";
 
-export type SigninStatus = "pending" | "success" | "failed" | null;
+export type SigninStatus = "pending" | "success" | "failed" | "idle";
+export type SigninError = 'Invalid email or password' | null;
 
 interface useSignin {
     status: SigninStatus,
-    setStatus: React.Dispatch<SetStateAction<SigninStatus>>
+    setStatus: React.Dispatch<SetStateAction<SigninStatus>>,
+    loginErr?: SigninError
 };
 
 export const useSignIn = (
     userEmail: string | null,
     userPassword: string | null): useSignin => {
-    const [status, setStatus] = useState<SigninStatus>(null);
-    const [loggingIn, setLoggingIn] = useState<boolean>(false);
-    const [successful, setSuccessful] = useState<boolean>(null);
+    const [status, setStatus] = useState<SigninStatus>("idle");
+    const [loginErr, setLoginErr] = useState<SigninError>(null);
     const dispatch = useDispatch<AppDispatch>();
 
 
@@ -33,8 +34,10 @@ export const useSignIn = (
                 dispatch(populateArticles(userContent.userArticles));
                 dispatch(populateResearch(userContent.userResearch));
                 setStatus("success");
+                setLoginErr(null);
             } else {
                 setStatus("failed");
+                setLoginErr('Invalid email or password');
             }
         };
 
@@ -45,6 +48,6 @@ export const useSignIn = (
     }, [status]);
 
 
-    return { status, setStatus };
+    return { status, setStatus, loginErr };
 
 };

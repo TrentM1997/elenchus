@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import AuthNotification from "@/components/React/session/notifications/AuthNotification";
@@ -8,12 +8,14 @@ import { useCheckCredentials } from "@/hooks/useCheckCredentials";
 import { useSignIn } from "@/hooks/useSignIn";
 import { useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
+import { error } from "astro/dist/core/logger/core";
+import InvalidCredentials from "../fallbacks/InvalidCredentials";
 
 export default function Login(): JSX.Element {
     const activeSession = useSelector((state: RootState) => state.auth.activeSession);
     const [userEmail, setUserEmail] = useState<string | null>(null);
     const [userPassword, setUserPassword] = useState<string | null>(null);
-    const { status, setStatus } = useSignIn(userEmail, userPassword);
+    const { status, setStatus, loginErr } = useSignIn(userEmail, userPassword);
     const { acceptedInput, validEmail } = useCheckCredentials(userEmail, userPassword);
     const navigate = useNavigate();
 
@@ -29,16 +31,14 @@ export default function Login(): JSX.Element {
         if (!activeSession) return;
 
         const timer = window.setTimeout(() => {
-            if (activeSession) {
-                navigate('/');
-            };
-        }, 1000);
+            navigate('/');
+        }, 2500);
 
         return () => {
             clearTimeout(timer);
         };
 
-    }, [status]);
+    }, [activeSession]);
 
 
     return (
@@ -47,8 +47,9 @@ export default function Login(): JSX.Element {
         >
             <ScrolltoTop />
             <AnimatePresence>
-                {status &&
+                {(status !== 'idle') &&
                     <AuthNotification
+                        id="login"
                         status={status}
                         setStatus={setStatus}
                         action="Login"
@@ -56,11 +57,14 @@ export default function Login(): JSX.Element {
                 }
             </AnimatePresence>
             <div className="mx-auto 2xl:max-w-7xl py-24 lg:px-16 md:px-12 px-8 xl:px-36">
-                <div className="border-b pb-12">
+                <div className="border-b">
                     <p className="text-3xl tracking-tight font-light lg:text-4xl text-white">
                         Log in.
                     </p>
                     <p className="mt-2 text-sm text-zinc-400">log in to manage your saved content.</p>
+                    <AnimatePresence>
+                        {loginErr ? <InvalidCredentials error={loginErr} /> : <div className="h-16 w-full" />}
+                    </AnimatePresence>
                 </div>
                 <LoginOperations
                     submitAuth={submitAuth}

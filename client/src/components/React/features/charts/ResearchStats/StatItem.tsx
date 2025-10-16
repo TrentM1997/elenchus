@@ -9,7 +9,6 @@ export default function StatItem({ label, target }) {
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting && !hasStarted.current) {
-        console.log(hasStarted.current);
         hasStarted.current = true;
         let current = 0;
         const interval = setInterval(() => {
