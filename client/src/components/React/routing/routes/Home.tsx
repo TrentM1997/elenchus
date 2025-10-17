@@ -40,13 +40,20 @@ export default function Home({ }) {
         try {
             const raw: string | null = window.sessionStorage.getItem(TOASTKEY) as string ?? null;
             const parsed: ExtractionToast | null = raw ? JSON.parse(raw) as ExtractionToast : null;
-            //parsed.shownToast initializes to false -> show toast on first visit
-            setShowToast(!parsed.shownToast);
+
+            const toastTimer = window.setTimeout(() => {
+                //parsed.shownToast initializes to false -> show toast on first visit
+                setShowToast(!parsed.shownToast);
+            }, 500);
+
+            return () => {
+                clearTimeout(toastTimer);
+            }
         } catch {
             console.error('session storage may be corrupted');
         }
 
-    }, [])
+    }, []);
 
 
     return (
