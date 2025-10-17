@@ -10,7 +10,7 @@ type ImgProps = React.ImgHTMLAttributes<HTMLImageElement> & {
 	fetchpriority?: FetchPriority;
 };
 
-export default function HeroImage() {
+function HeroImage() {
 	const activeSession = useSelector((state: RootState) => state.auth.activeSession);
 
 
@@ -67,6 +67,9 @@ export default function HeroImage() {
 			</div>
 		</section>
 	);
-}
+};
+
+
+export default React.memo(HeroImage);
 
 

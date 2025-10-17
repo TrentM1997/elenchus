@@ -17,7 +17,7 @@ const SideBar = lazy(() => import('../../features/dashboard/ProfileNavigation/Si
 
 export default function Dashboard(): JSX.Element {
     const isMobile = useIsMobile();
-    const { signingOut } = useSelector((state: RootState) => state.auth, shallowEqual);
+    const signingOut = useSelector((state: RootState) => state.auth.signOut);
 
 
     return (

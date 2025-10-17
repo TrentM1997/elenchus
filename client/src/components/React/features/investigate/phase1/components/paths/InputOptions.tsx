@@ -1,25 +1,28 @@
 import { useDispatch } from "react-redux";
 import { displayBlueSkySearch } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer";
 import { preselected } from "@/ReduxToolKit/Reducers/Investigate/UserPOV";
+import React from "react";
 
 
-export default function InputOptions() {
+const actions = [
+  {
+    title: "Look into public discourse",
+    description: "browse BlueSky for ideas to challenge",
+
+    isPermanent: true,
+  },
+  {
+    title: "Got an idea in mind?",
+    description: "break down an idea you heard or thought",
+
+    isPermanent: false,
+  },
+];
+
+function InputOptions() {
   const dispatch = useDispatch();
 
-  const actions = [
-    {
-      title: "Look into public discourse",
-      description: "browse BlueSky for ideas to challenge",
 
-      isPermanent: true,
-    },
-    {
-      title: "Got an idea in mind?",
-      description: "break down an idea you heard or thought",
-
-      isPermanent: false,
-    },
-  ];
 
   const searchBS = () => {
     dispatch(displayBlueSkySearch(true));
@@ -31,7 +34,6 @@ export default function InputOptions() {
     dispatch(displayBlueSkySearch(false));
     dispatch(preselected());
   }
-
 
   const importFromBlueSky = actions[0];
   const writeOwnInput = actions[1];
@@ -127,4 +129,7 @@ export default function InputOptions() {
       </div>
     </section>
   )
-}
+};
+
+
+export default React.memo(InputOptions);

@@ -1,8 +1,11 @@
+import React from "react";
+import KeyboardScroller from "./KeyboardScroller";
+
 interface AnimateTools {
     playAnimation: boolean
 }
 
-export default function ToolsForResearch({ playAnimation }: AnimateTools) {
+function ToolsForResearch({ playAnimation }: AnimateTools) {
     return (
         <section className="lg:p-8 w-full opacity-0 animate-fade-in animation-delay-200ms transition-opacity ease-in">
             <div className="mx-auto 2xl:max-w-7xl py-24 lg:px-16 md:px-12 px-8 xl:px-36 items-center lg:py-24 relative w-full">
@@ -30,32 +33,4 @@ export default function ToolsForResearch({ playAnimation }: AnimateTools) {
     );
 };
 
-
-function KeyboardScroller({ playAnimation }) {
-
-    return (
-        <div className={`
-        ${playAnimation
-            && 'animate-marquee [will-change:transform] [contain-intrinsic-size:180rem_12rem]'} 
-        opacity-50 whitespace-nowrap gap-4 flex
-        `}
-        >
-            {[
-                "/images/assets/lightKeyboard.svg",
-                "/images/assets/darkKeyboard.svg",
-                "/images/assets/lightKeyboard.svg",
-                "/images/assets/darkKeyboard.svg",
-                "/images/assets/lightKeyboard.svg",
-                "/images/assets/darkKeyboard.svg",
-            ].map((src, index) => (
-                <img
-                    key={index}
-                    src={src}
-                    alt="Keyboard thumbnail"
-                    className="lg:w-[30rem] lg:flex-none"
-                />
-            ))}
-        </div>
-    )
-}
-
+export default React.memo(ToolsForResearch);

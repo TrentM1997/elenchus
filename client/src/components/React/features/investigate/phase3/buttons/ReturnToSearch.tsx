@@ -53,7 +53,7 @@ export default function ReturnToSearch({ failed }: ReturnToSearchProps): JSX.Ele
             </AnimatePresence>
 
 
-            {!showReadingTooltip && <div className="absolute p-1 bg-white z-50 opacity-0 transition-all duration-200 ease-in-out 
+            {!showReadingTooltip && <div className="absolute p-1 bg-white z-50 opacity-0 transition-all duration-200 ease-soft delay-500 
             md:group-hover:opacity-100 bottom-12 -right-5
             rounded-md items-center border border-astro_gray shadow-thick after:content-[''] after:absolute after:bottom-[-10px] after:left-1/2 
             after:transform after:-translate-x-1/2 after:border-t-[10px] after:border-l-[10px] after:border-r-[10px] after:border-b-0 

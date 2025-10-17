@@ -25,7 +25,7 @@ const gridItems: GridItem[] = [
 ];
 
 
-const WikiAndNotes: React.FC = () => {
+const WikiAndNotes: React.FC = (): JSX.Element | null => {
     return (
         <section className="lg:p-8">
             <div className="mx-auto 2xl:max-w-7xl py-12 lg:px-16 md:px-12 px-8 xl:px-36 items-center relative w-full">
@@ -56,7 +56,7 @@ const WikiAndNotes: React.FC = () => {
     );
 };
 
-export default WikiAndNotes;
+export default React.memo(WikiAndNotes);
 
 
 

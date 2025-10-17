@@ -1,3 +1,4 @@
+import React from "react";
 
 interface Section {
     title: string;
@@ -27,7 +28,7 @@ const sections: Section[] = [
 
 
 
-export default function BiasFeature() {
+function BiasFeature(): JSX.Element | null {
     return (
         <section className="lg:p-8 w-full opacity-0 animate-fade-in animation-delay-200ms transition-opacity ease-in">
             <div className="px-8 py-12 mx-auto md:px-12 lg:px-16 xl:px-36 2xl:max-w-7xl border">
@@ -95,4 +96,7 @@ export default function BiasFeature() {
             </div>
         </section>
     );
-}
+};
+
+
+export default React.memo(BiasFeature);

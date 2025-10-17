@@ -6,8 +6,9 @@ import WikiAndNotes from '../components/WikiAndNotes';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/ReduxToolKit/store';
 const BlueSkyPosts = lazy(() => import('@/components/React/features/blueSky/Containers/BlueSky'));
+import React from 'react';
 
-export default function AnimationWrapper() {
+function LazyHydrationSection() {
     const [showBlueSky, setShowBlueSky] = useState<boolean>(false);
     const [playAnimation, setPlayAnimation] = useState<boolean>(false);
     const popoverPost = useSelector((state: RootState) => state.bluesky.popoverPost);
@@ -79,4 +80,7 @@ export default function AnimationWrapper() {
 
         </section>
     )
-}
+};
+
+
+export default React.memo(LazyHydrationSection);

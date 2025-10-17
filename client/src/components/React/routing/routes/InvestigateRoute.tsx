@@ -5,8 +5,9 @@ import { AppDispatch } from "@/ReduxToolKit/store";
 import InvestigationWorkSpace from "@/components/React/features/investigate/InvestigationWorkSpace";
 import { displaySelectTooltip } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer";
 import { useBodyLock } from "@/hooks/useBodyLock";
+import React from "react";
 
-export default function InvestigateContainer() {
+function InvestigateContainer() {
   const dispatch = useDispatch<AppDispatch>()
   const investigateState = useSelector((state: RootState) => state.investigation)
   const signingOut = useSelector((state: RootState) => state.auth.signOut)
@@ -50,3 +51,6 @@ export default function InvestigateContainer() {
     </main>
   );
 };
+
+
+export default React.memo(InvestigateContainer);

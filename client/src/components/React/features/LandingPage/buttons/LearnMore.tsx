@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
+import React from "react";
 
-export default function LearnMore(): JSX.Element {
+function LearnMore(): JSX.Element {
 
     return (
         <Link to='/about'>
@@ -14,3 +15,6 @@ export default function LearnMore(): JSX.Element {
         </Link>
     );
 };
+
+
+export default React.memo(LearnMore);

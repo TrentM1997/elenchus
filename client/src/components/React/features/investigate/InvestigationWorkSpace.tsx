@@ -11,12 +11,14 @@ import Notes from '@/components/React/features/investigate/notes/Notes';
 import BlueSkySkeleton from '@/components/React/features/blueSky/skeletons/BlueSkySkeleton';
 import PanelContainer from "@/components/React/features/investigate/phase3/controls/containers/PanelContainer";
 import DelayedFallback from '../../Shared/fallbacks/DelayedFallback';
+import React from 'react';
+import type { InvestigateState } from '@/ReduxToolKit/Reducers/Root/InvestigateReducer';
 
-export default function InvestigationWorkSpace() {
-    const investigateState = useSelector((state: RootState) => state.investigation);
+function InvestigationWorkSpace() {
+    const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
     const { display, notes, pov } = investigateState;
     const { idea, showOptions } = pov;
-    const { showBlueSkySearch, showMindMap, showGetArticlesModal } = display;
+    const { showBlueSkySearch } = display;
     const { takingNotes } = notes;
     const notesRef = useRef(null);
     const containerRef = useRef(null);
@@ -92,5 +94,8 @@ export default function InvestigationWorkSpace() {
             </AnimatePresence>
 
         </section>
-    )
-}
+    );
+};
+
+
+export default React.memo(InvestigationWorkSpace)

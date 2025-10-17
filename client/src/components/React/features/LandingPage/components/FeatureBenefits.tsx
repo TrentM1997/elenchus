@@ -1,3 +1,4 @@
+import React from "react";
 
 interface Feature {
     id: string;
@@ -30,7 +31,7 @@ const features: Feature[] = [
     },
 ];
 
-export default function FeatureBenefits() {
+function FeatureBenefits(): JSX.Element | null {
     return (
         <section className="lg:p-8">
             <div className="px-8 py-12 mx-auto md:px-12 lg:px-16 xl:px-36 2xl:max-w-7xl">
@@ -167,4 +168,6 @@ export default function FeatureBenefits() {
             </div>
         </section>
     );
-}
+};
+
+export default React.memo(FeatureBenefits);
