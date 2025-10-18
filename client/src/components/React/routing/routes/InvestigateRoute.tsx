@@ -16,12 +16,21 @@ const PLAYSTATE_KEYS = [
 
 function InvestigateContainer() {
   const dispatch = useDispatch<AppDispatch>()
-  const investigateState = useSelector((state: RootState) => state.investigation)
-  const signingOut = useSelector((state: RootState) => state.auth.signOut)
-  const { gettingHelp } = investigateState.help;
-  const { showSelectTooltip, showSearch } = investigateState.display;
-  const { status } = investigateState.search;
-  const hasSearched = showSearch && (status === 'fulfilled');
+  const showSelectTooltip = useSelector(
+    (s: RootState) => s.investigation.display.showSelectTooltip
+  );
+  const showSearch = useSelector(
+    (s: RootState) => s.investigation.display.showSearch
+  );
+  const status = useSelector(
+    (s: RootState) => s.investigation.search.status
+  );
+  const gettingHelp = useSelector(
+    (s: RootState) => s.investigation.help.gettingHelp
+  );
+  const signingOut = useSelector((s: RootState) => s.auth.signOut);
+
+  const hasSearched = showSearch && status === "fulfilled";
   useBodyLock();
 
   function removeToolTip(show: boolean, searched: boolean) {

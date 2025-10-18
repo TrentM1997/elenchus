@@ -4,6 +4,7 @@ import { headerTransitions } from "@/motion/variants";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
+import React from "react";
 
 interface StepHeader {
     title: string,
@@ -11,9 +12,8 @@ interface StepHeader {
     info: Help[],
 };
 
-export default function StepHeader({ title, subheader, info }: StepHeader) {
-    const investigateState = useSelector((state: RootState) => state.investigation);
-    const { step } = investigateState.stepper;
+function StepHeader({ title, subheader, info }: StepHeader) {
+    const step = useSelector((state: RootState) => state.investigation.stepper.step);
     const [display, setDisplay] = useState({
         title: title,
         subheader: subheader
@@ -67,3 +67,6 @@ export default function StepHeader({ title, subheader, info }: StepHeader) {
 
     );
 };
+
+
+export default React.memo(StepHeader);

@@ -1,13 +1,11 @@
 import { motion } from "framer-motion";
 import type { RootState } from '@/ReduxToolKit/store'
 import { useSelector, useDispatch } from 'react-redux'
-import { decrement, incrementBy } from "@/ReduxToolKit/Reducers/Investigate/Steps";
+import { decrement } from "@/ReduxToolKit/Reducers/Investigate/Steps";
+import React from "react";
 
-
-export default function BackButton({ }) {
-    const investigateState = useSelector((state: RootState) => state.investigation)
-    const { stepper } = investigateState
-    const { step } = stepper
+function BackButton({ }): JSX.Element | null {
+    const step = useSelector((state: RootState) => state.investigation.stepper.step);
     const dispatch = useDispatch()
 
     return (
@@ -39,4 +37,7 @@ export default function BackButton({ }) {
             </motion.div>
         </div>
     )
-}
+};
+
+
+export default React.memo(BackButton);

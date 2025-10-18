@@ -12,9 +12,7 @@ interface TrackProps {
 };
 
 export default function StepNode({ thisStep, caption }: TrackProps): JSX.Element {
-    const investigateState = useSelector((state: RootState) => state.investigation);
-    const { stepper } = investigateState;
-    const { step } = stepper;
+    const step = useSelector((state: RootState) => state.investigation.stepper.step);
     const animateNode: boolean = useMemo(() => {
         const show: boolean = (thisStep > step);
         return show;

@@ -1,19 +1,15 @@
 import type { RootState } from '@/ReduxToolKit/store'
-import { useSelector, useDispatch } from 'react-redux'
-import { increment, denyIncrement, acceptedInput, incrementBy } from "@/ReduxToolKit/Reducers/Investigate/Steps";
+import { useSelector, useDispatch, shallowEqual } from 'react-redux'
+import { increment, denyIncrement, acceptedInput } from "@/ReduxToolKit/Reducers/Investigate/Steps";
 import { motion } from "framer-motion";
 import { selectPost } from '@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice';
-import { useEffect, useMemo, useRef } from 'react';
-import type { InvestigateState } from '@/ReduxToolKit/Reducers/Root/InvestigateReducer';
+import { useEffect, useMemo } from 'react';
+import React from 'react';
 
-
-export default function NextButton({ }) {
-  const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation)
-  const selected = useSelector((state: RootState) => state.bluesky.selected)
-  const { stepper, help, pov } = investigateState
-  const { step, denied } = stepper
-  const { idea } = pov
-  const { gettingHelp } = help
+function NextButton({ }): JSX.Element | null {
+  const { step, denied } = useSelector((state: RootState) => state.investigation.stepper, shallowEqual);
+  const idea = useSelector((state: RootState) => state.investigation.pov.idea);
+  const gettingHelp = useSelector((state: RootState) => state.investigation.help.gettingHelp);
   const dispatch = useDispatch();
   const noInput = useMemo(() => {
     const noAction: boolean = idea === null;
@@ -60,5 +56,8 @@ export default function NextButton({ }) {
         </span>
       </button>
     </motion.div>
-  )
-}
+  );
+};
+
+
+export default React.memo(NextButton);

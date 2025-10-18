@@ -7,8 +7,7 @@ import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback
 const WindowWrapper = lazy(() => import('./WindowWrapper'));
 
 export default function GatherPOV(): JSX.Element {
-    const investigateState = useSelector((state: RootState) => state.investigation);
-    const { showBlueSkySearch } = investigateState.display;
+    const showBlueSkySearch: boolean | null = useSelector((state: RootState) => state.investigation.display.showBlueSkySearch);
 
     return (
         <main

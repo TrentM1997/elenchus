@@ -12,14 +12,12 @@ import BlueSkySkeleton from '@/components/React/features/blueSky/skeletons/BlueS
 import PanelContainer from "@/components/React/features/investigate/phase3/controls/containers/PanelContainer";
 import DelayedFallback from '../../Shared/fallbacks/DelayedFallback';
 import React from 'react';
-import type { InvestigateState } from '@/ReduxToolKit/Reducers/Root/InvestigateReducer';
 
 function InvestigationWorkSpace() {
-    const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
-    const { display, notes, pov } = investigateState;
-    const { idea, showOptions } = pov;
-    const { showBlueSkySearch } = display;
-    const { takingNotes } = notes;
+    const showOptions = useSelector((s: RootState) => s.investigation.pov.showOptions);
+    const idea = useSelector((s: RootState) => s.investigation.pov.idea);
+    const takingNotes = useSelector((s: RootState) => s.investigation.notes.takingNotes);
+    const showBlueSkySearch = useSelector((s: RootState) => s.investigation.display.showBlueSkySearch);
     const notesRef = useRef(null);
     const containerRef = useRef(null);
     const [notePosition, setNotePosition] = useState({ x: 20, y: 200 });

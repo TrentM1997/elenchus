@@ -6,12 +6,14 @@ function ScrolltoTop() {
 
     useEffect(() => {
 
-        window.scroll({
+        const scrollBehavior: ScrollToOptions = {
             top: 0,
             left: 0,
-            behavior: 'smooth'
-        })
-    }, [pathname])
+            behavior: 'instant' as any
+        }
+
+        window.scroll(scrollBehavior);
+    }, [pathname]);
 
     return null
 }

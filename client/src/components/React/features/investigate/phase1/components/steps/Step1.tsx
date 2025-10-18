@@ -5,17 +5,14 @@ import { useSelector } from "react-redux"
 import { RootState } from "@/ReduxToolKit/store"
 import { motion } from "framer-motion"
 import { variants } from "@/motion/variants"
-import Requirements from "../inputs/Requirements"
+import Requirements from "../inputs/interactive/Requirements"
 import { useCheckFirstStep } from "@/hooks/useCheckFirstStep"
 import React from "react"
-import type { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer"
 
 function Step1() {
-      const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation)
+      const denied = useSelector((state: RootState) => state.investigation.stepper.denied);
+      const idea = useSelector((state: RootState) => state.investigation.pov.idea);
       const selected = useSelector((state: RootState) => state.bluesky.selected);
-      const { stepper, pov } = investigateState
-      const { denied } = stepper
-      const { idea } = pov
       useCheckFirstStep();
 
       const chosenTake = selected

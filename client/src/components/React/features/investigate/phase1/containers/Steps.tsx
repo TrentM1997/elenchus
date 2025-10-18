@@ -5,11 +5,8 @@ import { stepContent } from "@/stepperContent/headers";
 import { stepsHelp } from "@/helpInfo/help";
 import Stepper from "../components/steps/Stepper";
 
-export default function Steps({ }) {
-  const investigateState = useSelector((state: RootState) => state.investigation)
-  const { stepper } = investigateState
-  const { step } = stepper
-
+export default function Steps({ }): JSX.Element | null {
+  const step = useSelector((state: RootState) => state.investigation.stepper.step);
 
   return (
     <section

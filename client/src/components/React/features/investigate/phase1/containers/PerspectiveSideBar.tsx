@@ -1,13 +1,11 @@
 import { RootState } from "@/ReduxToolKit/store"
-import { useSelector } from "react-redux"
-import SidebarItem from "../components/inputs/SidebarItem";
+import { shallowEqual, useSelector } from "react-redux"
+import SidebarItem from "../components/inputs/tracking/SidebarItem";
 import { SidebarItemData } from "@/env";
+import React from "react";
 
-
-export default function PerspectiveSidebar() {
-    const investigation = useSelector((state: RootState) => state.investigation);
-    const { pov } = investigation;
-    const { idea, perspective, expertise, biases, premises } = pov;
+function PerspectiveSidebar() {
+    const { idea, perspective, expertise, biases, premises } = useSelector((state: RootState) => state.investigation.pov, shallowEqual);
 
     const items: SidebarItemData[] = [
         { title: 'Idea', data: idea, step: 1 },
@@ -31,3 +29,4 @@ export default function PerspectiveSidebar() {
     );
 };
 
+export default React.memo(PerspectiveSidebar);

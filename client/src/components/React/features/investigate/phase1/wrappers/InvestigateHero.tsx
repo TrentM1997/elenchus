@@ -1,10 +1,16 @@
 import GatherPOV from "./GatherPOV";
 import StepControl from "../components/buttons/StepControl";
-import { useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
-export default function InvestigateHero({ }) {
-  const investigateState = useSelector((state: RootState) => state.investigation);
-  const { showBlueSkySearch } = investigateState.display;
+import React from "react";
+import { useEffect } from "react";
+import { ScrollUp } from "@/helpers/ScrollToTop";
+
+function InvestigateHero(): JSX.Element | null {
+
+  useEffect(() => {
+
+    ScrollUp();
+
+  }, []);
 
   return (
     <section className="transition-opacity opacity-0 
@@ -17,10 +23,7 @@ export default function InvestigateHero({ }) {
       sm:h-[32.5rem] md:h-[35rem] lg:h-[38rem] xl:h-[39rem] 
       py-10 h-[30rem] transition-all duration-700 ease-in-out 
       bg-gradientdown relative shrink-0
-      ${showBlueSkySearch
-          ? 'opacity-0 pointer-events-none'
-          : 'opacity-100 pointer-events-auto'
-        }
+      
       `}>
         <GatherPOV />
         <StepControl />
@@ -28,3 +31,5 @@ export default function InvestigateHero({ }) {
     </section>
   )
 };
+
+export default React.memo(InvestigateHero);

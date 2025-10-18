@@ -1,13 +1,14 @@
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/ReduxToolKit/store";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/ReduxToolKit/store";
 import { useEffect, useRef } from "react";
 import { RetrieveArticles, resetArticles } from "@/ReduxToolKit/Reducers/Investigate/SearchResults";
 import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary";
 import SearchBar from "../components/input/SearchBar";
 import { clearChosenArticles } from "@/ReduxToolKit/Reducers/Investigate/ChosenArticles";
 import { normalize } from "@/helpers/Normailize";
+import React from "react";
 
-export default function Search({ }) {
+function Search({ }): JSX.Element | null {
   const dispatch = useDispatch<AppDispatch>();
   const lastCommitedInput = useRef<string | null>(null);
   const draftRef = useRef<string | null>(null);
@@ -122,3 +123,4 @@ export default function Search({ }) {
 };
 
 
+export default React.memo(Search);

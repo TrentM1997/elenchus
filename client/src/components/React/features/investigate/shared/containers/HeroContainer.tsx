@@ -5,19 +5,17 @@ import CompletionHero from "@/components/React/features/investigate/heros/Comple
 import FinalResults from "@/components/React/features/investigate/phase5/FinalResults"
 import ScrolltoTop from "@/helpers/ScrollToTop"
 import { AnimatePresence, motion } from "framer-motion"
-import { useSelector } from "react-redux"
+import { shallowEqual, useSelector } from "react-redux"
 import { RootState } from "@/ReduxToolKit/store"
-import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer"
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 
 export default function HeroContainer({
 }) {
     const [spacerHeight, setSpacerHeight] = useState<number | null>(null);
     const [shouldMeasure, setShouldMeasure] = useState<boolean>(false);
-    const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
-    const { display, read } = investigateState
-    const { showMindMap, showSearch, showWrapUp, showCompletion, showResults, showWorkModal } = display;
-    const { articles, ContentStatus } = read;
+    const { showMindMap, showSearch, showWrapUp, showCompletion, showResults, showWorkModal } = useSelector((s: RootState) => s.investigation.display, shallowEqual);
+    const ContentStatus = useSelector((s: RootState) => s.investigation.read.ContentStatus);
+    const articles = useSelector((s: RootState) => s.investigation.read.articles);
     const heightRef = useRef(null);
     const showSpacerDiv = useMemo(() => {
         const hasRetrievedArticles: boolean = (ContentStatus === 'fulfilled');
