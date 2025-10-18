@@ -11,7 +11,7 @@ interface TransitionedIndexProps {
 }
 
 export function useTransitionedIndex({ }: TransitionedIndexProps): TransitionedIndex {
-    const { debouncedPage } = useDebouncedPage({ delay: 180 });
+    const { debouncedPage } = useDebouncedPage({ delay: 200 });
     const [isPending, startTransition] = useTransition();
     const [displayed, setDisplayed] = useState<number>(debouncedPage ?? 0);
 

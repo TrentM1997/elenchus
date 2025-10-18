@@ -1,7 +1,8 @@
 import loadingComponent from '@/lotties/loadingComponent.json';
 import Lottie from 'lottie-react';
+import React from 'react';
 
-export default function ComponentLoader() {
+function ComponentLoader(): JSX.Element | null {
 
     return (
         <div
@@ -16,3 +17,6 @@ export default function ComponentLoader() {
         </div>
     );
 };
+
+
+export default React.memo(ComponentLoader);

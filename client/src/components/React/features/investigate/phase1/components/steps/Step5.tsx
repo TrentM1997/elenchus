@@ -2,11 +2,12 @@ import { motion } from "framer-motion"
 import { useDispatch, useSelector } from "react-redux"
 import { displaySearch, displayMindMap } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer"
 import { RootState } from "@/ReduxToolKit/store"
-import { limitString } from "@/helpers/Presentation"
 import { variants } from "@/motion/variants"
-import { useIsMobile } from "@/hooks/useIsMobile"
+import PromptForSearch from "../inputs/prompts/PromptForSearch"
+import React from "react"
 
-export default function Step5() {
+function Step5(): JSX.Element | null {
+
     const investigateState = useSelector((state: RootState) => state.investigation)
     const { pov } = investigateState
     const { idea } = pov
@@ -34,9 +35,7 @@ export default function Step5() {
                     justify-start items-start md:justify-center
                     gap-y-5 sm:gap-y-12 my-auto"
                     >
-                        <PromptForSearch
-                            idea={idea}
-                        />
+                        <PromptForSearch />
 
                         <div className="w-fit h-auto">
                             <button
@@ -61,23 +60,6 @@ export default function Step5() {
     );
 };
 
+export default React.memo(Step5);
 
-function PromptForSearch({ idea }) {
-    const isMobile = useIsMobile();
 
-    const shortened = limitString(idea)
-
-    return (
-        <div className="w-full h-full flex flex-col gap-y-4">
-            {isMobile && <p className="flex text-xs xl:text-lg w-fit text-white whitespace-normal 
-                            font-light tracking-tight text-left text-wrap">
-                The idea: <span className="text-zinc-400 font-light tracking-tight">
-                    {shortened ? shortened : idea}
-                </span>
-            </p>}
-            <p className="text-xs sm:text-sm lg:text-base xl:text-xl w-fit text-white font-light tracking-tight text-wrap">
-                Next, you'll search for news articles on the idea
-            </p>
-        </div>
-    )
-};

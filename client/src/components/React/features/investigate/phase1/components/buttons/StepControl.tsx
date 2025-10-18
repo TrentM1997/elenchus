@@ -1,7 +1,8 @@
 import NextButton from "./Next";
 import BackButton from "./Back";
+import React from "react";
 
-export default function StepControl({ }) {
+function StepControl(): JSX.Element | null {
 
     return (
         <div className={`
@@ -19,3 +20,4 @@ export default function StepControl({ }) {
     )
 }
 
+export default React.memo(StepControl);

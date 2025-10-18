@@ -30,7 +30,7 @@ function StepHeader({ title, subheader, info }: StepHeader) {
                 subheader: subheader
             });
             setPropsChanging(false);
-        }, 200);
+        }, 50);
 
         return () => clearTimeout(timer);
 

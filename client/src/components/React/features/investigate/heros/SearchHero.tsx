@@ -7,7 +7,7 @@ import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBounda
 import ScrolltoTop from "@/helpers/ScrollToTop";
 import React from "react";
 
-function SearchHero(): JSX.Element {
+export default function SearchHero(): JSX.Element {
     const getContent = useSelector((state: RootState) => state.investigation.read.getContent);
     const dispatch = useDispatch<AppDispatch>();
 
@@ -35,5 +35,3 @@ function SearchHero(): JSX.Element {
         </section>
     );
 };
-
-export default React.memo(SearchHero);

@@ -1,10 +1,9 @@
 import GatherPOV from "./GatherPOV";
 import StepControl from "../components/buttons/StepControl";
-import React from "react";
 import { useEffect } from "react";
 import { ScrollUp } from "@/helpers/ScrollToTop";
 
-function InvestigateHero(): JSX.Element | null {
+export default function InvestigateHero(): JSX.Element | null {
 
   useEffect(() => {
 
@@ -31,5 +30,3 @@ function InvestigateHero(): JSX.Element | null {
     </section>
   )
 };
-
-export default React.memo(InvestigateHero);

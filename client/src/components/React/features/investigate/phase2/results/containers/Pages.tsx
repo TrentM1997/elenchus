@@ -3,18 +3,16 @@ import { useSelector } from "react-redux"
 import Page from "./Page"
 import { RootState } from "@/ReduxToolKit/store"
 import { useMemo } from "react";
-import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
 import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary";
 import LinkPagination from "../components/buttons/LinkPagination";
 import { pagesVariants } from "@/motion/variants";
 import ResultsSpacer from "../components/skeletons/ResultsSpacer";
 import { useTransitionedIndex } from "@/hooks/useTransitionedIndex";
 
-
-export default function Pages() {
-    const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation)
-    const { search } = investigateState
-    const { pages, status, articleOptions } = search;
+export default function Pages(): JSX.Element | null {
+    const pages = useSelector((state: RootState) => state.investigation.search.pages);
+    const status = useSelector((state: RootState) => state.investigation.search.status);
+    const articleOptions = useSelector((state: RootState) => state.investigation.search.articleOptions);
     const { isPending, displayed } = useTransitionedIndex({});
     const renderLinks = useMemo(() => {
         const canMap = Array.isArray(pages) && (pages.length > 0);
@@ -44,7 +42,7 @@ export default function Pages() {
                     {renderLinks && (pages[displayed]) &&
                         <Page
                             key={`page${displayed}`}
-                            pageContent={pages[displayed]}
+                            index={displayed}
                         />
                     }
                 </div>

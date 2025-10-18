@@ -1,8 +1,8 @@
 import PerspectiveSidebar from "../containers/PerspectiveSideBar";
 import Steps from "../containers/Steps";
-import React from "react";
 
-function WindowWrapper(): JSX.Element | null {
+
+export default function WindowWrapper(): JSX.Element | null {
 
     return (
         <main className="w-full h-full relative flex justify-center items-center">
@@ -21,6 +21,4 @@ function WindowWrapper(): JSX.Element | null {
         </main>
     );
 };
-
-export default React.memo(WindowWrapper);
 

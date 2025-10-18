@@ -3,7 +3,7 @@ import blueCheck from '@/lotties/blueCheck.json';
 import React, { useEffect, useCallback, useMemo, useRef } from "react";
 
 
-function Biases({ opinion, biases, getPOV }) {
+function Biases({ opinion, biases, getPOV }): JSX.Element | null {
     const lottieRef = useRef<LottieRefCurrentProps | null>(null);
 
     const chosen = useMemo(() => {
@@ -66,7 +66,7 @@ function Biases({ opinion, biases, getPOV }) {
         >
             <div
                 className={`bg-white/10 lg:text-base lg:text-[0.8rem] text-xs sm:text-sm tracking-tight
-                                rounded-4xl w-72 lg:w-96 lg:h-14 h-11 2xl:min-w-128 2xl:max-w-128 2xl:h-16 xl:h-14 xl:min-w-96
+                                rounded-4xl w-72 lg:w-96 lg:h-14 h-11 2xl:w-[34rem] 2xl:h-16 xl:h-14 xl:min-w-96
                                 cursor-pointer md:hover:bg-white/20 md:hover:text-white transition-all duration-200 ease-soft
                                 flex justify-between items-center lg:px-4 xs:px-2 grow-0 gap-3
                                 ${biases === null && 'text-white'}

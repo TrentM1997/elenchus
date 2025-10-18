@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
+import React from "react";
 
 interface DelayFallback {
     delay?: number,
     children: React.ReactNode | React.ReactNode[]
 };
 
-export default function DelayedFallback({ delay = 150, children }: DelayFallback): JSX.Element | null {
+function DelayedFallback({ delay = 150, children }: DelayFallback): JSX.Element | null {
     const [show, setShow] = useState<boolean>(false);
 
     useEffect(() => {
@@ -22,3 +23,6 @@ export default function DelayedFallback({ delay = 150, children }: DelayFallback
 
     return show ? (<>{children}</>) : null;
 };
+
+
+export default React.memo(DelayedFallback);

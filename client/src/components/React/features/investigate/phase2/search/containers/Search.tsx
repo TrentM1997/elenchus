@@ -8,7 +8,7 @@ import { clearChosenArticles } from "@/ReduxToolKit/Reducers/Investigate/ChosenA
 import { normalize } from "@/helpers/Normailize";
 import React from "react";
 
-function Search({ }): JSX.Element | null {
+export default function Search({ }): JSX.Element | null {
   const dispatch = useDispatch<AppDispatch>();
   const lastCommitedInput = useRef<string | null>(null);
   const draftRef = useRef<string | null>(null);
@@ -121,6 +121,3 @@ function Search({ }): JSX.Element | null {
     </div>
   )
 };
-
-
-export default React.memo(Search);

@@ -8,14 +8,12 @@ import Pages from "./Pages";
 import SearchFailed from "../errors/SearchFailed";
 import { searchResultsVariants } from "@/motion/variants";
 import ResultsPending from "../pending/ResultsPending";
-import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
 import { useMinTimeVisible } from "@/hooks/useMinTimeVisible";
 import SelectLinks from "../components/selection/containers/SelectLinks";
 
 export default function SearchResults() {
-    const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation)
-    const { search } = investigateState
-    const { articleOptions, status } = search
+    const status = useSelector((state: RootState) => state.investigation.search.status);
+    const articleOptions = useSelector((state: RootState) => state.investigation.search.articleOptions);
     const dispatch = useDispatch();
     const visible = useMinTimeVisible((status === 'pending'), 100, 800);
     const renderFallback = useMemo((): boolean => {

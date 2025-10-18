@@ -104,7 +104,7 @@ module.exports = {
         "fade-in": "fade-in 0.5s linear forwards",
         "shimmer": "shimmer 3s infinite linear",
         "fade-up": "fadeUp 0.3s linear forwards",
-        "fade-blur": "fadeBlur 0.5s linear forwards",
+        "fade-blur": "fadeBlur 0.3s linear forwards",
         "fade-skew": "fadeBlur 0.5s linear forwards",
         "fade-clip": "fadeBlur 0.5s linear forwards"
       },

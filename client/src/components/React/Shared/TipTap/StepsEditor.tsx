@@ -6,12 +6,11 @@ import Placeholder from "@tiptap/extension-placeholder";
 import { TipTapProps } from "@/env";
 import EditorControls from "./EditorControls";
 import { useEffect, useRef } from "react";
-import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
+import React from "react";
 
-export default function StepsEditor({ setterFunction, context }: TipTapProps): JSX.Element | null {
+function StepsEditor({ setterFunction, context }: TipTapProps): JSX.Element | null {
     const dispatch = useDispatch<AppDispatch>();
-    const investigate: InvestigateState = useSelector((state: RootState) => state.investigation);
-    const { step } = investigate.stepper;
+    const step = useSelector((state: RootState) => state.investigation.stepper.step);
     const draftRef = useRef<string | null>(null);
     const debounce = useRef<number | null>(null);
     const placeholderText = step === 0 ? 'type the idea to challenge here...' : 'type premises here...'
@@ -86,3 +85,6 @@ export default function StepsEditor({ setterFunction, context }: TipTapProps): J
         </div>
     )
 };
+
+
+export default React.memo(StepsEditor);

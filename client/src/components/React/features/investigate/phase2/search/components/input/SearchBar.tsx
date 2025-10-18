@@ -1,9 +1,5 @@
 import React from "react";
 import SearchButton from "../buttons/SearchButton";
-import { useMinTimeVisible } from "@/hooks/useMinTimeVisible";
-import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
-import { useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
 
 interface SearchBarProps {
     getSearchInput: (e: React.ChangeEvent<HTMLInputElement>) => void,

@@ -5,6 +5,7 @@ import { useMemo } from "react";
 import NodeIcon from "../icons/containers/NodeIcon";
 import WizardTrack from "../tracks/WizardTrack";
 import NodeCaption from "../labels/NodeCaption";
+import { softEase } from "@/motion/variants";
 
 interface TrackProps {
     thisStep: number,
@@ -24,7 +25,11 @@ export default function StepNode({ thisStep, caption }: TrackProps): JSX.Element
     }, [step]);
 
     return (
-        <li className={`flex flex-col h-16
+        <li
+            id={`Step Wizard node ${thisStep + 1}`}
+            aria-label={`Step Wizard node ${thisStep + 1}`}
+            title={`Step Wizard node ${thisStep + 1}`}
+            className={`flex flex-col h-16 cursor-text
         ${thisStep < 4 ? 'w-full items-center' : 'w-fit items-start'}
         `}>
             <div className={`flex items-center justify-center h-fit box-border
@@ -42,7 +47,7 @@ export default function StepNode({ thisStep, caption }: TrackProps): JSX.Element
                             ? "0 0 0 4px rgba(37, 99, 235, 1)"
                             : "none"
                     }}
-                    transition={{ duration: 0.4 }}
+                    transition={{ duration: 0.25, type: 'tween', ease: softEase }}
                     style={{ transformOrigin: 'left' }}
                 >
                     <NodeIcon thisStep={thisStep} />

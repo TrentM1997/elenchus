@@ -2,23 +2,23 @@ import { lazy } from "react";
 const ArticleLink = lazy(() => import('../../results/components/links/ArticleLink'))
 import { Suspense } from "react";
 import LinkPlaceholder from "../../search/components/loaders/LinkPlaceholder";
-import React from "react";
 import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback";
 import ScrolltoTop from "@/helpers/ScrollToTop";
-import type { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
 import type { RootState } from "@/ReduxToolKit/store";
 import type { AppDispatch } from "@/ReduxToolKit/store";
 import { useSelector, useDispatch } from "react-redux";
 import type { SelectedArticle } from "@/env";
 import { choose, discard } from "@/ReduxToolKit/Reducers/Investigate/ChosenArticles";
 
-function Page({ pageContent }) {
-    const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
-    const dispatch = useDispatch<AppDispatch>();
-    const { getArticle, display } = investigateState;
-    const { chosenArticles } = getArticle;
-    const { showGetArticlesModal } = display;
+interface Page {
+    index: number
+};
 
+export default function Page({ index }: Page): JSX.Element | null {
+    const page = useSelector((state: RootState) => state.investigation.search.pages[index]);
+    const chosenArticles = useSelector((state: RootState) => state.investigation.getArticle.chosenArticles);
+    const showGetArticlesModal = useSelector((state: RootState) => state.investigation.display.showGetArticlesModal);
+    const dispatch = useDispatch<AppDispatch>();
 
     const chooseArticle = (article: ArticleType): void => {
 
@@ -45,12 +45,12 @@ function Page({ pageContent }) {
     return (
         <ol
             className="relative h-full no-scrollbar py-2
-            opacity-0 animate-fade-clip animation-delay-200ms transition-opacity ease-soft
+            opacity-0 animate-fade-blur animation-delay-200ms transition-opacity ease-soft
             w-full xl:max-w-6xl 2xl:w-full mx-auto justify-items-center
             grid grid-cols-1 sm:grid-cols-3 grid-flow-row 2xl:gap-y-6 2xl:gap-x-0 gap-2">
-            {(Array.isArray(pageContent)) && (pageContent.length > 0) &&
-                pageContent.map((article, index) => (
-                    <Suspense key={`${index}{${article.url}}`} fallback={<DelayedFallback><LinkPlaceholder /></DelayedFallback>}>
+            {(Array.isArray(page)) && (page.length > 0) &&
+                page.map((article, index) => (
+                    <Suspense key={article.url} fallback={<DelayedFallback><LinkPlaceholder /></DelayedFallback>}>
                         <ArticleLink inModal={false} showGetArticlesModal={showGetArticlesModal} chosenArticles={chosenArticles} mute={(chosenArticles?.length === 3)} chooseArticle={chooseArticle} isPriority={(index <= 8)} article={article} index={index} />
                     </Suspense>
                 ))
@@ -61,5 +61,3 @@ function Page({ pageContent }) {
     );
 };
 
-
-export default React.memo(Page);

@@ -14,7 +14,7 @@ const PLAYSTATE_KEYS = [
   'previous-expertise',
 ];
 
-function InvestigateContainer() {
+export default function InvestigateContainer() {
   const dispatch = useDispatch<AppDispatch>()
   const showSelectTooltip = useSelector(
     (s: RootState) => s.investigation.display.showSelectTooltip
@@ -80,5 +80,3 @@ function InvestigateContainer() {
   );
 };
 
-
-export default React.memo(InvestigateContainer);

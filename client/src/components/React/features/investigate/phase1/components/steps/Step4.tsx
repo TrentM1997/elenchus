@@ -4,11 +4,10 @@ import { useSelector } from "react-redux";
 import { getPremises } from "@/ReduxToolKit/Reducers/Investigate/UserPOV";
 import { motion } from "framer-motion"
 import { variants } from "@/motion/variants"
+import React from "react";
 
-export default function Step4({ containerWidth }: any) {
-  const investigateState = useSelector((state: RootState) => state.investigation)
-  const { pov } = investigateState
-  const { premises } = pov
+function Step4(): JSX.Element | null {
+  const premises = useSelector((state: RootState) => state.investigation.pov.premises);
 
   return (
     <motion.div
@@ -35,3 +34,4 @@ export default function Step4({ containerWidth }: any) {
 }
 
 
+export default React.memo(Step4);
