@@ -1,47 +1,31 @@
 import Thumbnail from "./Thumbnail"
-import { reviewThisResearch } from "@/ReduxToolKit/Reducers/UserContent/UserInvestigations"
-import { useDispatch } from "react-redux"
-import { presentThisInvestigation } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
-import { limitString } from "@/helpers/Presentation";
+import Topic from "./Topic";
+import OpenInvestigation from "../buttons/OpenInvestigation";
+import React from "react";
+import SavedTimestamp from "./SavedTimestamp";
 
 interface PriorInvestigation {
     investigation: any,
-    inSeek?: boolean
+    inSeek?: boolean,
+    review: (investigation: any) => void
 };
 
-export default function PriorInvestigation({ investigation, inSeek }: PriorInvestigation) {
-    const dispatch = useDispatch()
-
-
-    function reviewResearch() {
-        dispatch(reviewThisResearch(investigation))
-        setTimeout(() => {
-            dispatch(presentThisInvestigation());
-        }, 150);
-    };
-
+function PriorInvestigation({ investigation, review }: PriorInvestigation) {
 
     return (
-        <div className={`
-        md:flex w-[342px] h-[404px] sm:h-full sm:w-full lg:w-[656px] lg:h-[516px] xl:min-h-[32rem] xl:w-[1030.39px] xl:h-[512px]`}>
-            <h2 id="2023-03-16-heading" className="pl-7 md:w-2/3 md:pl-0 text-sm font-light tracking-tight md:pr-6 text-white md:text-right">
-                <span className='text-zinc-400'>From:</span> {investigation.created_at.split('').splice(0, 10).join('')}
-            </h2>
-            <div className="relative pt-2 pl-7 md:w-3/4 md:pt-0 md:pl-12 pb-16 md:pb-24">
-                <div className="absolute bottom-0 left-0 w-px bg-blue-400 -top-3 md:top-2.5">
-                </div>
+        <div className={` border
+        md:flex w-[342px] h-[512px] sm:h-full sm:w-full lg:w-[656px] lg:h-[516px] xl:min-h-[32rem] xl:w-[880px] xl:h-[512px] mx-auto`}>
+            <SavedTimestamp created_at={investigation.created_at} />
+            <div className="relative h-full pt-2 pl-7 md:w-3/4 md:pt-0 md:pl-12 pb-16 md:pb-24">
+                <div className="absolute bottom-0 left-0 w-px bg-blue-400 -top-3 md:top-2.5" />
                 <div className="absolute -top-[1.0625rem] -left-1 h-[0.5625rem] w-[0.5625rem] rounded-full border-2 border-black/10 bg-blue-400 md:top-[0.4375rem]">
                 </div>
-                <div className="items-center w-fit">
-                    <div className='w-full xl-[w-490px]'>
-                        <Thumbnail investigation={investigation} />
-                        <TopicResearched topic={investigation.idea} />
-                        <div className="mt-4 h-9 xl:h-10 w-32">
-                            <button onClick={() => reviewResearch()} className="text-sm w-full h-full px-6 border focus:ring-2 rounded-full border-transparent bg-white hover:bg-white/10
-                            text-black duration-200 focus:ring-offset-2 focus:ring-black hover:text-white inline-flex items-center justify-start ring-1 ring-transparent">
-                                Review <span className="ml-2">&#8594;</span>
-                            </button>
-                        </div>
+                <div className="flex flex-col justify-start start gap-4 h-full w-80 lg:w-96 xl:w-112">
+                    <Thumbnail investigation={investigation} />
+                    <div className='w-full border flex flex-col items-start justify-center gap-2 px-1 md:px-0.5'>
+
+                        <Topic topic={investigation.idea} />
+                        <OpenInvestigation review={review} investigation={investigation} />
                     </div>
                 </div>
             </div>
@@ -50,22 +34,5 @@ export default function PriorInvestigation({ investigation, inSeek }: PriorInves
     );
 };
 
-interface Topic {
-    topic: string
-}
 
-function TopicResearched({ topic }: Topic) {
-
-    const clipped = topic ? limitString(topic, 70) : null;
-
-    return (
-        <div title={topic} className="xl:w-[490px] xl:h-[80px]">
-            <h3 className="text-white font-light tracking-tight text-md mt-4">Topic</h3>
-            <p className="text-zinc-400 mt-2 text-md text-wrap">
-                {clipped}
-            </p>
-        </div>
-
-    )
-}
-
+export default React.memo(PriorInvestigation);

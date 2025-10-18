@@ -1,26 +1,28 @@
 import { Virtuoso } from "react-virtuoso";
 import { useVirtuoso } from "@/hooks/useVirtuoso";
-import { useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/ReduxToolKit/store";
 import PriorInvestigation from "../components/InvestigationSaved";
-import InvestigationSkeletons, { InvestigationSkeleton } from "../skeletons/InvestigationSkeletons";
-import { useState, useRef } from "react";
+import InvestigationSkeletons from "../skeletons/InvestigationSkeletons";
+import { useRef, useCallback } from "react";
 import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";
-import { useIsMobile } from "@/hooks/useIsMobile";
+import { reviewThisResearch } from "@/ReduxToolKit/Reducers/UserContent/UserInvestigations";
 
 export default function ResearchScroller() {
-    const [inSeek, setInSeek] = useState<boolean>(false)
     const investigations = useSelector((state: RootState) => state.userWork.userResearch);
     const newArr = Array.isArray(investigations) ? [...investigations] : [];
     const timeline = newArr.sort((a, b) => b.id - a.id);
-    const { visible, fullyLoaded, loadMore } = useVirtuoso(timeline);
+    const { visible, fullyLoaded, loadMore, numSkeletons } = useVirtuoso(timeline);
     const { boxShadow, onScrollHandler } = useScrollWithShadow();
-    const scrollRef = useRef<number | null>(null)
-    const enter_velocity: number = 550;
-    const exit_velocity: number = 10;
-    const dwell_velocity: number = 250;
-    const isMobile = useIsMobile();
-    const VIRTUOSO_HEIGHT: string = isMobile ? '88%' : '94%';
+    const dispatch = useDispatch<AppDispatch>();
+    const timerRef = useRef<number | null>(null);
+
+    const review = useCallback((investigation: any) => {
+        timerRef.current = window.setTimeout(() => {
+            dispatch(reviewThisResearch(investigation));
+            timerRef.current = null;
+        }, 150);
+    }, []);
 
     return (
         <div
@@ -30,19 +32,20 @@ export default function ResearchScroller() {
             <Virtuoso
                 style={{
                     height: '94%', width: '100%', display: 'flex', overflowX: 'hidden', overscrollBehavior: 'contain',
-                    flexDirection: 'column', alignItems: 'center', justifyContent: 'end', boxShadow: boxShadow
+                    flexDirection: 'column', alignItems: 'center', justifyContent: 'start', boxShadow: boxShadow
                 }}
-                className="no-scrollbar"
+                className="no-scrollbar border"
                 onScroll={onScrollHandler}
+                defaultItemHeight={512}
                 data={visible}
                 endReached={loadMore}
                 increaseViewportBy={600}
                 computeItemKey={(_, investigation) => investigation.id}
-                context={{ fullyLoaded }}
+                context={{ fullyLoaded, numSkeletons }}
                 components={{ Footer: InvestigationSkeletons }}
                 itemContent={(_, investigation) => {
                     return (
-                        <PriorInvestigation investigation={investigation} />
+                        <PriorInvestigation review={review} investigation={investigation} />
                     )
                 }}
             />
