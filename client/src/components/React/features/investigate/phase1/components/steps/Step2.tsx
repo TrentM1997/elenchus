@@ -5,12 +5,13 @@ import Perspective from "../inputs/Perspective"
 import Expertise from "../inputs/Expertise"
 import { motion } from "framer-motion";
 import { variants } from "@/motion/variants"
+import type { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer"
 
 export default function Step2({ containerWidth }: any) {
-  const investigateState = useSelector((state: RootState) => state.investigation)
-  const { pov } = investigateState
-  const { expertise, perspective } = pov
-  const dispatch = useDispatch()
+  const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation)
+  const { pov } = investigateState;
+  const { expertise, perspective } = pov;
+  const dispatch = useDispatch();
 
   const getPOV = (e: React.MouseEvent<HTMLDivElement>) => {
 

@@ -13,7 +13,7 @@ function MobileProfileNav() {
 
 
   const mobileDashboardNav = (
-    <div className="fixed bottom-0 z-50 w-full max-w-full h-20 shadow-thick bg-zinc-900 
+    <div className="fixed bottom-0 z-30 w-full max-w-full h-20 shadow-thick bg-zinc-900 
     flex justify-center items-center px-4">
       <div className="w-full h-auto mx-auto flex items-center justify-between">
         <button

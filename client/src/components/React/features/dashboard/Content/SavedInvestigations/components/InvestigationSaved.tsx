@@ -4,7 +4,12 @@ import { useDispatch } from "react-redux"
 import { presentThisInvestigation } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
 import { limitString } from "@/helpers/Presentation";
 
-export default function PriorInvestigation({ investigation, inSeek }) {
+interface PriorInvestigation {
+    investigation: any,
+    inSeek?: boolean
+};
+
+export default function PriorInvestigation({ investigation, inSeek }: PriorInvestigation) {
     const dispatch = useDispatch()
 
 
@@ -18,7 +23,7 @@ export default function PriorInvestigation({ investigation, inSeek }) {
 
     return (
         <div className={`
-        md:flex w-full h-full lg:w-[656px] lg:h-[516px] xl:min-h-[32rem] xl:w-[919.19px] xl:h-[512px] 2xl:h-128  2xl:w-[1060px]`}>
+        md:flex w-[342px] h-[404px] sm:h-full sm:w-full lg:w-[656px] lg:h-[516px] xl:min-h-[32rem] xl:w-[1030.39px] xl:h-[512px]`}>
             <h2 id="2023-03-16-heading" className="pl-7 md:w-2/3 md:pl-0 text-sm font-light tracking-tight md:pr-6 text-white md:text-right">
                 <span className='text-zinc-400'>From:</span> {investigation.created_at.split('').splice(0, 10).join('')}
             </h2>
@@ -40,6 +45,7 @@ export default function PriorInvestigation({ investigation, inSeek }) {
                     </div>
                 </div>
             </div>
+
         </div>
     );
 };
@@ -50,10 +56,10 @@ interface Topic {
 
 function TopicResearched({ topic }: Topic) {
 
-    const clipped = topic ? limitString(topic, 100) : null;
+    const clipped = topic ? limitString(topic, 70) : null;
 
     return (
-        <div className="xl:w-[490px] xl:h-[80px]">
+        <div title={topic} className="xl:w-[490px] xl:h-[80px]">
             <h3 className="text-white font-light tracking-tight text-md mt-4">Topic</h3>
             <p className="text-zinc-400 mt-2 text-md text-wrap">
                 {clipped}

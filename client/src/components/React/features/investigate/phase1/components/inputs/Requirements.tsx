@@ -1,6 +1,6 @@
+import React from "react"
 
-
-export default function Requirements({ acceptInput, }) {
+function Requirements({ acceptInput }): JSX.Element | null {
 
     return (
         <div
@@ -34,4 +34,6 @@ export default function Requirements({ acceptInput, }) {
             </div>
         </div>
     )
-}
+};
+
+export default React.memo(Requirements);

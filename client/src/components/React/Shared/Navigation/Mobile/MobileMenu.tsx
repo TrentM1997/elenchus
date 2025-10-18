@@ -41,7 +41,7 @@ export default function MobileMenu() {
                 {isOpen && (
                     <motion.div
                         key="overlay"
-                        className="bg-black z-50 min-h-svh min-w-full top-0 left-0 bottom-0 fixed"
+                        className="bg-black z-50 min-h-svh min-w-full inset-0 fixed"
                         initial='closed'
                         animate='open'
                         exit="closed"

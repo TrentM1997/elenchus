@@ -1,8 +1,71 @@
-import Lottie from "lottie-react";
+import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import blueCheck from '@/lotties/blueCheck.json';
+import React, { useMemo, useRef, useEffect, useCallback } from "react";
+
+interface Expertise {
+    item: string | null,
+    expertise: string | null,
+    assignKnowledge: (e: React.MouseEvent<HTMLDivElement>) => void
+};
 
 
-export default function Expertise({ item, expertise, assignKnowledge }) {
+function Expertise({ item, expertise, assignKnowledge }: Expertise): JSX.Element | null {
+    const lottieRef = useRef<LottieRefCurrentProps | null>(null);
+
+    const chosen = useMemo(() => {
+        if (expertise === null) return false;
+        const isChosen: boolean = (item === expertise);
+        return isChosen;
+    }, [item, expertise]);
+
+
+
+    const hasPlayedBefore = useMemo(() => {
+        if (!chosen) return false;
+        try {
+            const lastPlayed = sessionStorage.getItem('previous-expertise');
+            return (lastPlayed === item);
+        } catch {
+            return false;
+        }
+    }, [chosen]);
+
+
+    const jumpToEnd = useCallback(() => {
+        const api = lottieRef.current;
+        if (!api) return;
+        const lastFrame = api.getDuration(true);
+        api.goToAndStop(Math.max(0, lastFrame), true);
+    }, []);
+
+
+    useEffect(() => {
+        const lottieApi = lottieRef.current;
+        if (!lottieApi) return;
+
+        if (!chosen) {
+            lottieApi.goToAndStop(0, true);
+            return;
+        }
+
+        if (hasPlayedBefore) {
+            jumpToEnd();
+        } else {
+            lottieApi.play();
+        };
+    }, [hasPlayedBefore]);
+
+
+    const handleComplete = useCallback(() => {
+        if (!chosen) return;
+        try {
+            sessionStorage.setItem("previous-expertise", expertise);
+        } catch {
+        }
+        jumpToEnd();
+    }, [chosen, jumpToEnd]);
+
+
 
     return (
         <div
@@ -19,14 +82,28 @@ export default function Expertise({ item, expertise, assignKnowledge }) {
             ${expertise !== null && expertise !== item && 'text-zinc-500'}
             `}
                 data-set={item}
-                onClick={(e) => { assignKnowledge(e) }}
+                onClick={(e) => assignKnowledge(e)}
             >{item}
                 <div className="lg:min-h-10 lg:min-w-10 lg:max-h-10 lg:p-0.5 xs:max-w-7 xs:max-h-7 xs:min-w-7 xs:min-h-7 absolute xs:right-1 z-0 flex items-center justify-center">
-                    {item === expertise ? <Lottie className="box-content absolute right-0 translate-x-0.5 xl:translate-x-1.5" animationData={blueCheck} loop={false} autoPlay={false} style={{ height: "100%", width: "100%", position: "relative" }} /> : (
-                        <div className="xl:max-h-5 xl:max-w-5 xl:min-w-5 xl:min-h-5 xs:max-w-4 xs:max-h-4 xs:min-w-4 xs:min-h-4 bg-black/40 box-content rounded-full  absolute xs:right-1"></div>
-                    )}
+                    {chosen
+                        ? (
+                            <Lottie
+                                onComplete={handleComplete}
+                                lottieRef={lottieRef}
+                                className="box-content absolute right-0 translate-x-0.5 xl:translate-x-1.5"
+                                animationData={blueCheck}
+                                loop={false}
+                                autoPlay={false}
+                                style={{ height: "100%", width: "100%", position: "relative" }} />
+                        )
+
+                        : (
+                            <div className="xl:max-h-5 xl:max-w-5 xl:min-w-5 xl:min-h-5 xs:max-w-4 xs:max-h-4 xs:min-w-4 xs:min-h-4 bg-black/40 box-content rounded-full  absolute xs:right-1"></div>
+                        )}
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
+
+export default React.memo(Expertise);

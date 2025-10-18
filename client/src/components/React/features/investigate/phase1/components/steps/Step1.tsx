@@ -1,24 +1,27 @@
-import { useState, useEffect, useMemo } from "react"
+import { useMemo } from "react"
 import StepsEditor from "../../../../../Shared/TipTap/StepsEditor"
 import { getIdea } from "@/ReduxToolKit/Reducers/Investigate/UserPOV"
-import { acceptedInput, denyIncrement } from "@/ReduxToolKit/Reducers/Investigate/Steps"
-import { useSelector, useDispatch } from "react-redux"
+import { useSelector } from "react-redux"
 import { RootState } from "@/ReduxToolKit/store"
-import { distance, motion } from "framer-motion"
+import { motion } from "framer-motion"
 import { variants } from "@/motion/variants"
 import Requirements from "../inputs/Requirements"
 import { useCheckFirstStep } from "@/hooks/useCheckFirstStep"
+import React from "react"
+import type { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer"
 
-export default function Step1() {
-      const investigateState = useSelector((state: RootState) => state.investigation)
+function Step1() {
+      const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation)
       const selected = useSelector((state: RootState) => state.bluesky.selected);
-      const [nextClicked, setNextClicked] = useState<boolean>(false);
       const { stepper, pov } = investigateState
       const { denied } = stepper
       const { idea } = pov
       useCheckFirstStep();
-      const dispatch = useDispatch()
-      const chosenTake = selected ? selected : idea;
+
+      const chosenTake = selected
+            ? selected
+            : idea;
+
       const status = useMemo((): boolean | null => {
             if (denied) {
                   return false;
@@ -28,18 +31,6 @@ export default function Step1() {
                   return null;
             }
       }, [denied]);
-
-
-      useEffect(() => {
-
-            if (nextClicked && (!idea)) dispatch(denyIncrement(true))
-
-            window.addEventListener('nextStepClick', () => {
-                  setNextClicked(true)
-            })
-
-
-      }, [idea, selected]);
 
 
       return (
@@ -61,3 +52,4 @@ export default function Step1() {
       );
 };
 
+export default React.memo(Step1);

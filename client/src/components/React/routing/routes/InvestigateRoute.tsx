@@ -7,6 +7,13 @@ import { displaySelectTooltip } from "@/ReduxToolKit/Reducers/Investigate/Displa
 import { useBodyLock } from "@/hooks/useBodyLock";
 import React from "react";
 
+
+const PLAYSTATE_KEYS = [
+  'previous-biases',
+  'previous-perspective',
+  'previous-expertise',
+];
+
 function InvestigateContainer() {
   const dispatch = useDispatch<AppDispatch>()
   const investigateState = useSelector((state: RootState) => state.investigation)
@@ -23,11 +30,23 @@ function InvestigateContainer() {
     };
   };
 
+  function clearCachedPlayStates(keys: Array<string>) {
+    try {
+      for (const k of keys) {
+        sessionStorage.removeItem(k)
+
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
 
   useEffect(() => {
 
 
     return () => {
+      clearCachedPlayStates(PLAYSTATE_KEYS);
       dispatch({ type: 'clear' })
     }
   }, []);

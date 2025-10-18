@@ -1,7 +1,70 @@
-import Lottie from "lottie-react"
+import Lottie, { LottieRefCurrentProps } from "lottie-react"
 import blueCheck from '@/lotties/blueCheck.json';
+import React, { useEffect, useCallback, useMemo, useRef } from "react";
 
-export default function Perspective({ perspective, opinion, getPOV }) {
+
+interface Perspective {
+    perspective: string | null,
+    opinion: string | null,
+    getPOV: (e: React.MouseEvent<HTMLDivElement>) => void
+};
+
+function Perspective({ perspective, opinion, getPOV }: Perspective): JSX.Element | null {
+    const lottieRef = useRef<LottieRefCurrentProps | null>(null);
+
+    const chosen = useMemo(() => {
+        if (perspective === null) return false;
+        const isChosen: boolean = (opinion === perspective);
+        return isChosen;
+    }, [opinion, perspective]);
+
+
+
+    const hasPlayedBefore = useMemo(() => {
+        if (!chosen) return false;
+        try {
+            const lastPlayed = sessionStorage.getItem('previous-perspective');
+            return (lastPlayed === opinion);
+        } catch {
+            return false;
+        }
+    }, [chosen]);
+
+
+    const jumpToEnd = useCallback(() => {
+        const api = lottieRef.current;
+        if (!api) return;
+        const lastFrame = api.getDuration(true);
+        api.goToAndStop(Math.max(0, lastFrame), true);
+    }, []);
+
+
+    useEffect(() => {
+        const lottieApi = lottieRef.current;
+        if (!lottieApi) return;
+
+        if (!chosen) {
+            lottieApi.goToAndStop(0, true);
+            return;
+        }
+
+        if (hasPlayedBefore) {
+            jumpToEnd();
+        } else {
+            lottieApi.play();
+        };
+    }, [hasPlayedBefore]);
+
+
+    const handleComplete = useCallback(() => {
+        if (!chosen) return;
+        try {
+            sessionStorage.setItem("previous-perspective", perspective);
+        } catch {
+        }
+        jumpToEnd();
+    }, [chosen, jumpToEnd]);
+
 
 
     return (
@@ -24,7 +87,7 @@ export default function Perspective({ perspective, opinion, getPOV }) {
                 {opinion}
                 <div className="lg:min-h-10 lg:max-h-10 lg:min-w-10 lg:p-0.5 
                   xs:max-w-7 xs:max-h-7 xs:min-w-7 xs:min-h-7 absolute xs:right-1 z-0 flex items-center justify-center">
-                    {opinion === perspective ? <Lottie className="box-content absolute right-0 translate-x-0.5 xl:translate-x-1.5"
+                    {opinion === perspective ? <Lottie lottieRef={lottieRef} onComplete={handleComplete} className="box-content absolute right-0 translate-x-0.5 xl:translate-x-1.5"
                         animationData={blueCheck} loop={false} autoPlay={false} style={{ height: "100%", width: "100%", position: "relative" }} />
                         : (
                             <div className="xl:max-h-5 xl:max-w-5 xl:min-w-5 xl:min-h-5 xs:max-w-4 xs:max-h-4 xs:min-w-4 xs:min-h-4 bg-black/40 box-content rounded-full  absolute xs:right-1"></div>
@@ -34,4 +97,7 @@ export default function Perspective({ perspective, opinion, getPOV }) {
             </div>
         </div>
     )
-}
+};
+
+
+export default React.memo(Perspective);

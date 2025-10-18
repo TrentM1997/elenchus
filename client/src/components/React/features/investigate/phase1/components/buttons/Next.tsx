@@ -3,32 +3,34 @@ import { useSelector, useDispatch } from 'react-redux'
 import { increment, denyIncrement, acceptedInput, incrementBy } from "@/ReduxToolKit/Reducers/Investigate/Steps";
 import { motion } from "framer-motion";
 import { selectPost } from '@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice';
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
+import type { InvestigateState } from '@/ReduxToolKit/Reducers/Root/InvestigateReducer';
 
 
 export default function NextButton({ }) {
-  const investigateState = useSelector((state: RootState) => state.investigation)
+  const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation)
   const selected = useSelector((state: RootState) => state.bluesky.selected)
   const { stepper, help, pov } = investigateState
   const { step, denied } = stepper
   const { idea } = pov
   const { gettingHelp } = help
   const dispatch = useDispatch();
+  const noInput = useMemo(() => {
+    const noAction: boolean = idea === null;
+    const empty: boolean = idea === "";
+    return (noAction || empty);
+  }, [idea]);
 
   const handleStep = () => {
     window.dispatchEvent(new CustomEvent('nextStepClick'));
     if (denied === false && idea !== '') {
       dispatch(increment())
       dispatch(selectPost(null))
-    } else if (denied === true) {
-      ;
-    } else if (denied === null && selected === null || idea === '') {
+    } else if ((denied === null) && noInput) {
       dispatch(acceptedInput(false))
       dispatch((denyIncrement(true)))
     }
-
-
-  }
+  };
 
   useEffect(() => {
 
