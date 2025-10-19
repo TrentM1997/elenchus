@@ -1,16 +1,13 @@
-import { useSelector, shallowEqual } from "react-redux";
+import { useSelector } from "react-redux";
 import { useIsMobile } from "@/hooks/useIsMobile";
-import { lazy, Suspense, useMemo, useState } from "react";
+import { lazy, Suspense } from "react";
 import { RootState } from "@/ReduxToolKit/store";
 import Display from "../../features/dashboard/Content/containers/Display";
 import FooterBarLoader from "../../features/dashboard/ProfileNavigation/skeletons/FooterBarSkeleton";
 import SidebarLoader from "../../features/dashboard/ProfileNavigation/skeletons/SidebarSkeleton";
 import { AnimatePresence } from "framer-motion";
 import SignOutModal from "../../session/forms/AuthForms/SignOutModal";
-import { NavigateFunction, useNavigate } from "react-router-dom";
-import ViewSavedContent from "../../features/dashboard/Content/containers/ViewSavedContent";
 import DelayedFallback from "../../Shared/fallbacks/DelayedFallback";
-import { SigninStatus } from "@/hooks/useSignIn";
 const MobileProfileNav = lazy(() => import('../../features/dashboard/ProfileNavigation/mobile/ProfileMenu'));
 const SideBar = lazy(() => import('../../features/dashboard/ProfileNavigation/SideBar/Sidebar'));
 
@@ -18,6 +15,7 @@ const SideBar = lazy(() => import('../../features/dashboard/ProfileNavigation/Si
 export default function Dashboard(): JSX.Element {
     const isMobile = useIsMobile();
     const signingOut = useSelector((state: RootState) => state.auth.signOut);
+
 
 
     return (

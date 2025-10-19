@@ -6,19 +6,21 @@ const {
   description = "#",
   url,
   socialImage = "/social-preview-image.png",
-  twitterImage = "/twitter-preview-image.png", // Assuming you have a separate image for Twitter
+  twitterImage = "/twitter-preview-image.png",
   author = "Trent Irvin, Said Gadzhiev",
 } = Astro.props;
-const sanitizedTitle = title.toLowerCase().replaceAll(" ", " ");
+const canonical =
+  (Astro.url && Astro.url.href) ||
+  (Astro.site && String(Astro.site)) ||
+  "https://elenchusapp.io/";
+console.log(canonical);
 ---
 
 <head>
   <Metas
     title={title}
     description={description.substring(0, 100)}
-    url={Astro.site
-      ? `${Astro.site}/${sanitizedTitle}`
-      : `https://elenchusapp.io`}
+    url={canonical}
     image={socialImage}
     author={author}
     twitterImage={twitterImage}

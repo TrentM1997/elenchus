@@ -1,16 +1,17 @@
 import { createPortal } from "react-dom";
-import { useDispatch } from "react-redux"
-import { AppDispatch } from "@/ReduxToolKit/store";
 
-export default function DetailView({ backTo }): JSX.Element {
-    const dispatch = useDispatch<AppDispatch>();
+interface DetailView {
+    backTo: () => void
+};
+
+export default function DetailView({ backTo }: DetailView): JSX.Element {
 
 
     const detailView = (
         <div
             onClick={backTo}
             aria-label="detail view on saved article"
-            className="fixed bottom-0 z-40 py-4 w-full px-4 backdrop-blur-xl opacity-0 animate-fade-in animation-delay-300ms bg-white/5 md:hover:bg-white/15 transition-all duration-200 ease-in-out backdrop-filter shadow-thick"
+            className="fixed bottom-0 z-40 py-4 w-full px-4 backdrop-blur-xl opacity-0 animate-fade-in animation-delay-300ms bg-white/5 md:hover:bg-white/15 transition-colors duration-200 ease-soft backdrop-filter shadow-thick"
         >
             <button
                 aria-label="back to saved articles"

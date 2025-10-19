@@ -45,6 +45,14 @@ function SkeletonInvestigation() {
 export default React.memo(SkeletonInvestigation);
 
 
+export function SkeletonThumbnailBox(): JSX.Element | null {
+
+    return (
+        <div className="h-40 w-52 lg:h-52 lg:w-60 rounded-2xl bg-[length:200%_100%] animate-shimmer
+    bg-[linear-gradient(110deg,#1a1c23_8%,#2b2f3a_18%,#1a1c23_33%)] " />
+    );
+};
+
 
 
 function SkeletonDescription(): JSX.Element | null {

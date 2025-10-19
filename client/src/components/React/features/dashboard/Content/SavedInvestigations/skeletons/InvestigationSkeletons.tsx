@@ -19,7 +19,7 @@ export default function InvestigationSkeletons({ context }) {
         <div
             id='skeleton-loaders'
             style={{ height: reservedSpace }}
-            className="relative w-auto mx-auto flex 
+            className="relative w-auto xl:w-[880px] mx-auto flex 
                 flex-col items-end justify-center"
         >
             {!fullyLoaded &&

@@ -2,9 +2,15 @@ import { useSelector, useDispatch } from "react-redux"
 import { presentArticles, presentResearch, presentManagement, presentDashboard } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
 import { RootState } from "@/ReduxToolKit/store";
 import { createPortal } from "react-dom";
-import React from "react";
+import React, { useMemo } from "react";
 
 function MobileProfileNav() {
+  const reviewingResearch = useSelector((state: RootState) => state.profileNav.displayThisInvestigation);
+  const reviewingArticle = useSelector((state: RootState) => state.profileNav.displayThisArticle);
+  const hideProfileNav = useMemo(() => {
+    const isReviewing: boolean = (reviewingArticle || reviewingResearch);
+    return isReviewing;
+  }, [reviewingArticle, reviewingResearch]);
   const showArticles = useSelector((state: RootState) => state.profileNav.displaySavedArticles)
   const showInvestigations = useSelector((state: RootState) => state.profileNav.displaySavedInvestigations);
   const showManagement = useSelector((state: RootState) => state.profileNav.displayAccountManagement);
@@ -13,8 +19,10 @@ function MobileProfileNav() {
 
 
   const mobileDashboardNav = (
-    <div className="fixed bottom-0 z-30 w-full max-w-full h-20 shadow-thick bg-zinc-900 
-    flex justify-center items-center px-4">
+    <div className={`fixed 
+      ${hideProfileNav ? 'translate-y-40 ' : 'delay-200'}
+      bottom-0 z-30 w-full max-w-full h-20 shadow-thick bg-zinc-900 transition-transform ease-soft duration-200
+    flex justify-center items-center px-4`}>
       <div className="w-full h-auto mx-auto flex items-center justify-between">
         <button
           onClick={() => {
