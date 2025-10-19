@@ -2,8 +2,7 @@
 const { title, description, url, socialImage, twitterImage, author } =
   Astro.props;
 let subtitle = "";
-const elenchus = '@/images/logos/elenchus.svg'
-
+const elenchus = "@/images/logos/elenchus.svg";
 ---
 
 <meta charset="UTF-8" />
@@ -15,22 +14,24 @@ const elenchus = '@/images/logos/elenchus.svg'
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="your keywords" content="Add ypour keywords here" />
 
-<meta name="title" content={`${title} - ${subtitle}`} />
+<meta name="title" content={`${title}`} />
 <meta name="description" content={description} />
 <meta name="author" content={author} />
-{/* <!---------------------
+{
+  /* <!---------------------
     open graph standard
----------------------> */}
-<meta property="og:title" content={`${title} - ${subtitle}`} />
+---------------------> */
+}
+<meta property="og:title" content={`${title}`} />
 <meta property="og:description" content={description} />
 <meta property="og:type" content="website" />
 <meta property="og:url" content={url} />
-{/* open graph Meta */ }
+{/* open graph Meta */}
 <meta
   property="og:image"
   content={Astro.site ? `${Astro.site}${elenchus}` : elenchus}
 />
-{/*  Open Graph Twitter */ }
+{/*  Open Graph Twitter */}
 
 <meta property="og:site_name" content={title} />
 <meta name="twitter:card" content="summary_large_image" />
