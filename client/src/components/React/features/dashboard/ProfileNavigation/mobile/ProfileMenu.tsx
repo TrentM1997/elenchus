@@ -19,7 +19,7 @@ function MobileProfileNav() {
     <div className={`fixed 
       ${hideProfileNav ? 'translate-y-full delay-100' : 'delay-200'}
       bottom-0 z-30 w-full max-w-full h-20 shadow-thick bg-zinc-900 transition-transform ease-soft duration-300
-    flex justify-center items-center px-4`}>
+    flex justify-center items-center  px-4`}>
       <div className="w-full h-auto mx-auto flex items-center justify-between">
         <button
           onClick={() => {
