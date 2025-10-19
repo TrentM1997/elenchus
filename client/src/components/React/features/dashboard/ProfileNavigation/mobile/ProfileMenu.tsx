@@ -2,15 +2,15 @@ import { useSelector, useDispatch } from "react-redux"
 import { presentArticles, presentResearch, presentManagement, presentDashboard } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
 import { RootState } from "@/ReduxToolKit/store";
 import { createPortal } from "react-dom";
-import React, { useMemo } from "react";
+import React from "react";
 
 function MobileProfileNav() {
   const reviewingResearch = useSelector((state: RootState) => state.profileNav.displayThisInvestigation);
   const reviewingArticle = useSelector((state: RootState) => state.profileNav.displayThisArticle);
-  const hideProfileNav = useMemo(() => {
+  const hideProfileNav = () => {
     const isReviewing: boolean = (reviewingArticle || reviewingResearch);
     return isReviewing;
-  }, [reviewingArticle, reviewingResearch]);
+  };
   const showArticles = useSelector((state: RootState) => state.profileNav.displaySavedArticles)
   const showInvestigations = useSelector((state: RootState) => state.profileNav.displaySavedInvestigations);
   const showManagement = useSelector((state: RootState) => state.profileNav.displayAccountManagement);
