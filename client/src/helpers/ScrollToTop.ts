@@ -9,7 +9,7 @@ function ScrolltoTop() {
         const scrollBehavior: ScrollToOptions = {
             top: 0,
             left: 0,
-            behavior: 'instant' as any
+            behavior: 'smooth' as any
         }
 
         window.scroll(scrollBehavior);

@@ -1,5 +1,5 @@
 import { AnimatePresence } from "framer-motion";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import type { RootState } from "@/ReduxToolKit/store";
 import type { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
 import SelectionRequired from "../../../../../notifications/SelectionRequired";
@@ -13,9 +13,12 @@ import MaxChosen from "./MaxChosen";
 import { useMaxSelectedToast } from "@/hooks/useAutoDismiss";
 
 export default function SelectTooltipWrapper(): JSX.Element | null {
-    const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
-    const { display, getArticle } = investigateState;
-    const { chosenArticles, showMaxToast } = getArticle;
+    const chosenArticles = useSelector((state: RootState) => state.investigation.getArticle.chosenArticles);
+    const showMaxToast = useSelector((state: RootState) => state.investigation.getArticle.showMaxToast);
+    const showSelectWarning = useSelector((state: RootState) => state.investigation.display.showSelectWarning);
+    const showSelectTooltip = useSelector((state: RootState) => state.investigation.display.showSelectTooltip);
+    const showGetArticlesModal = useSelector((state: RootState) => state.investigation.display.showGetArticlesModal);
+    const showToast = showMaxToast && (!showSelectWarning) && (!showSelectTooltip) && (!showGetArticlesModal);
     const count: number = useMemo(() => {
         if (Array.isArray(chosenArticles)) {
             return chosenArticles.length;
@@ -24,8 +27,6 @@ export default function SelectTooltipWrapper(): JSX.Element | null {
         };
     }, [chosenArticles]);
     useMaxSelectedToast({ count });
-    const { showSelectTooltip } = display;
-    const { showSelectWarning } = investigateState.display;
     const { getFlags, setFlag } = useTooltipFlags();
     const dispatch = useDispatch<AppDispatch>();
 
@@ -54,7 +55,7 @@ export default function SelectTooltipWrapper(): JSX.Element | null {
                     />
                 }
 
-                {showMaxToast && (!showSelectWarning) && (!showSelectTooltip) && <MaxChosen key={'max-articles-selected'} />}
+                {showToast && <MaxChosen key={'max-articles-selected'} />}
             </AnimatePresence>
         </>
     );
