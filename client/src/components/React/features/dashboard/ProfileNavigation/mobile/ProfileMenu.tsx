@@ -7,10 +7,7 @@ import React from "react";
 function MobileProfileNav() {
   const reviewingResearch = useSelector((state: RootState) => state.profileNav.displayThisInvestigation);
   const reviewingArticle = useSelector((state: RootState) => state.profileNav.displayThisArticle);
-  const hideProfileNav = () => {
-    const isReviewing: boolean = (reviewingArticle || reviewingResearch);
-    return isReviewing;
-  };
+  const hideProfileNav = (reviewingArticle || reviewingResearch);
   const showArticles = useSelector((state: RootState) => state.profileNav.displaySavedArticles)
   const showInvestigations = useSelector((state: RootState) => state.profileNav.displaySavedInvestigations);
   const showManagement = useSelector((state: RootState) => state.profileNav.displayAccountManagement);
@@ -20,8 +17,8 @@ function MobileProfileNav() {
 
   const mobileDashboardNav = (
     <div className={`fixed 
-      ${hideProfileNav ? 'translate-y-40 ' : 'delay-200'}
-      bottom-0 z-30 w-full max-w-full h-20 shadow-thick bg-zinc-900 transition-transform ease-soft duration-200
+      ${hideProfileNav ? 'translate-y-40 delay-100' : 'delay-200'}
+      bottom-0 z-30 w-full max-w-full h-20 shadow-thick bg-zinc-900 transition-transform ease-soft duration-300
     flex justify-center items-center px-4`}>
       <div className="w-full h-auto mx-auto flex items-center justify-between">
         <button
