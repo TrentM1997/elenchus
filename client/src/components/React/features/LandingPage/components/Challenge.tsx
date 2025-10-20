@@ -5,7 +5,7 @@ import Circuitry from "./Circuitry";
 function Challenge() {
 
     return (
-        <section className="lg:p-8 p-4 opacity-0 animate-fade-blur animation-delay-200ms transition-opacity ease-in">
+        <section className="lg:p-8 p-4 opacity-0 animate-fade-blur animation-delay-200ms ease-soft">
             <div className="px-8 py-12 lg:py-24 mx-auto md:px-12 lg:px-16 xl:px-36 lg:max-w-5xl xl:max-w-6xl 2xl:max-w-7xl">
                 <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:gap-24 items-center">
                     <div>

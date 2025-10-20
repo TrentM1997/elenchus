@@ -30,7 +30,7 @@ const sections: Section[] = [
 
 function BiasFeature(): JSX.Element | null {
     return (
-        <section className="lg:p-8 w-full opacity-0 animate-fade-in animation-delay-200ms transition-opacity ease-in">
+        <section className="lg:p-8 w-full opacity-0 animate-fade-in animation-delay-200ms ease-soft">
             <div className="px-8 py-12 mx-auto md:px-12 lg:px-16 xl:px-36 2xl:max-w-7xl border">
                 <div className="lg:text-center max-w-2xl lg:mx-auto">
                     <span className="text-blue-400">Informed Analysis</span>
