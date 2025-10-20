@@ -37,7 +37,7 @@ export default function ArticlesScroller({ handleArticleSelection }): JSX.Elemen
     }, []);
     if (!sortedArticles) return null;
     const { visible, fullyLoaded, loadMore, numSkeletons } = useVirtuoso(sortedArticles);
-    const { fastScroll, clockScrollSpeed } = useSkeletons(180);
+    const { fastScroll, clockScrollSpeed } = useSkeletons(200);
     const { boxShadow, onScrollHandler } = useScrollWithShadow();
     const [deletedIds, setDeletedIds] = useState<Set<number>>(new Set());
     const [status, setStatus] = useState<SigninStatus>(null);
@@ -112,10 +112,10 @@ export default function ArticlesScroller({ handleArticleSelection }): JSX.Elemen
                     defaultItemHeight={240}
                     components={{ Footer: SkeletonMap }}
                     computeItemKey={(_, article) => article.id}
-                    itemContent={(_, article) => {
+                    itemContent={(index, article) => {
                         return (<ArticleSaved>
                             <Title article={article} handleArticleSelection={handleArticleSelection} />
-                            <ArticleThumbnail articleDeleted={deletedIds.has(article.id)} fastScroll={fastScroll} article={article} deleteHandler={deleteHandler} />
+                            <ArticleThumbnail isPriority={(index <= 5)} articleDeleted={deletedIds.has(article.id)} fastScroll={fastScroll} article={article} deleteHandler={deleteHandler} />
                         </ArticleSaved>)
                     }}
                     style={articleScrollerStyles}
