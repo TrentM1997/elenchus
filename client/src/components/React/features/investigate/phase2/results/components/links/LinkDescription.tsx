@@ -9,10 +9,11 @@ interface LinkDescription {
     chosen?: boolean,
     provider?: string,
     logo?: string,
-    description?: string
+    description?: string,
+    inModal?: boolean
 };
 
-function LinkDescription({ isPriority, chosen, provider, logo, description }: LinkDescription) {
+function LinkDescription({ isPriority, chosen, provider, logo, description, inModal }: LinkDescription) {
     const providerSlug = useMemo(() => slugLogo(provider ?? ""), [logo]);
     const logoPath = useMemo(() => {
         const altPath = LOGOS[providerSlug] ?? logo;
@@ -38,7 +39,7 @@ text-[11px] font-medium tracking-wide text-white/90">
                     />
                 </div>
 
-                <div className='group-hover:text-blue-400 transition-colors ease-soft duration-200 h-fit text-lg sm:text-xs text-left lg:text-sm xl:text-base font-serif text-white'>
+                <div className={`${(chosen && !inModal) ? 'group-hover:text-black' : 'group-hover:text-blue-400'} transition-colors ease-soft duration-200 h-fit text-lg sm:text-xs text-left lg:text-sm xl:text-base font-serif text-white`}>
                     {provider}
                 </div>
             </div>

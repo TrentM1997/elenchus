@@ -277,7 +277,7 @@ declare global {
 
   interface LinkProps {
     article: ArticleType,
-    index: number,
+    index?: number,
     removingModal?: boolean
     isPriority?: boolean,
     chooseArticle?: (article: ArticleType) => void,

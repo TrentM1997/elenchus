@@ -13,14 +13,15 @@ function CurrentChosen({ chosenArticles }: CurrentChosen): JSX.Element {
     return (
         <div className="h-full my-auto">
             <p
-                className="text-base md:text-xl 2xl:text-2xl"
-            >Choose articles
+                className="text-base text-zinc-400 md:text-xl 2xl:text-2xl"
+            >{selectedTotal === 3 ? 'Articles chosen' : 'Choose articles'}
                 <span
                     className={`
-                text-blue-500 font-bold tracking-tight mx-2 
+                  font-bold tracking-tight ml-2 xl:ml-6 
                 ${selectedTotal === 3
-                            ? 'animate-pulse transition-opacity ease-soft'
-                            : null}`
+                            ? `inline-block bg-gradient-to-r from-zinc-600 via-zinc-200 to-zinc-600 
+         bg-[length:200%_100%] bg-clip-text text-transparent animate-shimmer`
+                            : 'text-blue-500'}`
                     }
                 >
                     {selectedArticles}

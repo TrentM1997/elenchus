@@ -17,8 +17,8 @@ interface Page {
 export default function Page({ index }: Page): JSX.Element | null {
     const page = useSelector((state: RootState) => state.investigation.search.pages[index]);
     const chosenArticles = useSelector((state: RootState) => state.investigation.getArticle.chosenArticles);
-    const showGetArticlesModal = useSelector((state: RootState) => state.investigation.display.showGetArticlesModal);
     const dispatch = useDispatch<AppDispatch>();
+    const maxChosen = (Array.isArray(chosenArticles) && (chosenArticles.length === 3));
 
     const chooseArticle = (article: ArticleType): void => {
 
@@ -43,20 +43,27 @@ export default function Page({ index }: Page): JSX.Element | null {
     };
 
     return (
-        <ol
-            className="relative h-full no-scrollbar py-2
-            opacity-0 animate-fade-in animation-delay-200ms transition-opacity ease-soft
+        <ul
+            className={`transform-gpu  will-change-[opacity,transform]
+            relative h-full no-scrollbar py-2 opacity-0 animate-fade-in animation-delay-200ms ease-soft
             w-full xl:max-w-6xl 2xl:w-full mx-auto justify-items-center
-            grid grid-cols-1 sm:grid-cols-3 grid-flow-row 2xl:gap-y-6 2xl:gap-x-0 gap-2">
+            grid grid-cols-1 sm:grid-cols-3 grid-flow-row 2xl:gap-y-6 2xl:gap-x-0 gap-2`}>
             {(Array.isArray(page)) && (page.length > 0) &&
                 page.map((article, index) => (
                     <Suspense key={article.url} fallback={<DelayedFallback><LinkPlaceholder /></DelayedFallback>}>
-                        <ArticleLink inModal={false} showGetArticlesModal={showGetArticlesModal} chosenArticles={chosenArticles} mute={(chosenArticles?.length === 3)} chooseArticle={chooseArticle} isPriority={(index <= 8)} article={article} index={index} />
+                        <ArticleLink
+                            inModal={false}
+                            chosenArticles={chosenArticles}
+                            mute={(chosenArticles?.length === 3)}
+                            chooseArticle={chooseArticle}
+                            isPriority={(index <= 8)}
+                            article={article}
+                        />
                     </Suspense>
                 ))
             }
 
-        </ol>
+        </ul>
     );
 };
 
