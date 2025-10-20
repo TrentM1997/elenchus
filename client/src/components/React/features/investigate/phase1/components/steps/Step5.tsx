@@ -7,10 +7,6 @@ import PromptForSearch from "../inputs/prompts/PromptForSearch"
 import React from "react"
 
 function Step5(): JSX.Element | null {
-
-    const investigateState = useSelector((state: RootState) => state.investigation)
-    const { pov } = investigateState
-    const { idea } = pov
     const dispatch = useDispatch()
 
     const beginSearch = () => {

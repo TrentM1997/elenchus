@@ -20,7 +20,7 @@ export default function ControlPanel({ }) {
 
     return (
         <div className="fixed 2xl:left-16 2xl:bottom-16 xl:left-4 xl:bottom-10 lg:left-6 lg:bottom-6 
-        bottom-0 left-0 right-0 z-30 flex lg:w-fit 2xl:w-fit shadow-black
+        bottom-0 left-0 right-0 z-30 flex lg:w-fit 2xl:w-fit shadow-black py-2 md:py-1 px-2 md:px-0
          h-auto bg-black xl:bg-astro_black lg:rounded-full border-t md:border border-border_gray">
 
 

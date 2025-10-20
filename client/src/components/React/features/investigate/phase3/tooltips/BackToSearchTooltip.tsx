@@ -50,7 +50,7 @@ function ServiceDownTip(): JSX.Element | null {
 
     return (
         <div className="w-full h-auto md:px-1 py-1 md:py-1 2xl:p-2 xl:p-1.5">
-            <h1 className="text-black text-wrap text-xs md:text-base md:font-light w-40 h-auto tracking-tighter">
+            <h1 className="text-black text-wrap text-sm md:text-base md:font-light w-60 md:w-40 h-auto tracking-tighter">
                 While the service is down you can still search and visit more sources, click here to return to search.
             </h1>
         </div>
