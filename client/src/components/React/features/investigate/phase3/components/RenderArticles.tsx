@@ -29,7 +29,7 @@ export default function RenderArticles(): JSX.Element | null {
             className="2xl:max-w-6xl h-full w-full mx-auto 
                   mb-12 flex flex-col">
             <div
-                className="w-full min-h-screen mx-auto relative 
+                className="w-full min-h-screen mx-auto relative
                 grow shrink-0"
             >
                 <ErrorBoundary>
