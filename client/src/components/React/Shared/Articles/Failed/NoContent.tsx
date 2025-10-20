@@ -69,10 +69,10 @@ function ExtractionServiceDown(): JSX.Element | null {
 
             </div>
 
-            <h1 className="w-full text-center text-zinc-500 mt-6 text-3xl font-light tracking-tight 2xl:text-3xl">
+            <h1 className="w-full text-center text-zinc-500 antialiased mt-6 text-3xl font-light tracking-tight 2xl:text-3xl">
                 Article extraction service is currently down
             </h1>
-            <p className="text-zinc-500 md:font-light text-center tracking-tight text-lg md:text-sm 2xl:text-xl text-wrap w-auto">
+            <p className="text-zinc-500 antialiased font-light text-center tracking-tight text-lg md:text-sm 2xl:text-xl text-wrap w-auto">
                 You can still visit sources of each article via the 'Visit Source' button on each notification
             </p>
         </div>

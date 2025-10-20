@@ -1,7 +1,6 @@
 import { AnimatePresence } from "framer-motion";
 import { shallowEqual, useSelector } from "react-redux";
 import type { RootState } from "@/ReduxToolKit/store";
-import type { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
 import SelectionRequired from "../../../../../notifications/SelectionRequired";
 import GuideSelectingArticles from "@/components/React/features/investigate/shared/tooltips/GuideSelectingArticles";
 import { useEffect, useMemo } from "react";
@@ -15,9 +14,7 @@ import { useMaxSelectedToast } from "@/hooks/useAutoDismiss";
 export default function SelectTooltipWrapper(): JSX.Element | null {
     const chosenArticles = useSelector((state: RootState) => state.investigation.getArticle.chosenArticles);
     const showMaxToast = useSelector((state: RootState) => state.investigation.getArticle.showMaxToast);
-    const showSelectWarning = useSelector((state: RootState) => state.investigation.display.showSelectWarning);
-    const showSelectTooltip = useSelector((state: RootState) => state.investigation.display.showSelectTooltip);
-    const showGetArticlesModal = useSelector((state: RootState) => state.investigation.display.showGetArticlesModal);
+    const { showSelectWarning, showSelectTooltip, showGetArticlesModal } = useSelector((state: RootState) => state.investigation.display, shallowEqual);
     const showToast = showMaxToast && (!showSelectWarning) && (!showSelectTooltip) && (!showGetArticlesModal);
     const count: number = useMemo(() => {
         if (Array.isArray(chosenArticles)) {

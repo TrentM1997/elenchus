@@ -7,7 +7,7 @@ import type { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateR
 export default function SearchButton() {
     const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
     const { status } = investigateState.search;
-    const spinnerVisible = useMinTimeVisible((status === 'pending'), 150, 800);
+    const spinnerVisible = useMinTimeVisible((status === 'pending'), 0, 800);
 
     return (
         <button type="submit"

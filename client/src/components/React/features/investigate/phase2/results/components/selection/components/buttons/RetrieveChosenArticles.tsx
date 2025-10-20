@@ -1,11 +1,10 @@
-import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
 import { displayGetArticlesModal, displaySelectionWarning, displaySelectTooltip } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer";
 import { AppDispatch } from "@/ReduxToolKit/store";
 import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
 
-function RetrieveChosenArticles() {
+export default function RetrieveChosenArticles() {
     const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
     const { chosenArticles } = investigateState.getArticle;
     const dispatch = useDispatch<AppDispatch>()
@@ -41,5 +40,3 @@ function RetrieveChosenArticles() {
     );
 };
 
-
-export default React.memo(RetrieveChosenArticles);
