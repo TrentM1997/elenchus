@@ -27,7 +27,7 @@ export default function MobileNavigation({ isOpen, toggle }) {
 
     const handleAuthChoice = () => {
         if (!activeSession) {
-            navigate('/Login')
+            navigate('/login')
             toggle()
 
         } else if (activeSession) {
