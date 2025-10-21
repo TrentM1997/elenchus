@@ -23,13 +23,7 @@ function SourceInfo({ article }: SourceInfoProps): JSX.Element | null {
                     </span>
                 </p>
             </div>
-            <div className="hidden xl:flex">
-                <p className="text-blue-400 text-xs">
-                    Factual Reporting <span className="text-zinc-400 px-1">•</span> <span className="text-zinc-400">
-                        {article.factual_reporting ? article.factual_reporting : 'Unknown'}
-                    </span>
-                </p>
-            </div>
+
         </>
     );
 };

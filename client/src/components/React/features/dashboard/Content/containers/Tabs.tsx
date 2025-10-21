@@ -19,7 +19,7 @@ function Tabs(): JSX.Element | null {
         displaySavedInvestigations,
         displaySavedArticles,
         displayAccountManagement,
-        displayDashboard,
+        displayMetrics,
         displayThisArticle,
         displayThisInvestigation
     } = useSelector((state: RootState) => state.profileNav, shallowEqual);
@@ -34,7 +34,7 @@ function Tabs(): JSX.Element | null {
             variants={variants} initial='closed' animate='open' exit='closed' transition={{ type: 'tween', duration: 0.2 }}>
             <ErrorBoundary>
                 <AnimatePresence mode="wait">
-                    {displayDashboard && <Metrics key='dashboard' />}
+                    {displayMetrics && <Metrics key='dashboard' />}
 
                     {displayAccountManagement && <AccManagement key='settings' />}
 

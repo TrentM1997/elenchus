@@ -39,7 +39,7 @@ function ResearchSource({ source }) {
                 </div>
                 <div className="w-auto">
                     <img
-                        className="aspect-[16/9] w-88 lg:w-112 xl:w-128 rounded-3xl object-cover sm:aspect-[2/1] overflow-hidden lg:aspect-[3/2]"
+                        className="aspect-[16/9] w-88 lg:w-112 xl:max-w-[26rem] xl:min-w-[26rem] rounded-3xl object-cover sm:aspect-[2/1] overflow-hidden lg:aspect-[3/2]"
                         width="560"
                         height="380"
                         src={source.image_url}

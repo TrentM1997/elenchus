@@ -65,7 +65,7 @@ export default function ArticlesScroller({ sortedArticles, markIds, deletedIds, 
     );
     const { fastScroll, clockScrollSpeed } = useSkeletons(200);
     const { boxShadow, onScrollHandler } = useScrollWithShadow();
-    const [status, setStatus] = useState<SigninStatus>(null);
+    const [status, setStatus] = useState<SigninStatus>('idle');
     const dispatch = useDispatch<AppDispatch>();
     const timerRef = useRef<number | null>(null);
     const articleScrollerStyles: CSSProperties = stylesWithShadow(boxShadow);
@@ -94,8 +94,8 @@ export default function ArticlesScroller({ sortedArticles, markIds, deletedIds, 
 
     const deleteHandler = useCallback(
         async (article: Article): Promise<void> => {
-            if (status) return;
-
+            if (status === 'pending') return;
+            setStatus('pending')
             try {
                 const results = await saveArticle(article, true);
                 if (results.data.message === "Deleted") {
@@ -117,11 +117,11 @@ export default function ArticlesScroller({ sortedArticles, markIds, deletedIds, 
             px-2 pt-8 md:pt-2 md:hover:shadow-[0_0_10px_rgba(255,255,255,0.03)] transition-shadow duration-200 ease-[cubic-bezier(.2,.6,.2,1)]"
         >
             <AnimatePresence>
-                {status &&
+                {(status !== 'idle') &&
                     <AuthNotification
                         status={status}
                         setStatus={setStatus}
-                        action="Deleting"
+                        action="Delete"
                     />}
             </AnimatePresence>
 

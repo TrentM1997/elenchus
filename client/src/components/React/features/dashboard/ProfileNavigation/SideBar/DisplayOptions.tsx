@@ -4,28 +4,29 @@ import MetricsIcon from "@/components/React/Shared/IconComponents/MetricsIcon";
 import InvestigationsIcon from "@/components/React/Shared/IconComponents/InvestigateIcon";
 import { shallowEqual, useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
-import { presentDashboard, presentResearch, presentArticles } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
+import { presentMetrics, presentResearch, presentArticles } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
 import React from "react";
 
 function DisplayOptions() {
-    const { displaySavedArticles, displayDashboard, displaySavedInvestigations } = useSelector((state: RootState) => state.profileNav, shallowEqual);
-
+    const { displaySavedArticles, displayMetrics, displaySavedInvestigations, displayThisInvestigation, displayThisArticle } = useSelector((state: RootState) => state.profileNav, shallowEqual);
+    const investigations_innit = (displaySavedInvestigations || displayThisInvestigation);
+    const articles_innit = (displaySavedArticles || displayThisArticle);
 
     return (
         <ul
             id="dashboard-controls"
             className="space-y-2 font-medium">
 
-            <DashboardOption name="Metrics" activeCondition={displayDashboard} actionCreator={presentDashboard}>
-                <MetricsIcon active={displayDashboard} />
+            <DashboardOption name="Metrics" activeCondition={displayMetrics} actionCreator={presentMetrics}>
+                <MetricsIcon active={displayMetrics} />
             </DashboardOption>
 
-            <DashboardOption name="Investigations" activeCondition={displaySavedInvestigations} actionCreator={presentResearch}>
-                <InvestigationsIcon active={displaySavedInvestigations} />
+            <DashboardOption name="Investigations" activeCondition={investigations_innit} actionCreator={presentResearch}>
+                <InvestigationsIcon active={investigations_innit} />
             </DashboardOption>
 
-            <DashboardOption name="Saved Articles" activeCondition={displaySavedArticles} actionCreator={presentArticles}>
-                <BookmarkIcon active={displaySavedArticles} />
+            <DashboardOption name="Saved Articles" activeCondition={articles_innit} actionCreator={presentArticles}>
+                <BookmarkIcon active={articles_innit} />
             </DashboardOption>
         </ul>
     );

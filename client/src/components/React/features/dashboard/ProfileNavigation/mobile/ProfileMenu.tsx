@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux"
-import { presentArticles, presentResearch, presentManagement, presentDashboard } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
+import { presentArticles, presentResearch, presentManagement, presentMetrics } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
 import { RootState } from "@/ReduxToolKit/store";
 import { createPortal } from "react-dom";
 import React from "react";
@@ -11,7 +11,7 @@ function MobileProfileNav() {
   const showArticles = useSelector((state: RootState) => state.profileNav.displaySavedArticles)
   const showInvestigations = useSelector((state: RootState) => state.profileNav.displaySavedInvestigations);
   const showManagement = useSelector((state: RootState) => state.profileNav.displayAccountManagement);
-  const showDashboard = useSelector((state: RootState) => state.profileNav.displayDashboard);
+  const showDashboard = useSelector((state: RootState) => state.profileNav.displayMetrics);
   const dispatch = useDispatch();
 
 
@@ -23,7 +23,7 @@ function MobileProfileNav() {
       <div className="w-full h-auto mx-auto flex items-center justify-between">
         <button
           onClick={() => {
-            dispatch(presentDashboard())
+            dispatch(presentMetrics())
           }}
           type="button" className="inline-flex flex-col items-center justify-center group">
           <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
