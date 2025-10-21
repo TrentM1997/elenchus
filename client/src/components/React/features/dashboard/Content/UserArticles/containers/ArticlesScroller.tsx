@@ -1,16 +1,14 @@
-import { Virtuoso } from "react-virtuoso";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/ReduxToolKit/store";
+import { ListRange, Virtuoso, VirtuosoHandle } from "react-virtuoso";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/ReduxToolKit/store";
 import ArticleSaved from "../components/ArticleSaved";
 import SkeletonMap from "../skeletons/SkeletonMap";
 import { useVirtuoso } from "@/hooks/useVirtuoso";
-import { readSavedArticle } from "@/ReduxToolKit/Reducers/UserContent/UserContentReducer"
-import { useCallback, useMemo, useState } from "react";
-import { presentThisArticle } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { selectArticleScrollPos, VirtuosoScrollPos } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
 import { saveArticle } from "@/services/supabase/SupabaseData";
 import { AnimatePresence } from "framer-motion";
 import AuthNotification from "@/components/React/session/notifications/AuthNotification";
-import { deleteArticleStatus } from "@/components/React/session/notifications/AuthStatus";
 import Title from "../components/Title";
 import ArticleThumbnail from "../components/ArticleThumbnail";
 import { useSkeletons } from "@/hooks/useSkeletons";
@@ -19,29 +17,45 @@ import type { CSSProperties } from "react";
 import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary";
 import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 import { SigninStatus } from "@/hooks/useSignIn";
-
+import type { AppDispatch } from "@/ReduxToolKit/store";
+import { readSavedArticle } from "@/ReduxToolKit/Reducers/UserContent/UserContentReducer";
+import { presentThisArticle } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
+import type { Ref } from "react";
 
 export interface RenderingValues {
     fullyLoaded: boolean | null,
     numSkeletons: number | null
 };
 
-export default function ArticlesScroller({ handleArticleSelection }): JSX.Element | null {
-    const userArticles: Article[] | null = useSelector((state: RootState) => state.userdata.userArticles);
-    const sortedArticles = useMemo(() => {
-        const artcs = userArticles
-            ? userArticles.slice()
-            : null;
-        const sorted = artcs?.sort((a: Article, b: Article) => b.id - a.id);
-        return sorted;
-    }, []);
+
+function stylesWithShadow(shadow: string): CSSProperties {
+
+    const boxShadow = shadow;
+
+    return {
+        height: '94.5%',
+        width: '100%',
+        boxShadow: boxShadow
+    }
+}
+
+interface ArticleScroller {
+    sortedArticles: Article[] | null,
+    markIds: (id: number, deleted: boolean) => void,
+    deletedIds: Set<number>,
+    restorePosition: VirtuosoScrollPos | null
+};
+
+export default function ArticlesScroller({ sortedArticles, markIds, deletedIds, restorePosition }: ArticleScroller): JSX.Element | null {
+    const virutuosoRef = useRef(null)
     if (!sortedArticles) return null;
-    const { visible, fullyLoaded, loadMore, numSkeletons } = useVirtuoso(sortedArticles);
+    const { visible, fullyLoaded, loadMore, numSkeletons, topKeyRef, topIndexRef, saveNow, scrollRef, initialTopMostItemIndex } = useVirtuoso(sortedArticles, 'articles', restorePosition ?? null, sortedArticles[0].id);
     const { fastScroll, clockScrollSpeed } = useSkeletons(200);
     const { boxShadow, onScrollHandler } = useScrollWithShadow();
-    const [deletedIds, setDeletedIds] = useState<Set<number>>(new Set());
     const [status, setStatus] = useState<SigninStatus>(null);
-
+    const dispatch = useDispatch<AppDispatch>();
+    const timerRef = useRef<number | null>(null);
+    const articleScrollerStyles: CSSProperties = stylesWithShadow(boxShadow);
     const rendering_values: RenderingValues = useMemo(() => {
         const context = {
             fullyLoaded: fullyLoaded ?? null,
@@ -51,26 +65,19 @@ export default function ArticlesScroller({ handleArticleSelection }): JSX.Elemen
     }, [fullyLoaded, numSkeletons]);
 
 
-    const articleScrollerStyles: CSSProperties = {
-        height: '94.5%',
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'start',
-        justifyContent: 'end',
-        overscrollBehavior: 'contain',
-        overflowX: 'hidden',
-        boxShadow: boxShadow
-    };
 
-    const markIds = (id: number, deleted: boolean) => {
-        setDeletedIds(prev => {
-            const next = new Set(prev);
-            deleted ? next.add(id) : next.delete(id);
-            return next;
-        });
-    };
+    const handleArticleSelection = useCallback((article: Article) => () => {
+        dispatch(readSavedArticle(article));
+        dispatch(presentThisArticle());
 
+        timerRef.current = window.setTimeout(() => {
+
+            saveNow();
+
+            timerRef.current = null;
+        }, 200);
+
+    }, [dispatch, visible]);
 
     const deleteHandler = useCallback(
         async (article: Article): Promise<void> => {
@@ -105,13 +112,15 @@ export default function ArticlesScroller({ handleArticleSelection }): JSX.Elemen
                     />}
             </AnimatePresence>
 
-
             <ErrorBoundary>
                 <Virtuoso
+                    ref={virutuosoRef}
+                    scrollerRef={(el: HTMLDivElement) => { scrollRef.current = el; }}
                     onScroll={onScrollHandler}
                     defaultItemHeight={240}
                     components={{ Footer: SkeletonMap }}
                     computeItemKey={(_, article) => article.id}
+                    initialTopMostItemIndex={initialTopMostItemIndex}
                     itemContent={(index, article) => {
                         return (<ArticleSaved>
                             <Title article={article} handleArticleSelection={handleArticleSelection} />
@@ -122,10 +131,14 @@ export default function ArticlesScroller({ handleArticleSelection }): JSX.Elemen
                     className="no-scrollbar scrollbar-gutter:stable overscroll-contain transition-shadow ease-[cubic-bezier(.2,.6,.2,1)]"
                     data={visible}
                     endReached={loadMore}
-                    increaseViewportBy={800}
+                    increaseViewportBy={200}
                     isScrolling={clockScrollSpeed}
                     context={rendering_values}
-
+                    rangeChanged={(r: ListRange) => {
+                        topIndexRef.current = r.endIndex;
+                        const item = visible[r.startIndex];
+                        topKeyRef.current = item ? (item as any).id : null;
+                    }}
                 />
             </ErrorBoundary>
 

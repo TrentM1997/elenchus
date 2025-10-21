@@ -1,4 +1,16 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import type { RootState } from "@/ReduxToolKit/store";
+
+export interface VirtuosoScrollPos {
+    topKey: string | number | null,
+    topIndex: number | null,
+    scrollTop: number | null,
+    dataVersion: number | null,
+    viewportHeight?: number | null,
+    savedAt?: number | null,
+    listID?: 'articles' | 'investigations' | null;
+};
+
 
 interface NavigateProfile {
 
@@ -10,7 +22,8 @@ interface NavigateProfile {
     displayThisInvestigation: boolean,
     displayThisArticle: boolean,
     backToArticles: boolean,
-    backToResearch: boolean
+    backToResearch: boolean,
+    articleScrollPosition: VirtuosoScrollPos | null,
 }
 
 const initialState: NavigateProfile = {
@@ -22,15 +35,38 @@ const initialState: NavigateProfile = {
     displayThisInvestigation: false,
     displayThisArticle: false,
     backToArticles: false,
-    backToResearch: false
+    backToResearch: false,
+    articleScrollPosition: null
 }
 
+
+export const selectArticleScrollPos = (s: RootState) => s.profileNav.articleScrollPosition;
 
 
 const ProfileNavigationSlice = createSlice({
     name: 'profileNav',
     initialState: initialState,
     reducers: {
+        storeScrollPosition: (state, action: PayloadAction<VirtuosoScrollPos | null>) => {
+            const next = action.payload;
+            const prev = state.articleScrollPosition;
+
+            if (
+                prev &&
+                next &&
+                prev.topKey === next.topKey &&
+                prev.topIndex === next.topIndex &&
+                prev.scrollTop === next.scrollTop &&
+                prev.dataVersion === next.dataVersion &&
+                prev.viewportHeight === next.viewportHeight
+            ) return;
+
+            state.articleScrollPosition = next;
+
+        },
+        clearScrollPosition: (state) => {
+            state.articleScrollPosition = null
+        },
         presentArticles: (state) => {
             state.displaySavedArticles = true;
             state.displayAccountManagement = false;
@@ -95,6 +131,6 @@ const ProfileNavigationSlice = createSlice({
 });
 
 
-export const { presentArticles, presentResearch, presentDeleteModal, presentManagement, presentDashboard, presentThisInvestigation, presentThisArticle } = ProfileNavigationSlice.actions;
+export const { presentArticles, presentResearch, presentDeleteModal, presentManagement, presentDashboard, presentThisInvestigation, presentThisArticle, storeScrollPosition, clearScrollPosition } = ProfileNavigationSlice.actions;
 
 export default ProfileNavigationSlice.reducer;
