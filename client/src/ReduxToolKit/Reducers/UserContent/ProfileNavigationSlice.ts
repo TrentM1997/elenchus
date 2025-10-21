@@ -24,6 +24,7 @@ interface NavigateProfile {
     backToArticles: boolean,
     backToResearch: boolean,
     articleScrollPosition: VirtuosoScrollPos | null,
+    researchScrollPosition: VirtuosoScrollPos | null
 }
 
 const initialState: NavigateProfile = {
@@ -36,7 +37,8 @@ const initialState: NavigateProfile = {
     displayThisArticle: false,
     backToArticles: false,
     backToResearch: false,
-    articleScrollPosition: null
+    articleScrollPosition: null,
+    researchScrollPosition: null
 }
 
 
@@ -66,6 +68,26 @@ const ProfileNavigationSlice = createSlice({
         },
         clearScrollPosition: (state) => {
             state.articleScrollPosition = null
+        },
+        storeResearchScrollPosition: (state, action: PayloadAction<VirtuosoScrollPos | null>) => {
+            const next = action.payload;
+            const prev = state.researchScrollPosition;
+
+            if (
+                prev &&
+                next &&
+                prev.topKey === next.topKey &&
+                prev.topIndex === next.topIndex &&
+                prev.scrollTop === next.scrollTop &&
+                prev.dataVersion === next.dataVersion &&
+                prev.viewportHeight === next.viewportHeight
+            ) return;
+
+            state.researchScrollPosition = next;
+
+        },
+        clearResearchScrollPos: (state) => {
+            state.researchScrollPosition = null;
         },
         presentArticles: (state) => {
             state.displaySavedArticles = true;
@@ -131,6 +153,6 @@ const ProfileNavigationSlice = createSlice({
 });
 
 
-export const { presentArticles, presentResearch, presentDeleteModal, presentManagement, presentDashboard, presentThisInvestigation, presentThisArticle, storeScrollPosition, clearScrollPosition } = ProfileNavigationSlice.actions;
+export const { presentArticles, presentResearch, presentDeleteModal, presentManagement, presentDashboard, presentThisInvestigation, presentThisArticle, storeScrollPosition, clearScrollPosition, storeResearchScrollPosition, clearResearchScrollPos } = ProfileNavigationSlice.actions;
 
 export default ProfileNavigationSlice.reducer;

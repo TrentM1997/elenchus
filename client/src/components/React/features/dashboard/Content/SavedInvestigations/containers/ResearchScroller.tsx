@@ -1,4 +1,4 @@
-import { Virtuoso } from "react-virtuoso";
+import { Virtuoso, ListRange } from "react-virtuoso";
 import { useVirtuoso } from "@/hooks/useVirtuoso";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/ReduxToolKit/store";
@@ -9,17 +9,38 @@ import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";
 import { reviewThisResearch } from "@/ReduxToolKit/Reducers/UserContent/UserInvestigations";
 import { useSkeletons } from "@/hooks/useSkeletons";
 import { presentThisInvestigation } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
+import type { SavedInvestigation } from "./SavedResearchLayout";
 
-export default function ResearchScroller() {
-    const investigations = useSelector((state: RootState) => state.userWork.userResearch);
-    const newArr = Array.isArray(investigations) ? [...investigations] : [];
-    const timeline = newArr.sort((a, b) => b.id - a.id);
-    const { visible, fullyLoaded, loadMore, numSkeletons } = useVirtuoso(timeline);
+interface ResearchScroller {
+    timeline: SavedInvestigation[]
+};
+
+export default function ResearchScroller({ timeline }: ResearchScroller) {
+    const restorePosition = useSelector((state: RootState) => state.profileNav.researchScrollPosition);
+    const {
+        visible,
+        fullyLoaded,
+        loadMore,
+        numSkeletons,
+        topKeyRef,
+        topIndexRef,
+        saveNow,
+        scrollRef,
+        initialTopMostItemIndex
+    } = useVirtuoso(
+        timeline,
+        'investigations',
+        restorePosition ?? null,
+        timeline[0].id
+    );
     const { boxShadow, onScrollHandler } = useScrollWithShadow();
     const dispatch = useDispatch<AppDispatch>();
     const { fastScroll, clockScrollSpeed } = useSkeletons(180);
+    const virtuosoRef = useRef();
+
 
     const review = useCallback((investigation: any) => {
+        saveNow();
         dispatch(reviewThisResearch(investigation))
         setTimeout(() => {
             dispatch(presentThisInvestigation());
@@ -32,9 +53,17 @@ export default function ResearchScroller() {
             overflow-x-hidden hover:shadow-[0_0_10px_rgba(255,255,255,0.03)] ease-[cubic-bezier(.2,.6,.2,1)] transition-shadow duration-200"
         >
             <Virtuoso
+                ref={virtuosoRef}
+                scrollerRef={(el: HTMLDivElement) => scrollRef.current = el}
+                initialTopMostItemIndex={initialTopMostItemIndex}
                 style={{
                     height: '94%', width: '100%', display: 'flex', overflowX: 'hidden', overscrollBehavior: 'contain',
                     flexDirection: 'column', alignItems: 'center', justifyContent: 'start', boxShadow: boxShadow
+                }}
+                rangeChanged={(r: ListRange) => {
+                    topIndexRef.current = r.endIndex;
+                    const item = visible[r.startIndex];
+                    topKeyRef.current = item ? (item as any).id : null;
                 }}
                 className="no-scrollbar"
                 onScroll={onScrollHandler}
@@ -42,7 +71,7 @@ export default function ResearchScroller() {
                 defaultItemHeight={512}
                 data={visible}
                 endReached={loadMore}
-                increaseViewportBy={500}
+                increaseViewportBy={200}
                 computeItemKey={(_, investigation) => investigation.id}
                 context={{ fullyLoaded, numSkeletons }}
                 components={{ Footer: InvestigationSkeletons }}

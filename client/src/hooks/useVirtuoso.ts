@@ -1,4 +1,4 @@
-import { clearScrollPosition, storeScrollPosition, VirtuosoScrollPos } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
+import { clearScrollPosition, storeResearchScrollPosition, storeScrollPosition, VirtuosoScrollPos } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
 import { AppDispatch } from "@/ReduxToolKit/store";
 import React, { useState, useCallback, useRef, useEffect, useMemo, useLayoutEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -82,16 +82,28 @@ export function useVirtuoso<T>(items: T[], scrollerId?: ScrollID, restoreToken?:
     const saveNow = useCallback(() => {
         if (didSaveRef.current) return;
         didSaveRef.current = true;
+        if (scrollerId === 'articles') {
+            dispatch(storeScrollPosition({
+                listID: scrollerId,
+                dataVersion: items.length,
+                topIndex: topIndexRef.current ?? 0,
+                topKey: topKeyRef.current ?? null,
+                scrollTop: scrollRef.current?.scrollTop ?? null,
+                viewportHeight: scrollRef.current?.clientHeight ?? null,
+                savedAt: Date.now(),
+            }));
+        } else {
+            dispatch(storeResearchScrollPosition({
+                listID: scrollerId,
+                dataVersion: items.length,
+                topIndex: topIndexRef.current ?? 0,
+                topKey: topKeyRef.current ?? null,
+                scrollTop: scrollRef.current?.scrollTop ?? null,
+                viewportHeight: scrollRef.current?.clientHeight ?? null,
+                savedAt: Date.now(),
+            }))
+        }
 
-        dispatch(storeScrollPosition({
-            listID: scrollerId,
-            dataVersion: items.length,
-            topIndex: topIndexRef.current ?? 0,
-            topKey: topKeyRef.current ?? null,
-            scrollTop: scrollRef.current?.scrollTop ?? null,
-            viewportHeight: scrollRef.current?.clientHeight ?? null,
-            savedAt: Date.now(),
-        }));
     }, [dispatch, scrollerId, items.length]);
 
     const loadMore: LoadMore = useCallback(() => {

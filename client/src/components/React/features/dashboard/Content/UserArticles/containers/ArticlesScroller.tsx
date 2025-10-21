@@ -1,11 +1,10 @@
-import { ListRange, Virtuoso, VirtuosoHandle } from "react-virtuoso";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
+import { ListRange, Virtuoso } from "react-virtuoso";
+import { useDispatch } from "react-redux";
 import ArticleSaved from "../components/ArticleSaved";
 import SkeletonMap from "../skeletons/SkeletonMap";
 import { useVirtuoso } from "@/hooks/useVirtuoso";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { selectArticleScrollPos, VirtuosoScrollPos } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
+import { useCallback, useMemo, useRef, useState } from "react";
+import { VirtuosoScrollPos } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
 import { saveArticle } from "@/services/supabase/SupabaseData";
 import { AnimatePresence } from "framer-motion";
 import AuthNotification from "@/components/React/session/notifications/AuthNotification";
@@ -20,7 +19,6 @@ import { SigninStatus } from "@/hooks/useSignIn";
 import type { AppDispatch } from "@/ReduxToolKit/store";
 import { readSavedArticle } from "@/ReduxToolKit/Reducers/UserContent/UserContentReducer";
 import { presentThisArticle } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
-import type { Ref } from "react";
 
 export interface RenderingValues {
     fullyLoaded: boolean | null,
@@ -49,7 +47,22 @@ interface ArticleScroller {
 export default function ArticlesScroller({ sortedArticles, markIds, deletedIds, restorePosition }: ArticleScroller): JSX.Element | null {
     const virutuosoRef = useRef(null)
     if (!sortedArticles) return null;
-    const { visible, fullyLoaded, loadMore, numSkeletons, topKeyRef, topIndexRef, saveNow, scrollRef, initialTopMostItemIndex } = useVirtuoso(sortedArticles, 'articles', restorePosition ?? null, sortedArticles[0].id);
+    const {
+        visible,
+        fullyLoaded,
+        loadMore,
+        numSkeletons,
+        topKeyRef,
+        topIndexRef,
+        saveNow,
+        scrollRef,
+        initialTopMostItemIndex
+    } = useVirtuoso(
+        sortedArticles,
+        'articles',
+        restorePosition ?? null,
+        sortedArticles[0].id
+    );
     const { fastScroll, clockScrollSpeed } = useSkeletons(200);
     const { boxShadow, onScrollHandler } = useScrollWithShadow();
     const [status, setStatus] = useState<SigninStatus>(null);

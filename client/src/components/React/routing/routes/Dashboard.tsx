@@ -8,7 +8,7 @@ import SidebarLoader from "../../features/dashboard/ProfileNavigation/skeletons/
 import { AnimatePresence } from "framer-motion";
 import SignOutModal from "../../session/forms/AuthForms/SignOutModal";
 import DelayedFallback from "../../Shared/fallbacks/DelayedFallback";
-import { clearScrollPosition } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
+import { clearResearchScrollPos, clearScrollPosition } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
 const MobileProfileNav = lazy(() => import('../../features/dashboard/ProfileNavigation/mobile/ProfileMenu'));
 const SideBar = lazy(() => import('../../features/dashboard/ProfileNavigation/SideBar/Sidebar'));
 
@@ -22,6 +22,7 @@ export default function Dashboard(): JSX.Element {
 
         return () => {
             dispatch(clearScrollPosition());
+            dispatch(clearResearchScrollPos());
         }
     }, []);
 
