@@ -29,7 +29,7 @@ export function ChartSkeletonWrapper({ children }): JSX.Element | null {
     return (
         <div className="mx-auto 2xl:max-w-7xl">
             <div className="grid grid-cols-1 lg:grid-cols-2 pt-8 xl:pt-0 lg:gap-36 xl:gap-x-44 items-center">
-                <SourceDiversitySkeleton />
+                <ChartDescriptionSkeleton />
                 {children}
             </div>
         </div>
@@ -39,54 +39,24 @@ export function ChartSkeletonWrapper({ children }): JSX.Element | null {
 
 
 export function DonutSkeletonChart(): JSX.Element | null {
-    const message: string = 'loading...';
-    const [typed, setTyped] = useState<string>("");
-    const [currIndex, setCurrIndex] = useState<number>(0);
-
-    useEffect(() => {
-
-        const typeNextChar = (): void => {
-            setTyped(prev => prev + message[currIndex]);
-            setCurrIndex(prev => prev + 1);
-        };
-
-        const interval = setInterval(() => {
-            if (currIndex < message.length) {
-                typeNextChar();
-            } else {
-                setTyped("");
-                setCurrIndex(0);
-            };
-        }, 300);
-
-        return () => {
-            clearInterval(interval);
-        };
-
-    }, [currIndex]);
-
-
 
     return (
         <div className="relative flex flex-col gap-y-3 md:items-start items-center justify-center md:pt-0 h-88 w-88 lg:h-112 lg:w-112">
             <LegendSkeleton />
-
-            {/* Donut skeleton */}
-            <div className="relative md:h-88 md:w-88 h-72 w-72 rounded-full border-[88px] border-zinc-800/50  border-t-zinc-800/30 border-l-zinc-800 animate-pulse" />
-
-            {/* Caption skeleton (below chart) */}
-            <div className="absolute -bottom-8 left-1/3 w-auto mx-auto">
-                <p className="text-zinc-400 font-light tracking-tight text-sm text-center">
-                    loading
-                </p>
-            </div>
+            <SkeletonDonut />
         </div >
 
     )
 };
 
 
-export function LegendSkeleton() {
+export function SkeletonDonut(): JSX.Element | null {
+
+    return <div className="relative md:h-88 md:w-88 h-72 w-72 rounded-full border-[88px] border-zinc-800/50  border-t-zinc-800/30 border-l-zinc-800 animate-pulse" />
+}
+
+
+export function LegendSkeleton(): JSX.Element | null {
 
     return (
         <div className="relative h-fit w-auto mx-auto flex flex-wrap gap-1.5 items-center justify-start box-border">
@@ -119,7 +89,7 @@ export function LegendSkeleton() {
 
 
 
-function SourceDiversitySkeleton() {
+function ChartDescriptionSkeleton(): JSX.Element | null {
     return (
         <section
             role="status"

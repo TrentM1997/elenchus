@@ -1,13 +1,13 @@
-import { lazy, Suspense, useRef, useEffect, useMemo } from "react";
+import { lazy, Suspense, useEffect, useMemo } from "react";
 import PieSkeleton from "@/components/React/features/charts/skeletons/PieSkeleton";
-import DonutSkeleton, { DonutSkeletonChart } from "@/components/React/features/charts/skeletons/DonutSkeleton";
+import { DonutSkeletonChart } from "@/components/React/features/charts/skeletons/ChartJsSkeleton";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch } from "@/ReduxToolKit/store";
 import { RootState } from "@/ReduxToolKit/store";
 import { getBiasSnapshot, getReportingRatings } from "@/ReduxToolKit/Reducers/UserContent/ChartSlice";
 import BiasWebWorker from '@/services/workers/biasSnapshot.js?worker';
 import IntegrityWebWorker from '@/services/workers/integrityWorker.js?worker';
-import ChartJsSkeleton from "@/components/React/features/charts/skeletons/DonutSkeleton";
+import ChartJsSkeleton from "@/components/React/features/charts/skeletons/ChartJsSkeleton";
 import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback";
 const BiasChart = lazy(() => import('@/components/React/features/charts/DonutChart/BiasChart'))
 const IntegrityChart = lazy(() => import('@/components/React/features/charts/PieChart/IntegrityChart'));
@@ -17,6 +17,8 @@ export default function ChartJsWrapper() {
     const biasRatings = useSelector((state: RootState) => state.chart.biasRatings);
     const ratingData = useSelector((state: RootState) => state.chart.reportingIntegrity);
     const dispatch = useDispatch<AppDispatch>();
+
+
     const priority1: boolean = useMemo(() => {
         const hasArticles = (Array.isArray(userArticles) && (userArticles.length > 0));
         if (!hasArticles) return false;
@@ -80,26 +82,26 @@ export default function ChartJsWrapper() {
 
     return (
         <>
-            <Suspense fallback={<DelayedFallback>
-                <ChartJsSkeleton>
-                    <DonutSkeletonChart />
+            <Suspense fallback={<DelayedFallback key={'delay-skeleton'}>
+                <ChartJsSkeleton key={'skeleton-wrapper'}>
+                    <DonutSkeletonChart key={'skeleton-donut'} />
                 </ChartJsSkeleton>
             </DelayedFallback>}>
-                {priority1 && <BiasChart />}
+                {priority1 && <BiasChart key={'bias-chart'} />}
 
             </Suspense>
 
 
             <Suspense fallback={
-                <DelayedFallback>
-                    <ChartJsSkeleton>
-                        <PieSkeleton />
+                <DelayedFallback key={'delay-pie-skeleton'}>
+                    <ChartJsSkeleton key={'wrapper-skeleton'}>
+                        <PieSkeleton key={'pie-skeleton'} />
                     </ChartJsSkeleton>
                 </DelayedFallback>
 
             }>
                 {priority2 &&
-                    <IntegrityChart />}
+                    <IntegrityChart key={'integrity-chart'} />}
             </Suspense>
         </>
     );
