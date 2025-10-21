@@ -77,7 +77,7 @@ export default function DetailsTable() {
 
 
     return (
-        <section className="xl:max-w-7xl lg:max-w-4xl max-w-2xl">
+        <section className="2xl:max-w-7xl xl:max-w-5xl lg:max-w-4xl md:max-w-3xl max-w-2xl">
             <div
                 className="mx-auto 2xl:max-w-7xl lg:py-12 lg:px-0 2xl:py-0 px-2 items-center relative w-full">
                 <div

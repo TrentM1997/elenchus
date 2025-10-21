@@ -43,7 +43,7 @@ export default function ResearchReview() {
             className="h-full min-h-dvh w-full
           animate-fade-in duration-200">
             <DetailView backTo={backTo} />
-            <div className="w-full h-full pb-20 overscroll-contain overflow-y-scroll no-scrollbar grow flex flex-col gap-y-20 items-center justify-start">
+            <div className="w-full h-full pb-20 overscroll-contain overflow-y-scroll no-scrollbar grow flex flex-col gap-y-24 items-center justify-start">
                 <ErrorBoundary>
                     <DetailsTable />
                     <SourcesFromResearch />

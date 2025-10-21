@@ -18,10 +18,9 @@ function ResearchSource({ source }) {
     return (
 
 
-        <li key={source.id} className="cursor-pointer">
-            <a
-                className="grid grid-cols-1 gap-12 lg:gap-24 md:grid-cols-2 items-center"
-                href={source.url}
+        <li key={source.id} className="cursor-pointer mx-auto w-fit lg:max-w-6xl xl:max-w-7xl">
+            <div
+                className="flex flex-col md:flex-row justify-between gap-12 lg:gap-24 items-center"
                 title={source.title}>
                 <div className="group" onClick={handleArticleSelection}>
                     <h3
@@ -38,13 +37,16 @@ function ResearchSource({ source }) {
                         Published by - <span className="text-zinc-400 md:group-hover:text-blue-400 transition-all ease-in-out duration-200">{source.provider} </span>
                     </p>
                 </div>
-                <img
-                    className="aspect-[16/9] w-4/5 rounded-3xl object-cover sm:aspect-[2/1] overflow-hidden lg:aspect-[3/2]"
-                    width="560"
-                    height="380"
-                    src={source.image_url}
-                />
-            </a>
+                <div className="w-auto">
+                    <img
+                        className="aspect-[16/9] w-88 lg:w-112 xl:w-128 rounded-3xl object-cover sm:aspect-[2/1] overflow-hidden lg:aspect-[3/2]"
+                        width="560"
+                        height="380"
+                        src={source.image_url}
+                    />
+                </div>
+
+            </div>
         </li>
     )
 };
