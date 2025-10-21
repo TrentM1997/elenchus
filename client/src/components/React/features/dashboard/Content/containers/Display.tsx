@@ -6,14 +6,15 @@ import ViewSavedContent from "./ViewSavedContent";
 import { AnimatePresence } from "framer-motion";
 
 function Display() {
-    const { displayThisArticle, displayThisInvestigation } = useSelector(
+    const { displayThisArticle, displayThisInvestigation, readAssociatedArticle } = useSelector(
         (s: RootState) => ({
             displayThisArticle: s.profileNav.displayThisArticle,
             displayThisInvestigation: s.profileNav.displayThisInvestigation,
+            readAssociatedArticle: s.profileNav.readAssociatedArticle
         }),
         shallowEqual
     );
-    const reviewingSavedContent: boolean = (displayThisArticle || displayThisInvestigation);
+    const reviewingSavedContent: boolean = (displayThisArticle || displayThisInvestigation || readAssociatedArticle);
 
 
     return (

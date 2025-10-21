@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/ReduxToolKit/store";
-import { readSavedArticle } from "@/ReduxToolKit/Reducers/UserContent/UserContentReducer";
-import { presentThisArticle } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
+import { grabAssociatedArticle } from "@/ReduxToolKit/Reducers/UserContent/UserContentReducer";
+import { presentAssociatedArticle } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
 import React from "react";
 
 
@@ -10,8 +10,8 @@ function ResearchSource({ source }) {
     const dispatch = useDispatch<AppDispatch>();
 
     const handleArticleSelection = () => {
-        dispatch(readSavedArticle(source));
-        dispatch(presentThisArticle());
+        dispatch(grabAssociatedArticle(source));
+        dispatch(presentAssociatedArticle());
     };
 
 

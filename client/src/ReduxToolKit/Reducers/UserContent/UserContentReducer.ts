@@ -10,6 +10,7 @@ interface UserContent {
     contextForSupabase: string | null,
     ArticleToReview: Article | null,
     deletingArticle: boolean,
+    associatedArticle: Article | null
 }
 
 const initialState: UserContent = {
@@ -20,6 +21,7 @@ const initialState: UserContent = {
     contextForSupabase: null,
     ArticleToReview: null,
     deletingArticle: false,
+    associatedArticle: null
 }
 
 export const fetchSavedArticles = createAsyncThunk(
@@ -80,7 +82,11 @@ const UserContentSlice = createSlice({
         },
         refreshArticles: (state, action) => {
             state.userArticles = state.userArticles.filter(a => a.id !== action.payload);
+        },
+        grabAssociatedArticle: (state, action) => {
+            state.associatedArticle = action.payload;
         }
+
 
     },
     extraReducers: builder => {
@@ -102,6 +108,6 @@ const UserContentSlice = createSlice({
     }
 })
 
-export const { clearUser, supabaseContext, readSavedArticle, removeSavedArticle, populateArticles, removingArticle, refreshArticles } = UserContentSlice.actions
+export const { clearUser, supabaseContext, readSavedArticle, removeSavedArticle, populateArticles, removingArticle, refreshArticles, grabAssociatedArticle } = UserContentSlice.actions
 
 export default UserContentSlice.reducer

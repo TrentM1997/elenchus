@@ -8,8 +8,8 @@ import { presentMetrics, presentResearch, presentArticles } from "@/ReduxToolKit
 import React from "react";
 
 function DisplayOptions() {
-    const { displaySavedArticles, displayMetrics, displaySavedInvestigations, displayThisInvestigation, displayThisArticle } = useSelector((state: RootState) => state.profileNav, shallowEqual);
-    const investigations_innit = (displaySavedInvestigations || displayThisInvestigation);
+    const { displaySavedArticles, displayMetrics, displaySavedInvestigations, displayThisInvestigation, displayThisArticle, readAssociatedArticle } = useSelector((state: RootState) => state.profileNav, shallowEqual);
+    const investigations_innit = (displaySavedInvestigations || displayThisInvestigation || readAssociatedArticle);
     const articles_innit = (displaySavedArticles || displayThisArticle);
 
     return (

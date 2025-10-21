@@ -24,7 +24,8 @@ interface NavigateProfile {
     backToArticles: boolean,
     backToResearch: boolean,
     articleScrollPosition: VirtuosoScrollPos | null,
-    researchScrollPosition: VirtuosoScrollPos | null
+    researchScrollPosition: VirtuosoScrollPos | null,
+    readAssociatedArticle: boolean
 }
 
 const initialState: NavigateProfile = {
@@ -38,7 +39,8 @@ const initialState: NavigateProfile = {
     backToArticles: false,
     backToResearch: false,
     articleScrollPosition: null,
-    researchScrollPosition: null
+    researchScrollPosition: null,
+    readAssociatedArticle: false
 }
 
 
@@ -98,6 +100,7 @@ const ProfileNavigationSlice = createSlice({
             state.displayThisArticle = false;
             state.backToResearch = false;
             state.backToArticles = true;
+            state.readAssociatedArticle = false;
         },
         presentResearch: (state) => {
             state.displaySavedInvestigations = true;
@@ -108,6 +111,7 @@ const ProfileNavigationSlice = createSlice({
             state.displayThisArticle = false;
             state.backToResearch = true;
             state.backToArticles = false;
+            state.readAssociatedArticle = false;
         },
         presentDeleteModal: (state, action) => {
             state.displayDeleteModal = action.payload;
@@ -122,6 +126,7 @@ const ProfileNavigationSlice = createSlice({
             state.displayThisArticle = false;
             state.backToResearch = false;
             state.backToArticles = false;
+            state.readAssociatedArticle = false;
         },
         presentMetrics: (state) => {
             state.displayMetrics = true;
@@ -132,6 +137,7 @@ const ProfileNavigationSlice = createSlice({
             state.displayThisArticle = false;
             state.backToResearch = false;
             state.backToArticles = false;
+            state.readAssociatedArticle = false;
         },
         presentThisInvestigation: (state) => {
             state.displayThisInvestigation = true;
@@ -140,6 +146,7 @@ const ProfileNavigationSlice = createSlice({
             state.displaySavedArticles = false;
             state.displaySavedInvestigations = false;
             state.displayThisArticle = false;
+            state.readAssociatedArticle = false;
         },
         presentThisArticle: (state) => {
             state.displayThisArticle = true;
@@ -148,11 +155,24 @@ const ProfileNavigationSlice = createSlice({
             state.displaySavedInvestigations = false;
             state.displaySavedArticles = false;
             state.displaySavedInvestigations = false;
+            state.readAssociatedArticle = false;
+        },
+        presentAssociatedArticle: (state) => {
+            state.readAssociatedArticle = true;
+            state.displayThisInvestigation = false;
+            state.displayAccountManagement = false;
+            state.displaySavedInvestigations = false;
+            state.displaySavedArticles = false;
+            state.displaySavedInvestigations = false;
+            state.displayThisArticle = false;
+            state.displayMetrics = false;
+            state.backToArticles = false;
+            state.backToResearch = false;
         }
     }
 });
 
 
-export const { presentArticles, presentResearch, presentDeleteModal, presentManagement, presentMetrics, presentThisInvestigation, presentThisArticle, storeScrollPosition, clearScrollPosition, storeResearchScrollPosition, clearResearchScrollPos } = ProfileNavigationSlice.actions;
+export const { presentArticles, presentResearch, presentDeleteModal, presentManagement, presentMetrics, presentThisInvestigation, presentThisArticle, storeScrollPosition, clearScrollPosition, storeResearchScrollPosition, clearResearchScrollPos, presentAssociatedArticle } = ProfileNavigationSlice.actions;
 
 export default ProfileNavigationSlice.reducer;

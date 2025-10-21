@@ -2,7 +2,6 @@ import { AppDispatch, RootState } from "@/ReduxToolKit/store"
 import { lazy, Suspense, useMemo } from "react"
 import { useDispatch, useSelector } from "react-redux"
 const FullSavedArticle = lazy(() => import('../components/fullContent/containers/FullSavedArticle'));
-const Article = lazy(() => import('../../../../../Shared/Articles/SuccessFull/containers/Article'))
 import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary"
 import ArticleSkeleton from "@/components/React/Shared/Articles/skeletons/ArticleSkeleton";
 import { motion } from "framer-motion";
