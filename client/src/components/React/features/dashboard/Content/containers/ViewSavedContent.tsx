@@ -18,9 +18,6 @@ function ViewSavedContent(): JSX.Element | null {
         shallowEqual
     );
 
-
-    console.log(readAssociatedArticle)
-
     return (
         <motion.section
             variants={variants}

@@ -9,28 +9,23 @@ import BiasWebWorker from '@/services/workers/biasSnapshot.js?worker';
 import IntegrityWebWorker from '@/services/workers/integrityWorker.js?worker';
 import ChartJsSkeleton from "@/components/React/features/charts/skeletons/ChartJsSkeleton";
 import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback";
+import { Priority } from "@/hooks/useRenderMetrics";
 const BiasChart = lazy(() => import('@/components/React/features/charts/DonutChart/BiasChart'))
 const IntegrityChart = lazy(() => import('@/components/React/features/charts/PieChart/IntegrityChart'));
 
-export default function ChartJsWrapper() {
+
+interface ChartJsWrapper {
+    priority1: Priority,
+    priority2: Priority,
+    biasRatings: number[],
+    ratingData: number[]
+};
+
+
+export default function ChartJsWrapper({ priority1, priority2, biasRatings, ratingData }: ChartJsWrapper): JSX.Element | null {
     const userArticles = useSelector((state: RootState) => state.userdata.userArticles);
-    const biasRatings = useSelector((state: RootState) => state.chart.biasRatings);
-    const ratingData = useSelector((state: RootState) => state.chart.reportingIntegrity);
     const dispatch = useDispatch<AppDispatch>();
 
-
-    const priority1: boolean = useMemo(() => {
-        const hasArticles = (Array.isArray(userArticles) && (userArticles.length > 0));
-        if (!hasArticles) return false;
-        const isLoaded = (Array.isArray(biasRatings)) && (biasRatings.length > 0);
-        return (hasArticles && isLoaded)
-    }, [biasRatings, userArticles]);
-
-    const priority2: boolean = useMemo(() => {
-        if (!priority1) return false;
-        const isLoaded: boolean = (Array.isArray(ratingData)) && (ratingData.length > 0);
-        return (isLoaded && priority1);
-    }, [priority1, ratingData]);
 
     useEffect(() => {
         if (!Array.isArray(userArticles) || (userArticles.length === 0)) return;
@@ -82,12 +77,15 @@ export default function ChartJsWrapper() {
 
     return (
         <>
-            <Suspense fallback={<DelayedFallback key={'delay-skeleton'}>
-                <ChartJsSkeleton key={'skeleton-wrapper'}>
-                    <DonutSkeletonChart key={'skeleton-donut'} />
-                </ChartJsSkeleton>
-            </DelayedFallback>}>
-                {priority1 && <BiasChart key={'bias-chart'} />}
+            <Suspense fallback={
+                <DelayedFallback key={'delay-skeleton'}>
+                    <ChartJsSkeleton key={'skeleton-wrapper'}>
+                        <DonutSkeletonChart key={'skeleton-donut'} />
+                    </ChartJsSkeleton>
+                </DelayedFallback>
+            }
+            >
+                {priority1 === 'complete' && <BiasChart key={'bias-chart'} />}
 
             </Suspense>
 
@@ -100,7 +98,7 @@ export default function ChartJsWrapper() {
                 </DelayedFallback>
 
             }>
-                {priority2 &&
+                {(priority2 === 'complete') && (priority1 === 'complete') &&
                     <IntegrityChart key={'integrity-chart'} />}
             </Suspense>
         </>
