@@ -58,7 +58,7 @@ function PieChart() {
             animate='open'
             exit='closed'
             transition={{ type: 'tween', duration: 0.2 }}
-            className="w-auto h-96 xl:h-128 xl:p-2 flex items-center justify-center"
+            className="w-auto h-96 xl:h-112 xl:p-2 flex items-center justify-center"
         >
             <ErrorBoundary>
                 <Pie key='pieChart' data={data} />

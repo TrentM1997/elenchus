@@ -1,4 +1,4 @@
-import { lazy, Suspense, useRef, useEffect } from "react";
+import { lazy, Suspense, useRef, useEffect, useMemo } from "react";
 import PieSkeleton from "@/components/React/features/charts/skeletons/PieSkeleton";
 import DonutSkeleton, { DonutSkeletonChart } from "@/components/React/features/charts/skeletons/DonutSkeleton";
 import { useSelector, useDispatch } from "react-redux";
@@ -17,6 +17,18 @@ export default function ChartJsWrapper() {
     const biasRatings = useSelector((state: RootState) => state.chart.biasRatings);
     const ratingData = useSelector((state: RootState) => state.chart.reportingIntegrity);
     const dispatch = useDispatch<AppDispatch>();
+    const priority1: boolean = useMemo(() => {
+        const hasArticles = (Array.isArray(userArticles) && (userArticles.length > 0));
+        if (!hasArticles) return false;
+        const isLoaded = (Array.isArray(biasRatings)) && (biasRatings.length > 0);
+        return (hasArticles && isLoaded)
+    }, [biasRatings, userArticles]);
+
+    const priority2: boolean = useMemo(() => {
+        if (!priority1) return false;
+        const isLoaded: boolean = (Array.isArray(ratingData)) && (ratingData.length > 0);
+        return (isLoaded && priority1);
+    }, [priority1, ratingData]);
 
     useEffect(() => {
         if (!Array.isArray(userArticles) || (userArticles.length === 0)) return;
@@ -73,8 +85,8 @@ export default function ChartJsWrapper() {
                     <DonutSkeletonChart />
                 </ChartJsSkeleton>
             </DelayedFallback>}>
-                {Array.isArray(biasRatings) &&
-                    (biasRatings.length > 0) && <BiasChart />}
+                {priority1 && <BiasChart />}
+
             </Suspense>
 
 
@@ -86,7 +98,7 @@ export default function ChartJsWrapper() {
                 </DelayedFallback>
 
             }>
-                {Array.isArray(ratingData) && (ratingData.length > 0) &&
+                {priority2 &&
                     <IntegrityChart />}
             </Suspense>
         </>

@@ -9,8 +9,8 @@ export default function ChartJsSkeleton({ children }: ChartJsSkeleton): JSX.Elem
 
     return (
         <div
-            className="relative
-            md:mt-16 lg:p-8 opacity-0 animate-fade-in transition-opacity animation-delay-300ms"
+            className="relative xl:h-[576px] xl:w-[1045px]
+             lg:p-8 opacity-0 animate-fade-in transition-opacity animation-delay-300ms"
         >
             <ChartSkeletonWrapper>
                 {children}
@@ -28,7 +28,7 @@ export function ChartSkeletonWrapper({ children }): JSX.Element | null {
 
     return (
         <div className="mx-auto 2xl:max-w-7xl">
-            <div className="grid grid-cols-1 lg:grid-cols-2 pt-8 xl:pt-0 gap-12 lg:gap-24 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 pt-8 xl:pt-0 lg:gap-36 xl:gap-x-44 items-center">
                 <SourceDiversitySkeleton />
                 {children}
             </div>
@@ -68,32 +68,54 @@ export function DonutSkeletonChart(): JSX.Element | null {
 
 
     return (
-        <div className="relative pt-12 md:pt-0 h-80 w-80 lg:h-96 lg:w-96 animate-pulse">
-            {/* Legend skeleton */}
-            <div className="absolute w-full -top-12 left-1/2 -translate-x-1/2 grid grid-cols-3 gap-x-6 gap-y-2">
-                {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="flex items-center space-x-2">
-                        {/* little colored square */}
-                        <div className="h-3 w-6 rounded-full bg-zinc-700/50" />
-                        {/* text placeholder */}
-                        <div className="h-3 w-32 rounded bg-zinc-700/50" />
-                    </div>
-                ))}
-            </div>
+        <div className="relative flex flex-col gap-y-3 md:items-start items-center justify-center md:pt-0 h-88 w-88 lg:h-112 lg:w-112">
+            <LegendSkeleton />
 
             {/* Donut skeleton */}
-            <div className="absolute inset-0 rounded-full border-[80px] border-zinc-700/50 border-t-zinc-800 border-l-zinc-800" />
+            <div className="relative md:h-88 md:w-88 h-72 w-72 rounded-full border-[88px] border-zinc-800/50  border-t-zinc-800/30 border-l-zinc-800 animate-pulse" />
 
             {/* Caption skeleton (below chart) */}
-            <div className="absolute -bottom-8 left-1/2 w-32 h-6 -translate-x-1/2 mt-4">
+            <div className="absolute -bottom-8 left-1/3 w-auto mx-auto">
                 <p className="text-zinc-400 font-light tracking-tight text-sm text-center">
-                    {typed}
+                    loading
                 </p>
             </div>
-        </div>
+        </div >
 
     )
 };
+
+
+export function LegendSkeleton() {
+
+    return (
+        <div className="relative h-fit w-auto mx-auto flex flex-wrap gap-1.5 items-center justify-start box-border">
+            {Array.from({ length: 3 }).map((_, i) => (
+                <div className={`w-fit flex items-center justify-start gap-y-1 gap-x-2 space-x-1`}>
+                    <div key={i} className={`flex items-center space-x-0.5`}>
+                        {/* little colored square */}
+                        <div className="h-2.5 w-10 rounded-full bg-zinc-700/50" />
+                        {/* text placeholder */}
+                        <div className="h-2 w-16 rounded bg-zinc-700/50" />
+                    </div>
+                    <div key={i} className={`flex items-center space-x-0.5`}>
+                        {/* little colored square */}
+                        <div className="h-2.5 w-10 rounded-full bg-zinc-700/50" />
+                        {/* text placeholder */}
+                        <div className="h-2 w-16 rounded bg-zinc-700/50" />
+                    </div>
+                    <div key={i} className={`flex items-center space-x-0.5`}>
+                        {/* little colored square */}
+                        <div className="h-2.5 w-10 rounded-full bg-zinc-700/50" />
+                        {/* text placeholder */}
+                        <div className="h-2 w-16 rounded bg-zinc-700/50" />
+                    </div>
+                </div>
+
+            ))}
+        </div>
+    )
+}
 
 
 
@@ -102,22 +124,25 @@ function SourceDiversitySkeleton() {
         <section
             role="status"
             aria-busy="true"
-            className={`mb-8 md:mb-0 rounded-2xl animate-shimmer bg-[length:200%_100%] 
-    bg-[linear-gradient(110deg,#1a1c23_8%,#2b2f3a_18%,#1a1c23_33%)] 
+            className={`mb-8 xl:w-[466.5px] xl:h-[285px] md:mb-0 rounded-2xl 
                  opacity-40
-                  p-6 md:p-8`}
+                  p-6 overflow-hidden`}
         >
-            <div className="space-y-4 md:space-y-5">
+            <div className="space-y-4 md:space-y-2">
                 {/* Eyebrow: "Comparative Analysis" */}
-                <div className="h-4 md:h-5 w-40 md:w-48 rounded-md bg-white/10" />
+                <div className="h-4 md:h-5 w-40 md:w-48 rounded-md bg-[length:200%_100%] 
+    bg-[linear-gradient(110deg,#1a1c23_8%,#2b2f3a_18%,#1a1c23_33%)] animate-shimmer" />
 
                 {/* Title: "Source diversity" */}
-                <div className="h-10 md:h-14 w-2/3 rounded-md bg-white/10" />
+                <div className="h-10 md:h-14 w-2/3 rounded-md bg-[length:200%_100%] 
+    bg-[linear-gradient(110deg,#1a1c23_8%,#2b2f3a_18%,#1a1c23_33%)] animate-shimmer" />
 
                 {/* Subcopy: two lines */}
                 <div className="space-y-2">
-                    <div className="h-4 md:h-5 w-full md:w-4/5 rounded-md bg-white/10" />
-                    <div className="h-4 md:h-5 w-2/3 md:w-1/2 rounded-md bg-white/10" />
+                    <div className="h-4 md:h-5 w-full md:w-4/5 rounded-md bg-[length:200%_100%] 
+    bg-[linear-gradient(110deg,#1a1c23_8%,#2b2f3a_18%,#1a1c23_33%)] animate-shimmer" />
+                    <div className="h-4 md:h-5 w-2/3 md:w-1/2 rounded-md bg-[length:200%_100%] 
+    bg-[linear-gradient(110deg,#1a1c23_8%,#2b2f3a_18%,#1a1c23_33%)] animate-shimmer" />
                 </div>
 
                 {/* Divider */}
@@ -129,8 +154,10 @@ function SourceDiversitySkeleton() {
                         (w, i) => (
                             <li key={i} className="flex items-center gap-3 md:gap-4">
                                 {/* check icon placeholder */}
-                                <span className="inline-block h-4 w-4 md:h-5 md:w-5 rounded-full bg-white/10" />
-                                <span className={`block h-4 md:h-5 rounded-md bg-white/10 ${w}`} />
+                                <span className="inline-block h-4 w-4 md:h-5 md:w-5 rounded-full bg-[length:200%_100%] 
+    bg-[linear-gradient(110deg,#1a1c23_8%,#2b2f3a_18%,#1a1c23_33%)] animate-shimmer" />
+                                <span className={`block h-4 md:h-5 rounded-md bg-[length:200%_100%] 
+    bg-[linear-gradient(110deg,#1a1c23_8%,#2b2f3a_18%,#1a1c23_33%)] animate-shimmer ${w}`} />
                             </li>
                         )
                     )}

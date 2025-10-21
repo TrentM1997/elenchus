@@ -35,7 +35,7 @@ function SourceChart(): JSX.Element {
       animate='open'
       exit='closed'
       transition={{ type: 'tween', duration: 0.2 }}
-      className="w-auto h-96 lg:h-128 flex items-center md:justify-center"
+      className="w-auto h-96 lg:h-112 flex items-center md:justify-center"
     >
       <ErrorBoundary
       >

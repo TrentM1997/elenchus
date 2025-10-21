@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+import { LegendSkeleton } from "./DonutSkeleton";
 
 export default function PieSkeleton() {
     const message: string = 'loading...';
@@ -31,7 +31,7 @@ export default function PieSkeleton() {
 
     return (
 
-        <div className="relative w-72 h-72 lg:w-88 lg:h-88 animate-pulse">
+        <div className="relative w-72 h-72 lg:w-96 lg:h-96 animate-pulse">
             <div className="absolute inset-0 rounded-full bg-zinc-800/60" />
 
             <div className="absolute inset-0 flex items-center justify-center">

@@ -21,6 +21,8 @@ export default function Metrics() {
     const userArticles = useSelector((state: RootState) => { state.userdata.userArticles });
     const { userResearch, stats } = useSelector((state: RootState) => state.userWork, shallowEqual);
     const hasInvestigations: boolean = Array.isArray(userResearch) && (userResearch.length > 0);
+    const biasRatings = useSelector((state: RootState) => state.chart.biasRatings);
+    const ratingData = useSelector((state: RootState) => state.chart.reportingIntegrity);
     const hasArticles: boolean = Array.isArray(userArticles) && (userArticles.length > 0);
     const displayFallback = useMemo(() => {
         return (!hasArticles && !hasInvestigations);
@@ -29,6 +31,14 @@ export default function Metrics() {
     const { boxShadow, onScrollHandler } = useScrollWithShadow();
     const calcRef = useRef<boolean | null>(null);
     const dispatch = useDispatch<AppDispatch>();
+    const priority3 = useMemo(() => {
+        const priority1_Loaded: boolean = (Array.isArray(biasRatings) && (biasRatings.length > 0));
+        const priority2_Loaded: boolean = (Array.isArray(ratingData) && (ratingData.length > 0));
+        if (!(priority1_Loaded && priority2_Loaded)) return false;
+
+        return statsPopulated ? true : false;
+
+    }, [ratingData, biasRatings, statsPopulated]);
 
     useEffect(() => {
         if (!hasInvestigations || statsPopulated) return;
@@ -87,7 +97,7 @@ export default function Metrics() {
 
                 <ChartJsWrapper />
                 <Suspense fallback={<DelayedFallback><StatsSkeleton /></DelayedFallback>}>
-                    {statsPopulated && <StatsSection />}
+                    {priority3 && <StatsSection />}
                 </Suspense>
 
                 {(calcRef.current === false) && <StatsFallback />}
