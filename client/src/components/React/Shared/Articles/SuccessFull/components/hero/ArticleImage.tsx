@@ -9,11 +9,9 @@ interface ArticleThumbnail {
 };
 
 function ArticleImage({ article }: ArticleThumbnail): JSX.Element | null {
-    const isMobile = useIsMobile();
-    const aspectClass = "w-[350px] md:w-[400px] lg:w-[800px] aspect-[2/1] xl:-translate-y-3 rounded-2xl lg:rounded-3xl sm:aspect-[2/1] xl:aspect-[16/9] w-full object-cover md:group-hover:shadow-blue-bottom transition-shadow duration-200 ease-[cubic-bezier(.2,.6,.2,1)]";
 
     return (
-        <div className="relative w-full max-w-xl aspect-[16/9] overflow-hidden rounded-2xl">
+        <div className="relative w-full sm:w-96 md:w-[350px] lg:w-[400px] xl:w-[800px] overflow-hidden aspect-[16/9] rounded-2xl">
             <img
                 src={article.image_url}
                 alt=""

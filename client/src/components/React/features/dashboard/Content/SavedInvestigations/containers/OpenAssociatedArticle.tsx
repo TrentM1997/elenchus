@@ -28,12 +28,12 @@ export default function OpenAssociatedArticle(): JSX.Element | null {
             animate='open'
             exit='closed'
             transition={{ type: 'tween', duration: 0.4, delay: 0.7 }}
-            className="min-h-dvh h-dvh pb-32 w-full flex items-center justify-center z-30
+            className="min-h-dvh h-dvh pb-32 w-fit flex items-center justify-center z-30
                         mx-auto relative mt-16 mt:pt-12 xl:mt-8">
             <DetailView backTo={backTo} />
 
             <main
-                className="2xl:max-w-7xl xl:w-4/5 lg:max-w-4xl md:w-4/5 grow
+                className="2xl:max-w-7xl xl:w-4/5 lg:max-w-4xl md:w-4/5 grow mx-auto
                 sm:w-3/4  w-80 h-full overflow-y-auto no-scrollbar scroll-smooth scrollbar-gutter-stable-both overscroll-contain
                  xl:px-24
                  ">

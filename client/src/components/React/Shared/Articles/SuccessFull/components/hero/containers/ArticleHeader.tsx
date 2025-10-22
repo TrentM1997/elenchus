@@ -4,12 +4,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import ScrolltoTop from "@/helpers/ScrollToTop";
 import ArticleMetaData from "./ArticleMetaData";
-import { useIsMobile } from "@/hooks/useIsMobile";
 import ArticleImage from "../ArticleImage";
 
 export default function ArticleHeader({ articleData, investigating }): JSX.Element | null {
     const [open, setOpen] = useState<boolean>(false)
-    const isMobile = useIsMobile();
 
     return (
         <motion.header
