@@ -34,7 +34,6 @@ export function useRenderMetrics(): RenderValues {
     });
     const [renderFallback, setRenderFallback] = useState<boolean>(false);
 
-    console.log(priority);
 
     useEffect(() => {
         if (priority.priority1 === 'failed' || priority.priority2 === 'failed') return;
