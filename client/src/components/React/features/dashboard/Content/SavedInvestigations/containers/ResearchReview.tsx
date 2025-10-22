@@ -13,8 +13,8 @@ import { presentResearch } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavi
 import { ScrollUp } from "@/helpers/ScrollToTop"
 
 export default function ResearchReview() {
-    const investigation = useSelector((state: RootState) => state.userWork.investigationToReview)
-    const sources = investigation.sources
+    const investigation = useSelector((state: RootState) => state.userWork.investigationToReview);
+    const sources = investigation ? investigation.sources : null;
     const savedArticles = useSelector((state: RootState) => state.userdata.userArticles)
     const dispatch = useDispatch()
     const cachedSources = JSON.parse(localStorage.getItem('cachedSources'))
@@ -43,13 +43,13 @@ export default function ResearchReview() {
             className="h-full min-h-dvh w-full
           animate-fade-in duration-200">
             <DetailView backTo={backTo} />
-            <div className="w-full h-full pb-20 overscroll-contain overflow-y-scroll no-scrollbar grow flex flex-col gap-y-24 items-center justify-start">
+            {investigation && <div className="w-full h-full pb-20 overscroll-contain overflow-y-scroll no-scrollbar grow flex flex-col gap-y-24 items-center justify-start">
                 <ErrorBoundary>
                     <DetailsTable />
                     <SourcesFromResearch />
                     <Terms />
                 </ErrorBoundary>
-            </div>
+            </div>}
 
 
         </section>

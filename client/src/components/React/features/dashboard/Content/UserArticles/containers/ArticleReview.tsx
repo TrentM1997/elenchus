@@ -12,7 +12,6 @@ import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback
 
 export default function ArticleReview() {
     const savedArticle = useSelector((state: RootState) => state.userdata.ArticleToReview);
-    if (!savedArticle) return null;
 
     const showArticle = useMemo(() => {
         const shouldShow: boolean = (savedArticle !== null);
