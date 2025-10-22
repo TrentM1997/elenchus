@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { lazy, Suspense, useMemo, useRef } from "react";
+import { lazy, Suspense, useRef } from "react";
 import ScrolltoTop from "@/helpers/ScrollToTop";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { RootState, AppDispatch } from "@/ReduxToolKit/store";
@@ -19,7 +19,7 @@ import ChartFallbackContainer from "../../../charts/ChartFallbacks/FbContainer";
 const StatsSection = lazy(() => import('../../../charts/ResearchStats/StatsSection'));
 
 
-export default function Metrics() {
+export default function Metrics(): JSX.Element | null {
     const { userResearch } = useSelector((state: RootState) => state.userWork, shallowEqual);
     const { priority1, priority2, priority3, renderFallback, ratingData, biasRatings, hasInvestigations } = useRenderMetrics();
     const dispatch = useDispatch<AppDispatch>();
@@ -79,7 +79,6 @@ export default function Metrics() {
             
             overflow-y-auto no-scrollbar scrollbar-gutter-stable-both scroll-smooth overscroll-contain">
 
-                {renderFallback && <NoSavedContentFallback key={'fallback'} />}
 
 
                 <ChartJsWrapper
@@ -99,9 +98,12 @@ export default function Metrics() {
                             />
                         </DelayedFallback>}
                 >
-                    {(priority1 === 'complete') && (priority2 === 'complete') && (priority3 === 'complete') && <StatsSection />}
+                    {(priority1 === 'complete') && (priority2 === 'complete') && (priority3 === 'complete') && <StatsSection key={'investigation-stats'} />}
                 </Suspense>
-                {(priority1 === 'failed' && (priority2 === 'failed')) && <ChartFallbackContainer />}
+                {((priority1 === 'failed') && (priority2 === 'failed')) && <ChartFallbackContainer />}
+
+
+                {renderFallback && <NoSavedContentFallback key={'fallback'} />}
 
 
                 {(priority3 === 'failed') && <StatsFallback key={'stats-fallback'} />}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { act, useEffect, useRef, useState } from "react";
 import { useSelector, shallowEqual } from "react-redux";
 import type { RootState } from "@/ReduxToolKit/store";
 
@@ -34,7 +34,10 @@ export function useRenderMetrics(): RenderValues {
     });
     const [renderFallback, setRenderFallback] = useState<boolean>(false);
 
+    console.log(priority);
+
     useEffect(() => {
+        if (priority.priority1 === 'failed' || priority.priority2 === 'failed') return;
         if (!hasArticles) {
             setPriority((prev: RenderMetrics) => ({
                 ...prev,
@@ -42,7 +45,7 @@ export function useRenderMetrics(): RenderValues {
                 priority2: 'failed'
             }));
             return;
-        }
+        };
         const priority_one_curr = priority.priority1;
         const priority_two_curr = priority.priority2;
         const upstreamDone = ((priority_one_curr === 'complete' && priority_two_curr === 'complete'))
@@ -56,9 +59,9 @@ export function useRenderMetrics(): RenderValues {
                 priority1: 'complete'
             }));
         };
-
-        const ratingsLoaded = (Array.isArray(ratingData) && (ratingData.length > 0));
-        if (ratingsLoaded && (priority.priority2 !== 'complete')) {
+        const upstream = priority.priority1;
+        const batchReady = (Array.isArray(ratingData) && (ratingData.length > 0)) && (upstream === 'complete');
+        if (batchReady && (priority.priority2 !== 'complete')) {
             setPriority((prev: RenderMetrics) => ({
                 ...prev,
                 priority2: 'complete'
@@ -66,15 +69,11 @@ export function useRenderMetrics(): RenderValues {
         };
 
 
-    }, [ratingData, biasRatings, userArticles, hasArticles, priority]);
+    }, [ratingData, biasRatings, userArticles, hasArticles, priority, priority]);
 
 
     useEffect(() => {
-
-        if (!hasArticles && !hasInvestigations) {
-            setRenderFallback(true);
-            return;
-        }
+        if (priority.priority3 === 'failed') return;
         if (!hasInvestigations) {
             setPriority((prev: RenderMetrics) => ({
                 ...prev,
@@ -83,14 +82,15 @@ export function useRenderMetrics(): RenderValues {
             return;
         }
 
-
         const priority_three_curr = priority.priority3;
 
         if (priority_three_curr === 'complete') return;
 
         const statsPopulated: boolean = Object.values(stats).some((el: number) => el !== null);
-
-        if (statsPopulated) {
+        const priority_one_curr = priority.priority1;
+        const priority_two_curr = priority.priority2;
+        const upstream_complete = ((priority_one_curr === 'complete') && (priority_two_curr === 'complete'));
+        if (statsPopulated && upstream_complete) {
             setPriority((prev: RenderMetrics) => ({
                 ...prev,
                 priority3: 'complete'

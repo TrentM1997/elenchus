@@ -10,25 +10,12 @@ import { SigninStatus } from "@/hooks/useSignIn";
 import { useClearUser } from "@/hooks/useClearUser";
 import { variants, softEase } from "@/motion/variants";
 
-
-
 export default function SignOutModal(): JSX.Element {
     const [status, setStatus] = useState<SigninStatus>('idle');
-    const [executeClearUser, setExcecuteClearUser] = useState<boolean>(false);
-    useClearUser(executeClearUser);
-    const navigate = useNavigate();
+    useClearUser(status);
     const dispatch = useDispatch();
-    const timerRef = useRef(null);
-
-    const goHome = () => {
-        timerRef.current = window.setTimeout(() => {
-            dispatch(clearAuthSlice());
-            navigate('/');
-            timerRef.current = null;
-        }, 2500);
-    };
-
-    useEffect(() => { }, [status]);
+    const navigate = useNavigate();
+    const timerRef = useRef<number | null>();
 
     useEffect(() => {
 
@@ -38,8 +25,10 @@ export default function SignOutModal(): JSX.Element {
                 const data: SignOutResponse = await fetchSignOut();
                 if (data.loggedOut === true) {
                     setStatus("success");
-                    setExcecuteClearUser(true);
-                    goHome();
+                    timerRef.current = window.setTimeout(() => {
+                        dispatch(clearAuthSlice());
+                        timerRef.current = null;
+                    }, 2400);
                 } else {
                     setStatus('failed');
                 }
@@ -53,6 +42,13 @@ export default function SignOutModal(): JSX.Element {
         if (status === 'pending') {
             executeSignOut();
         };
+
+        return () => {
+            if (status === 'success') {
+                navigate('/');
+            }
+        }
+
     }, [status]);
 
 

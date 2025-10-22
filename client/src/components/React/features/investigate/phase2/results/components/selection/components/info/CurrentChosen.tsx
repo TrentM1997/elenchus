@@ -20,7 +20,7 @@ function CurrentChosen({ chosenArticles }: CurrentChosen): JSX.Element {
         }
         setPhase("idle");
 
-        return () => {
+        return () => { //line i addeded
             if (timerRef.current !== null) {
                 clearTimeout(timerRef.current);
             };

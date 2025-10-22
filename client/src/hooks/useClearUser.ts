@@ -1,22 +1,24 @@
 import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import type { AppDispatch, RootState } from "@/ReduxToolKit/store";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "@/ReduxToolKit/store";
 import { clearCharts } from "@/ReduxToolKit/Reducers/UserContent/ChartSlice";
 import { clearUser } from "@/ReduxToolKit/Reducers/UserContent/UserContentReducer";
-import { clearAuthSlice } from "@/ReduxToolKit/Reducers/Athentication/Authentication";
 import { clearUserInvestigations } from "@/ReduxToolKit/Reducers/UserContent/UserInvestigations";
+import { SigninStatus } from "./useSignIn";
 
-export function useClearUser(excecute: boolean): null {
+export function useClearUser(status: SigninStatus): null {
     const dispatch = useDispatch<AppDispatch>();
 
-
     useEffect(() => {
-        if (!excecute) return;
-        dispatch(clearUserInvestigations());
+        if (status === 'idle') return;
+
+        if (status === 'success')
+            dispatch(clearUserInvestigations());
         dispatch(clearCharts());
         dispatch(clearUser());
 
-    }, [excecute]);
+
+    }, [status]);
 
     return null;
 };

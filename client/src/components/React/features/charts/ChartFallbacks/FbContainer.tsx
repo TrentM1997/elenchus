@@ -1,5 +1,6 @@
 import { ScaleIcon, SheildIcon } from "./FallbackIcons";
 import ChartFallback from "./ChartFallback";
+import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback";
 
 export default function ChartFallbackContainer() {
     const integrityMessage = `
@@ -12,13 +13,15 @@ export default function ChartFallbackContainer() {
 
 
     return (
-        <div className="flex flex-col gap-y-24 py-16">
-            <ChartFallback message={biasMessage} actionText={actionFallback} direction={directionLink}>
-                <ScaleIcon />
-            </ChartFallback>
-            <ChartFallback message={integrityMessage} actionText={actionFallback} direction={directionLink} >
-                <SheildIcon />
-            </ChartFallback>
+        <div className="flex flex-col gap-y-24 py-16 opacity-0 animate-fade-in animation-delay-200ms">
+            <DelayedFallback>
+                <ChartFallback message={biasMessage} actionText={actionFallback} direction={directionLink}>
+                    <ScaleIcon />
+                </ChartFallback>
+                <ChartFallback message={integrityMessage} actionText={actionFallback} direction={directionLink} >
+                    <SheildIcon />
+                </ChartFallback>
+            </DelayedFallback>
         </div>
     )
 };

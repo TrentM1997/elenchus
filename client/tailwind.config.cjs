@@ -106,9 +106,14 @@ module.exports = {
         "fade-up": "fadeUp 0.3s linear forwards",
         "fade-blur": "fadeBlur 0.3s linear forwards",
         "fade-skew": "fadeBlur 0.5s linear forwards",
-        "fade-clip": "fadeBlur 0.5s linear forwards"
+        "fade-clip": "fadeBlur 0.5s linear forwards",
+        'donut-shimmer': 'donut-shimmer 1.2s linear infinite',
       },
       keyframes: {
+        'donut-shimmer': {
+          '0%': { transform: 'translateX(-50%)' },
+          '100%': { transform: 'translateX(50%)' },
+        },
         fadeUp: {
           '0%': { opacity: '0', transform: 'translateY(8px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },

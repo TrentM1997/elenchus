@@ -52,7 +52,7 @@ export function DonutSkeletonChart(): JSX.Element | null {
 
 export function SkeletonDonut(): JSX.Element | null {
 
-    return <div className="relative md:h-88 md:w-88 h-72 w-72 rounded-full border-[88px] border-zinc-800/50  border-t-zinc-800/30 border-l-zinc-800 animate-pulse" />
+    return <div className="relative md:h-88 md:w-88 h-72 w-72 rounded-full border-[88px] border-zinc-800/50  border-t-zinc-800/30 border-l-zinc-800 transform-cpu will-change-transform animate-pulse" />
 }
 
 
@@ -100,18 +100,18 @@ function ChartDescriptionSkeleton(): JSX.Element | null {
         >
             <div className="space-y-4 md:space-y-2">
                 {/* Eyebrow: "Comparative Analysis" */}
-                <div className="h-4 md:h-5 w-40 md:w-48 rounded-md bg-[length:200%_100%] 
+                <div className="h-4 md:h-5 w-40 md:w-48 rounded-md bg-[length:200%_100%] transform-cpu will-change-transform
     bg-[linear-gradient(110deg,#1a1c23_8%,#2b2f3a_18%,#1a1c23_33%)] animate-shimmer" />
 
                 {/* Title: "Source diversity" */}
-                <div className="h-10 md:h-14 w-2/3 rounded-md bg-[length:200%_100%] 
+                <div className="h-10 md:h-14 w-2/3 rounded-md bg-[length:200%_100%] transform-cpu will-change-transform
     bg-[linear-gradient(110deg,#1a1c23_8%,#2b2f3a_18%,#1a1c23_33%)] animate-shimmer" />
 
                 {/* Subcopy: two lines */}
                 <div className="space-y-2">
-                    <div className="h-4 md:h-5 w-full md:w-4/5 rounded-md bg-[length:200%_100%] 
+                    <div className="h-4 md:h-5 w-full md:w-4/5 rounded-md bg-[length:200%_100%] transform-cpu will-change-transform
     bg-[linear-gradient(110deg,#1a1c23_8%,#2b2f3a_18%,#1a1c23_33%)] animate-shimmer" />
-                    <div className="h-4 md:h-5 w-2/3 md:w-1/2 rounded-md bg-[length:200%_100%] 
+                    <div className="h-4 md:h-5 w-2/3 md:w-1/2 rounded-md bg-[length:200%_100%] transform-cpu will-change-transform
     bg-[linear-gradient(110deg,#1a1c23_8%,#2b2f3a_18%,#1a1c23_33%)] animate-shimmer" />
                 </div>
 
@@ -124,9 +124,9 @@ function ChartDescriptionSkeleton(): JSX.Element | null {
                         (w, i) => (
                             <li key={i} className="flex items-center gap-3 md:gap-4">
                                 {/* check icon placeholder */}
-                                <span className="inline-block h-4 w-4 md:h-5 md:w-5 rounded-full bg-[length:200%_100%] 
+                                <span className="inline-block h-4 w-4 md:h-5 md:w-5 rounded-full bg-[length:200%_100%] transform-cpu will-change-transform
     bg-[linear-gradient(110deg,#1a1c23_8%,#2b2f3a_18%,#1a1c23_33%)] animate-shimmer" />
-                                <span className={`block h-4 md:h-5 rounded-md bg-[length:200%_100%] 
+                                <span className={`block h-4 md:h-5 rounded-md bg-[length:200%_100%] transform-cpu will-change-transform
     bg-[linear-gradient(110deg,#1a1c23_8%,#2b2f3a_18%,#1a1c23_33%)] animate-shimmer ${w}`} />
                             </li>
                         )
