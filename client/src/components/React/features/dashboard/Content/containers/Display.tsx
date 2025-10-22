@@ -5,7 +5,7 @@ import { RootState } from "@/ReduxToolKit/store";
 import ViewSavedContent from "./ViewSavedContent";
 import { AnimatePresence } from "framer-motion";
 
-function Display() {
+export default function Display() {
     const { displayThisArticle, displayThisInvestigation, readAssociatedArticle } = useSelector(
         (s: RootState) => ({
             displayThisArticle: s.profileNav.displayThisArticle,
@@ -34,5 +34,3 @@ function Display() {
     );
 };
 
-
-export default React.memo(Display);

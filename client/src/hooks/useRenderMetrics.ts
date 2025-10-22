@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector, shallowEqual } from "react-redux";
 import type { RootState } from "@/ReduxToolKit/store";
 
-export type Priority = 'complete' | 'pending';
+export type Priority = 'complete' | 'pending' | 'failed';
 
 interface RenderMetrics {
     priority1: Priority,
@@ -34,9 +34,15 @@ export function useRenderMetrics(): RenderValues {
     });
     const [renderFallback, setRenderFallback] = useState<boolean>(false);
 
-
     useEffect(() => {
-        if (!hasArticles) return;
+        if (!hasArticles) {
+            setPriority((prev: RenderMetrics) => ({
+                ...prev,
+                priority1: 'failed',
+                priority2: 'failed'
+            }));
+            return;
+        }
         const priority_one_curr = priority.priority1;
         const priority_two_curr = priority.priority2;
         const upstreamDone = ((priority_one_curr === 'complete' && priority_two_curr === 'complete'))
@@ -44,15 +50,15 @@ export function useRenderMetrics(): RenderValues {
 
 
         const biasLoaded = (Array.isArray(biasRatings) && biasRatings.length > 0);
-        if (biasLoaded) {
+        if (biasLoaded && (priority.priority1 !== 'complete')) {
             setPriority((prev: RenderMetrics) => ({
                 ...prev,
                 priority1: 'complete'
             }));
-        }
+        };
 
         const ratingsLoaded = (Array.isArray(ratingData) && (ratingData.length > 0));
-        if (ratingsLoaded) {
+        if (ratingsLoaded && (priority.priority2 !== 'complete')) {
             setPriority((prev: RenderMetrics) => ({
                 ...prev,
                 priority2: 'complete'
@@ -64,13 +70,22 @@ export function useRenderMetrics(): RenderValues {
 
 
     useEffect(() => {
+
         if (!hasArticles && !hasInvestigations) {
             setRenderFallback(true);
             return;
         }
-        if (!hasInvestigations) return;
+        if (!hasInvestigations) {
+            setPriority((prev: RenderMetrics) => ({
+                ...prev,
+                priority3: 'failed'
+            }));
+            return;
+        }
+
 
         const priority_three_curr = priority.priority3;
+
         if (priority_three_curr === 'complete') return;
 
         const statsPopulated: boolean = Object.values(stats).some((el: number) => el !== null);
@@ -80,9 +95,11 @@ export function useRenderMetrics(): RenderValues {
                 ...prev,
                 priority3: 'complete'
             }));
+
+            setRenderFallback(false);
         };
 
-    }, [userResearch, stats, hasInvestigations, hasArticles, priority]);
+    }, [userResearch, stats, hasInvestigations, hasArticles, priority, renderFallback]);
 
 
     return {

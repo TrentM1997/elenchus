@@ -15,6 +15,7 @@ import StatsFallback from "../../../charts/ChartFallbacks/StatsFallback";
 import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";
 import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback";
 import { useRenderMetrics } from "@/hooks/useRenderMetrics";
+import ChartFallbackContainer from "../../../charts/ChartFallbacks/FbContainer";
 const StatsSection = lazy(() => import('../../../charts/ResearchStats/StatsSection'));
 
 
@@ -62,7 +63,6 @@ export default function Metrics() {
 
     return (
         <motion.section
-            key={"dashboard"}
             variants={variants}
             initial='closed'
             animate='open'
@@ -80,6 +80,7 @@ export default function Metrics() {
             overflow-y-auto no-scrollbar scrollbar-gutter-stable-both scroll-smooth overscroll-contain">
 
                 {renderFallback && <NoSavedContentFallback key={'fallback'} />}
+
 
                 <ChartJsWrapper
                     key={'chartjs-wrapper'}
@@ -100,8 +101,10 @@ export default function Metrics() {
                 >
                     {(priority1 === 'complete') && (priority2 === 'complete') && (priority3 === 'complete') && <StatsSection />}
                 </Suspense>
+                {(priority1 === 'failed' && (priority2 === 'failed')) && <ChartFallbackContainer />}
 
-                {(calcRef.current === false) && <StatsFallback key={'stats-fallback'} />}
+
+                {(priority3 === 'failed') && <StatsFallback key={'stats-fallback'} />}
             </article>
 
 

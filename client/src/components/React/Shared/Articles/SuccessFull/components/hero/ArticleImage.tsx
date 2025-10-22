@@ -2,7 +2,6 @@ import React from "react";
 import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 import ArticleTitle from "./ArticleTitle";
 import PublishedBy from "./PublishedBy";
-import { useIsMobile } from "@/hooks/useIsMobile";
 
 interface ArticleThumbnail {
     article: Article
