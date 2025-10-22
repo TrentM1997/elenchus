@@ -8,7 +8,6 @@ interface CurrentChosen {
 function CurrentChosen({ chosenArticles }: CurrentChosen): JSX.Element {
     const selectedTotal = chosenArticles.length
     const selectedArticles = `${selectedTotal}/3`;
-    const [shimmer, setShimmer] = useState<boolean>(false);
     const [phase, setPhase] = useState<"idle" | "shimmer" | "fadeout">("idle");
     const timerRef = useRef<number | null>(null);
 
@@ -20,6 +19,12 @@ function CurrentChosen({ chosenArticles }: CurrentChosen): JSX.Element {
             return () => clearTimeout(timerRef.current!);
         }
         setPhase("idle");
+
+        return () => {
+            if (timerRef.current !== null) {
+                clearTimeout(timerRef.current);
+            };
+        };
     }, [selectedTotal]);
 
 
