@@ -9,7 +9,7 @@ import cors from 'cors';
 import mime from 'mime'
 import cookieParser from 'cookie-parser';
 const app = express();
-import { tldrSummary } from '../endpoints/tldrSummary.js';
+import { firecrawl_extractions } from '../endpoints/firecrawl_extractions.js';
 import { deleteUser } from '../endpoints/deleteUser.js';
 import { searchBlueSkyPosts } from '../endpoints/blueskyApi.js';
 import { getBlueSkyFeed } from '../endpoints/blueskyApi.js';
@@ -75,7 +75,7 @@ app.options('*', (req, res) => {
 
 
 app.get('/newsArticles', newsApi);
-app.post('/summarize', tldrSummary);
+app.post('/summarize', firecrawl_extractions);
 app.post('/deleteUser', deleteUser);
 app.get('/searchBlueSky', searchBlueSkyPosts);
 app.get('/getBlueSkyFeed', getBlueSkyFeed);

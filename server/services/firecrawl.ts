@@ -9,7 +9,7 @@ import { TldrRequest } from '../types/types.js';
 import { performance } from 'perf_hooks';
 import { getMediaBiases } from '../endpoints/mediaBias.js';
 import { cleanURL } from '../helpers/cleanUrl.js';
-import type { ScrapedArticle } from '../types/types.js';
+import type { FailedAttempt, ScrapedArticle } from '../types/types.js';
 
 export interface FirecrawlContent {
     title: string;
@@ -28,7 +28,13 @@ export interface FirecrawlResponse {
 export type FirecrawlResults = Array<FirecrawlResponse>;
 
 
-export const firecrawlExtract = async (article: TldrRequest): Promise<any> => {
+export interface ExtractRes {
+    data: ScrapedArticle | null,
+    message: string
+};
+
+
+export const firecrawlExtract = async (article: TldrRequest, failed: FailedAttempt[]): Promise<ExtractRes> => {
 
     const schema = {
         type: "object",
@@ -92,11 +98,20 @@ export const firecrawlExtract = async (article: TldrRequest): Promise<any> => {
             });
         };
 
-        return article_extracted;
+        return { data: article_extracted, message: 'success' };
 
     } catch (error) {
         console.log({ status: "firecrawl error encountered" });
         console.error(error);
-        return { message: "failed to scrape with firecrawl" };
+        const failedArticle = {
+            title: article.title,
+            summary: [{ denied: 'We were denied access to the article from', failedArticle: `${article.source} - ${article.title}` }],
+            logo: article.logo,
+            source: article.source,
+            date: article.date,
+            article_url: article.url,
+        };
+        failed.push(failedArticle);
+        return { data: null, message: `failed to scrape from - ${article.url}` }
     };
 };

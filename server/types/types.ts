@@ -183,6 +183,16 @@ export interface TldrRequest {
 };
 
 
+export interface FcParam {
+    url: string,
+    source: string,
+    date: string,
+    logo: string,
+    title: string,
+    image: string
+};
+
+
 export interface MappedTldrRequests {
     retrieved: ScrapedArticle[] | null,
     rejected: FailedAttempt[];
