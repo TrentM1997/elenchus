@@ -40,7 +40,7 @@ export interface Article {
     fallbackDate: string | null,
     summary: any,
     full_text: string,
-    logo: string,
+    logo?: string,
     id: number | null,
     factual_reporting?: string | null,
     bias?: Bias,

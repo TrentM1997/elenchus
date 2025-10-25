@@ -3,7 +3,7 @@ import { saveArticle } from "@/services/supabase/SupabaseData";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/ReduxToolKit/store";
 import { fetchSavedArticles } from "@/ReduxToolKit/Reducers/UserContent/UserContentReducer";
-import { ArticleToSave } from "@/env";
+import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 
 interface SaveArticleHook {
     handleSaveArticle: () => Promise<void>,
@@ -11,7 +11,7 @@ interface SaveArticleHook {
 };
 
 interface SaveHookParams {
-    article: ArticleToSave,
+    article: Article,
     isSaved: boolean | null
 }
 
@@ -29,30 +29,31 @@ export function useSaveArticle({ article, isSaved }: SaveHookParams): SaveArticl
     }, [userArticles, article.article_url]);
 
 
-    const dataToSave: SavedArticle = useMemo(() => {
+    const dataToSave: Article = useMemo(() => {
+
         return {
-            title: article.article_title,
-            provider: article.source,
-            image_url: article.article_image,
-            text: article.article_text,
-            authors: article.article_authors,
-            date_published: article.date_published ? article.date_published : article.article_pub_date,
+            title: article.title,
+            provider: article.provider,
+            image_url: article.image_url,
+            full_text: article.full_text,
+            authors: article.authors,
+            date_published: article.date_published ? article.date_published : article.fallbackDate,
             article_url: article.article_url,
             summary: article.summary,
-            fallbackDate: article.article_pub_date,
+            fallbackDate: article.fallbackDate,
             id: dbId,
             factual_reporting: article.factual_reporting,
             bias: article.bias,
             country: article.country
         };
     }, [
-        article.article_title,
-        article.source,
-        article.article_image,
-        article.article_text,
-        article.article_authors,
+        article.title,
+        article.provider,
+        article.image_url,
+        article.full_text,
+        article.authors,
         article.date_published,
-        article.article_pub_date,
+        article.fallbackDate,
         article.article_url,
         article.summary,
         article.factual_reporting,

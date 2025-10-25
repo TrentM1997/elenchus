@@ -78,7 +78,7 @@ export interface ArticleSaveResponse {
 //    country?: string | null
 //};
 
-type Bias = | "Left"
+export type Bias = | "Left"
     | "Left-Center"
     | "Center"
     | "Right-Center"
@@ -140,25 +140,22 @@ export interface DeleteUserBody {
     password: string
 };
 
+
 export interface ScrapedArticle {
-    article_abstract: string | null;
-    article_authors: string[];
-    article_html: string | null;
-    article_image: string;
-    article_pub_date: string;
-    article_text: string;
-    article_title: string;
-    article_url: string;
-    bias: string | null;
-    country: string | null;
-    date: string;
-    factual_reporting: string | null;
-    logo: string;
-    source: string;
-    summary: {
-        heading: string | null;
-        text: string | null;
-    }[] | null;
+    title: string,
+    provider: string,
+    authors: string[] | string,
+    article_url: string,
+    image_url: string,
+    date_published: string,
+    fallbackDate: string | null,
+    summary: any,
+    full_text: string,
+    logo: string,
+    id: number | null,
+    factual_reporting?: string | null,
+    bias: Bias,
+    country?: string | null
 };
 
 export interface FailedAttempt {

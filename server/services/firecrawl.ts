@@ -9,13 +9,13 @@ import { TldrRequest } from '../types/types.js';
 import { performance } from 'perf_hooks';
 import { getMediaBiases } from '../endpoints/mediaBias.js';
 import { cleanURL } from '../helpers/cleanUrl.js';
-import type { FailedAttempt, ScrapedArticle } from '../types/types.js';
+import type { FailedAttempt, ScrapedArticle, Bias } from '../types/types.js';
 
 export interface FirecrawlContent {
     title: string;
     author: string;
     source: string;
-    content: string;
+    content_markdown: string;
     imageUrl?: string;
     publishedDate?: string;
 }
@@ -34,7 +34,7 @@ export interface ExtractRes {
 };
 
 
-export const firecrawlExtract = async (article: TldrRequest, failed: FailedAttempt[]): Promise<ExtractRes> => {
+export const firecrawlExtract = async (article: TldrRequest, failed: FailedAttempt[]): Promise<ScrapedArticle | null> => {
 
     const schema = {
         type: "object",
@@ -43,7 +43,7 @@ export const firecrawlExtract = async (article: TldrRequest, failed: FailedAttem
             author: { type: "string" },
             publishedDate: { type: "string" },
             source: { type: "string" },
-            content: { type: "string" },
+            content_markdown: { type: "string" },
             imageUrl: { type: "string" },
         },
         required: ["title", "source", "content"],
@@ -59,46 +59,36 @@ export const firecrawlExtract = async (article: TldrRequest, failed: FailedAttem
 
 
     try {
-        const start = performance.now();
         const data = await firecrawl.scrape(urlClean, {
             formats: [{
                 type: "json",
-                schema: schema
+                schema: schema,
+                prompt: "Provide the main article body as markdown, preserving paragraphs, headings, and bullet lists."
             }],
         });
 
 
         const results = data as FirecrawlResponse;
         const content: FirecrawlContent = results.json;
-        const end: number = performance.now();
-        const duration: string = (end - start).toFixed(2);
 
         const article_extracted: ScrapedArticle = {
-            article_abstract: null,
-            article_authors: [content.author],
-            article_html: null,
-            article_image: content.imageUrl ?? article.image,
-            article_pub_date: article.date ?? null,
-            article_text: content.content ?? null,
-            article_title: content.title ?? article.title,
-            article_url: article.url,
-            bias: biasRatings?.bias ?? null,
-            country: biasRatings?.country ?? null,
-            date: article.date,
-            factual_reporting: biasRatings?.factual_reporting ?? null,
-            logo: article.logo ?? null,
-            source: article.source ?? null,
-            summary: null
+            title: article.title,
+            provider: article.source,
+            authors: content?.author ?? null,
+            article_url: urlClean,
+            image_url: content?.imageUrl ?? article.image,
+            date_published: article.date ?? content?.publishedDate,
+            fallbackDate: article?.date ?? null,
+            summary: null,
+            full_text: content?.content_markdown,
+            logo: article.logo,
+            id: null,
+            factual_reporting: biasRatings?.factual_reporting,
+            bias: biasRatings?.bias as Bias,
+            country: biasRatings?.country ?? null
         };
 
-        if (content) {
-            console.log({
-                status: "firecrawl scraped successfully",
-                runtime: `duration in milliseconds: ${duration}`
-            });
-        };
-
-        return { data: article_extracted, message: 'success' };
+        return article_extracted;
 
     } catch (error) {
         console.log({ status: "firecrawl error encountered" });
@@ -112,6 +102,6 @@ export const firecrawlExtract = async (article: TldrRequest, failed: FailedAttem
             article_url: article.url,
         };
         failed.push(failedArticle);
-        return { data: null, message: `failed to scrape from - ${article.url}` }
+        return null
     };
 };

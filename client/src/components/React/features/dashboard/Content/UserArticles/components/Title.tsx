@@ -9,7 +9,8 @@ interface TitleTypes {
 
 function Title({ article, handleArticleSelection }: TitleTypes): React.ReactNode {
 
-    const limitedTitle = limitString(article.title, 60);
+    //    const limitedTitle = limitString(article.title, 60);
+
 
     return (
         <div className={`group w-full h-full px-3 xl:p-4`}
@@ -19,7 +20,7 @@ function Title({ article, handleArticleSelection }: TitleTypes): React.ReactNode
 
                 className="text-sm sm:text-sm w-11/12 sm:w-full mt-3 lg:mt-4 tracking-tight font-light lg:text-lg xl:text-xl 2xl:text-2xl
                 text-white/80 md:group-hover:text-white transition-colors duration-200 ease-in-out">
-                {limitedTitle}
+                {article.title}
             </h3>
 
             <p className="text-zinc-400 text-xs sm:text-[0.65rem] md:text-xs mt-3 lg:mt-6 w-full text-left">
