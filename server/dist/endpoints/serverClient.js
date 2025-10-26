@@ -7,6 +7,9 @@ const envPath = path.resolve(__dirname, '../.env');
 dotenv.config({ path: envPath });
 import { SUPABASE_KEY, SUPABASE_URL } from '../src/Config.js';
 import { createClient } from '@supabase/supabase-js';
+import { saveArticleForUser } from '../services/saveArticle.js';
+import { deleteArticleForUser } from '../services/deleteArticle.js';
+import { getUserContent } from '../services/getUserContent.js';
 export const createSupabaseFromRequest = (req) => {
     const accessToken = req.cookies['sb-access-token'];
     return createClient(SUPABASE_URL, SUPABASE_KEY, {
@@ -30,11 +33,15 @@ export const getUserAndSupabase = async (req, res) => {
     return { supabase, user };
 };
 export const getCurrentUser = async (req, res) => {
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
     const session = await getUserAndSupabase(req, res);
     if (!session)
         return;
     const { user } = session;
-    res.status(200).json({ user });
+    const { id } = user;
+    const content = await getUserContent(supabase, id);
+    const userData = { sess: session, userContent: content };
+    res.status(200).json({ user: user, data: userData.userContent });
     return;
 };
 export const supabaseLogin = async (req, res) => {
@@ -60,8 +67,11 @@ export const supabaseLogin = async (req, res) => {
                 sameSite: 'lax',
                 maxAge: 7 * 24 * 60 * 60 * 1000,
             });
-            const data = response.data.session;
-            res.status(200).send(data);
+            const sessionData = response.data.session;
+            const { id } = sessionData.user;
+            const content = await getUserContent(supabase, id);
+            const userData = { sess: sessionData, userContent: content };
+            res.status(200).send(userData);
             return;
         }
         else {
@@ -133,8 +143,7 @@ export const getUserArticles = async (req, res) => {
             .eq('user_id', user.id);
         if (error) {
             console.error(error.message);
-            res.status(400).json({ error: error.message });
-            return;
+            throw new Error(`Unexpected error encountered: ${error.message}`);
         }
         else {
             res.status(200).send(data);
@@ -181,121 +190,43 @@ export const getUserResearch = async (req, res) => {
     }
     ;
 };
-const saveArticleForUser = async (req, res) => {
-    const session = await getUserAndSupabase(req, res);
-    if (!session)
-        return null;
-    const { supabase, user } = session;
-    const { dataToSave } = req.body;
-    const { text, url, image_url, summary, title, authors, date, provider, fallbackDate, factual_reporting, bias, country } = dataToSave;
-    try {
-        const { data, error } = await supabase
-            .from('articles')
-            .upsert([
-            {
-                title: title,
-                image_url: image_url,
-                provider: provider,
-                full_text: text,
-                authors: authors,
-                date_published: date || fallbackDate,
-                article_url: url,
-                summary: summary,
-                user_id: user.id,
-                bias: bias,
-                factual_reporting: factual_reporting,
-                country: country,
-            },
-        ], {
-            onConflict: 'user_id,article_url',
-        })
-            .select();
-        if (error) {
-            console.log(error.message);
-            const db_error = "couldn't save the provided article to the database";
-            return db_error;
-        }
-        else if (data) {
-            console.log(data);
-            const message = "Saved";
-            return message;
-        }
-        ;
-        return null;
-    }
-    catch (error) {
-        console.log(error);
-        const error_message = error instanceof Error
-            ? `Unknown server error: ${error.message}`
-            : 'Unknown server error, check server logs for more info';
-        return error_message;
-    }
-    ;
-};
-const deleteArticleForUser = async (req, res) => {
-    try {
-        const session = await getUserAndSupabase(req, res);
-        if (!session)
-            return null;
-        const { supabase, user } = session;
-        const { dataToSave } = req.body;
-        const { url } = dataToSave;
-        const response = await supabase
-            .from('articles')
-            .delete()
-            .eq('user_id', user.id)
-            .eq('article_url', url)
-            .select();
-        if (response?.error) {
-            console.error('Deleting error', response.error.message);
-            return null;
-        }
-        else if (response) {
-            const message = "Deleted";
-            return message;
-        }
-        ;
-        return null;
-    }
-    catch (error) {
-        console.log(error);
-        const err_message = error instanceof Error
-            ? `Unknown server error: ${error.message}`
-            : 'Unknown server error, check server logs for more info';
-        return err_message;
-    }
-    ;
-};
 export const handleArticleSave = async (req, res) => {
     const { articleExists, dataToSave } = req.body;
+    const session = await getUserAndSupabase(req, res);
+    if (!session)
+        return;
+    const { supabase, user } = session;
+    const user_id = user?.id;
+    const { id } = dataToSave;
     try {
         let result;
-        if (articleExists) {
+        if ((articleExists === true) && (id)) {
             console.log('deleting');
-            result = await deleteArticleForUser(req, res);
+            result = await deleteArticleForUser(supabase, user_id, id);
         }
         else {
             console.log('saving');
-            result = await saveArticleForUser(req, res);
+            result = await saveArticleForUser(supabase, user_id, dataToSave);
         }
         if (result) {
-            const responseObject = { saved: true, data: result };
+            console.log(result);
+            const responseObject = { success: true, data: result };
             res.status(200).send(responseObject);
             return;
         }
         else {
-            res.status(400).json({ saved: false, data: `Database operation failed to execute.` });
+            res.status(400).json({ success: false, message: `Database operation failed to execute.` });
             return;
         }
     }
     catch (error) {
         console.log(error);
         if (error instanceof Error) {
-            res.status(500).json({ saved: false, data: `Unknown server error ${error}` });
+            res.status(500).json({ success: false, message: `Unknown server error ${error}` });
             return;
         }
         else {
-            res.status(500).json({ saved: false, data: 'Unknown server error, check server logs for more info' });
+            res.status(500).json({ success: false, message: 'Unknown server error, check server logs for more info' });
             return;
         }
         ;

@@ -9,8 +9,7 @@ import cors from 'cors';
 import mime from 'mime';
 import cookieParser from 'cookie-parser';
 const app = express();
-import { bingArticles } from '../endpoints/bingApi.js';
-import { tldrSummary } from '../endpoints/tldrSummary.js';
+import { firecrawl_extractions } from '../endpoints/firecrawl_extractions.js';
 import { deleteUser } from '../endpoints/deleteUser.js';
 import { searchBlueSkyPosts } from '../endpoints/blueskyApi.js';
 import { getBlueSkyFeed } from '../endpoints/blueskyApi.js';
@@ -24,6 +23,7 @@ import { resetUserPassword } from '../endpoints/serverClient.js';
 import { getCurrentUser } from '../endpoints/serverClient.js';
 import { createNewUser } from '../endpoints/serverClient.js';
 import { sendFeedback } from '../endpoints/serverClient.js';
+import { newsApi } from '../endpoints/newsApi.js';
 const corsOptions = {
     origin: ['https://elenchusapp.io', 'http://localhost:5173'],
     credentials: true,
@@ -32,7 +32,7 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 app.use(express.json());
-app.use(cookieParser()); //*************** COOKIE PARSER HERE  */
+app.use(cookieParser());
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', req.headers.origin || '');
     res.header('Access-Control-Allow-Credentials', 'true');
@@ -55,8 +55,8 @@ app.options('*', (req, res) => {
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
     res.sendStatus(200);
 });
-app.get('/search/articles', bingArticles);
-app.get('/summarize', tldrSummary);
+app.get('/newsArticles', newsApi);
+app.post('/summarize', firecrawl_extractions);
 app.post('/deleteUser', deleteUser);
 app.get('/searchBlueSky', searchBlueSkyPosts);
 app.get('/getBlueSkyFeed', getBlueSkyFeed);
