@@ -18,7 +18,7 @@ type FcResObj = { retrieved: ScrapedArticle[] | null, rejected: FailedAttempt[] 
 export async function createFirecrawlClient(): Promise<Firecrawl | null> {
     let firecrawl
     try {
-        firecrawl = new Firecrawl({ apiKey: FIRECRAWL_KEY })
+        firecrawl = new Firecrawl({ apiKey: process.env.FIRECRAWL_KEY })
 
         return firecrawl
     } catch (err) {
