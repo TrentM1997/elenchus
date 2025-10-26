@@ -1,9 +1,3 @@
-import * as path from 'path'
-import { fileURLToPath } from 'url';
-const envUrl = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(envUrl)
-const envPath = path.resolve(__dirname, '../../.env');
-import { FIRECRAWL_KEY } from '../src/Config.js';
 import Firecrawl from "@mendable/firecrawl-js";
 import { getMediaBiases } from '../endpoints/mediaBias.js';
 import { cleanURL } from '../helpers/cleanUrl.js';
@@ -61,9 +55,8 @@ async function getBiasData(articles: FcParam[]): Promise<Map<string, BiasInfo>> 
     return biasRatings;
 };
 
-export async function firecrawlBatchScrape(articles: FcParam[], failed: FailedAttempt[]): Promise<ScrapedArticle[]> {
+export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcParam[], failed: FailedAttempt[]): Promise<ScrapedArticle[]> {
 
-    const firecrawl = new Firecrawl({ apiKey: FIRECRAWL_KEY });
     const urls = articles.map((article: FcParam) => {
         const cleansed = cleanURL(article.url);
         return cleansed;
