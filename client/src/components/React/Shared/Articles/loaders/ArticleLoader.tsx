@@ -17,6 +17,7 @@ export default function ArticleLoader(): JSX.Element | null {
                     <Lottie
 
                         animationData={vortex}
+
                         autoPlay={true}
                         loop={true}
                         style={{ height: '100%', width: '100%' }}
@@ -24,7 +25,7 @@ export default function ArticleLoader(): JSX.Element | null {
                 </div>
                 <header className='w-auto h-auto mx-auto flex flex-col items-center justify-center gap-y-12'>
                     <h1
-                        className='w-auto mx-auto h-fit text-center text-base tracking-tight md:text-3xl xl:text-3xl inline-block bg-gradient-to-r from-zinc-600 via-zinc-200 to-zinc-600 
+                        className='w-auto mx-auto h-fit text-center text-base tracking-tight md:text-3xl xl:text-3xl will-change-transform transform-gpu inline-block bg-gradient-to-r from-zinc-600 via-zinc-200 to-zinc-600 
          bg-[length:200%_100%] bg-clip-text text-transparent animate-shimmer'
                     >Gathering the chosen articles
 

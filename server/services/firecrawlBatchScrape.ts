@@ -87,7 +87,7 @@ export async function firecrawlBatchScrape(articles: FcParam[], failed: FailedAt
         }
         );
 
-        for(let index = 0; index < urls.length; index++) {
+        for (let index = 0; index < urls.length; index++) {
             const url = urls[index];
 
             const item = batchJob?.data?.[index] as FirecrawlBatchItem;
@@ -116,28 +116,28 @@ export async function firecrawlBatchScrape(articles: FcParam[], failed: FailedAt
 
                 continue;
             } else {
-                 const rating = MBFC_DATA.has(currArticle.source) ? MBFC_DATA.get(currArticle.source) : null
+                const rating = MBFC_DATA.has(currArticle.source) ? MBFC_DATA.get(currArticle.source) : null
 
 
-            const scraped: ScrapedArticle = {
-                title: json.title ?? currArticle.title,
-                provider: currArticle?.source,
-                authors: json?.author ?? "Author N/A",
-                article_url: url,
-                image_url: currArticle?.image ?? json?.imageUrl,
-                date_published: currArticle?.date ?? json?.publishedDate,
-                fallbackDate: currArticle?.date ?? null,
-                summary: null,
-                full_text: json?.content_markdown ?? "Failed to retrieve article content",
-                logo: currArticle?.logo,
-                id: null,
-                factual_reporting: rating?.factual_reporting,
-                bias: rating?.bias as Bias,
-                country: rating?.country ?? null
-            };
+                const scraped: ScrapedArticle = {
+                    title: json.title ?? currArticle.title,
+                    provider: currArticle?.source,
+                    authors: json?.author ?? "Author N/A",
+                    article_url: url,
+                    image_url: currArticle?.image ?? json?.imageUrl,
+                    date_published: currArticle?.date ?? json?.publishedDate,
+                    fallbackDate: currArticle?.date ?? null,
+                    summary: null,
+                    full_text: json?.content_markdown ?? "Failed to retrieve article content",
+                    logo: currArticle?.logo,
+                    id: null,
+                    factual_reporting: rating?.factual_reporting,
+                    bias: rating?.bias as Bias,
+                    country: rating?.country ?? null
+                };
 
-            scraped_articles.push(scraped);
-        }
+                scraped_articles.push(scraped);
+            }
         };
 
 
@@ -148,59 +148,3 @@ export async function firecrawlBatchScrape(articles: FcParam[], failed: FailedAt
         return scraped_articles;
     };
 };
-
-
-
-
-
-       // const results = urls.map((url: string, index: number): void => {
-//
-       //     const item = batchJob?.data?.[index] as FirecrawlBatchItem;
-       //     const json: FirecrawlJSON = item?.json;
-//
-       //     const currArticle = articles.find((article: FcParam) => {
-       //         const item = article.url === url;
-       //         return item ?? null
-       //     }) as FcParam;
-//
-       //     if (!json) {
-//
-       //         const failedArticle = currArticle ? {
-       //             title: currArticle.title,
-       //             summary: [{ denied: 'We were denied access to the article from', failedArticle: `${currArticle.source} - ${currArticle.title}` }],
-       //             logo: currArticle.logo,
-       //             source: currArticle.source,
-       //             date: currArticle.date,
-       //             article_url: currArticle.url,
-       //         } : null;
-//
-       //         if (failedArticle) {
-       //             failed.push(failedArticle);
-       //         };
-//
-       //         return;
-       //     } else {
-       //          const rating = MBFC_DATA.has(currArticle.source) ? MBFC_DATA.get(currArticle.source) : null
-//
-//
-       //     const scraped: ScrapedArticle = {
-       //         title: json.title ?? currArticle.title,
-       //         provider: currArticle?.source,
-       //         authors: json?.author ?? "Author N/A",
-       //         article_url: url,
-       //         image_url: currArticle?.image ?? json?.imageUrl,
-       //         date_published: currArticle?.date ?? json?.publishedDate,
-       //         fallbackDate: currArticle?.date ?? null,
-       //         summary: null,
-       //         full_text: json?.content_markdown ?? "Failed to retrieve article content",
-       //         logo: currArticle?.logo,
-       //         id: null,
-       //         factual_reporting: rating?.factual_reporting,
-       //         bias: rating?.bias as Bias,
-       //         country: rating?.country ?? null
-       //     };
-//
-       //     scraped_articles.push(scraped);
-       // }
-       //    
-       // });
