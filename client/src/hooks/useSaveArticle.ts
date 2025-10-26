@@ -30,13 +30,20 @@ export function useSaveArticle({ article, isSaved }: SaveHookParams): SaveArticl
 
 
     const dataToSave: Article = useMemo(() => {
+        let auth: string | string[]
+        if (typeof article.authors === 'string') {
+            auth = [];
+            auth.push(article.authors);
+        } else {
+            auth = article.authors;
+        };
 
         return {
             title: article.title,
             provider: article.provider,
             image_url: article.image_url,
             full_text: article.full_text,
-            authors: article.authors,
+            authors: auth,
             date_published: article.date_published ? article.date_published : article.fallbackDate,
             article_url: article.article_url,
             summary: article.summary,

@@ -6,7 +6,6 @@ const envPath = path.resolve(__dirname, '../../.env');
 import { FIRECRAWL_KEY } from '../src/Config.js';
 import Firecrawl from "@mendable/firecrawl-js";
 import { TldrRequest } from '../types/types.js';
-import { performance } from 'perf_hooks';
 import { getMediaBiases } from '../endpoints/mediaBias.js';
 import { cleanURL } from '../helpers/cleanUrl.js';
 import type { FailedAttempt, ScrapedArticle, Bias } from '../types/types.js';
@@ -27,27 +26,21 @@ export interface FirecrawlResponse {
 
 export type FirecrawlResults = Array<FirecrawlResponse>;
 
-
-export interface ExtractRes {
-    data: ScrapedArticle | null,
-    message: string
+export const schema = {
+    type: "object",
+    properties: {
+        title: { type: "string" },
+        author: { type: "string" },
+        publishedDate: { type: "string" },
+        source: { type: "string" },
+        content_markdown: { type: "string" },
+        imageUrl: { type: "string" },
+    },
+    required: ["title", "source", "content"],
 };
 
 
 export const firecrawlExtract = async (article: TldrRequest, failed: FailedAttempt[]): Promise<ScrapedArticle | null> => {
-
-    const schema = {
-        type: "object",
-        properties: {
-            title: { type: "string" },
-            author: { type: "string" },
-            publishedDate: { type: "string" },
-            source: { type: "string" },
-            content_markdown: { type: "string" },
-            imageUrl: { type: "string" },
-        },
-        required: ["title", "source", "content"],
-    };
 
     const firecrawl = new Firecrawl({
         apiKey: FIRECRAWL_KEY

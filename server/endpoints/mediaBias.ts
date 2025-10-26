@@ -7,6 +7,7 @@ const envPath = path.resolve(__dirname, '../.env');
 dotenv.config({ path: envPath })
 import { SUPABASE_KEY, SUPABASE_URL } from '../src/Config.js';
 import { createClient } from '@supabase/supabase-js';
+import type { Bias } from '../types/types.js';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
     auth: {
@@ -16,7 +17,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
 
 export interface BiasTypes {
     country: string | null,
-    bias: string | null,
+    bias: Bias | null,
     factual_reporting: string | null,
     name: string | null
 }
