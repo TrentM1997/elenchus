@@ -78,7 +78,6 @@ export default function ArticlesScroller({ sortedArticles, markIds, deletedIds, 
     }, [fullyLoaded, numSkeletons]);
 
 
-
     const handleArticleSelection = useCallback((article: Article) => () => {
         dispatch(readSavedArticle(article));
         dispatch(presentThisArticle());

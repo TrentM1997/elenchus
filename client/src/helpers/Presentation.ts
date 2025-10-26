@@ -30,8 +30,8 @@ export const limitArray = (arr: any) => {
 
 export const limitName = (name: string) => {
 
-    let splitName = name.split('')
-
+    let splitName = name?.split('') ?? null;
+    if (!splitName) return name;
     let shortenedArray = []
 
     for (let i = 0; i < splitName.length; i++) {

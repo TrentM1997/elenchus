@@ -30,9 +30,9 @@ export default function Article({ articleData, investigating }: ArticleProps): J
     const [prev, setPrev] = useState<Article | null>(null);
     const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
     const { read } = investigateState;
-    const { articles, currentStory, ContentStatus } = read;
+    const { articles, currentStory } = read;
 
-    const renderThisArticle: boolean = (displayed.article_url === articles[currentStory].article_url);
+    const renderThisArticle: boolean = investigating ? (displayed.article_url === articles[currentStory].article_url) : true;
 
     useEffect(() => {
         if (!articleData) return;
@@ -57,21 +57,21 @@ export default function Article({ articleData, investigating }: ArticleProps): J
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, transition: { type: 'tween', delay: 0.3, duration: 0.3 } }}
             exit={{ opacity: 0, transition: { type: 'tween', delay: 0, duration: 0.3 } }}
-            className="relative top-0 left-0 right-0 flex flex-col grow px-4
+            className="relative top-0 left-0 right-0 flex flex-col grow px-4 mx-auto
                  w-full lg:max-w-lg xl:max-w-4xl min-h-screen scrollbar-hide
                  bg-black transition-all duration-200 ease-in-out"
         >
             <AnimatePresence mode="wait" initial={false}>
                 {renderThisArticle && <motion.div
-                    key={displayed.article_url}
+                    key={articleData.article_url}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1, transition: { duration: 0.25 } }}
                     className="relative"
                 >
-                    <ArticleHeader articleData={displayed} investigating={investigating} />
+                    <ArticleHeader articleData={articleData} investigating={investigating} />
                     <ArticleContent
-                        article_text={displayed.full_text}
-                        article_url={displayed.article_url}
+                        article_text={articleData.full_text}
+                        article_url={articleData.article_url}
                     />
                 </motion.div>}
             </AnimatePresence>

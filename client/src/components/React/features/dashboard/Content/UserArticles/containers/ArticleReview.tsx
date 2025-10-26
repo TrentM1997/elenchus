@@ -1,6 +1,7 @@
 import { AppDispatch, RootState } from "@/ReduxToolKit/store"
 import { lazy, Suspense, useMemo } from "react"
 import { useDispatch, useSelector } from "react-redux"
+const Article = lazy(() => import('@/components/React/Shared/Articles/SuccessFull/containers/Article'))
 const FullSavedArticle = lazy(() => import('../components/fullContent/containers/FullSavedArticle'));
 import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary"
 import ArticleSkeleton from "@/components/React/Shared/Articles/skeletons/ArticleSkeleton";
@@ -45,7 +46,7 @@ export default function ArticleReview() {
                 <ErrorBoundary>
                     {showArticle &&
                         <Suspense fallback={<DelayedFallback><ArticleSkeleton /></DelayedFallback>}>
-                            <FullSavedArticle article={savedArticle} />
+                            <Article investigating={false} articleData={savedArticle} />
                         </Suspense>
                     }
                 </ErrorBoundary>

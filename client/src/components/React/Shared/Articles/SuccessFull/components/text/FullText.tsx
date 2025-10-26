@@ -5,6 +5,7 @@ import { AnimatePresence } from "framer-motion";
 import TermModalContainer from "@/components/React/features/WikiExtract/components/popovers/containers/TermModalContainer";
 import TermModal from "@/components/React/features/WikiExtract/components/popovers/modals/TermModal";
 import WikiTermExtract from "@/components/React/features/WikiExtract/components/WikiTermExtract";
+import ArticleBody from "./ArticleBody";
 
 interface FullTextProps {
     article_text: string,
@@ -63,9 +64,7 @@ export default function FullText({ article_text, article_url }: FullTextProps) {
             <AnimatePresence>
                 {wikiModalStages.display && <WikiTermExtract article_url={article_url} />}
             </AnimatePresence>
-            <p className="font-light xl:text-xl tracking-tight text-white">
-                {article_text}
-            </p>
+            <ArticleBody markdown={article_text} />
         </div>
     )
 };

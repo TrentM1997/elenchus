@@ -1,5 +1,6 @@
 import { SavedArticle } from "../endpoints/interfaces";
 import { SupabaseClient } from "@supabase/supabase-js";
+import type { Article } from "../types/types";
 
 interface SavedResponse {
     message: string,
@@ -9,10 +10,10 @@ interface SavedResponse {
 export const saveArticleForUser = async (
     supabase: SupabaseClient,
     id: string,
-    dataToSave: SavedArticle
+    dataToSave: Article
 ): Promise<SavedResponse | null> => {
 
-    const { text, article_url, image_url, summary, title, authors, date_published, provider, fallbackDate, factual_reporting, bias, country } = dataToSave;
+    const { full_text, article_url, image_url, summary, title, authors, date_published, provider, fallbackDate, factual_reporting, bias, country } = dataToSave;
     const date = date_published ?? fallbackDate;
 
     try {
@@ -24,7 +25,7 @@ export const saveArticleForUser = async (
                         title: title,
                         image_url: image_url,
                         provider: provider,
-                        full_text: text,
+                        full_text: full_text,
                         authors: authors,
                         date_published: date ?? null,
                         article_url: article_url,
@@ -40,6 +41,8 @@ export const saveArticleForUser = async (
                 }
             )
             .select();
+
+        console.log(data);
 
         if (error) {
             console.log(error.message);

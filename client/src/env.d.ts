@@ -7,6 +7,7 @@ import React, { ReactEventHandler, ReactNode, SetStateAction } from "react";
 import { ActionCreatorWithoutPayload } from "@reduxjs/toolkit";
 import { User } from "@supabase/supabase-js";
 import { SigninStatus } from "./hooks/useSignIn";
+import type { Article } from "./ReduxToolKit/Reducers/Investigate/Reading";
 
 declare global {
   interface ImportMetaEnv {
@@ -124,11 +125,7 @@ declare global {
     country?: string | null
   }
 
-  interface SaveArticleButton {
-    article: ArticleToSave,
-    open: boolean,
-    reviewing?: boolean
-  }
+
 
   interface Calculations {
     change: number | null,
@@ -265,7 +262,11 @@ declare global {
     action?: string
   }
 
-
+  interface SaveArticleButton {
+    article: Article,
+    open: boolean,
+    reviewing?: boolean
+  }
 
   interface SidebarItemData {
     title: string,

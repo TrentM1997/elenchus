@@ -33,7 +33,7 @@ export default function ArticleHeader({ articleData, investigating }): JSX.Eleme
             md:gap-x-4 items-stretch w-full h-full mx-auto mb-3"
             >
                 <article
-                    className="w-full h-full flex flex-col gap-y-4 xl:flex-row items-start xl:items-center xl:gap-x-4 xl:gap-y-0
+                    className="w-full h-full flex flex-col gap-y-4 xl:flex-row items-start xl:items-center 2xl:items-end xl:gap-x-4 xl:gap-y-0
                 justify-between self-end"
                 >
                     <ArticleImage article={articleData} />

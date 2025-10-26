@@ -78,7 +78,6 @@ export async function getUserContent(supabase: SupabaseClient, id: string): Prom
         ]);
 
         const results: UserContent = { userArticles: articles, userResearch: investigations };
-        console.log(results);
         return results;
 
     } catch (error) {

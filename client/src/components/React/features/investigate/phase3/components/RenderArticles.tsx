@@ -55,4 +55,4 @@ export default function RenderArticles(): JSX.Element | null {
         </main>
     )
 
-}
+};

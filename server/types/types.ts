@@ -78,7 +78,25 @@ export interface ArticleSaveResponse {
 //    country?: string | null
 //};
 
-type Bias = | "Left"
+
+export interface Article {
+    title: string,
+    provider: string,
+    authors: string[] | string,
+    article_url: string,
+    image_url: string,
+    date_published: string,
+    fallbackDate: string | null,
+    summary: any,
+    full_text: string,
+    logo?: string,
+    id: string | number | null,
+    factual_reporting?: string | null,
+    bias?: Bias,
+    country?: string | null
+}
+
+export type Bias = | "Left"
     | "Left-Center"
     | "Center"
     | "Right-Center"
@@ -140,25 +158,22 @@ export interface DeleteUserBody {
     password: string
 };
 
+
 export interface ScrapedArticle {
-    article_abstract: string | null;
-    article_authors: string[];
-    article_html: string;
-    article_image: string;
-    article_pub_date: string;
-    article_text: string;
-    article_title: string;
-    article_url: string;
-    bias: string;
-    country: string;
-    date: string;
-    factual_reporting: string;
-    logo: string;
-    source: string;
-    summary: {
-        heading: string;
-        text: string;
-    }[];
+    title: string,
+    provider: string,
+    authors: string[] | string,
+    article_url: string,
+    image_url: string,
+    date_published: string,
+    fallbackDate: string | null,
+    summary: any,
+    full_text: string,
+    logo: string,
+    id: number | null,
+    factual_reporting?: string | null,
+    bias: Bias,
+    country?: string | null
 };
 
 export interface FailedAttempt {
@@ -166,7 +181,7 @@ export interface FailedAttempt {
     summary: {
         denied: string;
         failedArticle: string;
-    }[];
+    }[] | null;
     logo: string;
     source: string;
     date: string;
@@ -174,6 +189,16 @@ export interface FailedAttempt {
 };
 
 export interface TldrRequest {
+    url: string,
+    source: string,
+    date: string,
+    logo: string,
+    title: string,
+    image: string
+};
+
+
+export interface FcParam {
     url: string,
     source: string,
     date: string,

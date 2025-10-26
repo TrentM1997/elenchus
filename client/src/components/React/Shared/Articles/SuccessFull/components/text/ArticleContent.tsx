@@ -8,6 +8,7 @@ interface ArticleContentProps {
 
 export default function ArticleContent({ article_text, article_url }: ArticleContentProps): JSX.Element | null {
 
+
     return (
         <motion.div
             initial={{ opacity: 0 }}
