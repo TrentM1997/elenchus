@@ -1,3 +1,10 @@
+import * as dotenv from 'dotenv';
+import * as path from 'path';
+import { fileURLToPath } from 'url';
+const envUrl = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(envUrl);
+const envPath = path.resolve(__dirname, '../.env');
+dotenv.config({ path: envPath });
 import { Request, Response } from 'express'
 import { FailedAttempt } from './interfaces.js';
 import { ScrapedArticle } from '../types/types.js';
