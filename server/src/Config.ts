@@ -15,7 +15,7 @@ export function getEnvVar(name: string): string {
 
 export const BING_KEY = getEnvVar('BING_KEY');
 export const TLDR_KEY = getEnvVar('TLDR_KEY');
-export const FIRECRAWL_KEY = getEnvVar('FIRECRAWL_KEY');
+export const FIRECRAWL_KEY = process.env.FIRECRAWL_KEY;
 export const SUPABASE_URL = getEnvVar('SUPABASE_URL');
 export const SUPABASE_KEY = getEnvVar('SUPABASE_SERVICE_KEY');
 export const BLUESKY_PASSWORD = getEnvVar('BLUESKY_PASSWORD');

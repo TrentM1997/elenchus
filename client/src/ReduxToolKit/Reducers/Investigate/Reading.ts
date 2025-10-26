@@ -4,7 +4,7 @@ export const GetArticleContent = createAsyncThunk('content/getArticleContent',
     async (articlesToSummarize: any, thunkAPi) => {
 
         try {
-            const tldrResponse = await fetch('/summarize', {
+            const response = await fetch('/summarize', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -15,13 +15,13 @@ export const GetArticleContent = createAsyncThunk('content/getArticleContent',
                 }),
             })
 
-            if (!tldrResponse.ok) {
-                throw new Error('There was an issue with TLDR API')
+            if (!response.ok) {
+                throw new Error(response.statusText);
             }
 
-            const tldrJSON = await tldrResponse.json()
+            const json = await response.json();
 
-            return tldrJSON
+            return json;
 
         } catch (error) {
             console.log(error.message)
