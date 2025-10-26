@@ -101,12 +101,11 @@ export default function HeroContainer({
                 {showWrapUp && <motion.div
                     key='WrapUp'
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 1, transition: { type: 'tween', delay: 0.5, duration: 0.5, ease: softEase } }}
-                    exit={{ opacity: 0, transition: { type: 'tween', delay: 0, duration: 0.5, ease: softEase } }}
+                    animate={{ opacity: 1, transition: { type: 'tween', delay: 0.2, duration: 0.3, ease: softEase } }}
+                    exit={{ opacity: 0, transition: { type: 'tween', delay: 0, duration: 0.3, ease: softEase } }}
                     className={`w-full h-fit mx-auto`}
                 >
                     <ReviewContainer />
-                    <ScrolltoTop />
                 </motion.div>}
 
                 {showCompletion &&

@@ -29,8 +29,6 @@ interface BiasInfo {
     country: string | null;
 }
 
-type BatchResults = Array<ScrapedArticle> | null
-
 const schema = {
     type: "object",
     properties: {
@@ -145,6 +143,19 @@ export async function firecrawlBatchScrape(articles: FcParam[], failed: FailedAt
 
     } catch (err) {
         console.error(err);
+        for (const art of articles) {
+            failed.push({
+                title: art.title,
+                summary: [{
+                    denied: 'We were denied access to the article from',
+                    failedArticle: `${art.source} - ${art.title}`
+                }],
+                logo: art.logo,
+                source: art.source,
+                date: art.date,
+                article_url: art.url,
+            });
+        }
         return scraped_articles;
     };
 };
