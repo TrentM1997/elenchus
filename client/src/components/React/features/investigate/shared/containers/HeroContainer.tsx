@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import { shallowEqual, useSelector } from "react-redux"
 import { RootState } from "@/ReduxToolKit/store"
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
+import { softEase } from "@/motion/variants"
 
 export default function HeroContainer({
 }) {
@@ -100,9 +101,8 @@ export default function HeroContainer({
                 {showWrapUp && <motion.div
                     key='WrapUp'
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ type: 'tween', duration: 0.5, ease: 'easeInOut' }}
+                    animate={{ opacity: 1, transition: { type: 'tween', delay: 0.5, duration: 0.5, ease: softEase } }}
+                    exit={{ opacity: 0, transition: { type: 'tween', delay: 0, duration: 0.5, ease: softEase } }}
                     className={`w-full h-fit mx-auto`}
                 >
                     <ReviewContainer />

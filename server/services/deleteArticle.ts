@@ -8,7 +8,7 @@ interface DeleteResponse {
 export const deleteArticleForUser = async (
     supabase: SupabaseClient,
     user_id: string,
-    id: string
+    id: string | number
 ): Promise<DeleteResponse | null> => {
 
     try {

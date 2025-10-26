@@ -18,6 +18,7 @@ import { Database } from './databaseInterfaces.js';
 import { saveArticleForUser } from '../services/saveArticle.js';
 import { deleteArticleForUser } from '../services/deleteArticle.js';
 import { getUserContent } from '../services/getUserContent.js';
+import type { Article } from '../types/types.js';
 
 export const createSupabaseFromRequest = (req: Request): SupabaseClient<Database> => {
     const accessToken = req.cookies['sb-access-token'];
@@ -223,12 +224,11 @@ export const handleArticleSave = async (req: Request, res: Response): Promise<vo
     if (!session) return;
     const { supabase, user } = session;
     const user_id: string = user?.id;
-    const { id } = dataToSave as SavedArticle;
-
+    const { id } = dataToSave as Article
     try {
         let result: any;
 
-        if (articleExists === true) {
+        if ((articleExists === true) && (id)) {
             console.log('deleting')
             result = await deleteArticleForUser(supabase, user_id, id);
         } else {

@@ -7,6 +7,7 @@ import { Suspense, lazy } from "react";
 import DetailView from "../../../ProfileNavigation/mobile/DetailView";
 import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary";
 const FullSavedArticle = lazy(() => import("../../UserArticles/components/fullContent/containers/FullSavedArticle"));
+const Article = lazy(() => import('@/components/React/Shared/Articles/SuccessFull/containers/Article'));
 import ArticleSkeleton from "@/components/React/Shared/Articles/skeletons/ArticleSkeleton";
 import { presentThisInvestigation } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
 import { grabAssociatedArticle } from "@/ReduxToolKit/Reducers/UserContent/UserContentReducer";
@@ -40,7 +41,7 @@ export default function OpenAssociatedArticle(): JSX.Element | null {
                 <ErrorBoundary>
                     {associatedArticle &&
                         <Suspense fallback={<DelayedFallback><ArticleSkeleton /></DelayedFallback>}>
-                            <FullSavedArticle article={associatedArticle} />
+                            <Article articleData={associatedArticle} investigating={false} />
                         </Suspense>
                     }
                 </ErrorBoundary>
