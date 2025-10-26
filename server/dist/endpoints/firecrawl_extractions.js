@@ -6,12 +6,11 @@ const __dirname = path.dirname(envUrl);
 const envPath = path.resolve(__dirname, '../.env');
 dotenv.config({ path: envPath });
 import { firecrawlBatchScrape } from '../services/firecrawlBatchScrape.js';
-import { FIRECRAWL_KEY } from '../src/Config.js';
 import Firecrawl from '@mendable/firecrawl-js';
 export async function createFirecrawlClient() {
     let firecrawl;
     try {
-        firecrawl = new Firecrawl({ apiKey: FIRECRAWL_KEY });
+        firecrawl = new Firecrawl({ apiKey: process.env.FIRECRAWL_KEY });
         return firecrawl;
     }
     catch (err) {
