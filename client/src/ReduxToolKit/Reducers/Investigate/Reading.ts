@@ -4,7 +4,7 @@ export const GetArticleContent = createAsyncThunk('content/getArticleContent',
     async (articlesToSummarize: any, thunkAPi) => {
 
         try {
-            const tldrResponse = await fetch(`/summarize?q=${articlesToSummarize}`, {
+            const tldrResponse = await fetch('/summarize', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',

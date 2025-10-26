@@ -43,7 +43,9 @@ export default function Home({ }) {
 
             const toastTimer = window.setTimeout(() => {
                 //parsed.shownToast initializes to false -> show toast on first visit
-                setShowToast(!parsed.shownToast);
+                if (parsed) {
+                    setShowToast(!parsed.shownToast);
+                };
             }, 500);
 
             return () => {

@@ -2,10 +2,24 @@ import { Request, Response } from 'express'
 import { FailedAttempt } from './interfaces.js';
 import { ScrapedArticle } from '../types/types.js';
 import { firecrawlExtract } from '../services/firecrawl.js';
+import { FIRECRAWL_KEY } from '../src/Config.js';
 import { firecrawlBatchScrape } from '../services/firecrawlBatchScrape.js';
 import Firecrawl from '@mendable/firecrawl-js';
 
 type FcResObj = { retrieved: ScrapedArticle[] | null, rejected: FailedAttempt[] };
+
+
+export function createFirecrawlClient() {
+    const key = FIRECRAWL_KEY;
+
+    if (!key) {
+        // Don't throw globally. Throw here so the caller can decide how to respond.
+        throw new Error("Missing FIRECRAWL_KEY in this runtime environment");
+    }
+
+    return new Firecrawl({ apiKey: key });
+}
+
 
 export const firecrawl_extractions = async (req: Request, res: Response): Promise<void> => {
 
@@ -18,23 +32,10 @@ export const firecrawl_extractions = async (req: Request, res: Response): Promis
         return;
     };
 
-    const FIRECRAWL_KEY = process.env.FIRECRAWL_KEY;
-    console.log(
-        "[firecrawl_extractions] FIRECRAWL_KEY present?",
-        !!FIRECRAWL_KEY,
-        "len:",
-        FIRECRAWL_KEY ? FIRECRAWL_KEY.length : "none"
-    );
-
-    if (!FIRECRAWL_KEY) {
-        res.status(500).json({
-            error: "Server misconfigured: FIRECRAWL_KEY is missing",
-        });
-        return;
-    }
+    const key = createFirecrawlClient()
 
     try {
-        const firecrawl = new Firecrawl({ apiKey: FIRECRAWL_KEY });
+        const firecrawl = createFirecrawlClient();
         const jobs: ScrapedArticle[] = await firecrawlBatchScrape(firecrawl, articles, failed);
         const responseObj: FcResObj = { retrieved: jobs, rejected: failed };
         res.status(200).json(responseObj);
