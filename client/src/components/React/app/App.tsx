@@ -19,7 +19,7 @@ export default function App() {
 
         const toast: ExtractionToast = { shownToast: false };
 
-        window.sessionStorage.setItem(TOASTKEY, JSON.stringify(toast));
+        // window.sessionStorage.setItem(TOASTKEY, JSON.stringify(toast));
 
     }, [])
 
