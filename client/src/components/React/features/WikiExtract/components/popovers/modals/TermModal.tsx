@@ -52,7 +52,6 @@ export default function TermModal(): JSX.Element | null {
             className="2xl:w-[26rem] md:w-96 rounded-3xl h-80 bg-black border border-border_gray
             flex items-center justify-center"
         >
-
             <div className="lg:min-w-0 lg:flex-1 max-w-sm mx-auto flex flex-col items-center justify-center">
                 <header className="w-full h-auto text-center">
                     <p className="text-white xl:text-lg font-light tracking-tight">Look this up?</p>

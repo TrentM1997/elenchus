@@ -15,7 +15,7 @@ export default function HighlightTextTip() {
 
     return (
         <motion.div
-            className="w-full h-auto py-8"
+            className="w-full h-auto pb-8 pt-4"
             {...divProps}>
 
 

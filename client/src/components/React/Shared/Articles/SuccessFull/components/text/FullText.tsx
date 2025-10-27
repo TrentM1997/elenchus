@@ -6,15 +6,20 @@ import TermModalContainer from "@/components/React/features/WikiExtract/componen
 import TermModal from "@/components/React/features/WikiExtract/components/popovers/modals/TermModal";
 import WikiTermExtract from "@/components/React/features/WikiExtract/components/WikiTermExtract";
 import ArticleBody from "./ArticleBody";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 interface FullTextProps {
     article_text: string,
     article_url: string
 };
 
+
+//TODO: ensure that in mobile view, the user is prompted with the lookup modal, not the modal meant for desktop view w/tooltips 
+
 export default function FullText({ article_text, article_url }: FullTextProps) {
     const investigateState = useSelector((state: RootState) => state.investigation);
     const dispatch = useDispatch<AppDispatch>();
+    const isMobile = useIsMobile();
     const { wikiModalStages } = investigateState.wiki;
 
 

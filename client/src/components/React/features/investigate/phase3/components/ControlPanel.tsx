@@ -1,22 +1,20 @@
 import TakeNotes from "../buttons/TakeNotes";
 import { FinishedReading } from "../buttons/FinishedReading";
 import ReturnToSearch from "../buttons/ReturnToSearch";
-import StoryPaginate from "../buttons/StoryPaginate";
 import { useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
 import GetInfo from "../buttons/GetInfo";
-import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
 import { useMemo } from "react";
+import { ReadingSlice } from "@/ReduxToolKit/Reducers/Investigate/Reading";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 export default function ControlPanel({ }) {
-    const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
-    const showContent = investigateState.display;
-    const { read } = investigateState;
-    const { ContentStatus, articles } = read;
+    const isMobile = useIsMobile();
+    const { status, articles }: ReadingSlice = useSelector((state: RootState) => state.investigation.read);
     const failedExtraction = useMemo(() => {
-        const failed: boolean = (ContentStatus === 'fulfilled') && (Array.isArray(articles)) && (articles.length === 0);
+        const failed: boolean = (status === 'fulfilled') && (Array.isArray(articles)) && (articles.length === 0);
         return failed;
-    }, [ContentStatus, articles]);
+    }, [status, articles]);
 
     return (
         <div className="fixed 2xl:left-16 2xl:bottom-16 
@@ -27,14 +25,13 @@ export default function ControlPanel({ }) {
          md:border border-border_gray">
 
 
-
             <ReturnToSearch failed={failedExtraction} />
 
 
             <FinishedReading failedExtraction={failedExtraction} />
 
 
-            <GetInfo failedExtraction={failedExtraction} />
+            {!isMobile && <GetInfo failedExtraction={failedExtraction} />}
 
 
             <TakeNotes failedExtraction={failedExtraction} />

@@ -31,14 +31,11 @@ export default function ArticleLoader(): JSX.Element | null {
 
                     </h1>
 
-                    <p className="text-zinc-400 font-light tracking-tight text-base">
+                    <p className="text-zinc-400 font-light tracking-tight text-xs md:text-base text-center text-wrap w-4/5">
                         This process can take up to 2 or 3 minutes while we extract and format each article for reading.
                     </p>
                 </header>
             </div>
-
-
-
         </motion.div>
     );
 }

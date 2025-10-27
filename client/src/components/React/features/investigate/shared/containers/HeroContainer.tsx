@@ -27,8 +27,6 @@ export default function HeroContainer({
         return show;
     }, [articles, showSearch]);
 
-    console.log(spacerHeight);
-
 
     useLayoutEffect(() => {
         if (!shouldMeasure || !showSearch) return;
