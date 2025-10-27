@@ -58,7 +58,7 @@ export default function Article({ articleData, investigating }: ArticleProps): J
             animate={{ opacity: 1, transition: { type: 'tween', delay: 0.3, duration: 0.3 } }}
             exit={{ opacity: 0, transition: { type: 'tween', delay: 0, duration: 0.3 } }}
             className="relative top-0 left-0 right-0 flex flex-col grow px-4 mx-auto
-                 w-full lg:max-w-lg xl:max-w-4xl min-h-screen scrollbar-hide
+                 w-full lg:max-w-2xl xl:max-w-4xl min-h-screen scrollbar-hide
                  bg-black transition-all duration-200 ease-in-out"
         >
             <AnimatePresence mode="wait" initial={false}>

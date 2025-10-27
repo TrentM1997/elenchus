@@ -9,11 +9,14 @@ import { shallowEqual, useSelector } from "react-redux"
 import { RootState } from "@/ReduxToolKit/store"
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 import { softEase } from "@/motion/variants"
+import { useIsMobile } from "@/hooks/useIsMobile"
+import StoryPaginate from "../../phase3/buttons/StoryPaginate"
 
 export default function HeroContainer({
 }) {
-    const [spacerHeight, setSpacerHeight] = useState<number | null>(null);
+    const isMobile = useIsMobile();
     const [shouldMeasure, setShouldMeasure] = useState<boolean>(false);
+    const [spacerHeight, setSpacerHeight] = useState<number | null>(80);
     const { showMindMap, showSearch, showWrapUp, showCompletion, showResults, showWorkModal } = useSelector((s: RootState) => s.investigation.display, shallowEqual);
     const status = useSelector((s: RootState) => s.investigation.read.status);
     const articles = useSelector((s: RootState) => s.investigation.read.articles);
@@ -23,6 +26,8 @@ export default function HeroContainer({
         const show: boolean = hasRetrievedArticles && (!showSearch);
         return show;
     }, [articles, showSearch]);
+
+    console.log(spacerHeight);
 
 
     useLayoutEffect(() => {
@@ -94,8 +99,11 @@ export default function HeroContainer({
                     exit={{ scale: 0 }}
                     transition={{ type: 'tween', duration: 0.3, delay: 0.2 }}
                     key="spacer-div"
-                    style={{ height: spacerHeight }}
-                />
+                    style={{ height: spacerHeight, width: '100%' }}
+                    className="flex items-center justify-center"
+                >
+                    {isMobile && <StoryPaginate />}
+                </motion.div>
                 }
 
                 {showWrapUp && <motion.div

@@ -19,36 +19,27 @@ export default function ControlPanel({ }) {
     }, [ContentStatus, articles]);
 
     return (
-        <div className="fixed 2xl:left-16 2xl:bottom-16 xl:left-4 xl:bottom-10 lg:left-6 lg:bottom-6 
-        bottom-0 left-0 right-0 z-30 flex lg:w-fit 2xl:w-fit shadow-black py-2 md:py-0 px-2 md:px-0
-         h-auto bg-black xl:bg-astro_black lg:rounded-full border-t md:border border-border_gray">
+        <div className="fixed 2xl:left-16 2xl:bottom-16 
+        xl:left-4 xl:bottom-10 lg:left-6 lg:bottom-6 w-fit shadow-material
+        bottom-0 left-0 right-0 z-30 flex items-start lg:items-center justify-center gap-x-4 lg:gap-x-0
+         lg:shadow-black py-1 md:py-0 px-4 lg:px-0 md:px-0 mx-auto lg:mx-0
+        h-14 lg:h-auto bg-zinc-900 xl:bg-astro_black rounded-t-2xl lg:rounded-full pointer-events-auto
+         md:border border-border_gray">
 
 
-            <div className="shrink-0 lg:rounded-l-full w-fit h-auto px-2 py-0.5  md:py-1.5 xl:px-2 2xl:px-2.5  md:hover:bg-border_gray transition-all ease-in-out lg:border-r border-border_gray flex justify-center">
-                <ReturnToSearch failed={failedExtraction} />
-            </div>
 
-            <div className={`${failedExtraction ? 'pointer-events-none opacity-30' : 'pointer-events-auto opacity-100 md:hover:bg-border_gray'}
-            shrink-0 w-fit h-auto py-0.5 px-2 md:py-1.5 xl:px-2 2xl:px-2.5
-              transition-opacity ease-in-out flex justify-center lg:border-r 
-              border-border_gray`}>
-                <FinishedReading />
-            </div>
-            <div className={`${failedExtraction ? 'pointer-events-none opacity-30' : 'pointer-events-auto opacity-100 md:hover:bg-border_gray'}
-            hidden lg:flex shrink-0 w-fit h-auto px-2.5 xl:px-2.5 
-             transition-all ease-in-out justify-center items-center 
-            lg:border-r lg:border-0 border-border_gray`}>
-                <GetInfo />
-            </div>
-            <div className={`${failedExtraction ? 'pointer-events-none opacity-30' : 'pointer-events-auto opacity-100 md:hover:bg-border_gray'}
-            shrink-0 w-fit h-auto lg:rounded-r-full px-2.5 py-0.5 xl:px-2.5
-            transition-opacity ease-in-out flex justify-center 
-             lg:border-0 border-border_gray`}>
-                <TakeNotes />
-            </div>
-            {showContent && <div className="flex justify-center lg:hidden grow shrink-0 w-fit h-auto py-1.5 xl:px-2 2xl:px-2.5 lg:hover:bg-border_gray transition-all ease-in-out lg:border-0 border-border_gray">
-                <StoryPaginate />
-            </div>}
+            <ReturnToSearch failed={failedExtraction} />
+
+
+            <FinishedReading failedExtraction={failedExtraction} />
+
+
+            <GetInfo failedExtraction={failedExtraction} />
+
+
+            <TakeNotes failedExtraction={failedExtraction} />
+
+
         </div>
     )
 

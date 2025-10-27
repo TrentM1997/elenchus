@@ -6,6 +6,8 @@ import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import BackToSearchTooltip from "../tooltips/BackToSearchTooltip";
 import type { ExtractionToast } from "@/components/React/app/App";
+import PanelLabel from "./PanelLabel";
+import ButtonHoverTooltip from "../tooltips/ButtonHoverTooltip";
 
 interface ReturnToSearchProps {
     failed: boolean
@@ -40,33 +42,34 @@ export default function ReturnToSearch({ failed }: ReturnToSearchProps): JSX.Ele
 
 
     return (
-        <button
-            aria-label="Return to search"
-            title="Return to search"
-            onClick={handleReturn}
-            className="my-auto mx-auto rounded-lg transition-all 
+        <div className="shrink-0 relative lg:rounded-l-full w-fit h-10 lg:h-auto px-2  md:py-1.5 lg:px-2.5  lg:hover:bg-border_gray transition-colors ease-soft duration-200 
+        lg:border-r border-border_gray flex justify-center">
+            <button
+                aria-label="Return to search"
+                onClick={handleReturn}
+                className="my-auto mx-auto rounded-lg transition-all group
         duration-300 xs:max-w-8 xs:max-h-8 xl:max-w-7 xl:max-h-7 2xl:max-w-8 
-        2xl:max-h-8 p-0.5 ease-in-out group relative"
-        >
-            <AnimatePresence>
-                {showBackTooltip && <BackToSearchTooltip id={showBackTooltip} setShowBackTooltip={setShowBackTooltip} />}
-            </AnimatePresence>
+        2xl:max-h-8 lg:p-0.5 ease-in-out group relative"
+            >
+                <AnimatePresence>
+                    {showBackTooltip && <BackToSearchTooltip id={showBackTooltip} setShowBackTooltip={setShowBackTooltip} />}
+                </AnimatePresence>
 
 
-            {!showReadingTooltip && <div className="absolute p-1 bg-white z-50 opacity-0 transition-all duration-200 ease-soft delay-500 
-            md:group-hover:opacity-100 bottom-12 -right-5
-            rounded-md items-center border border-astro_gray shadow-thick after:content-[''] after:absolute after:bottom-[-10px] after:left-1/2 
-            after:transform after:-translate-x-1/2 after:border-t-[10px] after:border-l-[10px] after:border-r-[10px] after:border-b-0 
-            after:border-t-white after:border-l-transparent after:border-r-transparent after:border-b-transparent">
-                <p className="text-black" >Back to search</p>
-            </div>}
+                {!showReadingTooltip && <ButtonHoverTooltip description="Return to search" />
+                }
 
-            <div className="h-full w-full box-border">
-                <svg className="text-white" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0,0,256,256" width="100%" height="100%" fillRule="nonzero"><g fill="currentColor" fillRule="nonzero" stroke="none" strokeWidth={1} strokeLinecap="butt" strokeLinejoin="miter" strokeMiterlimit={10} strokeDasharray="" strokeDashoffset={0} fontFamily="none" fontWeight="none" fontSize="none" textAnchor="none" style={{ mixBlendMode: 'normal' }}><g transform="scale(10.66667,10.66667)"><path d="M2,7v9h9l-3.62109,-3.62109c1.38641,-1.16734 3.16599,-1.87891 5.12109,-1.87891c3.534,0 6.52498,2.29466 7.58398,5.47266l2.36719,-0.78906c-1.389,-4.171 -5.31317,-7.18359 -9.95117,-7.18359c-2.64603,0 -5.05412,0.98632 -6.89648,2.60352z" /></g></g></svg>
-
-            </div>
+                <div className="h-full w-full box-border">
+                    <svg xmlns="http://www.w3.org/2000/svg" width={'100%'} height={'100%'} viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
+                        className="text-white group-hover:text-blue-400 transition-colors duration-200 ease-soft icon icon-tabler icons-tabler-outline icon-tabler-arrow-back-up"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M9 14l-4 -4l4 -4" /><path d="M5 10h11a4 4 0 1 1 0 8h-1" /></svg>
+                </div>
 
 
-        </button>
+            </button>
+
+            <PanelLabel description={"back"} />
+        </div>
+
     )
 }
