@@ -24,6 +24,7 @@ import { getCurrentUser } from '../endpoints/serverClient.js';
 import { createNewUser } from '../endpoints/serverClient.js';
 import { sendFeedback } from '../endpoints/serverClient.js';
 import { newsApi } from '../endpoints/newsApi.js';
+import { get_firecrawl_job } from '../endpoints/firecrawl_extractions.js';
 
 const corsOptions: object = {
 	origin: ['https://elenchusapp.io', 'http://localhost:5173'],
@@ -75,7 +76,7 @@ app.options('*', (req, res) => {
 
 
 app.get('/newsArticles', newsApi);
-app.post('/summarize', firecrawl_extractions);
+app.post('/firecrawl_extractions', firecrawl_extractions);
 app.post('/deleteUser', deleteUser);
 app.get('/searchBlueSky', searchBlueSkyPosts);
 app.get('/getBlueSkyFeed', getBlueSkyFeed);
@@ -89,6 +90,8 @@ app.post('/resetUserPassword', resetUserPassword);
 app.post('/getCurrentUser', getCurrentUser);
 app.post('/createNewUser', createNewUser);
 app.post('/sendFeedback', sendFeedback);
+app.get('/firecrawl_extractions/:jobId', get_firecrawl_job);
+
 
 
 

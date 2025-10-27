@@ -15,11 +15,11 @@ export default function HeroContainer({
     const [spacerHeight, setSpacerHeight] = useState<number | null>(null);
     const [shouldMeasure, setShouldMeasure] = useState<boolean>(false);
     const { showMindMap, showSearch, showWrapUp, showCompletion, showResults, showWorkModal } = useSelector((s: RootState) => s.investigation.display, shallowEqual);
-    const ContentStatus = useSelector((s: RootState) => s.investigation.read.ContentStatus);
+    const status = useSelector((s: RootState) => s.investigation.read.status);
     const articles = useSelector((s: RootState) => s.investigation.read.articles);
     const heightRef = useRef(null);
     const showSpacerDiv = useMemo(() => {
-        const hasRetrievedArticles: boolean = (ContentStatus === 'fulfilled');
+        const hasRetrievedArticles: boolean = (status === 'fulfilled');
         const show: boolean = hasRetrievedArticles && (!showSearch);
         return show;
     }, [articles, showSearch]);

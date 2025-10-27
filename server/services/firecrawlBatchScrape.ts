@@ -14,7 +14,7 @@ interface FirecrawlJSON {
 };
 
 interface FirecrawlBatchItem {
-    json: FirecrawlJSON
+    json: FirecrawlJSON | null
 };
 
 interface BiasInfo {
@@ -82,7 +82,7 @@ export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcPar
             const url = urls[index];
 
             const item = batchJob?.data?.[index] as FirecrawlBatchItem;
-            const json: FirecrawlJSON = item?.json;
+            const json: FirecrawlJSON | null = item?.json;
 
             const currArticle = articles.find((article: FcParam) => {
                 const cleanedLink: string = cleanURL(article.url);

@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion"
 import { createPortal } from "react-dom"
-import { GetArticleContent } from "@/ReduxToolKit/Reducers/Investigate/Reading"
+import { runFirecrawlExtraction } from "@/ReduxToolKit/Reducers/Investigate/Reading"
 import { useAppdispatch } from "@/hooks/appDispatch"
 import { useSelector, useDispatch } from "react-redux"
 import { RootState } from "@/ReduxToolKit/store"
@@ -10,10 +10,10 @@ import { useEffect, useState } from "react"
 import { getQuery } from "@/ReduxToolKit/Reducers/Investigate/UserPOV"
 import { variants } from "@/motion/variants"
 import DisplayThese from "./DisplayThese"
+import { ChosenArticleSlice } from "@/ReduxToolKit/Reducers/Investigate/ChosenArticles"
 
 export function GetTheseArticles() {
-    const investigateState = useSelector((state: RootState) => state.investigation);
-    const { chosenArticles } = investigateState.getArticle;
+    const { chosenArticles }: ChosenArticleSlice = useSelector((state: RootState) => state.investigation.getArticle);
     const [fetching, setFetching] = useState<boolean | null>(null);
     const appDispatch = useAppdispatch();
     const dispatch = useDispatch();
@@ -21,7 +21,7 @@ export function GetTheseArticles() {
     const retrieveArticles = (): void => {
         dispatch(getQuery(null))
         dispatch(resetResults())
-        appDispatch(GetArticleContent(chosenArticles))
+        appDispatch(runFirecrawlExtraction({ articles: chosenArticles }));
     };
 
     useEffect(() => {

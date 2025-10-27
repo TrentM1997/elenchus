@@ -5,28 +5,22 @@ import { RootState } from "@/ReduxToolKit/store";
 import Article from "@/components/React/Shared/Articles/SuccessFull/containers/Article";
 import ArticleLoader from "@/components/React/Shared/Articles/loaders/ArticleLoader";
 import NoContent from "@/components/React/Shared/Articles/Failed/NoContent";
-import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
 import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary";
+import { ReadingSlice } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 
 export default function RenderArticles(): JSX.Element | null {
-    const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
-    const { read } = investigateState;
-    const { articles, currentStory, ContentStatus } = read;
-    const renderArticle = Array.isArray(articles) && (articles.length > 0);
+    const { articles, currentStory, ContentStatus, status }: ReadingSlice = useSelector((state: RootState) => state.investigation.read);
+    const canRender = Array.isArray(articles) && (articles.length > 0);
     const noResults = useMemo(() => {
-        const failed: boolean = (ContentStatus === 'fulfilled') && (Array.isArray(articles)) && (articles.length === 0);
+        const failed: boolean = (status === 'fulfilled') && (Array.isArray(articles)) && (articles.length === 0);
         return failed;
     }, [ContentStatus, articles])
-    const showLoader = useMemo((): boolean => {
-        const shouldShowLoader: boolean = (ContentStatus === 'pending');
-        return shouldShowLoader;
-    }, [ContentStatus]);
-
+    const showLoader = (status === 'pending');
 
     return (
         <main
 
-            className="2xl:max-w-6xl h-full w-full mx-auto 
+            className="2xl:max-w-6xl h-full w-full mx-auto
                   mb-12 flex flex-col">
             <div
                 className="w-full min-h-screen mx-auto relative
@@ -36,7 +30,7 @@ export default function RenderArticles(): JSX.Element | null {
 
                     <AnimatePresence mode="wait" initial={false}>
                         {showLoader && <ArticleLoader key="loading-articles" />}
-                        {(!showLoader) && (renderArticle) &&
+                        {(!showLoader) && (canRender) &&
                             (articles[currentStory]) &&
                             <Article
                                 key="article"

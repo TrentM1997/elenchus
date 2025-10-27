@@ -35,6 +35,9 @@ export const ArticlesSlice = createSlice({
 })
 
 
+export type ChosenArticleSlice = ReturnType<typeof ArticlesSlice.reducer>;
+
+
 export const { choose, discard, clearChosenArticles, openMaxtoast } = ArticlesSlice.actions
 
 export default ArticlesSlice.reducer

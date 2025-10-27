@@ -1,35 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
-export const GetArticleContent = createAsyncThunk('content/getArticleContent',
-    async (articlesToSummarize: any, thunkAPi) => {
-
-        try {
-            const response = await fetch('/summarize', {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    articles: articlesToSummarize
-                }),
-            })
-
-            if (!response.ok) {
-                throw new Error(response.statusText);
-            }
-
-            const json = await response.json();
-
-            return json;
-
-        } catch (error) {
-            console.log(error.message)
-            return thunkAPi.rejectWithValue(error.message)
-        }
-    }
-);
-
 export interface Article {
     title: string,
     provider: string,
@@ -47,28 +17,151 @@ export interface Article {
     country?: string | null
 }
 
+interface FailedAttempt {
+    title: string;
+    summary: {
+        denied: string;
+        failedArticle: string;
+    }[];
+    logo: string;
+    source: string;
+    date: string;
+    article_url: string;
+};
+
+export type JobStatus = 'pending' | 'fulfilled' | 'rejected';
+
+interface FirecrawlJobStatus {
+    status: JobStatus
+    result: {
+        retrieved: Article[] | null;
+        rejected: FailedAttempt[];
+    } | null;
+    error: string | null;
+    createdAt: number;
+}
+
+interface FirecrawlSuccessPayload {
+    retrieved: Article[] | null;
+    rejected: FailedAttempt[];
+}
+
+
+
+export const runFirecrawlExtraction = createAsyncThunk<
+    FirecrawlSuccessPayload,
+    { articles: SelectedArticle[] },
+    { rejectValue: string }
+>(
+    'investigate/runFirecrawlExtraction',
+    async (payload, thunkApi) => {
+        const { signal, rejectWithValue } = thunkApi;
+        const { articles } = payload;
+
+        let jobId: string;
+        try {
+            const kickoffRes = await fetch('/firecrawl_extractions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ articles: articles }),
+                signal,
+            });
+
+            if (!kickoffRes.ok) {
+                const errText = await kickoffRes.text();
+                return rejectWithValue(
+                    `Failed to start extraction job (${kickoffRes.status}): ${errText}`
+                );
+            }
+
+            const kickoffJson: { jobId: string } = await kickoffRes.json();
+            jobId = kickoffJson.jobId;
+        } catch (err: any) {
+            return rejectWithValue(`Network error starting job: ${err.message}`);
+        }
+
+        const pollEndpoint = `/firecrawl_extractions/${jobId}`;
+
+        const pollDelay = (ms: number) =>
+            new Promise((resolve) => setTimeout(resolve, ms));
+
+        while (true) {
+            if (signal.aborted) {
+                return rejectWithValue('Extraction canceled by user/navigation');
+            }
+
+            let statusJson: FirecrawlJobStatus;
+            try {
+                const statusRes = await fetch(pollEndpoint, { signal });
+
+                if (statusRes.status === 404) {
+                    return rejectWithValue('Job not found or expired.');
+                }
+
+                if (!statusRes.ok) {
+                    const errText = await statusRes.text();
+                    return rejectWithValue(
+                        `Bad status fetch (${statusRes.status}): ${errText}`
+                    );
+                }
+
+                statusJson = (await statusRes.json()) as FirecrawlJobStatus;
+            } catch (err: any) {
+                return rejectWithValue(`Network error polling job: ${err.message}`);
+            }
+
+            if (statusJson.status === 'fulfilled') {
+                const finalResult = statusJson.result;
+
+                if (!finalResult) {
+                    return rejectWithValue('Job finished but no result payload.');
+                }
+
+                const payload: FirecrawlSuccessPayload = {
+                    retrieved: finalResult.retrieved,
+                    rejected: finalResult.rejected,
+                };
+
+                return payload;
+            }
+
+            if (statusJson.status === 'rejected') {
+                return rejectWithValue(
+                    statusJson.error || 'Extraction failed on server.'
+                );
+            }
+
+            await pollDelay(1500);
+        }
+    }
+);
+
+
 
 interface ReadingState {
-
+    status: 'idle' | 'pending' | 'fulfilled' | 'rejected',
     getContent: boolean | null,
     articles: Array<Article> | null,
     failedNotifications: Array<any> | null,
     currentStory: number | null,
     reading: boolean | null,
     paginateLimit: boolean | null,
-    ContentStatus: string
+    ContentStatus: 'idle' | 'pending' | 'fulfilled' | 'rejected',
+    error: string | null;
+
 }
 
 
 const initialState: ReadingState = {
-
+    status: 'idle',
     getContent: false,
     articles: null,
     failedNotifications: null,
     currentStory: 0,
     reading: false,
     paginateLimit: false,
-    ContentStatus: 'idle'
+    ContentStatus: 'idle',
+    error: null
 }
 
 
@@ -110,21 +203,31 @@ export const ReadingSlice = createSlice({
 
     },
     extraReducers: (builder) => {
-
-        builder.addCase(GetArticleContent.fulfilled, (state, action) => {
-            state.ContentStatus = 'fulfilled'
-            state.articles = action.payload.retrieved
-            state.failedNotifications = action.payload.rejected
-        }),
-            builder.addCase(GetArticleContent.rejected, (state, action) => {
-                state.ContentStatus = 'rejected'
-            }),
-            builder.addCase(GetArticleContent.pending, (state, action) => {
-                state.ContentStatus = 'pending'
+        builder
+            .addCase(runFirecrawlExtraction.pending, (state) => {
+                state.status = 'pending';
+                state.error = null;
+                state.articles = null;
+                state.failedNotifications = [];
             })
-    }
-})
+            .addCase(runFirecrawlExtraction.fulfilled, (state, action) => {
+                state.status = 'fulfilled';
+                state.articles = action.payload.retrieved;
+                state.failedNotifications = action.payload.rejected;
+                state.error = null;
+            })
+            .addCase(runFirecrawlExtraction.rejected, (state, action) => {
+                state.status = 'rejected';
+                state.error =
+                    (action.payload as string) ||
+                    action.error.message ||
+                    'Unknown error';
+            });
+    },
+});
 
+
+export type ReadingSlice = ReturnType<typeof ReadingSlice.reducer>;
 
 export const {
     articleData,

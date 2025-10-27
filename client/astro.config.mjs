@@ -17,7 +17,11 @@ export default defineConfig({
           target: 'http://localhost:5001',
           changeOrigin: true
         },
-        '/summarize': {
+        '/firecrawl_extractions': {
+          target: 'http://localhost:5001',
+          changeOrigin: true
+        },
+        '/firecrawl_extractions/:jobId': {
           target: 'http://localhost:5001',
           changeOrigin: true
         },

@@ -8,7 +8,7 @@ import StoryPaginate from "../../buttons/StoryPaginate";
 export default function PanelContainer() {
     const investigateState = useSelector((state: RootState) => state.investigation)
     const { showContent } = investigateState.display
-    const { ContentStatus, articles } = investigateState.read
+    const { articles, status } = investigateState.read
     const isMobile = useIsMobile();
 
     return (
@@ -22,10 +22,10 @@ export default function PanelContainer() {
                     className="w-full h-auto relative mx-auto"
                 >
                     {showContent &&
-                        ContentStatus === 'fulfilled' &&
+                        (status === 'fulfilled') &&
                         <ControlPanel />
                     }
-                    {(!isMobile) && (ContentStatus === 'fulfilled') &&
+                    {(!isMobile) && (status === 'fulfilled') &&
                         showContent &&
                         Array.isArray(articles) &&
                         (articles.length > 1) &&
