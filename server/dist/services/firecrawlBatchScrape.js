@@ -56,7 +56,7 @@ export async function firecrawlBatchScrape(firecrawl, articles, failed) {
                 const item = cleanedLink === url;
                 return item ?? null;
             });
-            if (!json) {
+            if (!json || Object.keys(json).length === 0) {
                 const failedArticle = currArticle ? {
                     title: currArticle.title,
                     summary: [{ denied: 'We were denied access to the article from', failedArticle: `${currArticle.source} - ${currArticle.title}` }],

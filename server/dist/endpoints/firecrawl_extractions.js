@@ -83,39 +83,4 @@ export const get_firecrawl_job = (req, res) => {
     }
     res.status(200).json(job);
 };
-//export const firecrawl_extractions = async (req: Request, res: Response): Promise<void> => {
-//
-//    const jobs: Record<string, JobResult> = {};
-//    const id = crypto.randomUUID();
-//    jobs[id] = { status: "pending", result: null, error: null, createdAt: Date.now() };
-//    res.json({ jobId: id });
-//
-//
-//    const failed: FailedAttempt[] = [];
-//    const { articles } = req.body;
-//
-//    if ((!articles) || (!Array.isArray(articles))) {
-//        res.status(400).json({ error: "No articles recieved to scrape" });
-//        return;
-//    };
-//
-//    try {
-//        const firecrawl = await createFirecrawlClient();
-//        if (firecrawl !== null) {
-//            const jobs: ScrapedArticle[] = await firecrawlBatchScrape(firecrawl, articles, failed);
-//            const responseObj: FcResObj = { retrieved: jobs, rejected: failed };
-//            res.status(200).json(responseObj);
-//            return;
-//        } else {
-//            res.status(401).send("Couldn't connect to firecrawl");
-//            return;
-//        };
-//
-//
-//    } catch (error) {
-//        console.error(error);
-//        res.status(500).send('Internal Server Error');
-//        return;
-//    };
-//};
 //# sourceMappingURL=firecrawl_extractions.js.map

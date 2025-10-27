@@ -14,7 +14,7 @@ interface FirecrawlJSON {
 };
 
 interface FirecrawlBatchItem {
-    json: FirecrawlJSON | null
+    json: FirecrawlJSON | undefined
 };
 
 interface BiasInfo {
@@ -81,8 +81,8 @@ export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcPar
         for (let index = 0; index < urls.length; index++) {
             const url = urls[index];
 
-            const item = batchJob?.data?.[index] as FirecrawlBatchItem;
-            const json: FirecrawlJSON | null = item?.json;
+            const item = batchJob?.data?.[index] as FirecrawlBatchItem | undefined
+            const json: FirecrawlJSON | undefined = item?.json;
 
             const currArticle = articles.find((article: FcParam) => {
                 const cleanedLink: string = cleanURL(article.url);
@@ -90,7 +90,7 @@ export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcPar
                 return item ?? null
             }) as FcParam;
 
-            if (!json) {
+            if (!json || Object.keys(json).length === 0) {
 
                 const failedArticle = currArticle ? {
                     title: currArticle.title,
