@@ -1,35 +1,26 @@
 import { motion, AnimatePresence } from "framer-motion";
 import SearchResults from "@/components/React/features/investigate/phase2/results/containers/SearchResults";
 import ModalContainer from "@/components/React/features/investigate/shared/wrappers/ModalContainer";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
 import ScrolltoTop from "@/helpers/ScrollToTop";
 import ArticleContainer from "@/components/React/Shared/Articles/containers/ArticleContainer";
 import { useMemo } from "react";
-import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
+import type { DisplayReducer } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer";
+import type { ModalStages } from "@/ReduxToolKit/Reducers/Investigate/WikipediaSlice";
 
 export default function Content() {
-    const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
-    const { wikiModalStages } = investigateState.wiki;
-    const {
-        search,
-        display
-    } = investigateState;
-    const {
-        showContent,
+    const status = useSelector((state: RootState) => state.investigation.search)
+    const wikiModalStages: ModalStages = useSelector((state: RootState) => state.investigation.wiki);
+    const { showContent,
         showBackToSearchModal,
         showSearch,
         showGetArticlesModal,
         showSelectWarning,
         showSelectTooltip,
-        showReadingTooltip
-    } = display;
-    const {
-        status
-    } = search;
+        showReadingTooltip }: DisplayReducer = useSelector((state: RootState) => state.investigation.display, shallowEqual);
 
     const animateSearch = useMemo((): boolean => {
-
         const firstCondition: boolean = ((showSearch) && (status !== 'idle'));
         const secondCondition: boolean = (!showContent);
         const show: boolean = firstCondition && secondCondition;

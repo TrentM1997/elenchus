@@ -92,6 +92,9 @@ const DisplaySlice = createSlice({
     }
 })
 
+
+export type DisplayReducer = ReturnType<typeof DisplaySlice.reducer>;
+
 export const { displayMindMap, displaySearch, displayArticleContent, displayCompletion, displayWrapUp, displayResults,
     displayWorkModal, displayReturnModal, displayGetArticlesModal, displaySelectionWarning, displaySelectTooltip, displayReadingTooltip,
     displaySelectBar, displayFeedBackForm, displayBlueSkySearch } = DisplaySlice.actions
