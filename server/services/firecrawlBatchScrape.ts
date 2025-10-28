@@ -4,26 +4,6 @@ import type { FailedAttempt, ScrapedArticle, Bias, FcParam } from '../types/type
 import { toFailedAttempt } from "../endpoints/firecrawl_extractions.js";
 import type { BatchScrapeJob } from "@mendable/firecrawl-js";
 
-interface FirecrawlJSON {
-    title?: string;
-    description?: string;
-    author?: string | string[];
-    imageUrl?: string;
-    publishedDate?: string;
-    content_markdown?: string;
-};
-
-
-interface MarkdownJSON {
-    success: boolean,
-    data: {
-        markdown: string,
-        metadata: {
-
-        }
-    }
-}
-
 export interface BatchItem {
     url: string,
     markdown?: string,
@@ -32,32 +12,13 @@ export interface BatchItem {
     error?: string
 };
 
-interface FirecrawlBatchItem {
-    json: MarkdownJSON | undefined
-};
-
 interface BiasInfo {
     bias: Bias | null;
     factual_reporting: string | null;
     country: string | null;
 }
 
-const schema = {
-    type: "object",
-    properties: {
-        title: { type: "string" },
-        author: { type: "string" },
-        publishedDate: { type: "string" },
-        source: { type: "string" },
-        content_markdown: { type: "string" },
-        imageUrl: { type: "string" },
-    },
-    required: ["title", "source", "content_markdown"],
-};
-
-
 type MBFC = Map<string, BiasInfo>
-
 
 export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcParam[], failed: FailedAttempt[], MBFC_DATA: MBFC): Promise<ScrapedArticle[]> {
 
@@ -88,17 +49,17 @@ export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcPar
         for (let index = 0; index < urls.length; index++) {
             const url = urls[index];
 
-            const json = batchJob?.data?.[index] as BatchItem | undefined;
+            const item = batchJob?.data?.[index] as BatchItem | undefined;
 
-            if (!json) {
+            if (!item) {
                 continue;
             };
 
-            const markdown = json?.markdown ?? "";
+            const markdown = item?.markdown ?? "";
+            const markdown_content = stripVideo(markdown);
 
-            const tooSmall = markdown.length < 200;
-            const looksPaywalled = /subscribe|sign in|sign up|enable javascript|disable your ad blocker/i.test(markdown);
-
+            const tooSmall = markdown_content.length < 200;
+            const looksPaywalled = /subscribe|sign in|sign up|enable javascript|disable your ad blocker/i.test(markdown_content);
 
 
             const currArticle = articles.find((article: FcParam) => {
@@ -107,13 +68,13 @@ export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcPar
                 return item ?? null
             }) as FcParam;
 
-            if (!markdown || tooSmall || looksPaywalled) {
+            if (!markdown_content || tooSmall || looksPaywalled) {
                 const failedscrape = toFailedAttempt(currArticle, "Content may be paywalled");
                 failed.push(failedscrape);
                 continue;
             };
 
-            if (!json || Object.keys(json).length === 0) {
+            if (!item || Object.keys(item).length === 0) {
 
                 const failedArticle = currArticle ? {
                     title: currArticle.title,
@@ -142,7 +103,7 @@ export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcPar
                     date_published: currArticle?.date ?? "Date of publication unavailable: visit source for date",
                     fallbackDate: currArticle?.date ?? null,
                     summary: null,
-                    full_text: json?.markdown ?? "Failed to retrieve article content",
+                    full_text: markdown_content ?? "Failed to retrieve article content",
                     logo: currArticle?.logo,
                     id: null,
                     factual_reporting: rating?.factual_reporting,
