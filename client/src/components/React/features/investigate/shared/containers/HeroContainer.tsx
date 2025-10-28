@@ -11,15 +11,16 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 import { softEase } from "@/motion/variants"
 import { useIsMobile } from "@/hooks/useIsMobile"
 import StoryPaginate from "../../phase3/buttons/StoryPaginate"
+import { ReadingSliceState } from "@/ReduxToolKit/Reducers/Investigate/Reading"
 
 export default function HeroContainer({
 }) {
     const isMobile = useIsMobile();
     const [shouldMeasure, setShouldMeasure] = useState<boolean>(false);
     const [spacerHeight, setSpacerHeight] = useState<number | null>(80);
+    const articles: ReadingSliceState = useSelector((state: RootState) => state.investigation.read.articles)
     const { showMindMap, showSearch, showWrapUp, showCompletion, showResults, showWorkModal } = useSelector((s: RootState) => s.investigation.display, shallowEqual);
     const status = useSelector((s: RootState) => s.investigation.read.status);
-    const articles = useSelector((s: RootState) => s.investigation.read.articles);
     const heightRef = useRef(null);
     const showSpacerDiv = useMemo(() => {
         const hasRetrievedArticles: boolean = (status === 'fulfilled');
