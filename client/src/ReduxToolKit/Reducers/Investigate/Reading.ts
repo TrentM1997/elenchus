@@ -61,7 +61,7 @@ export const runFirecrawlExtraction = createAsyncThunk<
     async (payload, thunkApi) => {
         const { signal, rejectWithValue } = thunkApi;
         const { articles } = payload;
-        const EXHAUSTED = articles.length;
+
         let jobId: string;
         try {
             const kickoffRes = await fetch('/firecrawl_extractions', {
