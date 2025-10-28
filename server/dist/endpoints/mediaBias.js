@@ -16,19 +16,22 @@ export const getMediaBiases = async (provider) => {
     try {
         const { data, error } = await supabase
             .from('sources')
-            .select()
-            .ilike('name', provider)
-            .single();
-        if (data) {
-            const { country, bias, factual_reporting, name } = data;
-            return { country, bias, factual_reporting, name };
+            .select('country,bias,factual_reporting,name')
+            .ilike('name', `%${provider}%`)
+            .limit(1);
+        if (error) {
+            console.error('[getMediaBiases] DB error for provider:', provider, error.message);
+            return null;
         }
-        if (error)
-            console.log(error.message);
+        if (!data || data.length === 0) {
+            return null;
+        }
+        const { country, bias, factual_reporting, name } = data[0];
+        return { country, bias, factual_reporting, name };
     }
-    catch (error) {
-        throw new Error('Error fetching the data from DB');
+    catch (err) {
+        console.error('[getMediaBiases] Unexpected throw for provider:', provider, err);
+        return null;
     }
-    ;
 };
 //# sourceMappingURL=mediaBias.js.map

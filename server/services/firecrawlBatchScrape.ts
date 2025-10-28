@@ -21,7 +21,7 @@ interface BiasInfo {
 
 type MBFC = Map<string, BiasInfo>
 
-export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcParam[], failed: FailedAttempt[], MBFC_DATA: MBFC): Promise<ScrapedArticle[]> {
+export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcParam[], failed: FailedAttempt[], MBFC_DATA: MBFC, retrieved: ScrapedArticle[]): Promise<void> {
 
     const urls = articles.map((article: FcParam) => {
         const cleansed = cleanURL(article.url);
@@ -47,7 +47,7 @@ export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcPar
             for (const art of articles) {
                 failed.push(toFailedAttempt(art, "Batch scrape failed"));
             }
-            return scraped_articles;
+            return;
         }
 
         for (let index = 0; index < urls.length; index++) {
@@ -62,8 +62,6 @@ export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcPar
             const markdown = item?.markdown ?? "";
             const markdown_content = markdown ? stripVideo(markdown) : markdown;
 
-            const tooSmall = markdown_content.length < 200;
-            const looksPaywalled = /subscribe|sign in|sign up|enable javascript|disable your ad blocker/i.test(markdown_content);
 
 
             const currArticle = articles.find((article: FcParam) => {
@@ -72,7 +70,7 @@ export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcPar
                 return item ?? null
             }) as FcParam;
 
-            if (!markdown_content || tooSmall || looksPaywalled) {
+            if (!markdown_content) {
                 const failedscrape = toFailedAttempt(currArticle, "Content may be paywalled");
                 failed.push(failedscrape);
                 continue;
@@ -115,15 +113,16 @@ export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcPar
                     country: rating?.country ?? null
                 };
 
-                scraped_articles.push(scraped);
+                retrieved.push(scraped);
             }
         };
 
 
-        return scraped_articles;
+        return;
 
     } catch (err) {
         console.error(err);
+
         for (const art of articles) {
             failed.push({
                 title: art.title,
@@ -137,6 +136,6 @@ export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcPar
                 article_url: art.url,
             });
         }
-        return scraped_articles;
+        return;
     };
 };

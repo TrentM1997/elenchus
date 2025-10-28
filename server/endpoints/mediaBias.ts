@@ -22,25 +22,29 @@ export interface BiasTypes {
     name: string | null
 }
 
-
-
 export const getMediaBiases = async (provider: string) => {
-
     try {
         const { data, error } = await supabase
             .from('sources')
-            .select()
-            .ilike('name', provider)
-            .single();
+            .select('country,bias,factual_reporting,name')
+            .ilike('name', `%${provider}%`)
+            .limit(1);
 
-        if (data) {
-            const { country, bias, factual_reporting, name }: BiasTypes = data;
-            return { country, bias, factual_reporting, name };
+        if (error) {
+            console.error('[getMediaBiases] DB error for provider:', provider, error.message);
+            return null;
         }
 
-        if (error) console.log(error.message);
+        if (!data || data.length === 0) {
+            return null;
+        }
 
-    } catch (error) {
-        throw new Error('Error fetching the data from DB');
-    };
+        const { country, bias, factual_reporting, name } = data[0] as BiasTypes;
+
+        return { country, bias, factual_reporting, name };
+    } catch (err) {
+        console.error('[getMediaBiases] Unexpected throw for provider:', provider, err);
+        return null;
+    }
 };
+

@@ -7,6 +7,9 @@ export function stripVideo(markdown) {
         "Keyboard Shortcuts",
         "Play/Pause",
         "Error Code",
+        "Recommended Videos",
+        "Left Arrow",
+        "Right Arrow"
     ];
     let cleaned = markdown;
     for (const token of splitTokens) {

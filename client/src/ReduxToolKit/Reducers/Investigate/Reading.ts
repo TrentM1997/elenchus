@@ -112,6 +112,7 @@ export const runFirecrawlExtraction = createAsyncThunk<
 
                 statusJson = (await statusRes.json()) as FirecrawlJobStatus;
                 if (statusJson.result !== null) {
+                    console.log(statusJson.result);
                     thunkApi.dispatch(updateProgress(statusJson.result.progress));
                 }
 

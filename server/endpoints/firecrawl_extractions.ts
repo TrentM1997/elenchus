@@ -12,6 +12,7 @@ import { firecrawlBatchScrape } from '../services/firecrawlBatchScrape.js';
 import Firecrawl from '@mendable/firecrawl-js';
 import type { Bias } from '../types/types.js';
 import { getMediaBiases } from './mediaBias.js';
+import { cleanURL } from '../helpers/cleanUrl.js';
 
 //type FcResObj = { retrieved: ScrapedArticle[] | null, rejected: FailedAttempt[] };
 
@@ -163,14 +164,21 @@ export const firecrawl_extractions = async (req: Request, res: Response): Promis
                 const chunk = chunks[i];
 
                 try {
-                    const chunkResults = await Promise.race([
-                        firecrawlBatchScrape(firecrawl, chunk, failed, MBFC_DATA),
+                    await Promise.race([
+                        firecrawlBatchScrape(firecrawl, chunk, failed, MBFC_DATA, retrieved),
                         new Promise<never>((_, reject) =>
                             setTimeout(() => reject(new Error('Chunk timed out')), 45000)
                         ),
                     ]);
 
-                    retrieved.push(...chunkResults);
+                    const successUrls = new Set(retrieved.map(r => r.article_url));
+
+                    for (let i = failed.length - 1; i >= 0; i--) {
+                        if (successUrls.has(cleanURL(failed[i].article_url))) {
+                            failed.splice(i, 1);
+                        }
+                    }
+
 
                     jobs[id] = {
                         ...jobs[id],

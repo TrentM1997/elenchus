@@ -8,6 +8,7 @@ dotenv.config({ path: envPath });
 import { firecrawlBatchScrape } from '../services/firecrawlBatchScrape.js';
 import Firecrawl from '@mendable/firecrawl-js';
 import { getMediaBiases } from './mediaBias.js';
+import { cleanURL } from '../helpers/cleanUrl.js';
 ;
 const jobs = {};
 export async function createFirecrawlClient() {
@@ -107,11 +108,16 @@ export const firecrawl_extractions = async (req, res) => {
             for (let i = 0; i < chunks.length; i++) {
                 const chunk = chunks[i];
                 try {
-                    const chunkResults = await Promise.race([
-                        firecrawlBatchScrape(firecrawl, chunk, failed, MBFC_DATA),
+                    await Promise.race([
+                        firecrawlBatchScrape(firecrawl, chunk, failed, MBFC_DATA, retrieved),
                         new Promise((_, reject) => setTimeout(() => reject(new Error('Chunk timed out')), 45000)),
                     ]);
-                    retrieved.push(...chunkResults);
+                    const successUrls = new Set(retrieved.map(r => r.article_url));
+                    for (let i = failed.length - 1; i >= 0; i--) {
+                        if (successUrls.has(cleanURL(failed[i].article_url))) {
+                            failed.splice(i, 1);
+                        }
+                    }
                     jobs[id] = {
                         ...jobs[id],
                         result: {

@@ -2,7 +2,7 @@ import { cleanURL } from '../helpers/cleanUrl.js';
 import { toFailedAttempt } from "../endpoints/firecrawl_extractions.js";
 import { stripVideo } from "../helpers/stripVideo.js";
 ;
-export async function firecrawlBatchScrape(firecrawl, articles, failed, MBFC_DATA) {
+export async function firecrawlBatchScrape(firecrawl, articles, failed, MBFC_DATA, retrieved) {
     const urls = articles.map((article) => {
         const cleansed = cleanURL(article.url);
         return cleansed;
@@ -22,7 +22,7 @@ export async function firecrawlBatchScrape(firecrawl, articles, failed, MBFC_DAT
             for (const art of articles) {
                 failed.push(toFailedAttempt(art, "Batch scrape failed"));
             }
-            return scraped_articles;
+            return;
         }
         for (let index = 0; index < urls.length; index++) {
             const url = urls[index];
@@ -33,14 +33,12 @@ export async function firecrawlBatchScrape(firecrawl, articles, failed, MBFC_DAT
             ;
             const markdown = item?.markdown ?? "";
             const markdown_content = markdown ? stripVideo(markdown) : markdown;
-            const tooSmall = markdown_content.length < 200;
-            const looksPaywalled = /subscribe|sign in|sign up|enable javascript|disable your ad blocker/i.test(markdown_content);
             const currArticle = articles.find((article) => {
                 const cleanedLink = cleanURL(article.url);
                 const item = cleanedLink === url;
                 return item ?? null;
             });
-            if (!markdown_content || tooSmall || looksPaywalled) {
+            if (!markdown_content) {
                 const failedscrape = toFailedAttempt(currArticle, "Content may be paywalled");
                 failed.push(failedscrape);
                 continue;
@@ -79,11 +77,11 @@ export async function firecrawlBatchScrape(firecrawl, articles, failed, MBFC_DAT
                     bias: rating?.bias,
                     country: rating?.country ?? null
                 };
-                scraped_articles.push(scraped);
+                retrieved.push(scraped);
             }
         }
         ;
-        return scraped_articles;
+        return;
     }
     catch (err) {
         console.error(err);
@@ -100,7 +98,7 @@ export async function firecrawlBatchScrape(firecrawl, articles, failed, MBFC_DAT
                 article_url: art.url,
             });
         }
-        return scraped_articles;
+        return;
     }
     ;
 }
