@@ -38,7 +38,7 @@ export default function StoryPaginate() {
     }
 
     return (
-        <div className="flex lg:justify-self-end relative lg:fixed 2xl:right-20 2xl:bottom-16 xl:right-12 xl:bottom-12 lg:bottom-10 lg:right-8">
+        <div className="z-40 pointer-events-auto flex lg:justify-self-end relative lg:fixed 2xl:right-20 2xl:bottom-16 xl:right-12 xl:bottom-12 lg:bottom-10 lg:right-8">
             <button onClick={() => decrement()}
                 className="rounded-l-3xl border border-r-0 border-white/10
                          py-2 px-3 text-center text-sm transition-all shadow-sm 

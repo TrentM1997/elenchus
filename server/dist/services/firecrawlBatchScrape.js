@@ -2,6 +2,22 @@ import { cleanURL } from '../helpers/cleanUrl.js';
 import { toFailedAttempt } from "../endpoints/firecrawl_extractions.js";
 import { stripVideo } from "../helpers/stripVideo.js";
 ;
+const exluded_tags = [
+    // multimedia / ads
+    "video", "iframe", "noscript", "embed", "object",
+    // nav / banners / popups
+    "nav", "footer", "header", "aside", "form",
+    // social & comments
+    ".share", ".social", ".comments", ".comment", "#comments",
+    // cookie and consent
+    ".cookie", ".cookie-banner", ".consent", "#consent",
+    // recirculation / recommended / related
+    ".recommended", ".recommendations", ".recirc", ".related", ".related-content",
+    ".read-more", ".more-stories", ".trending", ".popular", ".you-may-also-like",
+    ".newsletter", ".subscription", ".subscribe", ".signup",
+    // player wrappers
+    ".player-container", ".ytp", ".jwplayer", ".vjs"
+];
 export async function firecrawlBatchScrape(firecrawl, articles, failed, MBFC_DATA, retrieved) {
     const urls = articles.map((article) => {
         const cleansed = cleanURL(article.url);
@@ -12,7 +28,7 @@ export async function firecrawlBatchScrape(firecrawl, articles, failed, MBFC_DAT
         const batchJob = await firecrawl.batchScrape(urls, {
             options: {
                 waitFor: 2000,
-                excludeTags: ["video", "iframe", "noscript", ".cookie-banner", ".player-container"],
+                excludeTags: exluded_tags,
                 blockAds: true,
                 onlyMainContent: true,
                 formats: ["markdown"]

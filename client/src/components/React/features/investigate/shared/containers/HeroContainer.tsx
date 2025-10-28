@@ -23,7 +23,7 @@ export default function HeroContainer({
     const status = useSelector((s: RootState) => s.investigation.read.status);
     const heightRef = useRef(null);
     const showSpacerDiv = useMemo(() => {
-        const hasRetrievedArticles: boolean = (status === 'fulfilled');
+        const hasRetrievedArticles: boolean = ((Array.isArray(articles)) && (articles.length > 0));
         const show: boolean = hasRetrievedArticles && (!showSearch);
         return show;
     }, [articles, showSearch]);

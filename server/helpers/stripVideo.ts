@@ -9,7 +9,12 @@ export function stripVideo(markdown: string): string {
         "Error Code",
         "Recommended Videos",
         "Left Arrow",
-        "Right Arrow"
+        "Right Arrow",
+        "Close",
+        "Add Topic",
+        "Ask AI",
+        "BETA",
+        "This is a BETA experience. opt-out here"
     ];
 
     let cleaned = markdown;

@@ -113,6 +113,7 @@ export const firecrawl_extractions = async (req, res) => {
                         new Promise((_, reject) => setTimeout(() => reject(new Error('Chunk timed out')), 45000)),
                     ]);
                     const successUrls = new Set(retrieved.map(r => r.article_url));
+                    //walk backwards to remove any urls that actually succeeded
                     for (let i = failed.length - 1; i >= 0; i--) {
                         if (successUrls.has(cleanURL(failed[i].article_url))) {
                             failed.splice(i, 1);

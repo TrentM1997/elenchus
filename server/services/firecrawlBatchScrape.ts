@@ -21,6 +21,23 @@ interface BiasInfo {
 
 type MBFC = Map<string, BiasInfo>
 
+const exluded_tags = [
+    // multimedia / ads
+    "video", "iframe", "noscript", "embed", "object",
+    // nav / banners / popups
+    "nav", "footer", "header", "aside", "form",
+    // social & comments
+    ".share", ".social", ".comments", ".comment", "#comments",
+    // cookie and consent
+    ".cookie", ".cookie-banner", ".consent", "#consent",
+    // recirculation / recommended / related
+    ".recommended", ".recommendations", ".recirc", ".related", ".related-content",
+    ".read-more", ".more-stories", ".trending", ".popular", ".you-may-also-like",
+    ".newsletter", ".subscription", ".subscribe", ".signup",
+    // player wrappers
+    ".player-container", ".ytp", ".jwplayer", ".vjs"
+]
+
 export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcParam[], failed: FailedAttempt[], MBFC_DATA: MBFC, retrieved: ScrapedArticle[]): Promise<void> {
 
     const urls = articles.map((article: FcParam) => {
@@ -35,7 +52,7 @@ export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcPar
         const batchJob: BatchScrapeJob = await firecrawl.batchScrape(urls, {
             options: {
                 waitFor: 2000,
-                excludeTags: ["video", "iframe", "noscript", ".cookie-banner", ".player-container"],
+                excludeTags: exluded_tags,
                 blockAds: true,
                 onlyMainContent: true,
                 formats: ["markdown"]

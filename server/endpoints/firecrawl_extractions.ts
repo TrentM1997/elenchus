@@ -173,6 +173,7 @@ export const firecrawl_extractions = async (req: Request, res: Response): Promis
 
                     const successUrls = new Set(retrieved.map(r => r.article_url));
 
+                    //walk backwards to remove any urls that actually succeeded
                     for (let i = failed.length - 1; i >= 0; i--) {
                         if (successUrls.has(cleanURL(failed[i].article_url))) {
                             failed.splice(i, 1);

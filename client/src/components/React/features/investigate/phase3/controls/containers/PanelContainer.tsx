@@ -22,7 +22,7 @@ export default function PanelContainer() {
                     className="w-full h-auto relative mx-auto"
                 >
                     {showContent &&
-                        (status === 'fulfilled') &&
+                        (Array.isArray(articles) && (articles.length > 0)) &&
                         <ControlPanel />
                     }
                     {(!isMobile) && (status === 'fulfilled') &&
