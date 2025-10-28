@@ -162,12 +162,12 @@ export const runFirecrawlExtraction = createAsyncThunk<
 
 interface ReadingState {
     status: 'idle' | 'pending' | 'fulfilled' | 'rejected',
-    getContent: boolean | null,
-    articles: Array<Article> | null,
-    failedNotifications: Array<FailedAttempt> | null,
-    currentStory: number | null,
-    reading: boolean | null,
-    paginateLimit: boolean | null,
+    getContent: boolean,
+    articles: Array<Article>,
+    failedNotifications: Array<FailedAttempt>,
+    currentStory: number,
+    reading: boolean,
+    paginateLimit: boolean,
     error: string | null;
     progress: Prog;
 };
