@@ -1,4 +1,6 @@
 import { cleanURL } from '../helpers/cleanUrl.js';
+import { toFailedAttempt } from "../endpoints/firecrawl_extractions.js";
+;
 ;
 ;
 const schema = {
@@ -23,22 +25,36 @@ export async function firecrawlBatchScrape(firecrawl, articles, failed, MBFC_DAT
         const batchJob = await firecrawl.batchScrape(urls, {
             options: {
                 onlyMainContent: true,
-                formats: [{
-                        type: "json",
-                        prompt: "Provide the main article body as markdown, preserving paragraphs, headings, and bullet lists.",
-                        schema: schema,
-                    }]
+                formats: ["markdown"]
             }
         });
+        if ((batchJob.status === 'failed') || (!Array.isArray(batchJob.data))) {
+            for (const art of articles) {
+                failed.push(toFailedAttempt(art, "Batch scrape failed"));
+            }
+            return scraped_articles; // exit early so we don't hit undefined
+        }
         for (let index = 0; index < urls.length; index++) {
             const url = urls[index];
-            const item = batchJob?.data?.[index];
-            const json = item?.json;
+            const json = batchJob?.data?.[index];
+            if (!json) {
+                continue;
+            }
+            ;
+            const markdown = json?.markdown ?? "";
+            const tooSmall = markdown.length < 200;
+            const looksPaywalled = /subscribe|sign in|sign up|enable javascript|disable your ad blocker/i.test(markdown);
             const currArticle = articles.find((article) => {
                 const cleanedLink = cleanURL(article.url);
                 const item = cleanedLink === url;
                 return item ?? null;
             });
+            if (!markdown || tooSmall || looksPaywalled) {
+                const failedscrape = toFailedAttempt(currArticle, "Content may be paywalled");
+                failed.push(failedscrape);
+                continue;
+            }
+            ;
             if (!json || Object.keys(json).length === 0) {
                 const failedArticle = currArticle ? {
                     title: currArticle.title,
@@ -57,15 +73,15 @@ export async function firecrawlBatchScrape(firecrawl, articles, failed, MBFC_DAT
             else {
                 const rating = MBFC_DATA.has(currArticle.source) ? MBFC_DATA.get(currArticle.source) : null;
                 const scraped = {
-                    title: json.title ?? currArticle.title,
+                    title: currArticle.title,
                     provider: currArticle?.source,
-                    authors: json?.author ?? "Author N/A",
+                    authors: "N/A",
                     article_url: url,
-                    image_url: currArticle?.image ?? json?.imageUrl,
-                    date_published: currArticle?.date ?? json?.publishedDate,
+                    image_url: currArticle?.image ?? null,
+                    date_published: currArticle?.date ?? "Date of publication unavailable: visit source for date",
                     fallbackDate: currArticle?.date ?? null,
                     summary: null,
-                    full_text: json?.content_markdown ?? "Failed to retrieve article content",
+                    full_text: json?.markdown ?? "Failed to retrieve article content",
                     logo: currArticle?.logo,
                     id: null,
                     factual_reporting: rating?.factual_reporting,

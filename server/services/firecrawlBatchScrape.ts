@@ -1,7 +1,8 @@
 import Firecrawl from "@mendable/firecrawl-js";
 import { cleanURL } from '../helpers/cleanUrl.js';
 import type { FailedAttempt, ScrapedArticle, Bias, FcParam } from '../types/types.js';
-
+import { toFailedAttempt } from "../endpoints/firecrawl_extractions.js";
+import type { BatchScrapeJob } from "@mendable/firecrawl-js";
 
 interface FirecrawlJSON {
     title?: string;
@@ -12,8 +13,27 @@ interface FirecrawlJSON {
     content_markdown?: string;
 };
 
+
+interface MarkdownJSON {
+    success: boolean,
+    data: {
+        markdown: string,
+        metadata: {
+
+        }
+    }
+}
+
+export interface BatchItem {
+    url: string,
+    markdown?: string,
+    metadata?: Record<string, any>,
+    success?: boolean,
+    error?: string
+};
+
 interface FirecrawlBatchItem {
-    json: FirecrawlJSON | undefined
+    json: MarkdownJSON | undefined
 };
 
 interface BiasInfo {
@@ -50,30 +70,48 @@ export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcPar
 
     try {
 
-        const batchJob = await firecrawl.batchScrape(urls, {
+        const batchJob: BatchScrapeJob = await firecrawl.batchScrape(urls, {
             options: {
                 onlyMainContent: true,
-                formats: [{
-                    type: "json",
-                    prompt: "Provide the main article body as markdown, preserving paragraphs, headings, and bullet lists.",
-                    schema: schema,
-
-                }]
+                formats: ["markdown"]
             }
         }
         );
 
+        if ((batchJob.status === 'failed') || (!Array.isArray(batchJob.data))) {
+            for (const art of articles) {
+                failed.push(toFailedAttempt(art, "Batch scrape failed"));
+            }
+            return scraped_articles; // exit early so we don't hit undefined
+        }
+
         for (let index = 0; index < urls.length; index++) {
             const url = urls[index];
 
-            const item = batchJob?.data?.[index] as FirecrawlBatchItem | undefined
-            const json: FirecrawlJSON | undefined = item?.json;
+            const json = batchJob?.data?.[index] as BatchItem | undefined;
+
+            if (!json) {
+                continue;
+            };
+
+            const markdown = json?.markdown ?? "";
+
+            const tooSmall = markdown.length < 200;
+            const looksPaywalled = /subscribe|sign in|sign up|enable javascript|disable your ad blocker/i.test(markdown);
+
+
 
             const currArticle = articles.find((article: FcParam) => {
                 const cleanedLink: string = cleanURL(article.url);
                 const item = cleanedLink === url;
                 return item ?? null
             }) as FcParam;
+
+            if (!markdown || tooSmall || looksPaywalled) {
+                const failedscrape = toFailedAttempt(currArticle, "Content may be paywalled");
+                failed.push(failedscrape);
+                continue;
+            };
 
             if (!json || Object.keys(json).length === 0) {
 
@@ -96,15 +134,15 @@ export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcPar
 
 
                 const scraped: ScrapedArticle = {
-                    title: json.title ?? currArticle.title,
+                    title: currArticle.title,
                     provider: currArticle?.source,
-                    authors: json?.author ?? "Author N/A",
+                    authors: "N/A",
                     article_url: url,
-                    image_url: currArticle?.image ?? json?.imageUrl,
-                    date_published: currArticle?.date ?? json?.publishedDate,
+                    image_url: currArticle?.image ?? null,
+                    date_published: currArticle?.date ?? "Date of publication unavailable: visit source for date",
                     fallbackDate: currArticle?.date ?? null,
                     summary: null,
-                    full_text: json?.content_markdown ?? "Failed to retrieve article content",
+                    full_text: json?.markdown ?? "Failed to retrieve article content",
                     logo: currArticle?.logo,
                     id: null,
                     factual_reporting: rating?.factual_reporting,

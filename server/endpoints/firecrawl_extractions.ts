@@ -43,7 +43,7 @@ export async function createFirecrawlClient(): Promise<Firecrawl | null> {
 };
 
 
-function toFailedAttempt(a: FcParam, reason: string): FailedAttempt {
+export function toFailedAttempt(a: FcParam, reason: string): FailedAttempt {
     return {
         title: a.title,
         summary: [{ denied: reason, failedArticle: a.url }],

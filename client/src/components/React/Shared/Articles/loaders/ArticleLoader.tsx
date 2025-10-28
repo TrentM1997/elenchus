@@ -3,10 +3,29 @@ import { motion } from "framer-motion"
 import vortex from '@/lotties/vortex.json'
 import { useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
-
+import { useEffect, useRef, useState } from "react";
 
 export default function ArticleLoader(): JSX.Element | null {
+    const [showWaitCaution, setShowWaitCaution] = useState<boolean>(false);
     const progress: string | null = useSelector((state: RootState) => state.investigation.read.progress);
+    const timeRef = useRef<number | null>(null);
+
+
+    useEffect(() => {
+        if (timeRef.current) return;
+
+        timeRef.current = window.setTimeout(() => {
+            setShowWaitCaution(true);
+            timeRef.current = null;
+        }, 15000);
+
+
+        return () => {
+            if (timeRef.current !== null) {
+                clearTimeout(timeRef.current);
+            }
+        }
+    }, []);
 
     return (
         <motion.div
@@ -34,15 +53,25 @@ export default function ArticleLoader(): JSX.Element | null {
 
                     </h1>
 
-                    <p className="text-zinc-400 md:font-light tracking-tight text-base text-nowrap w-full text-center">
-                        {progress && `Progress • ${progress} articles extracted`}
-                    </p>
+                    <ScrapeProgress progress={progress} />
 
-                    <p className="text-zinc-400 font-light tracking-tight text-xs md:text-base text-center text-wrap w-4/5 mt-12">
-                        This process can take up to 2 or 3 minutes while we extract and format each article for reading.
-                    </p>
+                    {showWaitCaution && <p className="text-zinc-400 font-light tracking-tight text-xs md:text-base text-center text-wrap w-4/5 mt-12">
+                        This process may take a minute or two while we extract and format each article for reading.
+                    </p>}
                 </header>
             </div>
         </motion.div>
     );
-}
+};
+
+
+function ScrapeProgress({ progress }: { progress: string }): JSX.Element | null {
+
+    return (
+        <div className="flex items-center justify-center">
+            <p className="text-zinc-400 font-light tracking-tight text-sm">
+                Pending • {progress} extracted
+            </p>
+        </div>
+    );
+};

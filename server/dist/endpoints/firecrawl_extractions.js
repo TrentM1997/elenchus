@@ -24,7 +24,7 @@ export async function createFirecrawlClient() {
     return firecrawl;
 }
 ;
-function toFailedAttempt(a, reason) {
+export function toFailedAttempt(a, reason) {
     return {
         title: a.title,
         summary: [{ denied: reason, failedArticle: a.url }],
