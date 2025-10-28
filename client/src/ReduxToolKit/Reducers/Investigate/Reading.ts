@@ -38,7 +38,7 @@ interface FirecrawlJobStatus {
     status: JobStatus
     result: {
         progress: Prog,
-        retrieved: Article[] | null;
+        retrieved: Article[];
         rejected: FailedAttempt[];
     } | null;
     error: string | null;
@@ -46,7 +46,7 @@ interface FirecrawlJobStatus {
 }
 
 interface FirecrawlSuccessPayload {
-    retrieved: Article[] | null;
+    retrieved: Article[];
     rejected: FailedAttempt[];
     progress: Prog
 }
@@ -111,22 +111,15 @@ export const runFirecrawlExtraction = createAsyncThunk<
                 }
 
                 statusJson = (await statusRes.json()) as FirecrawlJobStatus;
-                if (statusJson.result !== null) {
-                    console.log(statusJson.result);
-                    thunkApi.dispatch(updateProgress(statusJson.result.progress));
-                }
-
                 if (statusJson.status) {
                     thunkApi.dispatch(updateStatus(statusJson.status));
                 }
 
-                if (statusJson?.result?.retrieved) {
+                if (statusJson.result !== null) {
+                    thunkApi.dispatch(updateProgress(statusJson.result.progress));
                     thunkApi.dispatch(appendArticles(statusJson.result.retrieved));
-                }
-                if (statusJson?.result?.rejected) {
                     thunkApi.dispatch(appendFailures(statusJson.result.rejected))
                 }
-
 
             } catch (err: any) {
                 return rejectWithValue(`Network error polling job: ${err.message}`);

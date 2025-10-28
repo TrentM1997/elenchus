@@ -45,7 +45,6 @@ export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcPar
         return cleansed;
     });
 
-    const scraped_articles: ScrapedArticle[] = [];
 
     try {
 

@@ -23,7 +23,6 @@ export async function firecrawlBatchScrape(firecrawl, articles, failed, MBFC_DAT
         const cleansed = cleanURL(article.url);
         return cleansed;
     });
-    const scraped_articles = [];
     try {
         const batchJob = await firecrawl.batchScrape(urls, {
             options: {
