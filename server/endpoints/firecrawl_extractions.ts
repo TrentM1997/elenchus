@@ -167,7 +167,7 @@ export const firecrawl_extractions = async (req: Request, res: Response): Promis
                     await Promise.race([
                         firecrawlBatchScrape(firecrawl, chunk, failed, MBFC_DATA, retrieved),
                         new Promise<never>((_, reject) =>
-                            setTimeout(() => reject(new Error('Chunk timed out')), 45000)
+                            setTimeout(() => reject(new Error('Chunk timed out')), 30000)
                         ),
                     ]);
 

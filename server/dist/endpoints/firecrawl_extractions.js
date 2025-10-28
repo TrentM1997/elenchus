@@ -110,7 +110,7 @@ export const firecrawl_extractions = async (req, res) => {
                 try {
                     await Promise.race([
                         firecrawlBatchScrape(firecrawl, chunk, failed, MBFC_DATA, retrieved),
-                        new Promise((_, reject) => setTimeout(() => reject(new Error('Chunk timed out')), 45000)),
+                        new Promise((_, reject) => setTimeout(() => reject(new Error('Chunk timed out')), 30000)),
                     ]);
                     const successUrls = new Set(retrieved.map(r => r.article_url));
                     //walk backwards to remove any urls that actually succeeded
