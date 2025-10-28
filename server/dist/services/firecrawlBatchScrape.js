@@ -1,5 +1,6 @@
 import { cleanURL } from '../helpers/cleanUrl.js';
 import { toFailedAttempt } from "../endpoints/firecrawl_extractions.js";
+import { stripVideo } from "../helpers/stripVideo.js";
 ;
 export async function firecrawlBatchScrape(firecrawl, articles, failed, MBFC_DATA) {
     const urls = articles.map((article) => {
@@ -10,6 +11,9 @@ export async function firecrawlBatchScrape(firecrawl, articles, failed, MBFC_DAT
     try {
         const batchJob = await firecrawl.batchScrape(urls, {
             options: {
+                waitFor: 3000,
+                excludeTags: ["video", "iframe", "noscript", ".cookie-banner", ".player-container"],
+                blockAds: true,
                 onlyMainContent: true,
                 formats: ["markdown"]
             }
@@ -18,7 +22,7 @@ export async function firecrawlBatchScrape(firecrawl, articles, failed, MBFC_DAT
             for (const art of articles) {
                 failed.push(toFailedAttempt(art, "Batch scrape failed"));
             }
-            return scraped_articles; // exit early so we don't hit undefined
+            return scraped_articles;
         }
         for (let index = 0; index < urls.length; index++) {
             const url = urls[index];
@@ -28,7 +32,7 @@ export async function firecrawlBatchScrape(firecrawl, articles, failed, MBFC_DAT
             }
             ;
             const markdown = item?.markdown ?? "";
-            const markdown_content = stripVideo(markdown);
+            const markdown_content = markdown ? stripVideo(markdown) : markdown;
             const tooSmall = markdown_content.length < 200;
             const looksPaywalled = /subscribe|sign in|sign up|enable javascript|disable your ad blocker/i.test(markdown_content);
             const currArticle = articles.find((article) => {

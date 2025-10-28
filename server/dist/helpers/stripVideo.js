@@ -1,5 +1,4 @@
-"use strict";
-function stripVideo(markdown) {
+export function stripVideo(markdown) {
     const hasVideoBlock = /This video file cannot be played|Keyboard Shortcuts|Play\/Pause|Error Code/i.test(markdown);
     if (!hasVideoBlock)
         return markdown;

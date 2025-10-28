@@ -98,7 +98,7 @@ export const firecrawl_extractions = async (req, res) => {
                 };
                 return;
             }
-            const CHUNK_SIZE = 1;
+            const CHUNK_SIZE = 2;
             const chunks = [];
             for (let i = 0; i < articles.length; i += CHUNK_SIZE) {
                 const batch = articles.slice(i, i + CHUNK_SIZE);
@@ -109,7 +109,7 @@ export const firecrawl_extractions = async (req, res) => {
                 try {
                     const chunkResults = await Promise.race([
                         firecrawlBatchScrape(firecrawl, chunk, failed, MBFC_DATA),
-                        new Promise((_, reject) => setTimeout(() => reject(new Error('Chunk timed out')), 50000)),
+                        new Promise((_, reject) => setTimeout(() => reject(new Error('Chunk timed out')), 60000)),
                     ]);
                     retrieved.push(...chunkResults);
                     jobs[id] = {

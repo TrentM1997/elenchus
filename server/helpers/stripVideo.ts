@@ -1,4 +1,4 @@
-function stripVideo(markdown: string): string {
+export function stripVideo(markdown: string): string {
     const hasVideoBlock = /This video file cannot be played|Keyboard Shortcuts|Play\/Pause|Error Code/i.test(markdown);
     if (!hasVideoBlock) return markdown;
 
