@@ -109,7 +109,7 @@ export const firecrawl_extractions = async (req, res) => {
                 try {
                     const chunkResults = await Promise.race([
                         firecrawlBatchScrape(firecrawl, chunk, failed, MBFC_DATA),
-                        new Promise((_, reject) => setTimeout(() => reject(new Error('Chunk timed out')), 60000)),
+                        new Promise((_, reject) => setTimeout(() => reject(new Error('Chunk timed out')), 45000)),
                     ]);
                     retrieved.push(...chunkResults);
                     jobs[id] = {
@@ -142,8 +142,9 @@ export const firecrawl_extractions = async (req, res) => {
         }
         catch (err) {
             console.error('firecrawl_extractions job failed:', err);
+            const partial_success = retrieved.length > 0;
             jobs[id] = {
-                status: 'rejected',
+                status: partial_success ? 'fulfilled' : 'rejected',
                 result: {
                     progress: 'Unexpected error: extraction failed',
                     rejected: failed,

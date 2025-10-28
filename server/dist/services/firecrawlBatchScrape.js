@@ -11,7 +11,7 @@ export async function firecrawlBatchScrape(firecrawl, articles, failed, MBFC_DAT
     try {
         const batchJob = await firecrawl.batchScrape(urls, {
             options: {
-                waitFor: 3000,
+                waitFor: 2000,
                 excludeTags: ["video", "iframe", "noscript", ".cookie-banner", ".player-container"],
                 blockAds: true,
                 onlyMainContent: true,

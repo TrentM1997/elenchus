@@ -37,7 +37,7 @@ export default function PendingExtractions({ setShowPendingExtractions, status }
             animate='show'
             exit='hide'
             transition={{ type: 'tween', duration: 0.2 }}
-            className="fixed top-24 right-36 h-10 w-60 p-2 bg-mirage border border-zinc-700 rounded-xl px-2 z-20"
+            className="fixed top-12 md:top-24 right-4 md:right-12 xl:right-36 h-10 w-60 p-2 bg-mirage border border-zinc-700 rounded-xl px-2 z-20"
         >
             <div key='title' className="flex w-full h-full items-center justify-between">
                 <div key='titleContainer' className="w-auto h-fit">
