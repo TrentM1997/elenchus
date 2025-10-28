@@ -1,4 +1,3 @@
-import { getMediaBiases } from '../endpoints/mediaBias.js';
 import { cleanURL } from '../helpers/cleanUrl.js';
 ;
 ;
@@ -14,28 +13,11 @@ const schema = {
     },
     required: ["title", "source", "content_markdown"],
 };
-async function getBiasData(articles) {
-    const biasRatings = new Map();
-    for (let i = 0; i < articles.length; i++) {
-        let source = articles[i].source;
-        let rating = await getMediaBiases(source);
-        let normalized = {
-            bias: rating?.bias ?? null,
-            factual_reporting: rating?.factual_reporting ?? null,
-            country: rating?.country ?? null
-        };
-        biasRatings.set(source, normalized);
-    }
-    ;
-    return biasRatings;
-}
-;
-export async function firecrawlBatchScrape(firecrawl, articles, failed) {
+export async function firecrawlBatchScrape(firecrawl, articles, failed, MBFC_DATA) {
     const urls = articles.map((article) => {
         const cleansed = cleanURL(article.url);
         return cleansed;
     });
-    const MBFC_DATA = await getBiasData(articles);
     const scraped_articles = [];
     try {
         const batchJob = await firecrawl.batchScrape(urls, {

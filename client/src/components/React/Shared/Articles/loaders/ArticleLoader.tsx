@@ -1,9 +1,12 @@
 import Lottie from "lottie-react"
 import { motion } from "framer-motion"
 import vortex from '@/lotties/vortex.json'
+import { useSelector } from "react-redux";
+import { RootState } from "@/ReduxToolKit/store";
 
 
 export default function ArticleLoader(): JSX.Element | null {
+    const progress: string | null = useSelector((state: RootState) => state.investigation.read.progress);
 
     return (
         <motion.div
@@ -23,7 +26,7 @@ export default function ArticleLoader(): JSX.Element | null {
                         style={{ height: '100%', width: '100%' }}
                     />
                 </div>
-                <header className='w-auto h-auto mx-auto flex flex-col items-center justify-center gap-y-12'>
+                <header className='w-auto h-auto mx-auto flex flex-col items-center justify-center gap-y-6'>
                     <h1
                         className='w-auto mx-auto h-fit text-center text-base tracking-tight md:text-3xl xl:text-3xl will-change-transform transform-gpu inline-block bg-gradient-to-r from-zinc-600 via-zinc-200 to-zinc-600 
          bg-[length:200%_100%] bg-clip-text text-transparent animate-shimmer'
@@ -31,7 +34,11 @@ export default function ArticleLoader(): JSX.Element | null {
 
                     </h1>
 
-                    <p className="text-zinc-400 font-light tracking-tight text-xs md:text-base text-center text-wrap w-4/5">
+                    <p className="text-zinc-400 md:font-light tracking-tight text-base text-nowrap w-full text-center">
+                        {progress && `Progress • ${progress} articles extracted`}
+                    </p>
+
+                    <p className="text-zinc-400 font-light tracking-tight text-xs md:text-base text-center text-wrap w-4/5 mt-12">
                         This process can take up to 2 or 3 minutes while we extract and format each article for reading.
                     </p>
                 </header>

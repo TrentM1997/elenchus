@@ -16,18 +16,18 @@ export default function ArticleContainer({ }) {
   const sources = useSelector((state: RootState) => state.userWork.sourcesToReview);
   const userArticles = useSelector((state: RootState) => state.userdata.userArticles);
   const sourcesToDispatch = sources;
-  const { articles, failedNotifications, ContentStatus } = read;
+  const { articles, failedNotifications, ContentStatus, status } = read;
   const firstRecordedSources = useRef<string>("");
   const dispatch = useDispatch();
 
   const showNotifications = useMemo((): boolean => {
     const hasFailed = (Array.isArray(failedNotifications)) && (failedNotifications.length > 0);
-    const fulfilled = (ContentStatus === 'fulfilled');
+    const fulfilled = (status === 'fulfilled');
     const show = hasFailed && fulfilled;
     return show;
   }, [ContentStatus, failedNotifications]);
 
-
+  console.log(showNotifications)
 
   useEffect(() => {
 

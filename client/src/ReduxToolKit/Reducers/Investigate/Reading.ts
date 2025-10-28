@@ -1,4 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { progress } from 'framer-motion';
+import { act } from 'react';
 
 export interface Article {
     title: string,
@@ -31,21 +33,23 @@ interface FailedAttempt {
 
 export type JobStatus = 'pending' | 'fulfilled' | 'rejected';
 
+export type Prog = 'extraction complete' | string;
+
 interface FirecrawlJobStatus {
     status: JobStatus
     result: {
+        progress: Prog,
         retrieved: Article[] | null;
         rejected: FailedAttempt[];
     } | null;
     error: string | null;
-    createdAt: number;
+    createdAt: number | null;
 }
 
 interface FirecrawlSuccessPayload {
     retrieved: Article[] | null;
     rejected: FailedAttempt[];
 }
-
 
 
 export const runFirecrawlExtraction = createAsyncThunk<
@@ -91,8 +95,9 @@ export const runFirecrawlExtraction = createAsyncThunk<
             }
 
             let statusJson: FirecrawlJobStatus;
+
             try {
-                const statusRes = await fetch(pollEndpoint, { signal });
+                const statusRes = await fetch(pollEndpoint, { signal, method: 'GET' });
 
                 if (statusRes.status === 404) {
                     return rejectWithValue('Job not found or expired.');
@@ -106,6 +111,12 @@ export const runFirecrawlExtraction = createAsyncThunk<
                 }
 
                 statusJson = (await statusRes.json()) as FirecrawlJobStatus;
+                if (statusJson.result !== null) {
+                    thunkApi.dispatch(updateProgress(statusJson.result.progress));
+                }
+                if (statusJson.status) {
+                    thunkApi.dispatch(updateStatus(statusJson.status));
+                }
             } catch (err: any) {
                 return rejectWithValue(`Network error polling job: ${err.message}`);
             }
@@ -148,8 +159,8 @@ interface ReadingState {
     paginateLimit: boolean | null,
     ContentStatus: 'idle' | 'pending' | 'fulfilled' | 'rejected',
     error: string | null;
-
-}
+    progress: Prog;
+};
 
 
 const initialState: ReadingState = {
@@ -161,8 +172,9 @@ const initialState: ReadingState = {
     reading: false,
     paginateLimit: false,
     ContentStatus: 'idle',
-    error: null
-}
+    error: null,
+    progress: '0'
+};
 
 
 export const ReadingSlice = createSlice({
@@ -171,6 +183,13 @@ export const ReadingSlice = createSlice({
     reducers: {
         getStories: (state, action) => {
             state.getContent = action.payload
+        },
+        updateProgress: (state, action) => {
+            const prev = state.progress;
+            const next = action.payload;
+            if (next !== prev) {
+                state.progress = next;
+            }
         },
         articleData: (state, action) => {
             state.articles = action.payload
@@ -199,7 +218,10 @@ export const ReadingSlice = createSlice({
         },
         restoreStatus: (state) => {
             state.ContentStatus = 'idle';
-        }
+        },
+        updateStatus: (state, action) => {
+            state.status = action.payload;
+        },
 
     },
     extraReducers: (builder) => {
@@ -231,6 +253,8 @@ export type ReadingSlice = ReturnType<typeof ReadingSlice.reducer>;
 
 export const {
     articleData,
+    updateStatus,
+    updateProgress,
     rejected,
     incrementStory,
     decrementStory,

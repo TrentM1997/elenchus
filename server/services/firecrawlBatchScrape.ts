@@ -1,5 +1,4 @@
 import Firecrawl from "@mendable/firecrawl-js";
-import { getMediaBiases } from '../endpoints/mediaBias.js';
 import { cleanURL } from '../helpers/cleanUrl.js';
 import type { FailedAttempt, ScrapedArticle, Bias, FcParam } from '../types/types.js';
 
@@ -36,33 +35,17 @@ const schema = {
     required: ["title", "source", "content_markdown"],
 };
 
-async function getBiasData(articles: FcParam[]): Promise<Map<string, BiasInfo>> {
-    const biasRatings = new Map<string, BiasInfo>();
 
-    for (let i = 0; i < articles.length; i++) {
-        let source = articles[i].source;
-        let rating = await getMediaBiases(source);
+type MBFC = Map<string, BiasInfo>
 
-        let normalized: BiasInfo = {
-            bias: rating?.bias ?? null,
-            factual_reporting: rating?.factual_reporting ?? null,
-            country: rating?.country ?? null
-        };
 
-        biasRatings.set(source, normalized);
-    };
-
-    return biasRatings;
-};
-
-export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcParam[], failed: FailedAttempt[]): Promise<ScrapedArticle[]> {
+export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcParam[], failed: FailedAttempt[], MBFC_DATA: MBFC): Promise<ScrapedArticle[]> {
 
     const urls = articles.map((article: FcParam) => {
         const cleansed = cleanURL(article.url);
         return cleansed;
     });
 
-    const MBFC_DATA = await getBiasData(articles);
     const scraped_articles: ScrapedArticle[] = [];
 
     try {

@@ -9,13 +9,21 @@ import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBounda
 import { ReadingSlice } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 
 export default function RenderArticles(): JSX.Element | null {
-    const { articles, currentStory, ContentStatus, status }: ReadingSlice = useSelector((state: RootState) => state.investigation.read);
+    const { articles, currentStory, progress, status, failedNotifications }: ReadingSlice = useSelector((state: RootState) => state.investigation.read);
     const canRender = Array.isArray(articles) && (articles.length > 0);
     const noResults = useMemo(() => {
         const failed: boolean = (status === 'fulfilled') && (Array.isArray(articles)) && (articles.length === 0);
         return failed;
-    }, [ContentStatus, articles])
+    }, [status, articles]);
     const showLoader = (status === 'pending');
+
+    console.log({
+        loader: showLoader,
+        articles: canRender,
+        fallback: noResults,
+        progress: progress,
+        failedNotifications: failedNotifications
+    });
 
     return (
         <main
