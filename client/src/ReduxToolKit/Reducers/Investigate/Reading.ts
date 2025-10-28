@@ -49,6 +49,7 @@ interface FirecrawlJobStatus {
 interface FirecrawlSuccessPayload {
     retrieved: Article[] | null;
     rejected: FailedAttempt[];
+    progress: Prog
 }
 
 
@@ -129,6 +130,7 @@ export const runFirecrawlExtraction = createAsyncThunk<
                 }
 
                 const payload: FirecrawlSuccessPayload = {
+                    progress: finalResult.progress,
                     retrieved: finalResult.retrieved,
                     rejected: finalResult.rejected,
                 };
@@ -236,6 +238,7 @@ export const ReadingSlice = createSlice({
                 state.status = 'fulfilled';
                 state.articles = action.payload.retrieved;
                 state.failedNotifications = action.payload.rejected;
+                state.progress = action.payload.progress;
                 state.error = null;
             })
             .addCase(runFirecrawlExtraction.rejected, (state, action) => {

@@ -22,10 +22,11 @@ export async function firecrawlBatchScrape(firecrawl, articles, failed, MBFC_DAT
     try {
         const batchJob = await firecrawl.batchScrape(urls, {
             options: {
+                onlyMainContent: true,
                 formats: [{
                         type: "json",
                         prompt: "Provide the main article body as markdown, preserving paragraphs, headings, and bullet lists.",
-                        schema: schema
+                        schema: schema,
                     }]
             }
         });

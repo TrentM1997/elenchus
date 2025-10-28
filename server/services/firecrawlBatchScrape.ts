@@ -52,10 +52,12 @@ export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcPar
 
         const batchJob = await firecrawl.batchScrape(urls, {
             options: {
+                onlyMainContent: true,
                 formats: [{
                     type: "json",
                     prompt: "Provide the main article body as markdown, preserving paragraphs, headings, and bullet lists.",
-                    schema: schema
+                    schema: schema,
+
                 }]
             }
         }
