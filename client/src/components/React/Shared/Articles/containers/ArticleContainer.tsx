@@ -1,5 +1,5 @@
 import FailedLoading from "../Failed/FailedLoading";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
 import { useEffect, useMemo, useRef } from "react";
 import { useDispatch } from "react-redux";
@@ -9,25 +9,21 @@ import { getSourcesToRecord, canUpdateSources } from "@/services/RecordSources";
 import { clearChosenArticles } from "@/ReduxToolKit/Reducers/Investigate/ChosenArticles";
 import { resetResults } from "@/ReduxToolKit/Reducers/Investigate/SearchResults";
 import { resetReadingSlice } from "@/ReduxToolKit/Reducers/Investigate/Reading";
+import type { ReadingSlice } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 
 export default function ArticleContainer({ }) {
-  const investigateState = useSelector((state: RootState) => state.investigation);
-  const { read } = investigateState;
   const sources = useSelector((state: RootState) => state.userWork.sourcesToReview);
-  const userArticles = useSelector((state: RootState) => state.userdata.userArticles);
   const sourcesToDispatch = sources;
-  const { articles, failedNotifications, ContentStatus, status } = read;
+  const { articles, failedNotifications, status }: ReadingSlice = useSelector((state: RootState) => state.investigation.read, shallowEqual);
   const firstRecordedSources = useRef<string>("");
   const dispatch = useDispatch();
-
   const showNotifications = useMemo((): boolean => {
     const hasFailed = (Array.isArray(failedNotifications)) && (failedNotifications.length > 0);
     const fulfilled = (status === 'fulfilled');
     const show = hasFailed && fulfilled;
     return show;
-  }, [ContentStatus, failedNotifications]);
+  }, [status, failedNotifications]);
 
-  console.log(showNotifications)
 
   useEffect(() => {
 

@@ -151,7 +151,7 @@ export const firecrawl_extractions = async (req: Request, res: Response): Promis
                 return;
             }
 
-            const CHUNK_SIZE = 2;
+            const CHUNK_SIZE = 1;
             const chunks: FcParam[][] = [];
 
             for (let i = 0; i < articles.length; i += CHUNK_SIZE) {

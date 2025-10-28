@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import type { PayloadAction } from '@reduxjs/toolkit';
 import { progress } from 'framer-motion';
 import { act } from 'react';
 
@@ -115,9 +116,18 @@ export const runFirecrawlExtraction = createAsyncThunk<
                 if (statusJson.result !== null) {
                     thunkApi.dispatch(updateProgress(statusJson.result.progress));
                 }
+
                 if (statusJson.status) {
                     thunkApi.dispatch(updateStatus(statusJson.status));
                 }
+
+                if (statusJson?.result?.retrieved) {
+                    thunkApi.dispatch(appendArticles(statusJson.result.retrieved));
+                }
+                if (statusJson?.result?.rejected) {
+                    thunkApi.dispatch(appendFailures(statusJson.result.rejected))
+                }
+
             } catch (err: any) {
                 return rejectWithValue(`Network error polling job: ${err.message}`);
             }
@@ -155,7 +165,7 @@ interface ReadingState {
     status: 'idle' | 'pending' | 'fulfilled' | 'rejected',
     getContent: boolean | null,
     articles: Array<Article> | null,
-    failedNotifications: Array<any> | null,
+    failedNotifications: Array<FailedAttempt> | null,
     currentStory: number | null,
     reading: boolean | null,
     paginateLimit: boolean | null,
@@ -168,8 +178,8 @@ interface ReadingState {
 const initialState: ReadingState = {
     status: 'idle',
     getContent: false,
-    articles: null,
-    failedNotifications: null,
+    articles: [],
+    failedNotifications: [],
     currentStory: 0,
     reading: false,
     paginateLimit: false,
@@ -191,6 +201,24 @@ export const ReadingSlice = createSlice({
             const next = action.payload;
             if (next !== prev) {
                 state.progress = next;
+            }
+        },
+        appendArticles: (state, action: PayloadAction<Article[]>) => {
+            const nextBatch = action.payload;
+            for (const batchItem of nextBatch) {
+                const already = state.articles.find(a => a.article_url === batchItem.article_url);
+                if (!already) {
+                    state.articles.push(batchItem);
+                }
+            }
+        },
+        appendFailures: (state, action: PayloadAction<FailedAttempt[]>) => {
+            const nextBatch = action.payload;
+            for (const item of nextBatch) {
+                const pre_existing = state.failedNotifications.find((i => i.article_url === item.article_url));
+                if (!pre_existing) {
+                    state.failedNotifications.push(item);
+                };
             }
         },
         articleData: (state, action) => {
@@ -266,6 +294,9 @@ export const {
     resetReadingSlice,
     closeNotification,
     limitPagination,
-    restoreStatus } = ReadingSlice.actions
+    restoreStatus,
+    appendArticles,
+    appendFailures
+} = ReadingSlice.actions
 
 export default ReadingSlice.reducer

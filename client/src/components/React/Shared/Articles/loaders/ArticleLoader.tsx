@@ -55,7 +55,7 @@ export default function ArticleLoader(): JSX.Element | null {
 
                     <ScrapeProgress progress={progress} />
 
-                    {showWaitCaution && <p className="text-zinc-400 font-light tracking-tight text-xs md:text-base text-center text-wrap w-4/5 mt-12">
+                    {showWaitCaution && <p className="text-zinc-400 opacity-0 animate-fade-blur ease-soft font-light tracking-tight text-xs md:text-base text-center text-wrap w-4/5 mt-12">
                         This process may take a minute or two while we extract and format each article for reading.
                     </p>}
                 </header>
@@ -68,9 +68,9 @@ export default function ArticleLoader(): JSX.Element | null {
 function ScrapeProgress({ progress }: { progress: string }): JSX.Element | null {
 
     return (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center p-3 w-auto h-auto rounded-lg bg-white/5">
             <p className="text-zinc-400 font-light tracking-tight text-sm">
-                Pending • {progress} extracted
+                Progress  {progress}
             </p>
         </div>
     );
