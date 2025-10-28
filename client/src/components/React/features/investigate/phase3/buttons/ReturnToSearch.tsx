@@ -5,7 +5,6 @@ import { RootState } from "@/ReduxToolKit/store";
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import BackToSearchTooltip from "../tooltips/BackToSearchTooltip";
-import type { ExtractionToast } from "@/components/React/app/App";
 import PanelLabel from "./PanelLabel";
 import ButtonHoverTooltip from "../tooltips/ButtonHoverTooltip";
 

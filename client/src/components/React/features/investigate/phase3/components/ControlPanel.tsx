@@ -5,12 +5,12 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
 import GetInfo from "../buttons/GetInfo";
 import { useMemo } from "react";
-import { ReadingSlice } from "@/ReduxToolKit/Reducers/Investigate/Reading";
+import { ReadingSliceState } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
 export default function ControlPanel({ }) {
     const isMobile = useIsMobile();
-    const { status, articles }: ReadingSlice = useSelector((state: RootState) => state.investigation.read);
+    const { status, articles }: ReadingSliceState = useSelector((state: RootState) => state.investigation.read);
     const failedExtraction = useMemo(() => {
         const failed: boolean = (status === 'fulfilled') && (Array.isArray(articles)) && (articles.length === 0);
         return failed;

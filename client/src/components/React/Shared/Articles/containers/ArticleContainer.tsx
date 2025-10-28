@@ -9,12 +9,12 @@ import { getSourcesToRecord, canUpdateSources } from "@/services/RecordSources";
 import { clearChosenArticles } from "@/ReduxToolKit/Reducers/Investigate/ChosenArticles";
 import { resetResults } from "@/ReduxToolKit/Reducers/Investigate/SearchResults";
 import { resetReadingSlice } from "@/ReduxToolKit/Reducers/Investigate/Reading";
-import type { ReadingSlice } from "@/ReduxToolKit/Reducers/Investigate/Reading";
+import type { ReadingSliceState } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 
 export default function ArticleContainer({ }) {
   const sources = useSelector((state: RootState) => state.userWork.sourcesToReview);
   const sourcesToDispatch = sources;
-  const { articles, failedNotifications, status }: ReadingSlice = useSelector((state: RootState) => state.investigation.read, shallowEqual);
+  const { articles, failedNotifications, status }: ReadingSliceState = useSelector((state: RootState) => state.investigation.read, shallowEqual);
   const firstRecordedSources = useRef<string>("");
   const dispatch = useDispatch();
   const showNotifications = useMemo((): boolean => {

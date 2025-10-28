@@ -6,10 +6,10 @@ import Article from "@/components/React/Shared/Articles/SuccessFull/containers/A
 import ArticleLoader from "@/components/React/Shared/Articles/loaders/ArticleLoader";
 import NoContent from "@/components/React/Shared/Articles/Failed/NoContent";
 import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary";
-import { ReadingSlice } from "@/ReduxToolKit/Reducers/Investigate/Reading";
+import { ReadingSliceState } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 
 export default function RenderArticles(): JSX.Element | null {
-    const { articles, currentStory, status }: ReadingSlice = useSelector((state: RootState) => state.investigation.read);
+    const { articles, currentStory, status }: ReadingSliceState = useSelector((state: RootState) => state.investigation.read);
     const canRender = Array.isArray(articles) && (articles.length > 0);
     const noResults = useMemo(() => {
         const failed: boolean = (status === 'fulfilled') && (Array.isArray(articles)) && (articles.length === 0);

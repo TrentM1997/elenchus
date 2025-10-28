@@ -1,7 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { progress } from 'framer-motion';
-import { act } from 'react';
 
 export interface Article {
     title: string,
@@ -63,7 +61,7 @@ export const runFirecrawlExtraction = createAsyncThunk<
     async (payload, thunkApi) => {
         const { signal, rejectWithValue } = thunkApi;
         const { articles } = payload;
-
+        const EXHAUSTED = articles.length;
         let jobId: string;
         try {
             const kickoffRes = await fetch('/firecrawl_extractions', {
@@ -128,6 +126,7 @@ export const runFirecrawlExtraction = createAsyncThunk<
                     thunkApi.dispatch(appendFailures(statusJson.result.rejected))
                 }
 
+
             } catch (err: any) {
                 return rejectWithValue(`Network error polling job: ${err.message}`);
             }
@@ -169,7 +168,6 @@ interface ReadingState {
     currentStory: number | null,
     reading: boolean | null,
     paginateLimit: boolean | null,
-    ContentStatus: 'idle' | 'pending' | 'fulfilled' | 'rejected',
     error: string | null;
     progress: Prog;
 };
@@ -183,7 +181,6 @@ const initialState: ReadingState = {
     currentStory: 0,
     reading: false,
     paginateLimit: false,
-    ContentStatus: 'idle',
     error: null,
     progress: '0'
 };
@@ -246,9 +243,7 @@ export const ReadingSlice = createSlice({
         limitPagination: (state, action) => {
             state.paginateLimit = action.payload
         },
-        restoreStatus: (state) => {
-            state.ContentStatus = 'idle';
-        },
+
         updateStatus: (state, action) => {
             state.status = action.payload;
         },
@@ -258,16 +253,10 @@ export const ReadingSlice = createSlice({
         builder
             .addCase(runFirecrawlExtraction.pending, (state) => {
                 state.status = 'pending';
-                state.error = null;
-                state.articles = null;
-                state.failedNotifications = [];
             })
             .addCase(runFirecrawlExtraction.fulfilled, (state, action) => {
                 state.status = 'fulfilled';
-                state.articles = action.payload.retrieved;
-                state.failedNotifications = action.payload.rejected;
                 state.progress = action.payload.progress;
-                state.error = null;
             })
             .addCase(runFirecrawlExtraction.rejected, (state, action) => {
                 state.status = 'rejected';
@@ -280,7 +269,7 @@ export const ReadingSlice = createSlice({
 });
 
 
-export type ReadingSlice = ReturnType<typeof ReadingSlice.reducer>;
+export type ReadingSliceState = ReturnType<typeof ReadingSlice.reducer>;
 
 export const {
     articleData,
@@ -294,7 +283,6 @@ export const {
     resetReadingSlice,
     closeNotification,
     limitPagination,
-    restoreStatus,
     appendArticles,
     appendFailures
 } = ReadingSlice.actions

@@ -1,10 +1,7 @@
 import { motion } from "framer-motion"
 import { createPortal } from "react-dom"
-import { displayArticleContent, displaySearch, displayReturnModal, displaySelectTooltip } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer"
-import { clearChosenArticles } from "@/ReduxToolKit/Reducers/Investigate/ChosenArticles"
+import { displayArticleContent, displaySearch, displayReturnModal } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer"
 import { useDispatch } from "react-redux"
-import { resetReadingSlice } from "@/ReduxToolKit/Reducers/Investigate/Reading"
-import { resetResults } from "@/ReduxToolKit/Reducers/Investigate/SearchResults"
 import { useEffect, useState } from "react";
 import { variants } from "@/motion/variants"
 import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary"
@@ -18,9 +15,6 @@ export function BackToSearch({ }) {
         dispatch(displayReturnModal(false));
         dispatch(displaySearch(true));
     };
-
-
-
 
 
     useEffect(() => {
