@@ -53,7 +53,7 @@ export default function WikiTermExtract({ article_url, data }: WikiTerm) {
             transition={{ type: "tween", duration: 0.2 }}
             className="w-[17rem] h-80 xl:w-80 lg:h-auto p-2 rounded-3xl  
             bg-black border border-border_gray z-30
-        flex flex-col items-center fixed lg:left-0.5 bottom-128 md:bottom-32 2xl:bottom-44"
+        flex flex-col items-center fixed lg:left-0.5 bottom-128 md:bottom-32 2xl:bottom-44 2xl:left-12"
         >
             <div
                 className="min-w-full max-w-full h-auto relative"

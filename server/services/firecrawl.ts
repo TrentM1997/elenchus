@@ -2,7 +2,8 @@ import type Firecrawl from "@mendable/firecrawl-js";
 import { TldrRequest } from '../types/types.js';
 import { getMediaBiases } from '../endpoints/mediaBias.js';
 import { cleanURL } from '../helpers/cleanUrl.js';
-import type { FailedAttempt, ScrapedArticle, Bias, FcParam } from '../types/types.js';
+import type { ScrapedArticle, Bias, FcParam } from '../types/types.js';
+import type { FailedAttempt } from "../types/types.js";
 import { toFailedAttempt } from "../endpoints/firecrawl_extractions.js";
 
 export interface FirecrawlContent {
@@ -31,7 +32,7 @@ interface BiasInfo {
 }
 type MBFC = Map<string, BiasInfo>
 
-export const firecrawlExtract = async (article: FcParam, failed: FailedAttempt[], firecrawl: Firecrawl, MBFC_DATA: MBFC, retrieved: ScrapedArticle[]): Promise<void> => {
+export const firecrawlExtract = async (article: FcParam, firecrawl: Firecrawl, MBFC_DATA: MBFC, pushRetrieved: (a: ScrapedArticle) => void, pushFailed: (f: FailedAttempt) => void): Promise<void> => {
 
 
     const urlClean = cleanURL(article.url);
@@ -53,7 +54,19 @@ export const firecrawlExtract = async (article: FcParam, failed: FailedAttempt[]
 
         const results = data as FirecrawlResponse;
         const content: FirecrawlContent = results.json;
-        const rating = MBFC_DATA.has(article.source) ? MBFC_DATA.get(article.source) : null
+        const rating = MBFC_DATA.has(article.source) ? MBFC_DATA.get(article.source) : null;
+
+        if (
+            !content ||
+            typeof content.content_markdown !== "string" ||
+            content.content_markdown.trim().length < 80
+        ) {
+            const failedArticle = toFailedAttempt(article, "empty or incomplete body");
+
+            pushFailed(failedArticle);
+            return;
+
+        }
 
 
         const article_extracted: ScrapedArticle = {
@@ -73,15 +86,13 @@ export const firecrawlExtract = async (article: FcParam, failed: FailedAttempt[]
             country: rating?.country
         };
 
-        retrieved.push(article_extracted);
-
+        pushRetrieved(article_extracted);
         return;
 
     } catch (error) {
-        console.log({ status: "firecrawl error encountered" });
         console.error(error);
         const failedArticle = toFailedAttempt(article, "scrape failed");
-        failed.push(failedArticle);
+        pushFailed(failedArticle);
         return;
     };
 };

@@ -9,7 +9,7 @@ export const schema = {
     },
     required: ["content_markdown"],
 };
-export const firecrawlExtract = async (article, failed, firecrawl, MBFC_DATA, retrieved) => {
+export const firecrawlExtract = async (article, firecrawl, MBFC_DATA, pushRetrieved, pushFailed) => {
     const urlClean = cleanURL(article.url);
     try {
         const data = await firecrawl.scrape(urlClean, {
@@ -26,6 +26,13 @@ export const firecrawlExtract = async (article, failed, firecrawl, MBFC_DATA, re
         const results = data;
         const content = results.json;
         const rating = MBFC_DATA.has(article.source) ? MBFC_DATA.get(article.source) : null;
+        if (!content ||
+            typeof content.content_markdown !== "string" ||
+            content.content_markdown.trim().length < 80) {
+            const failedArticle = toFailedAttempt(article, "empty or incomplete body");
+            pushFailed(failedArticle);
+            return;
+        }
         const article_extracted = {
             title: article.title,
             provider: article.source,
@@ -42,14 +49,13 @@ export const firecrawlExtract = async (article, failed, firecrawl, MBFC_DATA, re
             bias: rating?.bias,
             country: rating?.country
         };
-        retrieved.push(article_extracted);
+        pushRetrieved(article_extracted);
         return;
     }
     catch (error) {
-        console.log({ status: "firecrawl error encountered" });
         console.error(error);
         const failedArticle = toFailedAttempt(article, "scrape failed");
-        failed.push(failedArticle);
+        pushFailed(failedArticle);
         return;
     }
     ;

@@ -188,6 +188,8 @@ export interface FailedAttempt {
     article_url: string;
 };
 
+
+
 export interface TldrRequest {
     url: string,
     source: string,

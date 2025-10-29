@@ -15,10 +15,12 @@ import { ReadingSliceState } from "@/ReduxToolKit/Reducers/Investigate/Reading"
 
 export default function HeroContainer({
 }) {
+    const isMobile = useIsMobile();
     const [shouldMeasure, setShouldMeasure] = useState<boolean>(false);
     const [spacerHeight, setSpacerHeight] = useState<number | null>(80);
     const articles: ReadingSliceState = useSelector((state: RootState) => state.investigation.read.articles)
     const { showMindMap, showSearch, showWrapUp, showCompletion, showResults, showWorkModal } = useSelector((s: RootState) => s.investigation.display, shallowEqual);
+    const status = useSelector((s: RootState) => s.investigation.read.status);
     const heightRef = useRef(null);
     const showSpacerDiv = useMemo(() => {
         const hasRetrievedArticles: boolean = ((Array.isArray(articles)) && (articles.length > 0));
@@ -99,7 +101,7 @@ export default function HeroContainer({
                     style={{ height: spacerHeight, width: '100%' }}
                     className="flex items-center justify-center"
                 >
-                    <StoryPaginate />
+                    {isMobile && <StoryPaginate />}
                 </motion.div>
                 }
 

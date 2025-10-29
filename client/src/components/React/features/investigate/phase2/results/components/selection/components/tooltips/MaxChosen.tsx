@@ -18,7 +18,7 @@ function Maxchosen({ }: MaxChosen): JSX.Element | null {
             initial='closed'
             animate='open'
             exit='closed'
-            transition={{ type: 'tween', duration: 0.2, ease: [0.33, 0, 0.67, 1], delay: 0.2 }}
+            transition={{ type: 'tween', duration: 0.2, ease: [0.33, 0, 0.67, 1], delay: 0.5 }}
         >
 
             <div className="w-full flex flex-col items-center justify-center h-full p-2">

@@ -6,33 +6,31 @@ const __dirname = path.dirname(envUrl);
 const envPath = path.resolve(__dirname, '../.env');
 dotenv.config({ path: envPath });
 import Firecrawl from '@mendable/firecrawl-js';
+import { firecrawlExtract } from '../services/firecrawl.js';
 import { getMediaBiases } from './mediaBias.js';
 import { cleanURL } from '../helpers/cleanUrl.js';
-import { firecrawlExtract } from '../services/firecrawl.js';
-;
 const jobs = {};
+//───────────────────────────────
+// Helpers
+//───────────────────────────────
 export async function createFirecrawlClient() {
-    let firecrawl;
     try {
-        firecrawl = new Firecrawl({ apiKey: process.env.FIRECRAWL_KEY });
-        return firecrawl;
+        return new Firecrawl({ apiKey: process.env.FIRECRAWL_KEY });
     }
     catch (err) {
         console.error(err);
-        firecrawl = null;
+        return null;
     }
-    ;
-    return firecrawl;
 }
-;
 export function toFailedAttempt(a, reason) {
+    const cleaned = cleanURL(a.url);
     return {
         title: a.title,
         summary: [{ denied: reason, failedArticle: a.url }],
         logo: a.logo,
         source: a.source,
         date: a.date,
-        article_url: a.url,
+        article_url: cleaned,
     };
 }
 async function getBiasData(articles) {
@@ -40,36 +38,39 @@ async function getBiasData(articles) {
     const uniqueSources = Array.from(new Set(articles.map(a => a.source)));
     const lookups = uniqueSources.map(async (source) => {
         const rating = await getMediaBiases(source);
-        const normalized = {
-            bias: rating?.bias ?? null,
-            factual_reporting: rating?.factual_reporting ?? null,
-            country: rating?.country ?? null
+        return {
+            source,
+            normalized: {
+                bias: rating?.bias ?? null,
+                factual_reporting: rating?.factual_reporting ?? null,
+                country: rating?.country ?? null,
+            },
         };
-        return { source, normalized };
     });
     const results = await Promise.all(lookups);
-    for (const { source, normalized } of results) {
+    for (const { source, normalized } of results)
         biasRatings.set(source, normalized);
-    }
     return biasRatings;
 }
-;
+function reconcileFailed(retrieved, failed) {
+    const success = new Set(retrieved.map(r => cleanURL(r.article_url)));
+    for (let i = failed.length - 1; i >= 0; i--) {
+        if (success.has(cleanURL(failed[i].article_url)))
+            failed.splice(i, 1);
+    }
+}
 export const firecrawl_extractions = async (req, res) => {
     console.log('firecrawl endpoint hit');
     const { articles } = req.body;
     if (!articles || !Array.isArray(articles)) {
-        res.status(400).json({ error: "No articles received to scrape" });
+        res.status(400).json({ error: 'No articles received to scrape' });
         return;
     }
     const MBFC_DATA = await getBiasData(articles);
     const id = crypto.randomUUID();
     jobs[id] = {
         status: 'pending',
-        result: {
-            progress: `0/${articles.length}`,
-            retrieved: [],
-            rejected: []
-        },
+        result: { progress: `0/${articles.length}`, retrieved: [], rejected: [] },
         error: null,
         createdAt: Date.now(),
     };
@@ -80,65 +81,55 @@ export const firecrawl_extractions = async (req, res) => {
         try {
             const firecrawl = await createFirecrawlClient();
             if (!firecrawl) {
-                articles.forEach((art) => {
-                    const failedItem = toFailedAttempt(art, "Could not connect to firecrawl");
-                    failed.push(failedItem);
-                });
+                for (const art of articles)
+                    failed.push(toFailedAttempt(art, 'Could not connect to Firecrawl'));
                 jobs[id] = {
                     status: 'rejected',
-                    result: {
-                        progress: 'Unexpected error: extraction failed',
-                        rejected: failed,
-                        retrieved: []
-                    },
+                    result: { progress: 'connection failed', retrieved: [], rejected: failed },
                     error: "Couldn't connect to Firecrawl",
                     createdAt: jobs[id]?.createdAt ?? Date.now(),
                 };
                 return;
             }
-            const CHUNK_SIZE = 1;
-            const chunks = [];
-            for (let i = 0; i < articles.length; i += CHUNK_SIZE) {
-                const batch = articles.slice(i, i + CHUNK_SIZE);
-                chunks.push(batch);
+            const TIMEOUT_MS = 15000;
+            const inFlight = [];
+            const updateJobSnapshot = () => {
+                const prog = retrieved.length + failed.length;
+                jobs[id] = {
+                    ...jobs[id],
+                    result: {
+                        retrieved: [...retrieved],
+                        rejected: [...failed],
+                        progress: `${prog}/${articles.length}`,
+                    },
+                };
+            };
+            const pushRetrieved = (a) => {
+                retrieved.push(a);
+                updateJobSnapshot();
+            };
+            const pushFailed = (f) => {
+                failed.push(f);
+                updateJobSnapshot();
+            };
+            for (const article of articles) {
+                const scrapeJob = firecrawlExtract(article, firecrawl, MBFC_DATA, pushRetrieved, pushFailed);
+                const result = await Promise.race([
+                    scrapeJob.then(() => ({ timedOut: false })),
+                    new Promise((resolve) => setTimeout(() => resolve({ timedOut: true }), TIMEOUT_MS)),
+                ]);
+                if (result.timedOut)
+                    inFlight.push(scrapeJob);
             }
-            for (let i = 0; i < chunks.length; i++) {
-                const chunk = chunks[i];
-                try {
-                    await Promise.race([
-                        firecrawlExtract(chunk[0], failed, firecrawl, MBFC_DATA, retrieved),
-                        new Promise((_, reject) => setTimeout(() => reject(new Error('Chunk timed out')), 40000)),
-                    ]);
-                    const successUrls = new Set(retrieved.map(r => r.article_url));
-                    for (let i = failed.length - 1; i >= 0; i--) {
-                        if (successUrls.has(cleanURL(failed[i].article_url))) {
-                            failed.splice(i, 1);
-                        }
-                    }
-                    const prog = (retrieved.length + failed.length);
-                    jobs[id] = {
-                        ...jobs[id],
-                        result: {
-                            retrieved: [...retrieved],
-                            rejected: [...failed],
-                            progress: `${prog}/${chunks.length}`,
-                        },
-                    };
-                }
-                catch (chunkErr) {
-                    console.warn(`Chunk ${i + 1} failed:`, chunkErr);
-                    chunk.forEach((c) => {
-                        const item = toFailedAttempt(c, "error during extraction");
-                        failed.push(item);
-                    });
-                }
-            }
+            await Promise.allSettled(inFlight);
+            reconcileFailed(retrieved, failed);
+            console.log({ retrievedLength: retrieved.length, failedLength: failed.length });
             jobs[id] = {
                 status: 'fulfilled',
                 result: {
-                    progress: `${chunks.length}/${chunks.length}`,
-                    retrieved: retrieved,
-                    rejected: failed
+                    progress: `${articles.length}/${articles.length}`,
+                    retrieved: [...retrieved],
+                    rejected: [...failed],
                 },
                 error: null,
                 createdAt: jobs[id]?.createdAt ?? Date.now(),
@@ -152,7 +143,7 @@ export const firecrawl_extractions = async (req, res) => {
                 result: {
                     progress: 'Unexpected error: extraction failed',
                     rejected: failed,
-                    retrieved: retrieved
+                    retrieved,
                 },
                 error: err?.message ?? 'Internal server error',
                 createdAt: jobs[id]?.createdAt ?? Date.now(),
@@ -167,6 +158,7 @@ export const get_firecrawl_job = (req, res) => {
         res.status(404).json({ status: 'unknown', error: 'Job not found' });
         return;
     }
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
     res.status(200).json(job);
 };
 //# sourceMappingURL=firecrawl_extractions.js.map
