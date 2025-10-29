@@ -97,7 +97,12 @@ export const runFirecrawlExtraction = createAsyncThunk<
             let statusJson: FirecrawlJobStatus;
 
             try {
-                const statusRes = await fetch(pollEndpoint, { signal, method: 'GET' });
+                const statusRes = await fetch(pollEndpoint, {
+                    signal,
+                    method: 'GET',
+                    cache: 'no-store',
+                    headers: { 'Cache-Control': 'no-cache' },
+                });
 
                 if (statusRes.status === 404) {
                     return rejectWithValue('Job not found or expired.');
@@ -147,7 +152,7 @@ export const runFirecrawlExtraction = createAsyncThunk<
                 );
             }
 
-            await pollDelay(1500);
+            await pollDelay(1000);
         }
     }
 );
@@ -197,19 +202,26 @@ export const ReadingSlice = createSlice({
         appendArticles: (state, action: PayloadAction<Article[]>) => {
             const nextBatch = action.payload;
             for (const batchItem of nextBatch) {
+                const url = batchItem.article_url
                 const already = state.articles.find(a => a.article_url === batchItem.article_url);
                 if (!already) {
                     state.articles.push(batchItem);
+                };
+
+                const index = state.failedNotifications.findIndex(f => f.article_url === url);
+                if (index !== -1) {
+                    state.failedNotifications.splice(index, 1);
                 }
             }
         },
         appendFailures: (state, action: PayloadAction<FailedAttempt[]>) => {
             const nextBatch = action.payload;
-            for (const item of nextBatch) {
-                const pre_existing = state.failedNotifications.find((i => i.article_url === item.article_url));
-                if (!pre_existing) {
-                    state.failedNotifications.push(item);
-                };
+            for (const f of nextBatch) {
+                const url = f.article_url;
+                if (state.articles.some(a => a.article_url === url)) continue;
+                if (!state.failedNotifications.some(x => x.article_url === url)) {
+                    state.failedNotifications.push(f);
+                }
             }
         },
         articleData: (state, action) => {
