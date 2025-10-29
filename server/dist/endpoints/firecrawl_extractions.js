@@ -110,7 +110,7 @@ export const firecrawl_extractions = async (req, res) => {
                 try {
                     await Promise.race([
                         firecrawlBatchScrape(firecrawl, chunk, failed, MBFC_DATA, retrieved),
-                        new Promise((_, reject) => setTimeout(() => reject(new Error('Chunk timed out')), 20000)),
+                        new Promise((_, reject) => setTimeout(() => reject(new Error('Chunk timed out')), 40000)),
                     ]);
                     const successUrls = new Set(retrieved.map(r => r.article_url));
                     //walk backwards to remove any urls that actually succeeded
@@ -119,12 +119,13 @@ export const firecrawl_extractions = async (req, res) => {
                             failed.splice(i, 1);
                         }
                     }
+                    const prog = (retrieved.length + failed.length);
                     jobs[id] = {
                         ...jobs[id],
                         result: {
                             retrieved: [...retrieved],
                             rejected: [...failed],
-                            progress: `${i + 1}/${chunks.length}`,
+                            progress: `${prog}/${chunks.length}`,
                         },
                     };
                 }

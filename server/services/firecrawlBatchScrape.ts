@@ -4,6 +4,7 @@ import type { FailedAttempt, ScrapedArticle, Bias, FcParam } from '../types/type
 import { toFailedAttempt } from "../endpoints/firecrawl_extractions.js";
 import type { BatchScrapeJob } from "@mendable/firecrawl-js";
 import { stripVideo } from "../helpers/stripVideo.js";
+import { cleanMarkdownArticle } from "../helpers/cleanMarkdown.js";
 
 export interface BatchItem {
     url: string,
@@ -85,18 +86,16 @@ export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcPar
         }
 
         for (let index = 0; index < urls.length; index++) {
-            const url = urls[index];
 
             const item = batchJob?.data?.[index] as BatchItem | undefined;
+            const url = cleanURL(item?.url ?? urls[index]);
 
             if (!item) {
                 continue;
             };
 
             const markdown = item?.markdown ?? "";
-            const markdown_content = markdown ? stripVideo(markdown) : markdown;
-
-
+            const markdown_content = markdown ? cleanMarkdownArticle(markdown) : markdown;
 
             const currArticle = articles.find((article: FcParam) => {
                 const cleanedLink: string = cleanURL(article.url);

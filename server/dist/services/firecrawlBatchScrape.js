@@ -1,6 +1,6 @@
 import { cleanURL } from '../helpers/cleanUrl.js';
 import { toFailedAttempt } from "../endpoints/firecrawl_extractions.js";
-import { stripVideo } from "../helpers/stripVideo.js";
+import { cleanMarkdownArticle } from "../helpers/cleanMarkdown.js";
 ;
 const excluded_tags = [
     // multimedia / ads
@@ -50,14 +50,14 @@ export async function firecrawlBatchScrape(firecrawl, articles, failed, MBFC_DAT
             return;
         }
         for (let index = 0; index < urls.length; index++) {
-            const url = urls[index];
             const item = batchJob?.data?.[index];
+            const url = cleanURL(item?.url ?? urls[index]);
             if (!item) {
                 continue;
             }
             ;
             const markdown = item?.markdown ?? "";
-            const markdown_content = markdown ? stripVideo(markdown) : markdown;
+            const markdown_content = markdown ? cleanMarkdownArticle(markdown) : markdown;
             const currArticle = articles.find((article) => {
                 const cleanedLink = cleanURL(article.url);
                 const item = cleanedLink === url;
