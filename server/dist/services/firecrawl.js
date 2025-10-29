@@ -1,73 +1,56 @@
-import * as path from 'path';
-import { fileURLToPath } from 'url';
-const envUrl = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(envUrl);
-const envPath = path.resolve(__dirname, '../../.env');
-import { FIRECRAWL_KEY } from '../src/Config.js';
-import Firecrawl from "@mendable/firecrawl-js";
-import { getMediaBiases } from '../endpoints/mediaBias.js';
 import { cleanURL } from '../helpers/cleanUrl.js';
+import { toFailedAttempt } from "../endpoints/firecrawl_extractions.js";
+;
 ;
 export const schema = {
     type: "object",
     properties: {
-        title: { type: "string" },
-        author: { type: "string" },
-        publishedDate: { type: "string" },
-        source: { type: "string" },
         content_markdown: { type: "string" },
-        imageUrl: { type: "string" },
     },
-    required: ["title", "source", "content"],
+    required: ["content_markdown"],
 };
-export const firecrawlExtract = async (article, failed) => {
-    const firecrawl = new Firecrawl({
-        apiKey: FIRECRAWL_KEY
-    });
-    const santizedSource = article.source.trim();
-    const biasRatings = await getMediaBiases(santizedSource);
+export const firecrawlExtract = async (article, failed, firecrawl, MBFC_DATA, retrieved) => {
     const urlClean = cleanURL(article.url);
     try {
         const data = await firecrawl.scrape(urlClean, {
+            onlyMainContent: true,
+            blockAds: true,
+            maxAge: 31_536_000_000, // 1 year in ms
+            waitFor: 1500,
             formats: [{
                     type: "json",
                     schema: schema,
-                    prompt: "Provide the main article body as markdown, preserving paragraphs, headings, and bullet lists."
+                    prompt: "Extract ONLY the main article body. Return it as markdown in content_markdown. Preserve paragraph breaks, headings, bullet lists, and quoted passages. Exclude navigation menus, cookie notices, paywall blurbs, newsletter signups, and unrelated promos."
                 }],
         });
         const results = data;
         const content = results.json;
+        const rating = MBFC_DATA.has(article.source) ? MBFC_DATA.get(article.source) : null;
         const article_extracted = {
             title: article.title,
             provider: article.source,
-            authors: content?.author ?? null,
+            authors: "N/A",
             article_url: urlClean,
-            image_url: content?.imageUrl ?? article.image,
-            date_published: article.date ?? content?.publishedDate,
+            image_url: article.image,
+            date_published: article.date ?? null,
             fallbackDate: article?.date ?? null,
             summary: null,
             full_text: content?.content_markdown,
             logo: article.logo,
             id: null,
-            factual_reporting: biasRatings?.factual_reporting,
-            bias: biasRatings?.bias,
-            country: biasRatings?.country ?? null
+            factual_reporting: rating?.factual_reporting,
+            bias: rating?.bias,
+            country: rating?.country
         };
-        return article_extracted;
+        retrieved.push(article_extracted);
+        return;
     }
     catch (error) {
         console.log({ status: "firecrawl error encountered" });
         console.error(error);
-        const failedArticle = {
-            title: article.title,
-            summary: [{ denied: 'We were denied access to the article from', failedArticle: `${article.source} - ${article.title}` }],
-            logo: article.logo,
-            source: article.source,
-            date: article.date,
-            article_url: article.url,
-        };
+        const failedArticle = toFailedAttempt(article, "scrape failed");
         failed.push(failedArticle);
-        return null;
+        return;
     }
     ;
 };

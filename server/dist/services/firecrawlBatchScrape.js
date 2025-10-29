@@ -1,6 +1,5 @@
 import { cleanURL } from '../helpers/cleanUrl.js';
 import { toFailedAttempt } from "../endpoints/firecrawl_extractions.js";
-import { cleanMarkdownArticle } from "../helpers/cleanMarkdown.js";
 ;
 const excluded_tags = [
     // multimedia / ads
@@ -36,11 +35,20 @@ export async function firecrawlBatchScrape(firecrawl, articles, failed, MBFC_DAT
     try {
         const batchJob = await firecrawl.batchScrape(urls, {
             options: {
+                maxAge: 31_536_000_000,
                 waitFor: 1500,
                 excludeTags: excluded_tags,
                 blockAds: true,
                 onlyMainContent: true,
-                formats: ["markdown"]
+                formats: [{
+                        type: 'json',
+                        schema: {
+                            type: 'object',
+                            properties: {
+                                content: { type: 'markdown' }
+                            }
+                        }
+                    }]
             }
         });
         if ((batchJob.status === 'failed') || (!Array.isArray(batchJob.data))) {
@@ -57,13 +65,12 @@ export async function firecrawlBatchScrape(firecrawl, articles, failed, MBFC_DAT
             }
             ;
             const markdown = item?.markdown ?? "";
-            const markdown_content = markdown ? cleanMarkdownArticle(markdown) : markdown;
             const currArticle = articles.find((article) => {
                 const cleanedLink = cleanURL(article.url);
                 const item = cleanedLink === url;
                 return item ?? null;
             });
-            if (!markdown_content) {
+            if (!markdown) {
                 const failedscrape = toFailedAttempt(currArticle, "Content may be paywalled");
                 failed.push(failedscrape);
                 continue;
@@ -95,7 +102,7 @@ export async function firecrawlBatchScrape(firecrawl, articles, failed, MBFC_DAT
                     date_published: currArticle?.date ?? "Date of publication unavailable: visit source for date",
                     fallbackDate: currArticle?.date ?? null,
                     summary: null,
-                    full_text: markdown_content ?? "Failed to retrieve article content",
+                    full_text: markdown ?? "Failed to retrieve article content",
                     logo: currArticle?.logo,
                     id: null,
                     factual_reporting: rating?.factual_reporting,

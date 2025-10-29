@@ -5,10 +5,10 @@ const envUrl = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(envUrl);
 const envPath = path.resolve(__dirname, '../.env');
 dotenv.config({ path: envPath });
-import { firecrawlBatchScrape } from '../services/firecrawlBatchScrape.js';
 import Firecrawl from '@mendable/firecrawl-js';
 import { getMediaBiases } from './mediaBias.js';
 import { cleanURL } from '../helpers/cleanUrl.js';
+import { firecrawlExtract } from '../services/firecrawl.js';
 ;
 const jobs = {};
 export async function createFirecrawlClient() {
@@ -37,9 +37,7 @@ export function toFailedAttempt(a, reason) {
 }
 async function getBiasData(articles) {
     const biasRatings = new Map();
-    // First, dedupe sources so we don't ask MBFC 5 times for "CNN"
     const uniqueSources = Array.from(new Set(articles.map(a => a.source)));
-    // Kick off all the lookups in parallel, one per unique source
     const lookups = uniqueSources.map(async (source) => {
         const rating = await getMediaBiases(source);
         const normalized = {
@@ -49,14 +47,13 @@ async function getBiasData(articles) {
         };
         return { source, normalized };
     });
-    // Wait for them all together
     const results = await Promise.all(lookups);
-    // Fill the map
     for (const { source, normalized } of results) {
         biasRatings.set(source, normalized);
     }
     return biasRatings;
 }
+;
 export const firecrawl_extractions = async (req, res) => {
     console.log('firecrawl endpoint hit');
     const { articles } = req.body;
@@ -109,11 +106,10 @@ export const firecrawl_extractions = async (req, res) => {
                 const chunk = chunks[i];
                 try {
                     await Promise.race([
-                        firecrawlBatchScrape(firecrawl, chunk, failed, MBFC_DATA, retrieved),
+                        firecrawlExtract(chunk[0], failed, firecrawl, MBFC_DATA, retrieved),
                         new Promise((_, reject) => setTimeout(() => reject(new Error('Chunk timed out')), 40000)),
                     ]);
                     const successUrls = new Set(retrieved.map(r => r.article_url));
-                    //walk backwards to remove any urls that actually succeeded
                     for (let i = failed.length - 1; i >= 0; i--) {
                         if (successUrls.has(cleanURL(failed[i].article_url))) {
                             failed.splice(i, 1);

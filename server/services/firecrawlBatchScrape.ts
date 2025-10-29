@@ -3,8 +3,6 @@ import { cleanURL } from '../helpers/cleanUrl.js';
 import type { FailedAttempt, ScrapedArticle, Bias, FcParam } from '../types/types.js';
 import { toFailedAttempt } from "../endpoints/firecrawl_extractions.js";
 import type { BatchScrapeJob } from "@mendable/firecrawl-js";
-import { stripVideo } from "../helpers/stripVideo.js";
-import { cleanMarkdownArticle } from "../helpers/cleanMarkdown.js";
 
 export interface BatchItem {
     url: string,
@@ -69,11 +67,20 @@ export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcPar
 
         const batchJob: BatchScrapeJob = await firecrawl.batchScrape(urls, {
             options: {
+                maxAge: 31_536_000_000,
                 waitFor: 1500,
                 excludeTags: excluded_tags,
                 blockAds: true,
                 onlyMainContent: true,
-                formats: ["markdown"]
+                formats: [{
+                    type: 'json',
+                    schema: {
+                        type: 'object',
+                        properties: {
+                            content: { type: 'markdown' }
+                        }
+                    }
+                }]
             }
         }
         );
@@ -95,7 +102,7 @@ export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcPar
             };
 
             const markdown = item?.markdown ?? "";
-            const markdown_content = markdown ? cleanMarkdownArticle(markdown) : markdown;
+
 
             const currArticle = articles.find((article: FcParam) => {
                 const cleanedLink: string = cleanURL(article.url);
@@ -103,7 +110,7 @@ export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcPar
                 return item ?? null
             }) as FcParam;
 
-            if (!markdown_content) {
+            if (!markdown) {
                 const failedscrape = toFailedAttempt(currArticle, "Content may be paywalled");
                 failed.push(failedscrape);
                 continue;
@@ -138,7 +145,7 @@ export async function firecrawlBatchScrape(firecrawl: Firecrawl, articles: FcPar
                     date_published: currArticle?.date ?? "Date of publication unavailable: visit source for date",
                     fallbackDate: currArticle?.date ?? null,
                     summary: null,
-                    full_text: markdown_content ?? "Failed to retrieve article content",
+                    full_text: markdown ?? "Failed to retrieve article content",
                     logo: currArticle?.logo,
                     id: null,
                     factual_reporting: rating?.factual_reporting,
