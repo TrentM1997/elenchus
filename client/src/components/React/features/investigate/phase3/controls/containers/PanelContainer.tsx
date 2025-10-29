@@ -4,12 +4,14 @@ import { RootState } from "@/ReduxToolKit/store";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import ControlPanel from "../../components/ControlPanel";
 import StoryPaginate from "../../buttons/StoryPaginate";
+import { ReadingSliceState } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 
 export default function PanelContainer() {
     const investigateState = useSelector((state: RootState) => state.investigation)
     const { showContent } = investigateState.display
-    const { articles, status } = investigateState.read
+    const { articles, status, failedNotifications }: ReadingSliceState = investigateState.read
     const isMobile = useIsMobile();
+    const renderControlPanel = (Array.isArray(articles) && (articles.length > 0) || ((status === 'fulfilled') && (Array.isArray(failedNotifications)) && (failedNotifications.length > 0)))
 
     return (
         <AnimatePresence>
@@ -21,8 +23,8 @@ export default function PanelContainer() {
                     transition={{ type: 'tween', duration: 0.2 }}
                     className="w-full h-auto relative mx-auto"
                 >
-                    {showContent &&
-                        (Array.isArray(articles) && (articles.length > 0)) &&
+                    {renderControlPanel &&
+
                         <ControlPanel />
                     }
                     {(!isMobile) && (status === 'fulfilled') &&

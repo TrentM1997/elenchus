@@ -19,7 +19,6 @@ export default function RenderArticles(): JSX.Element | null {
         return failed;
     }, [status, articles]);
 
-    console.log(articles.length);
 
     useEffect(() => {
         if (showPendingExtractions || noResults) return;

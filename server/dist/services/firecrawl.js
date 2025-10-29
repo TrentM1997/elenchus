@@ -15,7 +15,7 @@ export const firecrawlExtract = async (article, firecrawl, MBFC_DATA, pushRetrie
         const data = await firecrawl.scrape(urlClean, {
             onlyMainContent: true,
             blockAds: true,
-            maxAge: 31_536_000_000, // 1 year in ms
+            maxAge: 31449600000, // 1 year in ms
             waitFor: 1500,
             formats: [{
                     type: "json",
