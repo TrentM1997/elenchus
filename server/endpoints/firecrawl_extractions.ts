@@ -97,7 +97,6 @@ export const firecrawl_extractions = async (req: Request, res: Response): Promis
         return;
     }
 
-    const MBFC_DATA = await getBiasData(articles);
     const id = crypto.randomUUID();
 
     jobs[id] = {
@@ -108,6 +107,8 @@ export const firecrawl_extractions = async (req: Request, res: Response): Promis
     };
 
     res.status(202).json({ jobId: id });
+
+    const MBFC_DATA = await getBiasData(articles);
 
     (async () => {
         const failed: FailedAttempt[] = [];

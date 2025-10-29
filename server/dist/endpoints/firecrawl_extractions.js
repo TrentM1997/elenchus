@@ -66,7 +66,6 @@ export const firecrawl_extractions = async (req, res) => {
         res.status(400).json({ error: 'No articles received to scrape' });
         return;
     }
-    const MBFC_DATA = await getBiasData(articles);
     const id = crypto.randomUUID();
     jobs[id] = {
         status: 'pending',
@@ -75,6 +74,7 @@ export const firecrawl_extractions = async (req, res) => {
         createdAt: Date.now(),
     };
     res.status(202).json({ jobId: id });
+    const MBFC_DATA = await getBiasData(articles);
     (async () => {
         const failed = [];
         const retrieved = [];
