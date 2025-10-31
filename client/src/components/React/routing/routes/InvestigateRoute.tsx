@@ -5,14 +5,24 @@ import { AppDispatch } from "@/ReduxToolKit/store";
 import InvestigationWorkSpace from "@/components/React/features/investigate/InvestigationWorkSpace";
 import { displaySelectTooltip } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer";
 import { useBodyLock } from "@/hooks/useBodyLock";
-import React from "react";
 
 
-const PLAYSTATE_KEYS = [
+export const PLAYSTATE_KEYS = [
   'previous-biases',
   'previous-perspective',
   'previous-expertise',
 ];
+
+export function clearCachedPlayStates(keys: Array<string>) {
+  try {
+    for (const k of keys) {
+      sessionStorage.removeItem(k)
+
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
 
 export default function InvestigateContainer() {
   const dispatch = useDispatch<AppDispatch>()
@@ -39,16 +49,7 @@ export default function InvestigateContainer() {
     };
   };
 
-  function clearCachedPlayStates(keys: Array<string>) {
-    try {
-      for (const k of keys) {
-        sessionStorage.removeItem(k)
 
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
 
   useEffect(() => {

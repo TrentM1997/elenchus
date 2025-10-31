@@ -2,27 +2,29 @@ import { RootState } from "@/ReduxToolKit/store"
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { displayWorkModal } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer"
-import { PreviousWork } from "../modals/PreviousWork"
+import { PreviousWork } from "../modals/PreviousWork";
+import { clearCachedPlayStates } from "@/components/React/routing/routes/InvestigateRoute";
+import { PLAYSTATE_KEYS } from "@/components/React/routing/routes/InvestigateRoute";
 
 export default function InvestigateMore() {
     const [open, setOpen] = useState<boolean>(false)
-    const id = useSelector((state: RootState) => state.auth.user_id)
+    const activeSession = useSelector((state: RootState) => state.auth.activeSession);
     const saved = useSelector((state: RootState) => state.saveResearch.saved)
     const dispatch = useDispatch()
 
 
     const showModal = () => {
-
-        if (saved && id) {
-            dispatch({ type: 'clear' })
-        } else if (id && !saved) {
+        if (saved && activeSession) {
+            dispatch({ type: 'clear' });
+            clearCachedPlayStates(PLAYSTATE_KEYS);
+        } else if (activeSession && !saved) {
             displayWorkModal(true)
             setOpen(true)
-        } else if (!id) {
-            dispatch({ type: 'clear' })
+        } else if (!activeSession) {
+            dispatch({ type: 'clear' });
+            clearCachedPlayStates(PLAYSTATE_KEYS);
         }
-
-    }
+    };
 
 
 
