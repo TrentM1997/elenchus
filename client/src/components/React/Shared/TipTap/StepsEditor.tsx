@@ -8,7 +8,7 @@ import EditorControls from "./EditorControls";
 import { useEffect, useRef } from "react";
 import React from "react";
 
-function StepsEditor({ setterFunction, context }: TipTapProps): JSX.Element | null {
+export default function StepsEditor({ setterFunction, context, id }: TipTapProps): JSX.Element | null {
     const dispatch = useDispatch<AppDispatch>();
     const step = useSelector((state: RootState) => state.investigation.stepper.step);
     const draftRef = useRef<string | null>(null);
@@ -70,8 +70,11 @@ function StepsEditor({ setterFunction, context }: TipTapProps): JSX.Element | nu
     }
 
     return (
-        <div className="w-full max-w-168 2xl:h-[16.5rem] xl:h-[15rem] lg:h-[14.5rem] md:h-52 sm:h-44 h-36
-         box-border mx-auto">
+        <div className={`${(id === 'takeaway') ? 'h-full' : '2xl:max-h-[16.5rem] xl:h-[15rem] lg:h-[14.5rem] md:h-52 sm:h-44 h-36'}
+            w-full max-w-168
+         box-border mx-auto`
+        }
+        >
             <EditorControls editor={editor} />
             <div onClick={handleContainerClick} className="h-full w-full box-border max-w-80 md:max-w-full overflow-hidden">
                 <EditorContent style={{ textAlign: 'left', verticalAlign: 'top', minHeight: '90%', height: '100%', color: '#ffffff', maxWidth: '100%' }} editor={editor}
@@ -86,5 +89,3 @@ function StepsEditor({ setterFunction, context }: TipTapProps): JSX.Element | nu
     )
 };
 
-
-export default React.memo(StepsEditor);

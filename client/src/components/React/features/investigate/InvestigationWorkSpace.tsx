@@ -76,6 +76,8 @@ function InvestigationWorkSpace() {
             >
                 <Content />
             </Suspense>
+
+
             <PanelContainer key='control-panel-container' />
 
             <AnimatePresence>

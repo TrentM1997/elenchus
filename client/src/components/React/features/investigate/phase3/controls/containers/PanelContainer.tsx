@@ -7,11 +7,10 @@ import StoryPaginate from "../../buttons/StoryPaginate";
 import { ReadingSliceState } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 
 export default function PanelContainer() {
-    const investigateState = useSelector((state: RootState) => state.investigation)
-    const { showContent } = investigateState.display
-    const { articles, status, failedNotifications }: ReadingSliceState = investigateState.read
+    const showContent = useSelector((state: RootState) => state.investigation.display.showContent);
+    const { articles, status }: ReadingSliceState = useSelector((state: RootState) => state.investigation.read);
     const isMobile = useIsMobile();
-    const renderControlPanel = (Array.isArray(articles) && (articles.length > 0) || ((status === 'fulfilled') && (Array.isArray(failedNotifications)) && (failedNotifications.length > 0)))
+    const renderControlPanel = (Array.isArray(articles) && (articles.length > 0) || ((status === 'fulfilled')));
 
     return (
         <AnimatePresence>

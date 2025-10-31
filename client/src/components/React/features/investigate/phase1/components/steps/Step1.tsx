@@ -42,7 +42,7 @@ function Step1() {
                   <div
                         className={`w-full max-w-full overflow-hidden grow-0 max-h-full min-h-44
                         pb-8 sm:pb-7 box-border relative`}>
-                        <StepsEditor context={chosenTake} setterFunction={getIdea} />
+                        <StepsEditor id="step1" context={chosenTake} setterFunction={getIdea} />
                         <Requirements acceptInput={status} />
                   </div>
             </motion.div>

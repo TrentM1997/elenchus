@@ -241,7 +241,8 @@ declare global {
 
   interface TipTapProps {
     context: string | null,
-    setterFunction: any
+    setterFunction: any,
+    id?: 'takeaway' | 'step1' | 'step4'
   }
 
   interface AuthStatus {

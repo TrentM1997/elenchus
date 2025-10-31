@@ -56,8 +56,8 @@ function OptionalTakeaway({ newPOV, takeAway, getTakeAways }: OptionalTakeawayPr
                 </div>
             </header>
             <main className="xs:w-full xs:h-auto mx-auto mb-4">
-                <div className="w-full xs:h-32 sm:h-36 2xl:h-52 bg-white/10 rounded-lg">
-                    <StepsEditor context={takeAway} setterFunction={getTakeAways} />
+                <div className="w-full xs:h-32 sm:h-36 xl:h-44 2xl:h-52 bg-white/10 rounded-lg">
+                    <StepsEditor id="takeaway" context={takeAway} setterFunction={getTakeAways} />
                 </div>
             </main>
         </>
