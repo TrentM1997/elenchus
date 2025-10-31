@@ -78,9 +78,8 @@ export default function HeroContainer({
                         ref={heightRef}
                         key='Search'
                         initial={{ opacity: 0 }}
-                        animate={{ opacity: 1, transition: { type: 'tween', duration: 0.2, delay: 0.5 } }}
-                        exit={{ opacity: 0 }}
-                        transition={{ type: 'tween', duration: 0.2 }}
+                        animate={{ opacity: 1, transition: { type: 'tween', duration: 0.2, delay: 0.5, ease: softEase } }}
+                        exit={{ opacity: 0, transition: { type: 'tween', duration: 0.2, delay: 0, ease: softEase } }}
                         className={`w-full h-auto mx-auto relative`}
                         onAnimationComplete={() => {
                             setShouldMeasure(true)
