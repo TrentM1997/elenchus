@@ -3,7 +3,6 @@ const ArticleLink = lazy(() => import('../../results/components/links/ArticleLin
 import { Suspense } from "react";
 import LinkPlaceholder from "../../search/components/loaders/LinkPlaceholder";
 import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback";
-import ScrolltoTop from "@/helpers/ScrollToTop";
 import type { RootState } from "@/ReduxToolKit/store";
 import type { AppDispatch } from "@/ReduxToolKit/store";
 import { useSelector, useDispatch } from "react-redux";

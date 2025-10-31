@@ -83,7 +83,7 @@ function reconcileFailed(retrieved: ScrapedArticle[], failed: FailedAttempt[]) {
     for (let i = failed.length - 1; i >= 0; i--) {
         if (success.has(cleanURL(failed[i].article_url))) failed.splice(i, 1);
     }
-}
+};
 
 
 type ReqBody = { articles: FcParam[] };
@@ -101,7 +101,11 @@ export const firecrawl_extractions = async (req: Request, res: Response): Promis
 
     jobs[id] = {
         status: 'pending',
-        result: { progress: `0/${articles.length}`, retrieved: [], rejected: [] },
+        result: {
+            progress: `0/${articles.length}`,
+            retrieved: [],
+            rejected: []
+        },
         error: null,
         createdAt: Date.now(),
     };

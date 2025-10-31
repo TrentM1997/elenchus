@@ -7,10 +7,8 @@ import Step4 from "./Step4";
 import Step5 from "./Step5";
 import { RootState } from "@/ReduxToolKit/store";
 
-export default function Stepper() {
-    const investigateState = useSelector((state: RootState) => state.investigation)
-    const { stepper } = investigateState
-    const { step } = stepper
+export default function Stepper(): JSX.Element | null {
+    const step: number = useSelector((state: RootState) => state.investigation.stepper.step);
 
     return (
         <div className="grow h-44 sm:h-52 2xl:h-72
