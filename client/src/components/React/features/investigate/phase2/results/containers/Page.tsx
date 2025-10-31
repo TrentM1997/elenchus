@@ -25,7 +25,7 @@ export default function Page({ index }: Page): JSX.Element | null {
         const dataForServer: SelectedArticle = {
             url: article.url,
             source: article.provider,
-            date: article.article_pub_date,
+            date: article.date_published,
             logo: article.logo,
             title: article.name,
             image: article.image.img

@@ -46,7 +46,7 @@ declare global {
   }
 
   interface ArticleType {
-    article_pub_date: string,
+    date_published: string,
     description: string,
     image: Image
     keywords: string[]
