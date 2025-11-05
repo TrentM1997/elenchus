@@ -50,7 +50,7 @@ export default function ConfirmNewPassword({ acceptedInput, canSubmit, setCanSub
                 <div className="relative w-full h-auto">
                     <input onChange={(e) => handleSecondEntry(e)} id="confirm_password" name="password" type={showPassword ? 'text' : 'password'} placeholder="Retype password here..." autoComplete="current-password"
                         className={`block w-full px-3 py-3 border-2 rounded-xl appearance-none text-white placeholder-black/50 bg-white/5 focus:bg-black
-        focus:bg-transparent focus:outline-none focus:ring-black text-xs sm:text-sm placeholder-zinc-500 h-10
+        focus:bg-transparent focus:outline-none focus:ring-black text-base placeholder-zinc-500 h-10
         ${canSubmit === false && 'border-red-500 focus:border-red-500'}
         ${canSubmit === true && 'border-green-500 focus:border-green-500'}
          ${canSubmit === null && 'focus:border-white/5 '}

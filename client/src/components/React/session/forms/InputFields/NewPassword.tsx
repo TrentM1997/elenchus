@@ -50,7 +50,7 @@ export default function NewPassword({ acceptedInput, canSubmit, handlePassword, 
                 <div className="relative w-full h-auto">
                     <input onChange={(e) => handlePassword(e)} id="password" name="password" type={showPassword ? 'text' : 'password'} placeholder="Type password here..." autoComplete="current-password"
                         className={`block w-full px-3 py-3 border-2 rounded-xl appearance-none text-white placeholder-black/50 bg-white/5 focus:border-white/5 focus:bg-black
-                        focus:outline-none focus:ring-black text-xs sm:text-sm placeholder-zinc-500 h-10 relative
+                        focus:outline-none focus:ring-black text-base placeholder-zinc-500 h-10 relative
             ${first_pw_valid === false && 'border-red-500 focus:border-red-500'}
             ${canSubmit === true && 'border-green-500 focus:border-green-500'}
             `} required />

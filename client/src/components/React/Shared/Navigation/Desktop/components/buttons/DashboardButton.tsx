@@ -8,6 +8,7 @@ export default function DashboardButton(): JSX.Element {
     const { signOut, activeSession } = useSelector((state: RootState) => state.auth,
         shallowEqual);
     const location = useLocation();
+    const keyValue: string = activeSession ? 'active' : 'inactive';
     const active: boolean = (
         location.pathname === '/dashboard'
     )
@@ -24,13 +25,14 @@ export default function DashboardButton(): JSX.Element {
                                  bg-white/5 hover:bg-black hover:border-white/10 transition-all duration-200 ease-in-out w-auto cursor-pointer group">
 
                     <p
+                        key={`status-${keyValue}`}
                         className={`
                             ${active
                                 ? 'text-blue-300'
                                 : 'text-white'}
-                            text-center font-light text-sm w-full
+                            text-center font-light text-sm w-full opacity-0 animate-fade-in ease-soft
                             group-hover:text-blue-400 transition-all duration-200 
-                            ease-in-out whitespace-nowrap
+                             whitespace-nowrap
                             `}
                     >
                         {activeSession ? 'Dashboard' : 'Log in'}

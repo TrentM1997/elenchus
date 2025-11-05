@@ -7,21 +7,52 @@ import { hideTop } from "@/motion/variants";
 import { createPortal } from "react-dom";
 import { AuthNotificationProps } from "@/env";
 
+interface DeleteActions {
+    pending: string,
+    success: string,
+    failed: string
+};
+
+const deleteMessages: DeleteActions = {
+    pending: 'Deleting article',
+    success: 'Deleted successfully',
+    failed: 'Failed to delete'
+};
+
 
 export default function AuthNotification({ status, setStatus, action }: AuthNotificationProps) {
 
+
     useEffect(() => {
+        if (status === 'success' || (status === 'failed')) {
+            const timer = window.setTimeout(() => {
+                setStatus('idle');
+            }, 2000);
 
-        const timer = window.setTimeout(() => {
-            setStatus('idle');
-        }, 2000);
-
-        return () => clearTimeout(timer);
-
+            return () => clearTimeout(timer);
+        }
     }, [status]);
 
 
-    const notification = (
+    const deleteStatus: JSX.Element | null = (
+        <p
+            key={`delete${status}`}
+            className="text-white font-light text-sm">
+            {(status === 'pending') && deleteMessages.pending}
+            {(status === 'success') && deleteMessages.success}
+            {(status === 'failed') && deleteMessages.failed}
+        </p>
+    );
+
+    const general: JSX.Element | null = (
+        <p className="text-white font-light text-sm">
+
+            {`${action} ${status}`}
+        </p>
+    )
+
+
+    const notification: JSX.Element | null = (
         <motion.div
             key='accountCreationNotification'
             variants={hideTop}
@@ -33,9 +64,7 @@ export default function AuthNotification({ status, setStatus, action }: AuthNoti
         >
             <div key='title' className="flex w-full h-full items-center justify-between">
                 <div key='titleContainer' className="w-auto h-fit">
-                    <p className="text-white font-light text-sm">
-                        {`${action} ${status}`}
-                    </p>
+                    {(action && (action === 'Delete')) ? deleteStatus : general}
                 </div>
                 <div className="w-auto h-fit relative">
                     {<AnimatePresence mode="wait">
