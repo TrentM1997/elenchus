@@ -15,7 +15,7 @@ function CurrentChosen({ chosenArticles }: CurrentChosen): JSX.Element {
     useEffect(() => {
         if (selectedTotal === 3) {
             setPhase("shimmer");
-            timerRef.current = window.setTimeout(() => setPhase("fadeout"), 2500); // 0.5s before end
+            timerRef.current = window.setTimeout(() => setPhase("fadeout"), 6000); // 0.5s before end
             return () => clearTimeout(timerRef.current!);
         }
         setPhase("idle");

@@ -6,7 +6,7 @@ import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReduce
 
 type UseMaxSelectedToast = { count: number, limit?: number, timeout?: number };
 
-export function useMaxSelectedToast({ count, limit = 3, timeout = 5000 }: UseMaxSelectedToast): void {
+export function useMaxSelectedToast({ count, limit = 3, timeout = 4000 }: UseMaxSelectedToast): void {
     const investigation: InvestigateState = useSelector((state: RootState) => state.investigation);
     const { showMaxToast } = investigation.getArticle;
     const dispatch = useDispatch<AppDispatch>();

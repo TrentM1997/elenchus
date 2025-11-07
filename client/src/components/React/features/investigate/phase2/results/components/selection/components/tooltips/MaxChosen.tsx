@@ -11,8 +11,8 @@ function Maxchosen({ }: MaxChosen): JSX.Element | null {
 
 
     const modal = (
-        <motion.div className="fixed z-50 bottom-24 right-2 md:right-52 lg:right-60 xl:right-128 2xl:right-16
-            w-72 h-32 p-3 bg-slate-200 rounded-lg flex flex-col items-center
+        <motion.div className="fixed z-50 bottom-24 right-2 md:right-52 lg:right-60 xl:right-128 2xl:right-44
+            w-72 h-32 2xl:h-24 2xl:w-60 p-2 bg-slate-200 rounded-lg flex flex-col items-center
         border border-astro_gray shadow-material"
             variants={variants}
             initial='closed'
@@ -23,7 +23,7 @@ function Maxchosen({ }: MaxChosen): JSX.Element | null {
 
             <div className="w-full flex flex-col items-center justify-center h-full p-2">
 
-                <div className="text-black  text-wrap text-base h-fit w-full font-light tracking-tight">
+                <div className="text-black  text-wrap text-base h-fit w-full tracking-tight">
                     Maximum amount of articles chosen!
                 </div>
             </div>

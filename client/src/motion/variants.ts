@@ -23,6 +23,35 @@ export const hideTop = {
     }
 };
 
+export const stepVariants = {
+    open: {
+        opacity: 1,
+        transition: {
+            type: 'tween',
+            duration: 0.2,
+            delay: 0.2,
+            ease: softEase
+        }
+    },
+    closed: {
+        opacity: 0,
+        transition: {
+            duration: 0.2,
+            type: 'tween'
+        }
+    },
+    exit: {
+        opacity: 0,
+        transition: {
+            type: 'tween',
+            duration: 0.2,
+            delay: 0,
+            ease: softEase
+        }
+    }
+
+};
+
 
 export const delays = {
     open: {

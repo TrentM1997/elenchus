@@ -1,5 +1,8 @@
 import React from "react";
 import SearchButton from "../buttons/SearchButton";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/ReduxToolKit/store";
+import type { ContentStatus } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer";
 
 interface SearchBarProps {
     getSearchInput: (e: React.ChangeEvent<HTMLInputElement>) => void,
@@ -9,6 +12,7 @@ interface SearchBarProps {
 }
 
 export default function SearchBar({ getSearchInput, handleSubmit, flush }: SearchBarProps): JSX.Element {
+    const contentContainerStatus: ContentStatus = useSelector((s: RootState) => s.investigation.display.contentContainer);
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         const composing = (e.nativeEvent as KeyboardEvent).isComposing;
@@ -21,10 +25,11 @@ export default function SearchBar({ getSearchInput, handleSubmit, flush }: Searc
 
     return (
         <form
-            className="bg-white/10 hover:bg-white/15
-            transition-all duration-200 ease-in-out text-white w-full h-fit 
+            className={`${(contentContainerStatus === 'active') ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
+                bg-white/10 hover:bg-white/15
+            transition-all duration-200 ease-soft text-white w-full h-fit 
             border-none md:h-10 md:p-0 2xl:px-1 rounded-full relative
-            xs:text-sm md:text-lg flex items-center prose"
+            xs:text-sm md:text-lg flex items-center prose`}
             onSubmit={(e) => handleSubmit(e)}
         >
             <input

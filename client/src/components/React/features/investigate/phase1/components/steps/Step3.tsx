@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/ReduxToolKit/store"
 import Biases from "../inputs/interactive/Biases"
 import { motion } from "framer-motion"
-import { variants } from "@/motion/variants"
+import { stepVariants } from "@/motion/variants"
 import React from "react"
 
 function Step3(): JSX.Element | null {
@@ -24,11 +24,10 @@ function Step3(): JSX.Element | null {
 
   return (
     <motion.div
-      variants={variants}
+      variants={stepVariants}
       initial='closed'
       animate='open'
-      exit='closed'
-      transition={{ type: 'tween', duration: 0.2 }}
+      exit='exit'
       className='max-w-full absolute inset-0
     flex flex-col justify-center items-center px-2 xl:px-0 basis-full'>
 

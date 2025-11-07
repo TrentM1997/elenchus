@@ -1,5 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { acceptedInput } from "./Steps";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+export type ContentStatus = 'active' | 'idle';
 
 interface Display {
     showMindMap: boolean,
@@ -12,7 +13,7 @@ interface Display {
     showSelectBar: boolean,
     showBackToSearchModal: boolean,
     showGetArticlesModal: boolean,
-
+    contentContainer: ContentStatus,
     showSelectWarning: boolean,
     showSelectTooltip: boolean,
     showReadingTooltip: boolean,
@@ -22,6 +23,7 @@ interface Display {
 }
 
 const initialState: Display = {
+    contentContainer: 'idle',
     showMindMap: true,
     showSearch: false,
     showContent: false,
@@ -44,6 +46,9 @@ const DisplaySlice = createSlice({
     name: 'display',
     initialState: initialState,
     reducers: {
+        contentStatusChange: (state, action: PayloadAction<ContentStatus>) => {
+            state.contentContainer = action.payload;
+        },
         displayMindMap: (state, action) => {
             state.showMindMap = action.payload
         },
@@ -97,6 +102,6 @@ export type DisplayReducer = ReturnType<typeof DisplaySlice.reducer>;
 
 export const { displayMindMap, displaySearch, displayArticleContent, displayCompletion, displayWrapUp, displayResults,
     displayWorkModal, displayReturnModal, displayGetArticlesModal, displaySelectionWarning, displaySelectTooltip, displayReadingTooltip,
-    displaySelectBar, displayFeedBackForm, displayBlueSkySearch } = DisplaySlice.actions
+    displaySelectBar, displayFeedBackForm, displayBlueSkySearch, contentStatusChange } = DisplaySlice.actions
 
 export default DisplaySlice.reducer

@@ -10,6 +10,7 @@ import React from "react";
 
 export default function StepsEditor({ setterFunction, context, id }: TipTapProps): JSX.Element | null {
     const dispatch = useDispatch<AppDispatch>();
+
     const step = useSelector((state: RootState) => state.investigation.stepper.step);
     const draftRef = useRef<string | null>(null);
     const debounce = useRef<number | null>(null);
@@ -33,6 +34,7 @@ export default function StepsEditor({ setterFunction, context, id }: TipTapProps
     }, []);
 
 
+
     const editor: Editor = useEditor({
         content: context && context.trim().length > 0 ? context : null,
         onCreate: ({ editor }) => {
@@ -45,7 +47,7 @@ export default function StepsEditor({ setterFunction, context, id }: TipTapProps
                 }
             }),
             Placeholder.configure({
-                placeholder: placeholderText,
+                placeholder: context && context.trim().length > 0 ? null : placeholderText,
             }),
         ],
         editorProps: {

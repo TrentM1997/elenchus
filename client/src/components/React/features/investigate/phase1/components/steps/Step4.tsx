@@ -3,7 +3,7 @@ import { RootState } from "@/ReduxToolKit/store";
 import { useSelector } from "react-redux";
 import { getPremises } from "@/ReduxToolKit/Reducers/Investigate/UserPOV";
 import { motion } from "framer-motion"
-import { variants } from "@/motion/variants"
+import { stepVariants } from "@/motion/variants"
 import React from "react";
 
 function Step4(): JSX.Element | null {
@@ -11,11 +11,10 @@ function Step4(): JSX.Element | null {
 
   return (
     <motion.div
-      variants={variants}
+      variants={stepVariants}
       initial='closed'
       animate='open'
-      exit='closed'
-      transition={{ type: 'tween', duration: 0.2 }}
+      exit='exit'
       className='absolute inset-0'>
       <div className="inline-block h-fit box-border mx-auto min-w-full max-w-full 2xl:h-full">
         <div className="flex flex-col items-center w-full 

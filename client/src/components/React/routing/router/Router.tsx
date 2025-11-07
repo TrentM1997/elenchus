@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { rootLoader } from "../loaderFunctions/rootLoader";
 import Root from "../Root/Root";
 import Pageskeleton from "../skeletons/PageSkeleton";
+import DelayedFallback from "../../Shared/fallbacks/DelayedFallback";
 
 
 
@@ -10,7 +11,7 @@ export const router = createBrowserRouter([
         path: "/",
         element: <Root />,
         loader: rootLoader,
-        hydrateFallbackElement: <Pageskeleton />,
+        hydrateFallbackElement: <DelayedFallback delay={200}><Pageskeleton /></DelayedFallback>,
         children: [
             {
                 index: true,

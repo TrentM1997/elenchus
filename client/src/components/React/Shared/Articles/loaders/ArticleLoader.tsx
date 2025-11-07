@@ -17,7 +17,7 @@ export default function ArticleLoader(): JSX.Element | null {
         timeRef.current = window.setTimeout(() => {
             setShowWaitCaution(true);
             timeRef.current = null;
-        }, 15000);
+        }, 12000);
 
 
         return () => {
@@ -45,17 +45,21 @@ export default function ArticleLoader(): JSX.Element | null {
                         style={{ height: '100%', width: '100%' }}
                     />
                 </div>
-                <header className='w-auto h-auto mx-auto flex flex-col items-center justify-center gap-y-6'>
+                <header className='w-auto h-auto mx-auto flex flex-col items-center justify-center'>
                     <h1
                         className='w-auto mx-auto h-fit text-center text-base tracking-tight md:text-3xl xl:text-3xl will-change-transform transform-gpu inline-block bg-gradient-to-r from-zinc-600 via-zinc-200 to-zinc-600 
-         bg-[length:200%_100%] bg-clip-text text-transparent animate-shimmer'
+         bg-[length:200%_100%] bg-clip-text text-transparent animate-shimmer pb-8'
                     >Gathering the chosen articles
 
                     </h1>
 
                     <ScrapeProgress progress={progress} />
 
-                    {showWaitCaution && <p className="text-zinc-400 opacity-0 animate-fade-blur ease-soft font-light tracking-tight text-xs md:text-base text-center text-wrap w-4/5 mt-12">
+                    <div className="w-full h-24">
+
+                    </div>
+
+                    {showWaitCaution && <p className="text-zinc-400 opacity-0 animate-fade-blur ease-soft font-light tracking-tight text-xs md:text-base text-center text-wrap w-4/5">
                         This process may take a minute or two while we extract and format each article for reading.
                     </p>}
                 </header>

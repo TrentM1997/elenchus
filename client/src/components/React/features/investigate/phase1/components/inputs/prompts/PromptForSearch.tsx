@@ -21,6 +21,9 @@ function PromptForSearch(): JSX.Element | null {
             <p className="text-sm lg:text-base xl:text-xl w-fit text-white font-light tracking-tight text-wrap">
                 Next, you'll search for news articles on the idea
             </p>
+            {!isMobile && <p className="mt-2 text-wrap text-zinc-400 font-light tracking-tight text-xs lg:text-sm xl:text-base w-4/5">
+                If you want to change anything for <em className="text-zinc-200">Perspective, Prior Knowledge, Biases</em> or <em className="text-zinc-200">Premises</em>, go back and do so now
+            </p>}
         </div>
     );
 };

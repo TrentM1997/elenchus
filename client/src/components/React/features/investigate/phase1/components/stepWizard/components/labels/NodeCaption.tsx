@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
 import { useMemo } from "react";
+import { softEase } from "@/motion/variants";
 
 interface Caption {
     caption: string,
@@ -9,13 +10,8 @@ interface Caption {
 }
 
 export default function NodeCaption({ caption, thisStep }: Caption): JSX.Element {
-    const investigateState = useSelector((state: RootState) => state.investigation);
-    const { stepper } = investigateState;
-    const { step } = stepper;
-    const showCaption: boolean = useMemo(() => {
-        const show: boolean = (thisStep === step) || (thisStep < step);
-        return show;
-    }, [step]);
+    const step: number = useSelector((state: RootState) => state.investigation.stepper.step);
+    const showCaption: boolean = (thisStep === step) || (thisStep < step);
 
 
     return (
@@ -29,7 +25,9 @@ export default function NodeCaption({ caption, thisStep }: Caption): JSX.Element
                     : 0
             }}
             transition={{
-                duration: 0.7
+                type: 'tween',
+                duration: 0.2,
+                ease: softEase
             }}
         >
             {caption}

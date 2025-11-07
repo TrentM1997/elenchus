@@ -4,7 +4,7 @@ import { getIdea } from "@/ReduxToolKit/Reducers/Investigate/UserPOV"
 import { useSelector } from "react-redux"
 import { RootState } from "@/ReduxToolKit/store"
 import { motion } from "framer-motion"
-import { variants } from "@/motion/variants"
+import { stepVariants } from "@/motion/variants"
 import Requirements from "../inputs/interactive/Requirements"
 import { useCheckFirstStep } from "@/hooks/useCheckFirstStep"
 import React from "react"
@@ -32,11 +32,10 @@ function Step1() {
 
       return (
             <motion.div
-                  variants={variants}
+                  variants={stepVariants}
                   initial='closed'
                   animate='open'
-                  exit='closed'
-                  transition={{ type: 'tween', duration: 0.2 }}
+                  exit='exit'
                   className="flex justify-center items-start gap-2 z-10 
                   absolute inset-0">
                   <div

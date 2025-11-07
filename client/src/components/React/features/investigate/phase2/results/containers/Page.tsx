@@ -43,8 +43,8 @@ export default function Page({ index }: Page): JSX.Element | null {
 
     return (
         <ul
-            className={`transform-gpu  will-change-[opacity,transform]
-            relative h-full no-scrollbar py-2 opacity-0 animate-fade-in animation-delay-200ms ease-soft
+            className={`transform-gpu  will-change-[opacity,transform] animation-delay-300ms
+            relative h-full no-scrollbar py-2 opacity-0 animate-fade-in ease-soft
             w-full xl:max-w-6xl 2xl:w-full mx-auto justify-items-center
             grid grid-cols-1 sm:grid-cols-3 grid-flow-row 2xl:gap-y-6 2xl:gap-x-0 gap-2`}>
             {(Array.isArray(page)) && (page.length > 0) &&

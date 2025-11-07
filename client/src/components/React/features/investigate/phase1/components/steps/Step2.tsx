@@ -4,7 +4,7 @@ import { RootState } from "@/ReduxToolKit/store"
 import Perspective from "../inputs/interactive/Perspective"
 import Expertise from "../inputs/interactive/Expertise"
 import { motion } from "framer-motion";
-import { variants } from "@/motion/variants"
+import { stepVariants } from "@/motion/variants"
 import React from "react"
 
 function Step2(): JSX.Element | null {
@@ -37,11 +37,11 @@ function Step2(): JSX.Element | null {
 
   return (
     <motion.div
-      variants={variants}
+      variants={stepVariants}
       initial='closed'
       animate='open'
-      exit='closed'
-      transition={{ type: 'tween', duration: 0.2 }}
+      exit='exit'
+
       className="grid grid-cols-2 justify-between md:gap-x-2 items-center w-full h-full box-border 
       absolute inset-0"
     >
