@@ -25,9 +25,6 @@ function InvestigationWorkSpace() {
     const [notePosition, setNotePosition] = useState({ x: 20, y: 200 });
     const [constraints, setConstraints] = useState(null);
 
-    console.log(contentStatus);
-
-
     function handleDragConstraints() {
         if (!containerRef.current || !notesRef.current) return;
 
@@ -76,7 +73,7 @@ function InvestigationWorkSpace() {
 
             <Suspense
                 key={'content-container'}
-                fallback={<DelayedFallback><ComponentLoader /></DelayedFallback>}
+                fallback={<DelayedFallback delay={300}><ComponentLoader /></DelayedFallback>}
             >
                 {(contentStatus === 'active') && <Content />}
             </Suspense>
