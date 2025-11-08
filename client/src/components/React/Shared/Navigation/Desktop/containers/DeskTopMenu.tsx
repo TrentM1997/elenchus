@@ -7,7 +7,7 @@ function DeskTopMenu() {
     const signingOut = useSelector((state: RootState) => state.auth.signOut)
 
     return (
-        <div className={`fixed top-0 w-full inset-x-0 z-40 opacity-0 animate-fade-in animation-delay-600ms
+        <div className={`fixed top-0 w-full inset-x-0 z-40
         ${signingOut ? 'pointer-events-none' : 'pointer-events-auto'}
         `}>
             <div className="md:w-dvw mx-auto">

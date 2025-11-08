@@ -3,8 +3,7 @@ import { useEffect, useLayoutEffect } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
 import ErrorBoundary from "../../../Shared/ErrorBoundaries/ErrorBoundary";
-import { variants } from "@/motion/variants";
-import { getPopoverPost, selectPost } from "@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice";
+import { selectPost } from "@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice";
 import SearchBlueSky from "../Components/input/SearchBlueSky";
 import BlueSkyHeader from "../Components/BlueSkyHeader";
 import CloseBlueSky from "../Components/buttons/CloseBlueSky";
@@ -13,10 +12,11 @@ import { displayBlueSkySearch } from "@/ReduxToolKit/Reducers/Investigate/Displa
 import FeedContainer from "./FeedContainer";
 
 interface BlueSkyProps {
-  context: 'home' | 'investigate'
+  context: 'home' | 'investigate',
+  shouldAnimate: boolean
 };
 
-export default function BlueSky({ context }: BlueSkyProps) {
+export default function BlueSky({ context, shouldAnimate }: BlueSkyProps) {
   const { posts } = useSelector((state: RootState) => state.bluesky, shallowEqual);
   const researchState = useSelector((state: RootState) => state.investigation);
   const navigate = useNavigate();
@@ -55,7 +55,7 @@ export default function BlueSky({ context }: BlueSkyProps) {
   return (
     <div
 
-      className="lg:p-8 w-full relative will-change-[opacity] opacity-0 animate-fade-up animation-delay-200ms transition-opacity ease-in"
+      className="lg:p-8 w-full relative opacity-0 animate-fade-in animation-delay-200ms ease-soft"
     >
       <div className='mt-12 md:mt-6 p-4 w-full py-6 mx-auto md:px-12 lg:px-0  2xl:max-w-7xl h-full'
       >
@@ -75,6 +75,7 @@ export default function BlueSky({ context }: BlueSkyProps) {
           <ErrorBoundary
           >
             <FeedContainer
+              shouldAnimate={shouldAnimate}
               key={'postsfetched'}
               context={context}
               posts={posts}

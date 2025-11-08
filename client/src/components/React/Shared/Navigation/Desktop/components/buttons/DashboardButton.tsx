@@ -30,8 +30,8 @@ export default function DashboardButton(): JSX.Element {
                             ${active
                                 ? 'text-blue-300'
                                 : 'text-white'}
-                            text-center font-light text-sm w-full opacity-0 animate-fade-in ease-soft
-                            group-hover:text-blue-400 transition-all duration-200 
+                            text-center font-light text-sm w-full
+                            group-hover:text-blue-400 transition-colors duration-200 ease-soft
                              whitespace-nowrap
                             `}
                     >

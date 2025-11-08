@@ -9,10 +9,11 @@ import { variants } from "@/motion/variants";
 
 
 type FeedProps = {
-  posts: any
+  posts: any,
+  shouldAnimate: boolean
 };
 
-export default function Feed({ posts }: FeedProps): React.ReactNode {
+export default function Feed({ posts, shouldAnimate }: FeedProps): React.ReactNode {
   const selected = useSelector((state: RootState) => state.bluesky.selected);
   const [firstHalf, setFirstHalf] = useState<any>(null);
   const [secondHalf, setSecondHalf] = useState<any>(null);
@@ -56,7 +57,10 @@ export default function Feed({ posts }: FeedProps): React.ReactNode {
         className='items-center space-x-6 pb-12 lg:pb-0 lg:space-x-8 animate-scroller2 group
           md:animate-none relative lg:px-4 mx-auto grid grid-cols-1 lg:grid-cols-2'>
         <div
-          className={`relative transform-gpu will-change-transform flex-shrink-0 h-full items-center animate-scroller2 ${selected ? 'animation-paused' : 'animation-running hover:animation-paused'}`}>
+          style={{ transform: 'translateZ(0)' }}
+          className={`relative transform-gpu will-change-transform [contain:layout_paint] backface-hidden flex-shrink-0 h-full items-center animate-scroller2 
+            ${(shouldAnimate && selected) ? 'animation-paused' : 'animation-running'}
+          `}>
 
           {firstHalf !== null &&
             <Scroller
@@ -66,7 +70,11 @@ export default function Feed({ posts }: FeedProps): React.ReactNode {
           }
         </div>
         <div
-          className={`relative transform-gpu will-change-transform flex-shrink-0 h-full items-center animate-scroller ${selected ? 'animation-paused' : 'animation-running hover:animation-paused'}`}>
+          style={{ transform: 'translateZ(0)' }}
+          className={`relative transform-gpu will-change-transform [contain:layout_paint] backface-hidden flex-shrink-0 h-full items-center animate-scroller 
+             ${(shouldAnimate && selected) ? 'animation-paused' : 'animation-running'}
+          
+          `}>
 
           {secondHalf !== null &&
             <Scroller

@@ -7,7 +7,7 @@ import { PostsProps } from "@/env";
 import Popover from "../Popovers/Popover";
 import Feed from "../Components/feed/Feed";
 
-export default function FeedContainer({ posts, shouldRedirect }: PostsProps) {
+export default function FeedContainer({ posts, shouldRedirect, shouldAnimate }: PostsProps) {
     const status = useSelector((state: RootState) => state.bluesky.status);
     const selected = useSelector((state: RootState) => state.bluesky.selected);
 
@@ -39,6 +39,7 @@ export default function FeedContainer({ posts, shouldRedirect }: PostsProps) {
 
                     {status !== 'pending' &&
                         <Feed
+                            shouldAnimate={shouldAnimate}
                             key='feed'
                             posts={posts}
                         />

@@ -7,13 +7,19 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/ReduxToolKit/store';
 const BlueSkyPosts = lazy(() => import('@/components/React/features/blueSky/Containers/BlueSky'));
 import React from 'react';
+import DelayedFallback from '@/components/React/Shared/fallbacks/DelayedFallback';
 
 function LazyHydrationSection() {
     const [showBlueSky, setShowBlueSky] = useState<boolean>(false);
     const [playAnimation, setPlayAnimation] = useState<boolean>(false);
+    const [shouldAnimate, setShouldAnimate] = useState<boolean>(false);
     const popoverPost = useSelector((state: RootState) => state.bluesky.popoverPost);
     const sentinelRef = useRef(null);
     const animationTriggerRef = useRef(null);
+    const feedRef = useRef(null);
+
+
+    //TODO: finish fixing scroll jank
 
 
     useEffect(() => {
@@ -22,7 +28,7 @@ function LazyHydrationSection() {
         const observer = new IntersectionObserver(([entry]) => {
 
             if (entry.isIntersecting) {
-                setShowBlueSky(prev => !prev);
+                setShowBlueSky(true);
                 observer.disconnect();
             }
         },
@@ -42,7 +48,7 @@ function LazyHydrationSection() {
         const animationObserver = new IntersectionObserver(([entry]) => {
 
             if (entry.isIntersecting) {
-                setPlayAnimation(prev => !prev);
+                setPlayAnimation(true);
                 animationObserver.disconnect();
             }
         },
@@ -53,7 +59,18 @@ function LazyHydrationSection() {
         return () => {
             animationObserver.disconnect();
         }
-    }, [playAnimation])
+    }, [playAnimation]);
+
+    useEffect(() => {
+        if (!feedRef.current) return;
+
+        const observer = new IntersectionObserver(([entry]) => {
+            setShouldAnimate(entry.isIntersecting);
+        }, { rootMargin: '300px' });
+
+        observer.observe(feedRef.current);
+        return () => observer.disconnect();
+    }, []);
 
     return (
         <section
@@ -70,10 +87,11 @@ function LazyHydrationSection() {
             <WikiAndNotes />
 
             <div ref={sentinelRef} className='h-1 w-full' />
+            <div ref={feedRef} className='h-1 w-full' />
 
             {showBlueSky &&
-                <Suspense fallback={<BlueSkySkeleton context='home' />}>
-                    {showBlueSky && <BlueSkyPosts context='home' />}
+                <Suspense fallback={<DelayedFallback><BlueSkySkeleton context='home' /></DelayedFallback>}>
+                    {showBlueSky && <BlueSkyPosts shouldAnimate={shouldAnimate} context='home' />}
                 </Suspense>
             }
 

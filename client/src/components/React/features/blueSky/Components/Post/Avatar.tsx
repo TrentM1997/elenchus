@@ -19,7 +19,7 @@ export default function Avatar({ src }: AvatarProps): React.ReactNode {
         alt: 'avatar',
         loading: 'lazy',
         decoding: 'async',
-        fetchpriority: 'auto',
+        fetchpriority: 'low',
         className: 'object-cover bg-zinc-100 rounded-full h-full w-full shrink-0',
         onError: (e) => {
             const img = e.currentTarget;
