@@ -13,6 +13,7 @@ import { AnimatePresence } from 'framer-motion';
 import ArticleExtractionToast from '../../Shared/modals/ArticleExtactionToast';
 import type { ExtractionToast } from '../../app/App';
 import LazyHydrationSection from '../../features/LandingPage/containers/LazyHydrationSection';
+import ToolsForResearch from '../../features/LandingPage/components/ToolsForResearch';
 
 export default function Home({ }) {
     const signingOut = useSelector((state: RootState) => state.auth.signOut);
@@ -59,7 +60,7 @@ export default function Home({ }) {
 
 
     return (
-        <section className={`flex h-auto flex-col w-full grow transition-opacity duration-200 delay-200 ease-in-out scroll-smooth thin-gray-scrollbar
+        <section className={`flex h-auto flex-col gap-y-20 w-full grow scroll-smooth
          ${signingOut || popoverPost
                 ? 'opacity-50 pointer-events-none'
                 : 'opacity-100 pointer-events-auto'
@@ -69,15 +70,17 @@ export default function Home({ }) {
                 : 'pointer-events-auto'
             }
          `}>
-            {signingOut &&
-                <SignOutModal />
-            }
             <AnimatePresence>
                 {showToast && <ArticleExtractionToast setShowToast={setShowToast} />}
             </AnimatePresence>
 
+            {signingOut &&
+                <SignOutModal />
+            }
+
             <HeroImage />
             <Challenge />
+            <ToolsForResearch />
             <ChartingFeatures />
             <LazyHydrationSection />
         </section>

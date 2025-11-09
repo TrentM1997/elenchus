@@ -1,25 +1,19 @@
 import { lazy, Suspense, useEffect } from 'react'
 import { useState, useRef } from 'react';
-import ToolsForResearch from '../components/Keyboard';
 import BlueSkySkeleton from '../../blueSky/skeletons/BlueSkySkeleton';
 import WikiAndNotes from '../components/WikiAndNotes';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/ReduxToolKit/store';
 const BlueSkyPosts = lazy(() => import('@/components/React/features/blueSky/Containers/BlueSky'));
-import React from 'react';
+import { startTransition } from 'react';
 import DelayedFallback from '@/components/React/Shared/fallbacks/DelayedFallback';
 
-function LazyHydrationSection() {
+export default function LazyHydrationSection() {
     const [showBlueSky, setShowBlueSky] = useState<boolean>(false);
-    const [playAnimation, setPlayAnimation] = useState<boolean>(false);
     const [shouldAnimate, setShouldAnimate] = useState<boolean>(false);
     const popoverPost = useSelector((state: RootState) => state.bluesky.popoverPost);
     const sentinelRef = useRef(null);
-    const animationTriggerRef = useRef(null);
     const feedRef = useRef(null);
-
-
-    //TODO: finish fixing scroll jank
 
 
     useEffect(() => {
@@ -28,6 +22,9 @@ function LazyHydrationSection() {
         const observer = new IntersectionObserver(([entry]) => {
 
             if (entry.isIntersecting) {
+                startTransition(() => {
+                    setShowBlueSky(true);
+                });
                 setShowBlueSky(true);
                 observer.disconnect();
             }
@@ -41,35 +38,37 @@ function LazyHydrationSection() {
         };
     }, [showBlueSky]);
 
-
-    useEffect(() => {
-        if ((playAnimation) || (!animationTriggerRef.current)) return;
-
-        const animationObserver = new IntersectionObserver(([entry]) => {
-
-            if (entry.isIntersecting) {
-                setPlayAnimation(true);
-                animationObserver.disconnect();
-            }
-        },
-            { rootMargin: '400px' }
-        );
-        animationObserver.observe(animationTriggerRef.current);
-
-        return () => {
-            animationObserver.disconnect();
-        }
-    }, [playAnimation]);
-
     useEffect(() => {
         if (!feedRef.current) return;
 
-        const observer = new IntersectionObserver(([entry]) => {
-            setShouldAnimate(entry.isIntersecting);
-        }, { rootMargin: '300px' });
+        const startObserver = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    startTransition(() => {
+                        setShouldAnimate(true)
+                    })
+                }
+            },
+            { rootMargin: '300px' }
+        );
 
-        observer.observe(feedRef.current);
-        return () => observer.disconnect();
+        const stopObserver = new IntersectionObserver(
+            ([entry]) => {
+                if (!entry.isIntersecting) {
+                    startTransition(() => {
+                        setShouldAnimate(false)
+                    })
+                }
+            },
+            { rootMargin: '0px' }
+        );
+
+        startObserver.observe(feedRef.current);
+
+        return () => {
+            startObserver.disconnect();
+            stopObserver.disconnect();
+        };
     }, []);
 
     return (
@@ -78,15 +77,11 @@ function LazyHydrationSection() {
             className={`w-full h-auto z-20
         ${popoverPost ? 'overflow-y-hidden' : ''}
         `}>
-            <div
-                ref={animationTriggerRef}
-                className='h-1 w-full' />
+            <div ref={sentinelRef} className='h-1 w-full' />
 
-            <ToolsForResearch playAnimation={playAnimation} />
 
             <WikiAndNotes />
 
-            <div ref={sentinelRef} className='h-1 w-full' />
             <div ref={feedRef} className='h-1 w-full' />
 
             {showBlueSky &&
@@ -95,10 +90,6 @@ function LazyHydrationSection() {
                 </Suspense>
             }
 
-
         </section>
     )
 };
-
-
-export default React.memo(LazyHydrationSection);

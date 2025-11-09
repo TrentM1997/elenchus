@@ -138,7 +138,7 @@ declare global {
     posts: any[] | null,
     context?: string,
     shouldRedirect: boolean,
-    shouldAnimate: boolean
+    shouldAnimate?: boolean
   }
 
 

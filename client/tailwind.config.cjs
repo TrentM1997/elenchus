@@ -330,6 +330,9 @@ module.exports = {
         '.animation-delay-600ms': {
           'animation-delay': '600ms'
         },
+        '.animation-delay-700ms': {
+          'animation-delay': '700ms'
+        },
         '.no-scrollbar': {
           /* Hide scrollbar for Chrome, Safari, and Opera */
           '-webkit-overflow-scrolling': 'touch',

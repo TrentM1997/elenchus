@@ -10,14 +10,17 @@ import { variants } from "@/motion/variants";
 
 type FeedProps = {
   posts: any,
-  shouldAnimate: boolean
+  shouldAnimate?: boolean
 };
 
-export default function Feed({ posts, shouldAnimate }: FeedProps): React.ReactNode {
+export default function Feed({ posts, shouldAnimate = true }: FeedProps): JSX.Element {
   const selected = useSelector((state: RootState) => state.bluesky.selected);
+  const postForPopover = useSelector((s: RootState) => s.bluesky.popoverPost);
   const [firstHalf, setFirstHalf] = useState<any>(null);
   const [secondHalf, setSecondHalf] = useState<any>(null);
   const dispatch = useDispatch<AppDispatch>();
+  const playAnimation = (shouldAnimate && (!postForPopover));
+
 
   useEffect(() => {
     const handleNew = () => {
@@ -52,14 +55,14 @@ export default function Feed({ posts, shouldAnimate }: FeedProps): React.ReactNo
       <div
 
         style={{
-          animationPlayState: selected ? 'paused' : 'running'
+          animationPlayState: (selected) && (shouldAnimate) ? 'paused' : 'running'
         }}
         className='items-center space-x-6 pb-12 lg:pb-0 lg:space-x-8 animate-scroller2 group
           md:animate-none relative lg:px-4 mx-auto grid grid-cols-1 lg:grid-cols-2'>
         <div
           style={{ transform: 'translateZ(0)' }}
           className={`relative transform-gpu will-change-transform [contain:layout_paint] backface-hidden flex-shrink-0 h-full items-center animate-scroller2 
-            ${(shouldAnimate && selected) ? 'animation-paused' : 'animation-running'}
+            ${playAnimation ? 'animation-running md:hover:animation-paused' : 'animation-paused'}
           `}>
 
           {firstHalf !== null &&
@@ -72,7 +75,7 @@ export default function Feed({ posts, shouldAnimate }: FeedProps): React.ReactNo
         <div
           style={{ transform: 'translateZ(0)' }}
           className={`relative transform-gpu will-change-transform [contain:layout_paint] backface-hidden flex-shrink-0 h-full items-center animate-scroller 
-             ${(shouldAnimate && selected) ? 'animation-paused' : 'animation-running'}
+              ${playAnimation ? 'animation-running md:hover:animation-paused' : 'animation-paused'}
           
           `}>
 

@@ -53,6 +53,45 @@ export const getFeed = createAsyncThunk(
     }
 )
 
+export interface BlueSkyPost {
+    uri: string;
+    cid: string;
+    author: {
+        did: string;
+        handle: string;
+        displayName: string;
+        avatar: string;
+        associated?: Record<string, any>;
+        [key: string]: any;
+    };
+    record: {
+        $type: 'app.bsky.feed.post';
+        createdAt: string;
+        text: string;
+        langs?: string[];
+        facets?: {
+            index: { byteStart: number; byteEnd: number };
+            features: Array<Record<string, any>>;
+        }[];
+        [key: string]: any;
+    };
+    bookmarkCount: number;
+    likeCount: number;
+    quoteCount: number;
+    replyCount: number;
+    repostCount: number;
+    indexedAt: string;
+    labels?: any[];
+    viewer?: {
+        bookmarked: boolean;
+        threadMuted: boolean;
+        embeddingDisabled: boolean;
+        [key: string]: any;
+    };
+    [key: string]: any; // keeps it resilient to API drift
+}
+
+
 type PopoverXY = {
     x: number | null,
     y: number | null
@@ -67,7 +106,7 @@ interface BSTypes {
 
     status: string,
     feedStatus: string
-    posts: any | null,
+    posts: BlueSkyPost | null,
     errorMessage: string | null,
     selected: any,
     popoverPost: any | null,

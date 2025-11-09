@@ -27,14 +27,15 @@ const gridItems: GridItem[] = [
 
 const WikiAndNotes: React.FC = (): JSX.Element | null => {
     return (
-        <section className="lg:p-8">
-            <div className="mx-auto 2xl:max-w-7xl py-12 lg:px-16 md:px-12 px-8 xl:px-36 items-center relative w-full">
+        <section className="">
+            <div className="mx-auto 2xl:max-w-7xl py-12 lg:px-16 md:px-12 px-8 xl:px-24 items-center relative w-full">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-24 items-start">
-                    <span className="text-blue-400">Structured thinking</span>
+
                     <h2 className="text-3xl tracking-tight font-light lg:text-4xl text-white">
                         Context and notes
                         <span className="block text-zinc-400">as you explore</span>
                     </h2>
+                    <h2 className="text-3xl tracking-tight font-light lg:text-4xl text-white">Structured thinking</h2>
                 </div>
 
                 <div className="grid lg:grid-cols-2 gap-24 mt-12">

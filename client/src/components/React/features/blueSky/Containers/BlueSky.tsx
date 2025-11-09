@@ -13,10 +13,10 @@ import FeedContainer from "./FeedContainer";
 
 interface BlueSkyProps {
   context: 'home' | 'investigate',
-  shouldAnimate: boolean
+  shouldAnimate?: boolean
 };
 
-export default function BlueSky({ context, shouldAnimate }: BlueSkyProps) {
+export default function BlueSky({ context, shouldAnimate = true }: BlueSkyProps) {
   const { posts } = useSelector((state: RootState) => state.bluesky, shallowEqual);
   const researchState = useSelector((state: RootState) => state.investigation);
   const navigate = useNavigate();
