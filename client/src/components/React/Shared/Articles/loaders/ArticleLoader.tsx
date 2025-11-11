@@ -55,13 +55,13 @@ export default function ArticleLoader(): JSX.Element | null {
 
                     <ScrapeProgress progress={progress} />
 
-                    <div className="w-full h-24">
-
+                    <div className="w-full h-24 flex items-center justify-center">
+                        <p className={`text-zinc-400 opacity-0 ${showWaitCaution ? 'animate-fade-blur' : ''} ease-soft font-light tracking-tight text-xs md:text-base text-center text-wrap w-4/5`}>
+                            This process may take a minute or two while we extract and format each article for reading.
+                        </p>
                     </div>
 
-                    {showWaitCaution && <p className="text-zinc-400 opacity-0 animate-fade-blur ease-soft font-light tracking-tight text-xs md:text-base text-center text-wrap w-4/5">
-                        This process may take a minute or two while we extract and format each article for reading.
-                    </p>}
+
                 </header>
             </div>
         </motion.div>

@@ -6,7 +6,7 @@ import Placeholder from "@tiptap/extension-placeholder";
 import { TipTapProps } from "@/env";
 import EditorControls from "./EditorControls";
 import { useEffect, useRef } from "react";
-import React from "react";
+import styles from './StepsEditor.module.css';
 
 export default function StepsEditor({ setterFunction, context, id }: TipTapProps): JSX.Element | null {
     const dispatch = useDispatch<AppDispatch>();
@@ -47,7 +47,9 @@ export default function StepsEditor({ setterFunction, context, id }: TipTapProps
                 }
             }),
             Placeholder.configure({
-                placeholder: context && context.trim().length > 0 ? null : placeholderText,
+                placeholder: ({ editor }) => {
+                    return editor.isEmpty ? placeholderText : ''
+                }
             }),
         ],
         editorProps: {
@@ -80,7 +82,7 @@ export default function StepsEditor({ setterFunction, context, id }: TipTapProps
             <EditorControls editor={editor} />
             <div onClick={handleContainerClick} className="h-full w-full box-border max-w-80 md:max-w-full overflow-hidden">
                 <EditorContent style={{ textAlign: 'left', verticalAlign: 'top', minHeight: '90%', height: '100%', color: '#ffffff', maxWidth: '100%' }} editor={editor}
-                    className={`
+                    className={`${styles.editor}
                     text-white whitespace-pre-wrap break-words text-xs 
                     sm:text-sm xl:text-lg focus:outline-none px-2 focus:border-none 
                     font-light font-serif tracking-tight cursor-text

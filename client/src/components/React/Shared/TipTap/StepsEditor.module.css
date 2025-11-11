@@ -1,0 +1,4 @@
+/* StepsEditor.module.css */
+.editor :global(.ProseMirror p.is-editor-empty:not(:first-child)::before) {
+  content: none !important;
+}
