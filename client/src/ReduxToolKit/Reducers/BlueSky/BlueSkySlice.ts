@@ -103,7 +103,7 @@ type Dimensions = {
 };
 
 interface BSTypes {
-
+    fadeOutHomePage: boolean
     status: string,
     feedStatus: string
     posts: BlueSkyPost | null,
@@ -115,6 +115,7 @@ interface BSTypes {
 };
 
 const initialState: BSTypes = {
+    fadeOutHomePage: false,
     status: 'idle',
     feedStatus: 'idle',
     posts: null,
@@ -150,6 +151,9 @@ export const BlueSkySlice = createSlice({
         getPopoverPost: (state, action) => {
             state.popoverPost = action.payload;
         },
+        landingPageFadeOut: (state, action: PayloadAction<boolean>) => {
+            state.fadeOutHomePage = action.payload
+        },
         resetBlueSkyState: () => initialState
 
     },
@@ -179,6 +183,6 @@ export const BlueSkySlice = createSlice({
     }
 });
 
-export const { resetBlueSkyState, selectPost, getStoredPosts, getPopoverPosition, getPopoverPost } = BlueSkySlice.actions;
+export const { resetBlueSkyState, selectPost, getStoredPosts, getPopoverPosition, getPopoverPost, landingPageFadeOut } = BlueSkySlice.actions;
 
 export default BlueSkySlice.reducer;

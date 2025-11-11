@@ -25,7 +25,9 @@ export function clearCachedPlayStates(keys: Array<string>) {
 };
 
 export default function InvestigateContainer() {
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useDispatch<AppDispatch>();
+  const postSelected: string | null = useSelector((s: RootState) => s.bluesky.selected);
+  const fadeOutHomePage: boolean = useSelector((s: RootState) => s.bluesky.fadeOutHomePage);
   const showSelectTooltip = useSelector(
     (s: RootState) => s.investigation.display.showSelectTooltip
   );
@@ -48,7 +50,6 @@ export default function InvestigateContainer() {
       dispatch(displaySelectTooltip(false));
     };
   };
-
 
 
 

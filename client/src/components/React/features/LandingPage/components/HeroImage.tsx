@@ -43,7 +43,7 @@ function HeroImage() {
 						</span>
 					</div>
 					<div className='mk6'>
-						<h1 className='text-3xl tracking-tight mt-6 font-light lg:text-4xl text-white'>
+						<h1 className='text-3xl tracking-tight mt-6 font-light lg:text-4xl text-white [text-shadow:0_0_6px_rgba(255,255,255,0.25)]'>
 							<strong>elenchus</strong>
 							<span className='block text-zinc-400'>
 

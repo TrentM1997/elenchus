@@ -1,6 +1,7 @@
 import { useDispatch } from "react-redux"
-import { selectPost } from "@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice"
+import { landingPageFadeOut, selectPost } from "@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice"
 import { getIdea, preselected } from "@/ReduxToolKit/Reducers/Investigate/UserPOV"
+import { useEffect } from "react";
 
 interface UseThis {
     post: any,
@@ -13,13 +14,17 @@ export default function UseThisPost({ post }: UseThis) {
     const investigateThis = () => {
         dispatch(preselected());
         dispatch(getIdea(post.record.text));
-        dispatch(selectPost(null));
     };
 
     const unselect = () => {
         dispatch(selectPost(null));
     };
 
+    useEffect(() => {
+        return () => {
+            dispatch(selectPost(null));
+        }
+    }, [])
 
 
     return (

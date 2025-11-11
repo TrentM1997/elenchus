@@ -18,7 +18,7 @@ export default function Popover({ shouldRedirect }: PopoverProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1, transition: { delay: 0.3, duration: 0.3, type: 'tween', ease: softEase } }}
       exit={{ opacity: 0, transition: { delay: 0, duration: 0.4, type: 'tween', ease: softEase } }}
-      className={`z-[900] fixed inset-0 flex justify-center items-center bg-black/60
+      className={`z-[900] fixed inset-0 flex justify-center items-center bg-black/60 backdrop-blur-[3px] will-change-[opacity,backdrop-filter]
         ${popoverPost
           ? 'overflow-y-hidden'
           : ''}

@@ -19,7 +19,7 @@ function Step1() {
             ? selected
             : idea;
 
-      const status = useMemo((): boolean | null => {
+      const status = (): boolean | null => {
             if (denied) {
                   return false;
             } else if (denied === false) {
@@ -27,7 +27,9 @@ function Step1() {
             } else {
                   return null;
             }
-      }, [denied]);
+      };
+
+      const statusDetails = status();
 
 
       return (
@@ -42,7 +44,7 @@ function Step1() {
                         className={`w-full max-w-full overflow-hidden grow-0 max-h-full min-h-44
                         pb-8 sm:pb-7 box-border relative`}>
                         <StepsEditor id="step1" context={chosenTake} setterFunction={getIdea} />
-                        <Requirements acceptInput={status} />
+                        <Requirements acceptInput={statusDetails} />
                   </div>
             </motion.div>
       );

@@ -18,7 +18,7 @@ export default function SelectedPost(): JSX.Element {
 
     return (
         <div className="relative 2xl:w-[26rem] md:w-96 w-80 h-fit">
-            <BSPost post={popoverPost} />
+            <BSPost inPopover={true} post={popoverPost} />
         </div>
     )
 }

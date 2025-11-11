@@ -31,9 +31,9 @@ export default function SearchBlueSky() {
         <div
             className="relative flex w-full lg:w-88 items-center">
             <form
-                className="bg-white/10 text-white w-full h-fit
+                className="bg-white/10 text-white w-full h-fit md:hover:bg-white/15 ease-in-out
                          border-none md:h-10 md:p-0 2xl:px-0 rounded-full relative
-                         transition-colors xs:text-sm md:text-lg flex items-center prose"
+                         transition-all duration-200 xs:text-sm md:text-lg flex items-center prose"
             >
                 <input
                     onChange={(e) => retrieveInput(e)}

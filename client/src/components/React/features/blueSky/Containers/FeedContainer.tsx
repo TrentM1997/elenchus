@@ -10,6 +10,7 @@ import Feed from "../Components/feed/Feed";
 export default function FeedContainer({ posts, shouldRedirect, shouldAnimate = true }: PostsProps) {
     const status = useSelector((state: RootState) => state.bluesky.status);
     const selected = useSelector((state: RootState) => state.bluesky.selected);
+    const popoverPost = useSelector((s: RootState) => s.bluesky.popoverPost);
 
     return (
         <motion.div
@@ -24,7 +25,7 @@ export default function FeedContainer({ posts, shouldRedirect, shouldAnimate = t
             <div className="relative min-h-screen w-full">
 
                 <AnimatePresence>
-                    {selected &&
+                    {popoverPost &&
                         <Popover
                             key='popoverPost'
                             shouldRedirect={shouldRedirect}

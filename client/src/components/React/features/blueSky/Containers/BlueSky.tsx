@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useEffect, useLayoutEffect } from "react";
+import { startTransition, useEffect, useLayoutEffect } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
 import ErrorBoundary from "../../../Shared/ErrorBoundaries/ErrorBoundary";
@@ -38,7 +38,10 @@ export default function BlueSky({ context, shouldAnimate = true }: BlueSkyProps)
 
     const timer = window.setTimeout(() => {
       if (idea && shouldRedirect) {
-        navigate('/investigate');
+        startTransition(() => {
+          navigate('/investigate');
+
+        })
       }
       dispatch(displayBlueSkySearch(false));
 

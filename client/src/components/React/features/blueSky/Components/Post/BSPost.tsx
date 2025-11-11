@@ -10,10 +10,11 @@ import type { BlueSkyPost } from "@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice";
 
 interface BSPostProps {
   post: BlueSkyPost,
-  choosePost?: (post: BlueSkyPost) => void
+  choosePost?: (post: BlueSkyPost) => void,
+  inPopover?: boolean
 }
 
-function BSPost({ post, choosePost }: BSPostProps): JSX.Element {
+function BSPost({ post, choosePost, inPopover }: BSPostProps): JSX.Element {
   const selected = useSelector((state: RootState) => state.bluesky.selected)
   const dispatch = useDispatch<AppDispatch>();
   const text: string = post.record?.text ?? null;
@@ -23,7 +24,7 @@ function BSPost({ post, choosePost }: BSPostProps): JSX.Element {
       onClick={() => choosePost(post)}
       className={`relative rounded-3xl shadow-inset my-8 md:hover:bg-white/15 transition-colors duration-200 ease-soft
         py-2 px-2  lg:p-6 ring-1 ring-white/5 cursor-pointer flex flex-col gap-y-2
-        ${text === selected
+        ${(text === selected) || (inPopover)
           ? 'bg-white shadow-material z-40 pointer-events-none'
           : 'pointer-events-auto bg-white/5'}
         `}

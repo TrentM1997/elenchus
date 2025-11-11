@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/ReduxToolKit/store';
 import SignOutModal from '../../session/forms/AuthForms/SignOutModal';
 import AnimationWrapper from '../../features/LandingPage/containers/LazyHydrationSection';
-import { getStoredPosts, searchBlueSky } from '@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice';
+import { getStoredPosts, landingPageFadeOut, searchBlueSky } from '@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice';
 import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useBodyLock } from '@/hooks/useBodyLock';
@@ -13,11 +13,10 @@ import { AnimatePresence } from 'framer-motion';
 import ArticleExtractionToast from '../../Shared/modals/ArticleExtactionToast';
 import type { ExtractionToast } from '../../app/App';
 import LazyHydrationSection from '../../features/LandingPage/containers/LazyHydrationSection';
-import ToolsForResearch from '../../features/LandingPage/components/ToolsForResearch';
 
 export default function Home({ }) {
     const signingOut = useSelector((state: RootState) => state.auth.signOut);
-    const popoverPost = useSelector((state: RootState) => state.bluesky.popoverPost);
+    const fadeOut = useSelector((s: RootState) => s.bluesky.fadeOutHomePage);
     const posts = useSelector((state: RootState) => state.bluesky.posts);
     const [showToast, setShowToast] = useState<boolean>(false);
     const dispatch = useDispatch<AppDispatch>();
@@ -33,6 +32,9 @@ export default function Home({ }) {
         } else if (!stored && !posts) {
             dispatch(searchBlueSky("morning"));
         };
+
+        return () => {
+        }
     }, []);
 
 
@@ -61,10 +63,7 @@ export default function Home({ }) {
 
     return (
         <section className={`flex h-auto flex-col gap-y-20 w-full grow scroll-smooth
-         ${signingOut || popoverPost
-                ? 'opacity-50 pointer-events-none'
-                : 'opacity-100 pointer-events-auto'
-            }
+          
          ${showToast
                 ? 'pointer-events-none'
                 : 'pointer-events-auto'
@@ -79,9 +78,10 @@ export default function Home({ }) {
             }
 
             <HeroImage />
-            <Challenge />
-            <ToolsForResearch />
             <ChartingFeatures />
+
+            <Challenge />
+
             <LazyHydrationSection />
         </section>
     );
