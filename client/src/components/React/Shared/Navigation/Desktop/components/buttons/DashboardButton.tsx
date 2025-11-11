@@ -39,7 +39,7 @@ export default function DashboardButton(): JSX.Element {
                     </p>
                 </button>
             </Link>
-            {signOut && <SignOutModal />}
+
         </div>
     );
 };

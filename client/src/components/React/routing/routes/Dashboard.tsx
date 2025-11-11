@@ -5,8 +5,6 @@ import { AppDispatch, RootState } from "@/ReduxToolKit/store";
 import Display from "../../features/dashboard/Content/containers/Display";
 import FooterBarLoader from "../../features/dashboard/ProfileNavigation/skeletons/FooterBarSkeleton";
 import SidebarLoader from "../../features/dashboard/ProfileNavigation/skeletons/SidebarSkeleton";
-import { AnimatePresence } from "framer-motion";
-import SignOutModal from "../../session/forms/AuthForms/SignOutModal";
 import DelayedFallback from "../../Shared/fallbacks/DelayedFallback";
 import { clearResearchScrollPos, clearScrollPosition, presentMetrics } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
 const MobileProfileNav = lazy(() => import('../../features/dashboard/ProfileNavigation/mobile/ProfileMenu'));
@@ -53,9 +51,7 @@ export default function Dashboard(): JSX.Element {
 
             <Display />
 
-            <AnimatePresence>
-                {signingOut && <SignOutModal />}
-            </AnimatePresence>
+
         </main>
     )
 };

@@ -73,10 +73,6 @@ export default function Home({ }) {
                 {showToast && <ArticleExtractionToast setShowToast={setShowToast} />}
             </AnimatePresence>
 
-            {signingOut &&
-                <SignOutModal />
-            }
-
             <HeroImage />
             <ChartingFeatures />
 

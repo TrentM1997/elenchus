@@ -73,7 +73,7 @@ function ScrapeProgress({ progress }: { progress: string }): JSX.Element | null 
 
     return (
         <div className="flex items-center justify-center p-3 w-auto h-auto rounded-lg bg-white/5">
-            <p className="text-zinc-400 font-light tracking-tight text-sm">
+            <p aria-live="polite" className="text-zinc-400 font-light tracking-tight text-sm">
                 Progress  {progress}
             </p>
         </div>

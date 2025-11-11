@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect } from "react";
 import { Suspense } from "react";
-import { useDispatch } from "react-redux";
-import type { AppDispatch } from "@/ReduxToolKit/store";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "@/ReduxToolKit/store";
 import { useLoaderData, ScrollRestoration, useLocation } from "react-router-dom";
 import type { RootPayload } from "../loaderFunctions/rootLoader";
 import Navigation from "../../Shared/Navigation/Navigation";
@@ -11,11 +11,13 @@ import { populateResearch } from "@/ReduxToolKit/Reducers/UserContent/UserInvest
 import { authenticate } from "@/ReduxToolKit/Reducers/Athentication/Authentication";
 import Pageskeleton from "../skeletons/PageSkeleton";
 import { AnimatePresence, motion } from "framer-motion";
-import { softEase } from "@/motion/variants";
+import ModalLayer from "../../Shared/modals/ModalLayer";
+import SignOutModal from "../../session/forms/AuthForms/SignOutModal";
+
 
 export default function Root() {
     const { user, articles, investigations } = useLoaderData() as RootPayload;
-    const location = useLocation();
+    const signout = useSelector((s: RootState) => s.auth.signOut);
     const dispatch = useDispatch<AppDispatch>();
 
 
@@ -34,6 +36,9 @@ export default function Root() {
         <>
             <Navigation
             />
+            <AnimatePresence mode="wait">
+                {signout && <ModalLayer key='overlay'><SignOutModal key='modal' /></ModalLayer>}
+            </AnimatePresence>
             <Suspense
                 fallback={<Pageskeleton />}
             >

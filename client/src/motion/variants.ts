@@ -23,6 +23,12 @@ export const hideTop = {
     }
 };
 
+export const popoverVariants = {
+    initial: { opacity: 0 },
+    animate: { opacity: 1, transition: { delay: 0.3, duration: 0.3, type: 'tween', ease: softEase } },
+    exit: { opacity: 0, transition: { delay: 0, duration: 0.4, type: 'tween', ease: softEase } }
+};
+
 export const stepVariants = {
     open: {
         opacity: 1,
