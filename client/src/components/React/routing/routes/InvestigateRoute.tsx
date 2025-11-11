@@ -51,9 +51,8 @@ export default function InvestigateContainer() {
     };
   };
 
-
-
   useEffect(() => {
+
 
 
     return () => {

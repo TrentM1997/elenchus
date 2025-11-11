@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import React from "react";
 import Circuitry from "./Circuitry";
+import { emitFadeFooter } from "@/helpers/customEvents";
 
-function Challenge() {
+function Challenge(): JSX.Element {
+
 
     return (
         <section className="lg:p-8 p-4">
@@ -23,12 +25,16 @@ function Challenge() {
                             establishing what you believe and why
                         </p>
                         <div className="inline-flex flex-wrap items-center mt-8">
-                            <div className="text-sm py-2 px-4 border focus:ring-2 rounded-full border-transparent 
+                            <Link onClick={() => emitFadeFooter()} to={'/investigate'} >
+                                <div
+                                    className="text-sm py-2 px-4 border focus:ring-2 rounded-full border-transparent 
                             bg-white hover:bg-white/10 text-black duration-200 focus:ring-offset-2 focus:ring-white 
                             hover:text-white inline-flex items-center justify-center ring-1 ring-transparent cursor-pointer">
-                                <Link to='/Investigate'> Get started &nbsp; →</Link>
+                                    Get started &nbsp; →
 
-                            </div>
+                                </div>
+                            </Link>
+
                         </div>
                     </div>
                     <div className="h-72 w-72 md:h-auto md:w-auto">

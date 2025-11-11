@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { startTransition, useEffect, useLayoutEffect } from "react";
+import { startTransition, useEffect, useLayoutEffect, useRef } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
 import ErrorBoundary from "../../../Shared/ErrorBoundaries/ErrorBoundary";
@@ -21,8 +21,9 @@ export default function BlueSky({ context, shouldAnimate = true }: BlueSkyProps)
   const researchState = useSelector((state: RootState) => state.investigation);
   const navigate = useNavigate();
   const { idea } = researchState.pov;
-  const shouldRedirect: boolean = context === 'home';
   const dispatch = useDispatch();
+  const shouldRedirect: boolean = context === 'home';
+  const redirectTimer = useRef<number | null>(null);
 
 
   useLayoutEffect(() => {
@@ -36,19 +37,22 @@ export default function BlueSky({ context, shouldAnimate = true }: BlueSkyProps)
   useEffect(() => {
     if (!idea) return
 
-    const timer = window.setTimeout(() => {
-      if (idea && shouldRedirect) {
+    if (idea && shouldRedirect) {
+      redirectTimer.current = window.setTimeout(() => {
         startTransition(() => {
           navigate('/investigate');
+        });
+        redirectTimer.current = null;
+      }, 400);
 
-        })
-      }
-      dispatch(displayBlueSkySearch(false));
+    }
+    dispatch(displayBlueSkySearch(false));
 
-    }, 300);
 
     return () => {
-      clearTimeout(timer)
+      if (redirectTimer.current !== null) {
+        clearTimeout(redirectTimer.current);
+      }
       dispatch(selectPost(null));
     }
 

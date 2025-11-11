@@ -1,8 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { Suspense } from "react";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/ReduxToolKit/store";
-import { useLoaderData, ScrollRestoration } from "react-router-dom";
+import { useLoaderData, ScrollRestoration, useLocation } from "react-router-dom";
 import type { RootPayload } from "../loaderFunctions/rootLoader";
 import Navigation from "../../Shared/Navigation/Navigation";
 import { Outlet } from "react-router-dom";
@@ -10,10 +10,14 @@ import { populateArticles } from "@/ReduxToolKit/Reducers/UserContent/UserConten
 import { populateResearch } from "@/ReduxToolKit/Reducers/UserContent/UserInvestigations";
 import { authenticate } from "@/ReduxToolKit/Reducers/Athentication/Authentication";
 import Pageskeleton from "../skeletons/PageSkeleton";
+import { AnimatePresence, motion } from "framer-motion";
+import { softEase } from "@/motion/variants";
 
 export default function Root() {
     const { user, articles, investigations } = useLoaderData() as RootPayload;
+    const location = useLocation();
     const dispatch = useDispatch<AppDispatch>();
+
 
     useEffect(() => {
         if (user) {
@@ -25,6 +29,7 @@ export default function Root() {
         }
     }, [user, articles, investigations, dispatch]);
 
+
     return (
         <>
             <Navigation
@@ -32,8 +37,10 @@ export default function Root() {
             <Suspense
                 fallback={<Pageskeleton />}
             >
+
                 <Outlet />
                 <ScrollRestoration />
+
             </Suspense>
         </>
     );

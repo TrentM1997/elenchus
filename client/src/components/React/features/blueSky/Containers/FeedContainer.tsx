@@ -25,7 +25,7 @@ export default function FeedContainer({ posts, shouldRedirect, shouldAnimate = t
             <div className="relative min-h-screen w-full">
 
                 <AnimatePresence>
-                    {popoverPost &&
+                    {popoverPost && selected &&
                         <Popover
                             key='popoverPost'
                             shouldRedirect={shouldRedirect}

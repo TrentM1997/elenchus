@@ -1,4 +1,7 @@
-<footer class="bg-black lg:p-8 z-20">
+<footer
+	id="global-footer"
+	class="bg-black lg:p-8 z-20 transition-opacity duration-200 ease-soft"
+>
 	<div
 		class="items-center px-8 mx-auto py-12 lg:py-16 md:px-12 lg:px-16 xl:px-36 2xl:max-w-7xl"
 	>
@@ -221,3 +224,11 @@
 		</section>
 	</div>
 </footer>
+<script>
+	const footer = document.getElementById("global-footer");
+
+	window.addEventListener("footer:fadeout", () => {
+		footer.style.opacity = "0";
+		setTimeout(() => (footer.style.opacity = "1"), 400);
+	});
+</script>
