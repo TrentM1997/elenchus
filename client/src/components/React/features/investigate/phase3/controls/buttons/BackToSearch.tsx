@@ -1,32 +1,17 @@
 import { displayArticleContent, displaySearch, displayReturnModal } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer"
 import { useDispatch } from "react-redux"
-import { useEffect, useState } from "react";
 
 export function BackToSearch(): JSX.Element {
-    const [returning, setReturning] = useState<boolean>(false);
     const dispatch = useDispatch();
+    const wait = (ms: number) => new Promise(res => setTimeout(res, ms));
 
-    const goBack = (): void => {
+    const returnToSearch = async () => {
         dispatch(displayArticleContent(false));
-        dispatch(displayReturnModal(false));
+        await wait(200);
         dispatch(displaySearch(true));
+        await wait(100);
+        dispatch(displayReturnModal(false));
     };
-
-
-    useEffect(() => {
-
-        if (!returning) return;
-
-        const timer = window.setTimeout(() => {
-            goBack();
-        }, 150);
-
-        return () => {
-            clearTimeout(timer);
-        };
-
-    }, [returning])
-
 
     return (
         <div className="z-50 opacity-0 animate-fade-blur animation-delay-400ms
@@ -46,7 +31,7 @@ export function BackToSearch(): JSX.Element {
                     <button onClick={() => { dispatch(displayReturnModal(false)) }} type="button" className="text-base min-w-36 py-2 w-full px-4 border focus:ring-2 rounded-full border-transparent bg-white hover:bg-white/10 text-black duration-200 focus:ring-offset-2 focus:ring-white hover:text-white inline-flex items-center justify-center ring-1 ring-transparent">
                         No
                     </button>
-                    <button onClick={() => setReturning(true)} type="button" className="text-base py-2 min-w-36 w-full px-4 border focus:ring-2 rounded-full border-transparent bg-white hover:bg-white/10 text-black duration-200 focus:ring-offset-2 focus:ring-white hover:text-white inline-flex items-center justify-center ring-1 ring-transparent">
+                    <button onClick={returnToSearch} type="button" className="text-base py-2 min-w-36 w-full px-4 border focus:ring-2 rounded-full border-transparent bg-white hover:bg-white/10 text-black duration-200 focus:ring-offset-2 focus:ring-white hover:text-white inline-flex items-center justify-center ring-1 ring-transparent">
                         Yes
                     </button>
                 </div>
