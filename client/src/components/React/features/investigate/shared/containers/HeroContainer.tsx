@@ -20,7 +20,6 @@ export default function HeroContainer({
     const [spacerHeight, setSpacerHeight] = useState<number | null>(80);
     const articles: ReadingSliceState = useSelector((state: RootState) => state.investigation.read.articles)
     const { showMindMap, showSearch, showWrapUp, showCompletion, showResults, showWorkModal } = useSelector((s: RootState) => s.investigation.display, shallowEqual);
-    const status = useSelector((s: RootState) => s.investigation.read.status);
     const heightRef = useRef(null);
     const showSpacerDiv = useMemo(() => {
         const hasRetrievedArticles: boolean = ((Array.isArray(articles)) && (articles.length > 0));

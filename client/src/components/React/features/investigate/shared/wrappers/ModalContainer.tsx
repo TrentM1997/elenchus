@@ -10,7 +10,14 @@ export default function ModalContainer() {
     const showBackToSearchModal: boolean = useSelector((s: RootState) => s.investigation.display.showBackToSearchModal);
 
     return <AnimatePresence mode="wait">
-        {showBackToSearchModal ? <ModalLayer key='back-to-search-overlay'><BackToSearch key="goBack" /> </ModalLayer> : null}
-        {showGetArticlesModal && <GetTheseArticles key="getContent" />}
+        {showBackToSearchModal && <ModalLayer key='back-to-search-overlay'>
+            <BackToSearch key="goBack" />
+        </ModalLayer>
+        }
+        {showGetArticlesModal &&
+            <ModalLayer key='get-these-articles-overlay'>
+                <GetTheseArticles key="getContent" />
+            </ModalLayer>
+        }
     </AnimatePresence>
 };

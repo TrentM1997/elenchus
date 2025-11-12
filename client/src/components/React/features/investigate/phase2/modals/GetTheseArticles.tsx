@@ -1,96 +1,94 @@
-import { AnimatePresence, motion } from "framer-motion"
-import { createPortal } from "react-dom"
 import { runFirecrawlExtraction } from "@/ReduxToolKit/Reducers/Investigate/Reading"
 import { useAppdispatch } from "@/hooks/appDispatch"
 import { useSelector, useDispatch } from "react-redux"
 import { RootState } from "@/ReduxToolKit/store"
 import { displayGetArticlesModal, displayArticleContent, displaySearch } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer"
-import { resetResults } from "@/ReduxToolKit/Reducers/Investigate/SearchResults"
-import { useEffect, useState } from "react"
-import { getQuery } from "@/ReduxToolKit/Reducers/Investigate/UserPOV"
-import { variants } from "@/motion/variants"
 import DisplayThese from "./DisplayThese"
-import { ChosenArticleSlice } from "@/ReduxToolKit/Reducers/Investigate/ChosenArticles"
+import { ChosenArticleSlice } from "@/ReduxToolKit/Reducers/Investigate/ChosenArticles";
+import { wait } from "@/helpers/Presentation"
 
-export function GetTheseArticles() {
+export function GetTheseArticles(): JSX.Element {
     const { chosenArticles }: ChosenArticleSlice = useSelector((state: RootState) => state.investigation.getArticle);
-    const [fetching, setFetching] = useState<boolean | null>(null);
     const appDispatch = useAppdispatch();
     const dispatch = useDispatch();
 
     const retrieveArticles = (): void => {
-        dispatch(getQuery(null))
-        dispatch(resetResults())
         appDispatch(runFirecrawlExtraction({ articles: chosenArticles }));
     };
 
-    useEffect(() => {
+    const executeExtraction = async () => {
+        retrieveArticles();
+        await wait(200);
+        dispatch(displaySearch(false));
+        await wait(200);
+        dispatch(displayGetArticlesModal(false));
+        await wait(200);
+        dispatch(displayArticleContent(true));
+    };
 
-        if (!fetching) {
-            return
-        } else {
-            retrieveArticles();
-        };
+    const dontExecute = () => {
+        dispatch(displayGetArticlesModal(false));
+    };
 
-        const timer = window.setTimeout(() => {
-            dispatch(displayGetArticlesModal(false));
-            dispatch(displaySearch(false));
-            dispatch(displayArticleContent(true));
-        }, 200);
+    return (
 
-        return () => clearTimeout(timer);
-
-    }, [fetching]);
-
-    const modal = (
-        <motion.div
-            key='getTheseArticles'
-            variants={variants}
-            initial="closed"
-            animate="open"
-            exit="closed"
-            transition={{ type: 'tween', duration: 0.2, ease: [0.33, 0, 0.67, 1] }}
-            className="fixed inset-0 flex items-start md:py-36 xl:py-14 justify-center p-4 bg-black/60 backdrop-blur-[3px] will-change-[opacity,backdrop-filter]"
-        >
-            <div className="opacity-0 animate-fade-skew animation-delay-400ms transition-opacity ease-soft flex 
-            flex-col items-center gap-6 rounded-3xl p-2 md:p-8 lg:p-4 w-[95dvw] sm:w-11/12 lg:w-3/4 relative -bottom-16 lg:bottom-20 xl:bottom-0 xl:w-5/6 2xl:max-w-6xl h-auto
+        <div
+            aria-label="Extract the chosen articles modal"
+            className="opacity-0 animate-fade-blur animation-delay-400ms will-change-[opacity] ease-soft flex 
+            flex-col items-center gap-6 rounded-3xl p-2 md:p-8 lg:p-4 w-88 sm:w-11/12 lg:w-3/4 
+            relative  xl:w-5/6 2xl:max-w-6xl h-auto
      sm:gap-y-10 sm:p-10 bg-black border border-border_gray mt-2 
      shadow-material text-center">
-                <div className="mx-auto flex flex-col gap-y-2 lg:gap-y-12 w-full items-end h-full">
-                    <div className="w-full flex justify-center h-auto">
-                        <p className="text-white text-lg xl:text-3xl font-light tracking-tight text-center py-2 w-full">Get these articles?</p>
-
-                    </div>
-                    <div className={`${fetching ? 'opacity-0' : 'opacity-100'} 
-                    flex items-center justify-center h-full w-full
-                    transition-opacity duration-150 ease-in-out`}>
-                        <DisplayThese fetching={fetching} />
-
-                    </div>
-                    <div className="flex gap-x-2 py-4 items-center justify-center h-full w-full">
-                        <button onClick={() => setFetching(true)} type="button"
-                            className="text-base min-w-36 md:w-52 py-2 px-4 border focus:ring-2 rounded-full shadow-material 
-                    border-transparent bg-white hover:bg-white/10 text-black duration-200 focus:ring-offset-2 
-                    focus:ring-white hover:text-white inline-flex items-center justify-center ring-1 ring-transparent">
-                            Yes
-                        </button>
-                        <button onClick={() => dispatch(displayGetArticlesModal(false))} type="button"
-                            className="text-base py-2 min-w-36 md:w-52 px-4 border focus:ring-2 rounded-full shadow-material
-                    border-transparent bg-white hover:bg-white/10 text-black duration-200 focus:ring-offset-2 
-                    focus:ring-white hover:text-white inline-flex items-center justify-center ring-1 ring-transparent">
-                            No
-                        </button>
-
-                    </div>
-                </div>
+            <div className="mx-auto flex flex-col gap-y-2 
+            lg:gap-y-12 w-full items-end h-full"
+            >
+                <GetArticlesHeader />
+                {(Array.isArray(chosenArticles))
+                    && (chosenArticles.length > 0)
+                    && <DisplayThese />}
+                <ExtractThese executeExtraction={executeExtraction} dontExecute={dontExecute} />
             </div>
+        </div>
+    );
+};
 
-        </motion.div>
-    )
+
+interface ExtractThese {
+    executeExtraction: () => Promise<void>,
+    dontExecute: () => void
+}
+
+function ExtractThese({ executeExtraction, dontExecute }: ExtractThese): JSX.Element {
 
 
     return (
-        createPortal(modal, document.body)
-    )
+        <div className="flex gap-x-2 py-4 items-center justify-center h-full w-full">
+            <button onClick={executeExtraction} type="button"
+                className="text-base min-w-36 md:w-52 py-2 px-4 rounded-full shadow-material 
+                 bg-white hover:bg-white/15 text-black duration-200 
+                    hover:text-white inline-flex items-center justify-center">
+                Yes
+            </button>
+            <button onClick={dontExecute} type="button"
+                className="text-base py-2 min-w-36 md:w-52 px-4 rounded-full shadow-material
+                     bg-white hover:bg-white/15 text-black duration-200 
+                     hover:text-white inline-flex items-center justify-center">
+                No
+            </button>
 
+        </div>
+    )
+};
+
+
+function GetArticlesHeader(): JSX.Element {
+
+    return (
+        <header className="w-full flex justify-center h-auto"
+        >
+            <h1 className="text-white text-lg xl:text-3xl font-light 
+                    tracking-tight text-center py-2 w-full"
+            >Get these articles?</h1>
+        </header>
+    );
 };

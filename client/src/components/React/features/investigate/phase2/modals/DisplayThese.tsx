@@ -4,58 +4,66 @@ import { RootState } from "@/ReduxToolKit/store";
 import ArticleLink from "../results/components/links/ArticleLink";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";
+import type { SelectedArticle } from "@/env";
 
-export default function DisplayThese({ fetching }) {
+export default function DisplayThese() {
     const investigateState = useSelector((state: RootState) => state.investigation)
     const { chosenArticles } = investigateState.getArticle;
     const { articleOptions } = investigateState.search;
-    const [selected, setSelected] = useState<ArticleType[]>([]);
     const { boxShadow, onScrollHandler } = useScrollWithShadow();
     const isMobile = useIsMobile();
-
+    const MOBILE_SHADOW = isMobile ? { boxShadow: boxShadow } : null;
     const optionsMap: Map<string, ArticleType> = useMemo(() => {
 
         const mappedOptions: Map<string, ArticleType> = new Map(
-
             articleOptions?.map((article: ArticleType) =>
                 [article.url, article])
         );
-        return mappedOptions ?? null;
+        return mappedOptions;
     }, [articleOptions]);
 
-    useEffect(() => {
+    const selected = useMemo(() => {
 
-        function getConfirmation(map: Map<string, ArticleType>, chosen: ArticleType[]): ArticleType[] | null {
-            let results = [];
-            for (let i = 0; i < chosen.length; i++) {
-                let link = chosen[i].url;
-                if (map.has(link)) {
-                    results.push(map.get(link));
-                };
-            };
-            return results ?? null;
-        };
-
-        if (Array.isArray(chosenArticles) && (chosenArticles.length > 0) && (optionsMap.size > 0)) {
-            const displayThese = getConfirmation(optionsMap, chosenArticles);
-            setSelected(displayThese);
-        };
-
+        if (!chosenArticles?.length || !optionsMap.size) return [];
+        return chosenArticles
+            .map((a: SelectedArticle) => optionsMap.get(a.url))
+            .filter(Boolean) as ArticleType[];
     }, [chosenArticles, optionsMap]);
 
 
     return (
-        <div className="relative w-full h-[55dvh] sm:h-full mx-auto">
-            <div onScroll={onScrollHandler} style={isMobile ? { boxShadow } : null}
-                className="py-2 mx-auto gap-y-2 
-             w-full h-full relative overflow-y-auto no-scrollbar z-40 transition-all duration-200 ease-in-out sm:flex-row sm:flex-wrap flex flex-col items-center justify-start sm:justify-center sm:gap-x-3">
-                {selected?.length && chosenArticles?.length && boxShadow
-                    ? selected.map((article, i) => (
-                        <ArticleLink inModal={true} chosenArticles={chosenArticles} key={article.url} article={article} index={i} removingModal={fetching} />
-                    ))
-                    : null}
+        <div
+            aria-label="Chosen articles container"
+            className="flex items-center justify-center h-full w-full opacity-0 
+                animate-fade-clip animation-delay-700ms ease-soft"
+        >
+            <div className="relative w-full h-[55dvh] sm:h-full mx-auto"
+            >
+                <ul
+                    aria-label="Chosen articles displayed"
+                    onScroll={onScrollHandler}
+                    style={MOBILE_SHADOW}
+                    className="py-2 mx-auto gap-y-2 
+             w-full h-full relative overflow-y-auto no-scrollbar z-40  
+              sm:flex-row sm:flex-wrap flex flex-col items-center 
+              justify-start sm:justify-center sm:gap-x-3"
+                >
+                    {(selected.length > 0) &&
+                        boxShadow &&
+                        selected.map((article, i) => (
+                            <ArticleLink
+                                key={article.url}
+                                inModal={true}
+                                chosenArticles={chosenArticles}
+                                article={article}
+                                index={i}
+                            />
+                        ))
+                    }
+                </ul>
             </div>
         </div>
+
     )
 };
 

@@ -23,6 +23,7 @@ export default function SearchBar({ getSearchInput, handleSubmit, flush }: Searc
         }
     };
 
+
     return (
         <form
             className={`${(contentContainerStatus === 'active') ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}

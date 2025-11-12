@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
 
 
 export interface UserPOVState {
@@ -9,7 +8,7 @@ export interface UserPOVState {
     expertise: string | null,
     biases: string | null,
     premises: string | null,
-    query: string | null,
+    //  query: string | null,
     searching: boolean | null,
     loading: boolean | null,
     showOptions: boolean
@@ -22,7 +21,7 @@ const initialState: UserPOVState = {
     expertise: null,
     biases: null,
     premises: null,
-    query: null,
+    //  query: null,
     searching: false,
     loading: false,
     showOptions: true
@@ -49,9 +48,7 @@ export const UserPOVSlice = createSlice({
         getPremises: (state, action) => {
             state.premises = action.payload
         },
-        getQuery: (state, action) => {
-            state.query = action.payload
-        },
+
         searchingArticles: (state, action) => {
             state.searching = action.payload
         },
@@ -65,6 +62,6 @@ export const UserPOVSlice = createSlice({
     }
 })
 
-export const { getIdea, getPerspective, getExpertise, getBiases, getPremises, getQuery, searchingArticles, loading, preselected } = UserPOVSlice.actions
+export const { getIdea, getPerspective, getExpertise, getBiases, getPremises, searchingArticles, loading, preselected } = UserPOVSlice.actions
 
 export default UserPOVSlice.reducer

@@ -1,4 +1,5 @@
 import { displayArticleContent, displaySearch, displayReturnModal } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer"
+import { resetResults } from "@/ReduxToolKit/Reducers/Investigate/SearchResults";
 import { useDispatch } from "react-redux"
 
 export function BackToSearch(): JSX.Element {
@@ -6,6 +7,7 @@ export function BackToSearch(): JSX.Element {
     const wait = (ms: number) => new Promise(res => setTimeout(res, ms));
 
     const returnToSearch = async () => {
+        dispatch(resetResults());
         dispatch(displayArticleContent(false));
         await wait(200);
         dispatch(displaySearch(true));

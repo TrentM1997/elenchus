@@ -1,5 +1,7 @@
 //helper functions to shorten strings, arrays etc
 
+export const wait = (ms: number) => new Promise(res => setTimeout(res, ms));
+
 export const limitArray = (arr: any) => {
 
     let shortenedAuthors = []
