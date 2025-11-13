@@ -1,7 +1,21 @@
 import Completed from "../phase5/Completed"
-
+import { useDispatch } from "react-redux"
+import type { AppDispatch } from "@/ReduxToolKit/store"
+import { changePhase } from "@/ReduxToolKit/Reducers/Investigate/Rendering"
+import { useEffect } from "react";
 
 export default function CompletionHero() {
+    const dispatch = useDispatch<AppDispatch>();
+
+    useEffect(() => {
+        const timer = window.setTimeout(() => {
+            dispatch(changePhase('Phase 6'));
+        }, 2000);
+
+        return () => {
+            clearTimeout(timer);
+        }
+    }, []);
 
     return (
         <article className="w-full h-full flex flex-col items-center gap-y-2 xs:px-4 

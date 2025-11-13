@@ -3,9 +3,9 @@ import EndInvestigateButton from "./buttons/FinishInvestigation"
 import { getTakeAways } from "@/ReduxToolKit/Reducers/Investigate/Review"
 import { useSelector, useDispatch } from "react-redux"
 import { RootState } from "@/ReduxToolKit/store"
-import { SetStateAction, useEffect, useRef, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import type { AppDispatch } from "@/ReduxToolKit/store"
-import { displayWrapUp, displayCompletion } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer"
+import { changePhase } from "@/ReduxToolKit/Reducers/Investigate/Rendering"
 
 type Opt = 'initial' | 'Opt-in' | 'Opt-out';
 
@@ -19,11 +19,8 @@ export default function Stance() {
         if (option === 'initial') return;
 
         if (option === 'Opt-out') {
-
-            dispatch(displayWrapUp(false))
-            dispatch(displayCompletion(true))
+            dispatch(changePhase('Phase 5'));
         };
-
     }, [option, dispatch]);
 
 

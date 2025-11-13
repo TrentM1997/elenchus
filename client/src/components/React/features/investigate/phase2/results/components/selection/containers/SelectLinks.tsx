@@ -7,27 +7,23 @@ import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReduce
 import RetrieveChosenArticles from "../components/buttons/RetrieveChosenArticles";
 import SelectTooltipWrapper from "../components/tooltips/SelectTooltipWrapper";
 import CurrentChosen from "../components/info/CurrentChosen";
+import type { ModalDisplayed, SelectionBar } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 
 export default function SelectLinks() {
   const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
+  const modal: ModalDisplayed = useSelector((s: RootState) => s.investigation.rendering.modal);
   const { articleOptions, status } = investigateState.search;
   const { getArticle } = investigateState;
   const { showGetArticlesModal } = investigateState.display;
   const { chosenArticles } = getArticle;
   const visible = useMinTimeVisible((status === 'pending'), 150, 800);
-
-  const showSelectBar = useMemo((): boolean => {
-    const loaded: boolean = Array.isArray(articleOptions) && (articleOptions.length > 0);
-    const fallbackUnmounted: boolean = (visible !== true);
-    const shouldShow: boolean = (loaded && fallbackUnmounted);
-    return shouldShow;
-  }, [status, articleOptions, visible]);
-
+  const results = (Array.isArray(articleOptions)) && (articleOptions.length > 0);
+  const canAnimate = (!visible) && (modal === null);
 
 
   return (
     <AnimatePresence initial={false}>
-      {showSelectBar &&
+      {canAnimate && (results) &&
         <motion.div
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: 1, y: showGetArticlesModal ? 100 : 0 }}

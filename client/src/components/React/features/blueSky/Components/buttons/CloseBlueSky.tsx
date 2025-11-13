@@ -1,12 +1,13 @@
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/ReduxToolKit/store";
 import { displayBlueSkySearch } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer";
+import { changePhase } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 
 export default function CloseBlueSky() {
     const dispatch = useDispatch<AppDispatch>();
 
     return (
-        <div onClick={() => dispatch(displayBlueSkySearch(false))}
+        <div onClick={() => dispatch(changePhase('Phase 1'))}
             className="absolute top-1.5 right-1.5 z-50 max-h-8 max-w-8 p-1 
                   cursor-pointer rounded-full hover:bg-white/20 transition-all 
                   duration-200 ease-in-out"

@@ -26,7 +26,7 @@ export default function SearchBar({ getSearchInput, handleSubmit, flush }: Searc
 
     return (
         <form
-            className={`${(contentContainerStatus === 'active') ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
+            className={`
                 bg-white/10 hover:bg-white/15
             transition-all duration-200 ease-soft text-white w-full h-fit 
             border-none md:h-10 md:p-0 2xl:px-1 rounded-full relative

@@ -3,6 +3,7 @@ import { RootState } from "@/ReduxToolKit/store";
 import { displayGetArticlesModal, displaySelectionWarning, displaySelectTooltip } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer";
 import { AppDispatch } from "@/ReduxToolKit/store";
 import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
+import { populateModal, populateTooltip } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 
 export default function RetrieveChosenArticles() {
     const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
@@ -11,9 +12,9 @@ export default function RetrieveChosenArticles() {
 
     const handleSummaries = () => {
         if (chosenArticles.length > 0) {
-            dispatch(displayGetArticlesModal(true))
+            dispatch(populateModal('Extract Confirmation'));
         } else {
-            dispatch(displaySelectionWarning(true))
+            dispatch(populateTooltip('Selection Required'));
         }
     };
 

@@ -1,30 +1,8 @@
 import Lottie from "lottie-react"
 import blueCheck from '@/lotties/blueCheck.json'
-import { useEffect } from "react"
-import { displayCompletion, displayResults } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer"
-import { useDispatch, useSelector } from "react-redux"
-import { RootState } from "@/ReduxToolKit/store"
 
 
 export default function Completed() {
-    const investigateState = useSelector((state: RootState) => state.investigation)
-    const { display } = investigateState
-    const showComplete = display
-    const dispatch = useDispatch()
-
-    useEffect(() => {
-
-        const timer = setTimeout(() => {
-            dispatch(displayCompletion(false))
-
-        }, 2000)
-
-        return () => {
-            dispatch(displayResults(true))
-            clearTimeout(timer)
-        }
-
-    }, [showComplete])
 
     return (
         <article className="2xl:min-w-[60rem] w-full md:w-4/5 h-fit md:h-full mx-auto flex flex-col items-center md:gap-y-6 relative">

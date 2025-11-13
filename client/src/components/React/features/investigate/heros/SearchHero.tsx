@@ -1,22 +1,8 @@
 import Search from "../phase2/search/containers/Search";
-import { useSelector, useDispatch } from "react-redux";
-import type { RootState, AppDispatch } from "@/ReduxToolKit/store";
-import { useEffect } from "react";
-import { displaySearch } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer";
 import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary";
 import ScrolltoTop from "@/helpers/ScrollToTop";
-import React from "react";
 
 export default function SearchHero(): JSX.Element {
-    const getContent = useSelector((state: RootState) => state.investigation.read.getContent);
-    const dispatch = useDispatch<AppDispatch>();
-
-    useEffect(() => {
-
-        if (getContent) {
-            dispatch(displaySearch(false));
-        };
-    }, [getContent])
 
     return (
         <section

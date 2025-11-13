@@ -11,15 +11,12 @@ import Notes from '@/components/React/features/investigate/notes/Notes';
 import BlueSkySkeleton from '@/components/React/features/blueSky/skeletons/BlueSkySkeleton';
 import PanelContainer from "@/components/React/features/investigate/phase3/controls/containers/PanelContainer";
 import DelayedFallback from '../../Shared/fallbacks/DelayedFallback';
-import React from 'react';
-import type { ContentStatus } from '@/ReduxToolKit/Reducers/Investigate/DisplayReducer';
+import type { Phase, PathSelected } from '@/ReduxToolKit/Reducers/Investigate/Rendering';
 
-function InvestigationWorkSpace() {
-    const showOptions = useSelector((s: RootState) => s.investigation.pov.showOptions);
-    const idea = useSelector((s: RootState) => s.investigation.pov.idea);
+export default function InvestigationWorkSpace() {
+    const phase: Phase = useSelector((s: RootState) => s.investigation.rendering.phase);
+    const path: PathSelected = useSelector((s: RootState) => s.investigation.rendering.path);
     const takingNotes = useSelector((s: RootState) => s.investigation.notes.takingNotes);
-    const showBlueSkySearch = useSelector((s: RootState) => s.investigation.display.showBlueSkySearch);
-    const contentStatus: ContentStatus = useSelector((s: RootState) => s.investigation.display.contentContainer);
     const notesRef = useRef(null);
     const containerRef = useRef(null);
     const [notePosition, setNotePosition] = useState({ x: 20, y: 200 });
@@ -38,9 +35,7 @@ function InvestigationWorkSpace() {
         });
     };
 
-
     useEffect(() => {
-
         if (containerRef.current && notesRef.current) handleDragConstraints();
     }, []);
 
@@ -50,40 +45,52 @@ function InvestigationWorkSpace() {
             ref={containerRef}
             id='workspace'
             className={`w-full h-auto flex flex-col grow
-            justify-start items-center transition-opacity duration-200 
-            
-            `}
+            justify-start items-center transition-opacity duration-200`}
         >
-
-            {!idea && showOptions &&
-                <InputOptions key='input-options' />
+            {
+                (phase === 'Initial')
+                && (path === null)
+                && <InputOptions
+                    key='input-options'
+                />
             }
 
-            {showBlueSkySearch === false && (showOptions === false) &&
+            {(phase === 'Initial')
+                && (path === 'BlueSky Feed')
+                && <Suspense
+                    fallback={
+                        <DelayedFallback key={'bluesky-boundary'}>
+                            <BlueSkySkeleton context={'investigate'} />
+                        </DelayedFallback>
+                    }>
+                    <BlueSkyPosts key='bluesky-feed' context={'investigate'} />
+                </Suspense>
+            }
+            {(phase !== 'Initial') &&
                 <HeroContainer
                     key={'HeroContainer'} />
             }
-
-
-            {showBlueSkySearch &&
-                <Suspense fallback={<DelayedFallback><BlueSkySkeleton context={'investigate'} /></DelayedFallback>}>
-                    <BlueSkyPosts context={'investigate'} />
-                </Suspense>
-            }
-
             <Suspense
                 key={'content-container'}
-                fallback={<DelayedFallback delay={300}><ComponentLoader /></DelayedFallback>}
+                fallback={
+                    <DelayedFallback
+                        key='content-boundary'
+                        delay={300}
+                    >
+                        <ComponentLoader key='loader-spinner' />
+                    </DelayedFallback>}
             >
-                {(contentStatus === 'active') && <Content />}
+                {(phase === 'Phase 2' || phase === 'Phase 3')
+                    && <Content key='article-content'
+                    />
+                }
             </Suspense>
 
-
-            <PanelContainer key='control-panel-container' />
+            <PanelContainer
+                key='control-panel-container' />
 
             <AnimatePresence>
                 {takingNotes &&
-
                     <Notes
                         key={'notepad'}
                         notesRef={notesRef}
@@ -97,6 +104,3 @@ function InvestigationWorkSpace() {
         </section>
     );
 };
-
-
-export default React.memo(InvestigationWorkSpace)

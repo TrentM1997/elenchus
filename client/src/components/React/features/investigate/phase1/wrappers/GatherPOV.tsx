@@ -7,7 +7,6 @@ import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback
 const WindowWrapper = lazy(() => import('./WindowWrapper'));
 
 export default function GatherPOV(): JSX.Element {
-    const showBlueSkySearch: boolean | null = useSelector((state: RootState) => state.investigation.display.showBlueSkySearch);
 
     return (
         <main
@@ -15,11 +14,7 @@ export default function GatherPOV(): JSX.Element {
             lg:items-center xl:items-end justify-center lg:px-4 2xl:gap-y-6 w-full h-full relative"
         >
             <StepWizard />
-
-            {showBlueSkySearch === false &&
-                <Suspense fallback={<DelayedFallback><ComponentLoader /></DelayedFallback>}>
-                    <WindowWrapper />
-                </Suspense>}
+            <WindowWrapper />
         </main>
     )
 };

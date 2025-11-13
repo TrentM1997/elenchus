@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux"
-import { displayCompletion, displayWrapUp } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer"
+import { changePhase } from "@/ReduxToolKit/Reducers/Investigate/Rendering"
 
 export default function EndInvestigateButton() {
     const dispatch = useDispatch()
@@ -7,8 +7,7 @@ export default function EndInvestigateButton() {
     return (
         <button
             onClick={() => {
-                dispatch(displayWrapUp(false))
-                dispatch(displayCompletion(true))
+                dispatch(changePhase('Phase 5'));
             }}
             className="w-auto bg-white hover:bg-white/10 group shadow-thick 
             transition-colors duration-200 ease-in-out rounded-full h-fit py-2 px-8 mx-auto flex items-center">

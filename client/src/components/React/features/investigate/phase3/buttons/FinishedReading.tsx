@@ -6,6 +6,7 @@ import { RootState } from "@/ReduxToolKit/store";
 import { useEffect } from "react";
 import { useTooltipFlags } from "@/hooks/useTooltipFlags";
 import PanelLabel from "./PanelLabel";
+import { changePhase } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 
 
 export function FinishedReading({ failedExtraction }) {
@@ -38,9 +39,7 @@ export function FinishedReading({ failedExtraction }) {
               border-border_gray`}>
             <button
                 onClick={() => {
-                    dispatch(initiateFinalProcess(true))
-                    dispatch(displayArticleContent(false))
-                    dispatch(displayWrapUp(true))
+                    dispatch(changePhase('Phase 4'));
                 }}
                 className="my-auto mx-auto rounded-lg transition-all 
         duration-300 max-w-8 max-h-8 xl:max-w-7 xl:max-h-7 2xl:max-w-8 group

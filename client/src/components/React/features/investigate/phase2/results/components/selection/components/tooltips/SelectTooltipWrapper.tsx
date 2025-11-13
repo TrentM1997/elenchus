@@ -7,9 +7,9 @@ import { useEffect, useMemo } from "react";
 import { useTooltipFlags } from "@/hooks/useTooltipFlags";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/ReduxToolKit/store";
-import { displaySelectTooltip } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer";
 import MaxChosen from "./MaxChosen";
 import { useMaxSelectedToast } from "@/hooks/useAutoDismiss";
+import { populateTooltip } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 
 export default function SelectTooltipWrapper(): JSX.Element | null {
     const chosenArticles = useSelector((state: RootState) => state.investigation.getArticle.chosenArticles);
@@ -33,7 +33,7 @@ export default function SelectTooltipWrapper(): JSX.Element | null {
         const flags = getFlags();
 
         if (flags.selectingTooltip === false) {
-            dispatch(displaySelectTooltip(true));
+            dispatch(populateTooltip('Selection Required'));
             setFlag('selectingTooltip', true);
         };
 

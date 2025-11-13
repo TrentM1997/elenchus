@@ -1,46 +1,46 @@
 import { motion, AnimatePresence } from "framer-motion";
 import SearchResults from "@/components/React/features/investigate/phase2/results/containers/SearchResults";
 import ModalContainer from "@/components/React/features/investigate/shared/wrappers/ModalContainer";
-import { shallowEqual, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
 import ScrolltoTop from "@/helpers/ScrollToTop";
 import ArticleContainer from "@/components/React/Shared/Articles/containers/ArticleContainer";
-import { useMemo } from "react";
-import type { DisplayReducer } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer";
 import type { ModalStages } from "@/ReduxToolKit/Reducers/Investigate/WikipediaSlice";
+import { Phase, TooltipDisplayed } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 
 export default function Content() {
-    const status = useSelector((state: RootState) => state.investigation.search)
+    const tooltip: TooltipDisplayed = useSelector((s: RootState) => s.investigation.rendering.tooltip);
+    const phase: Phase = useSelector((s: RootState) => s.investigation.rendering.phase);
     const wikiModalStages: ModalStages = useSelector((state: RootState) => state.investigation.wiki);
-    const { showContent,
-        showBackToSearchModal,
-        showSearch,
-        showGetArticlesModal,
-        showSelectWarning,
-        showSelectTooltip,
-        showReadingTooltip }: DisplayReducer = useSelector((state: RootState) => state.investigation.display, shallowEqual);
+    //  const status = useSelector((state: RootState) => state.investigation.search);
+    // const { showContent,
+    //     showBackToSearchModal,
+    //     showSearch,
+    //     showGetArticlesModal,
+    //     showSelectWarning,
+    //     showSelectTooltip,
+    //     showReadingTooltip }: DisplayReducer = useSelector((state: RootState) => state.investigation.display, shallowEqual);
+    // const animateSearch = useMemo((): boolean => {
+    //     const firstCondition: boolean = ((showSearch) && (status !== 'idle'));
+    //     const secondCondition: boolean = (!showContent);
+    //     const show: boolean = firstCondition && secondCondition;
+    //     return show;
+    //
+    // }, [showSearch, status]);
+    //
+    // const animateArticles = useMemo(() => {
+    //     const show: boolean = (showContent) && (!animateSearch);
+    //     return show;
+    // }, [animateSearch, showContent]);
 
-    const animateSearch = useMemo((): boolean => {
-        const firstCondition: boolean = ((showSearch) && (status !== 'idle'));
-        const secondCondition: boolean = (!showContent);
-        const show: boolean = firstCondition && secondCondition;
-        return show;
-
-    }, [showSearch, status]);
-
-    const animateArticles = useMemo(() => {
-        const show: boolean = (showContent) && (!animateSearch);
-        return show;
-    }, [animateSearch, showContent]);
-
-
+    // (modal === 'Extract Confirmation') || (modal === 'Back to Search') ? 'pointer-events-none' : 'pointer-events-auto'}
     return (
         <motion.div
             initial={{ opacity: 1 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ type: 'tween', duration: 0.2 }}
-            className={`${showBackToSearchModal || showGetArticlesModal || showSelectWarning || showSelectTooltip ? 'pointer-events-none' : 'pointer-events-auto'}
+            className={`
             ${wikiModalStages.highlight && 'cursor-text'}
                 relative shrink-0 w-full h-full min-h-screen mx-auto xs:px-2`}>
 
@@ -50,7 +50,7 @@ export default function Content() {
                 className="relative 2xl:max-w-7xl w-full min-h-full flex flex-col justify-center box-border mx-auto">
                 <AnimatePresence mode="wait">
 
-                    {animateSearch &&
+                    {(phase === 'Phase 2') &&
                         <motion.div
                             key='links'
                             style={{ position: 'relative' }}
@@ -64,12 +64,12 @@ export default function Content() {
 
                         </motion.div>}
 
-                    {animateArticles &&
+                    {(phase === 'Phase 3') &&
                         <motion.div
                             key='articles'
                             style={{ position: 'relative' }}
                             initial={{ opacity: 0 }}
-                            animate={{ opacity: showReadingTooltip ? 0.5 : 1, transition: { type: 'tween', duration: 0.2, delay: 0.3 } }}
+                            animate={{ opacity: (tooltip === 'Finished Reading Button') ? 0.5 : 1, transition: { type: 'tween', duration: 0.2, delay: 0.3 } }}
                             exit={{ opacity: 0, transition: { type: 'tween', duration: 0.2, delay: 0 } }}
                             className="min-h-screen w-full mx-auto lg:pb-96"
                         >

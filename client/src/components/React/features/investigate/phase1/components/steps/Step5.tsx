@@ -1,17 +1,16 @@
 import { motion } from "framer-motion"
-import { useDispatch, useSelector } from "react-redux"
-import { displaySearch, displayMindMap, contentStatusChange } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer"
+import { useDispatch } from "react-redux"
+import { changePhase } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 import { stepVariants } from "@/motion/variants"
 import PromptForSearch from "../inputs/prompts/PromptForSearch"
 import React from "react"
+import { AppDispatch } from "@/ReduxToolKit/store";
 
 function Step5(): JSX.Element | null {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch<AppDispatch>();
 
     const beginSearch = () => {
-        dispatch(displayMindMap(false));
-        dispatch(displaySearch(true));
-        dispatch(contentStatusChange('active'));
+        dispatch(changePhase('Phase 2'));
     };
 
     return (

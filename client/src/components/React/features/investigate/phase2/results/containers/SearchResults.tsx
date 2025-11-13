@@ -13,6 +13,7 @@ import SelectLinks from "../components/selection/containers/SelectLinks";
 
 export default function SearchResults() {
     const status = useSelector((state: RootState) => state.investigation.search.status);
+
     const articleOptions = useSelector((state: RootState) => state.investigation.search.articleOptions);
     const dispatch = useDispatch();
     const visible = useMinTimeVisible((status === 'pending'), 100, 800);
@@ -22,11 +23,7 @@ export default function SearchResults() {
         return (loaded && empty);
     }, [status, articleOptions]);
 
-    const renderPending = useMemo(() => {
-        const isPending = (status === 'pending');
-        const empty = (!articleOptions);
-        return (empty && isPending);
-    }, [status, articleOptions]);
+    const renderOptions = ((Array.isArray(articleOptions)) && (articleOptions.length > 0));
 
     useEffect(() => {
 
@@ -34,7 +31,6 @@ export default function SearchResults() {
             const formedPages = formPages(articleOptions)
             dispatch(getPages(formedPages))
         };
-
 
     }, [status, articleOptions]);
 
@@ -59,7 +55,7 @@ export default function SearchResults() {
                     {visible && <ResultsPending key={'loading search results'} />}
 
 
-                    {!renderPending && (!visible) &&
+                    {(status === 'fulfilled') && (!visible) && (renderOptions) &&
                         <Pages key={'pages'} />
                     }
 

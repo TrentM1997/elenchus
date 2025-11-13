@@ -1,5 +1,4 @@
 import { useDispatch } from "react-redux"
-import { displayReturnModal } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer"
 import { useSelector } from "react-redux"
 import { RootState } from "@/ReduxToolKit/store";
 import { AnimatePresence } from "framer-motion";
@@ -7,6 +6,7 @@ import { useEffect, useState } from "react";
 import BackToSearchTooltip from "../tooltips/BackToSearchTooltip";
 import PanelLabel from "./PanelLabel";
 import ButtonHoverTooltip from "../tooltips/ButtonHoverTooltip";
+import { populateModal } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 
 interface ReturnToSearchProps {
     failed: boolean
@@ -22,7 +22,7 @@ export default function ReturnToSearch({ failed }: ReturnToSearchProps): JSX.Ele
 
 
     const handleReturn = () => {
-        dispatch(displayReturnModal(true))
+        dispatch(populateModal('Back to Search'));
     };
 
     useEffect(() => {

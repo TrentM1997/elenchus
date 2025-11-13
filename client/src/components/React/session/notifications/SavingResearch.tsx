@@ -9,6 +9,7 @@ import Failed from "./Failed";
 import Pending from "./Pending";
 import Success from "./Success";
 import { stopAskingForFeedBack } from "@/ReduxToolKit/Reducers/Feedback/FeedbackSlice";
+import { populateModal } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 
 export default function SavingResearch({ }) {
     const saveStatus = useSelector((state: RootState) => state.saveResearch.status)
@@ -32,7 +33,7 @@ export default function SavingResearch({ }) {
         const timer = setTimeout(() => {
             dispatch(removeNotification('idle'))
             if (declinedFeedback !== true && seenFeedBackForm !== true) {
-                dispatch(displayFeedBackForm(true))
+                dispatch(populateModal('Feedback Form'))
             }
             dispatch(stopAskingForFeedBack(true))
         }, 2000)

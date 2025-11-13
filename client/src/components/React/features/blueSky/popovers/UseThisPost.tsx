@@ -3,6 +3,7 @@ import { getPopoverPost, landingPageFadeOut, selectPost } from "@/ReduxToolKit/R
 import { getIdea, preselected } from "@/ReduxToolKit/Reducers/Investigate/UserPOV"
 import { useEffect } from "react";
 import { emitFadeFooter } from "@/helpers/customEvents";
+import { changePhase, choosePath } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 
 interface UseThis {
     post: any,
@@ -13,8 +14,8 @@ export default function UseThisPost({ post }: UseThis) {
     const dispatch = useDispatch();
 
     const investigateThis = () => {
-        dispatch(preselected());
         dispatch(getIdea(post.record.text));
+        dispatch(changePhase('Phase 1'));
         emitFadeFooter()
         dispatch(selectPost(null));
     };

@@ -7,35 +7,23 @@ import { createPortal } from "react-dom"
 
 
 export default function StoryPaginate() {
-    const investigateState = useSelector((state: RootState) => state.investigation)
-    const { read } = investigateState
-    const { currentStory, articles } = read
-    const { display } = investigateState
-    const { showContent } = display
+    const currentStory = useSelector((s: RootState) => s.investigation.read.currentStory);
+    const articles = useSelector((s: RootState) => s.investigation.read.articles);
     const dispatch = useDispatch()
 
-    useEffect(() => {
-    }, [showContent, articles])
 
     const decrement = () => {
-        if (showContent) {
-            if (currentStory > 0) {
-                dispatch(decrementStory())
-            }
+        if (currentStory > 0) {
+            dispatch(decrementStory())
         }
-
-    }
+    };
 
     const increment = () => {
 
-        if (showContent) {
-            if (currentStory < articles.length - 1) {
-                dispatch(incrementStory())
-            }
+        if (currentStory < articles.length - 1) {
+            dispatch(incrementStory())
         }
-
-
-    }
+    };
 
     return (
         <div className="z-40 pointer-events-auto flex lg:justify-self-end relative lg:fixed 2xl:right-20 2xl:bottom-16 xl:right-12 xl:bottom-12 lg:bottom-10 lg:right-8">

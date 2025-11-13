@@ -6,6 +6,7 @@ import { displayGetArticlesModal, displayArticleContent, displaySearch } from "@
 import DisplayThese from "./DisplayThese"
 import { ChosenArticleSlice } from "@/ReduxToolKit/Reducers/Investigate/ChosenArticles";
 import { wait } from "@/helpers/Presentation"
+import { changePhase, populateModal } from "@/ReduxToolKit/Reducers/Investigate/Rendering"
 
 export function GetTheseArticles(): JSX.Element {
     const { chosenArticles }: ChosenArticleSlice = useSelector((state: RootState) => state.investigation.getArticle);
@@ -19,11 +20,9 @@ export function GetTheseArticles(): JSX.Element {
     const executeExtraction = async () => {
         retrieveArticles();
         await wait(200);
-        dispatch(displaySearch(false));
+        dispatch(changePhase('Phase 3'))
         await wait(200);
-        dispatch(displayGetArticlesModal(false));
-        await wait(200);
-        dispatch(displayArticleContent(true));
+        dispatch(populateModal(null));
     };
 
     const dontExecute = () => {

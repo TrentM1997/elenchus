@@ -5,6 +5,7 @@ import { AppDispatch } from "@/ReduxToolKit/store";
 import InvestigationWorkSpace from "@/components/React/features/investigate/InvestigationWorkSpace";
 import { displaySelectTooltip } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer";
 import { useBodyLock } from "@/hooks/useBodyLock";
+import { populateModal, populateTooltip } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 
 
 export const PLAYSTATE_KEYS = [
@@ -26,8 +27,7 @@ export function clearCachedPlayStates(keys: Array<string>) {
 
 export default function InvestigateContainer() {
   const dispatch = useDispatch<AppDispatch>();
-  const postSelected: string | null = useSelector((s: RootState) => s.bluesky.selected);
-  const fadeOutHomePage: boolean = useSelector((s: RootState) => s.bluesky.fadeOutHomePage);
+  const modal = useSelector((s: RootState) => s.investigation.rendering.modal);
   const showSelectTooltip = useSelector(
     (s: RootState) => s.investigation.display.showSelectTooltip
   );
@@ -47,7 +47,7 @@ export default function InvestigateContainer() {
 
   function removeToolTip(show: boolean, searched: boolean) {
     if (show && searched) {
-      dispatch(displaySelectTooltip(false));
+      dispatch(populateTooltip(null))
     };
   };
 

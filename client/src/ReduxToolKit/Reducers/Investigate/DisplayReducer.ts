@@ -3,23 +3,23 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 export type ContentStatus = 'active' | 'idle';
 
 interface Display {
-    showMindMap: boolean,
-    showSearch: boolean,
-    showContent: boolean,
-    showWrapUp: boolean,
-    showResults: boolean,
-    showCompletion: boolean,
-    showWorkModal: boolean,
-    showSelectBar: boolean,
-    showBackToSearchModal: boolean,
-    showGetArticlesModal: boolean,
-    contentContainer: ContentStatus,
-    showSelectWarning: boolean,
-    showSelectTooltip: boolean,
-    showReadingTooltip: boolean,
+    showMindMap: boolean, //old, doesn't have use anymore
+    showSearch: boolean, // replaced by phase state
+    showContent: boolean, // replaced by phase state
+    showWrapUp: boolean, // replaced by phase state
+    showResults: boolean, // replaced by phase state
+    showCompletion: boolean, // replaced by phase state
+    showWorkModal: boolean, // replaced by modal state
+    showSelectBar: boolean, // replaced by selection state
+    showBackToSearchModal: boolean, // replaced by modal state
+    showGetArticlesModal: boolean, // replaced by modal state
+    contentContainer: ContentStatus, // will move into new 'Rendering' reducer
+    showSelectWarning: boolean, // replaced by tooltip state
+    showSelectTooltip: boolean, // replaced by tooltip state
+    showReadingTooltip: boolean, // replaced by tooltip state
 
-    showFeedBackForm: boolean,
-    showBlueSkySearch: boolean | null
+    showFeedBackForm: boolean, // will be added to 'Rendering' reducer
+    showBlueSkySearch: boolean | null // will be replaced by modal state
 }
 
 const initialState: Display = {
