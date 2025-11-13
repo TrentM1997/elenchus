@@ -8,6 +8,7 @@ import { ActionCreatorWithoutPayload } from "@reduxjs/toolkit";
 import { User } from "@supabase/supabase-js";
 import { SigninStatus } from "./hooks/useSignIn";
 import type { Article } from "./ReduxToolKit/Reducers/Investigate/Reading";
+import { ActiveTab } from "./ReduxToolKit/Reducers/UserContent/DashboardTabs";
 
 declare global {
   interface ImportMetaEnv {
@@ -341,11 +342,14 @@ declare global {
 
   }
 
+  type DashboardOptionName = ActiveTab | 'Sign Out'
+
   interface DashboardOption {
-    name: string,
-    actionCreator: ActionCreatorWithoutPayload,
-    activeCondition?: boolean,
-    children: ReactNode
+    name: DashboardOptionName,
+    children: ReactNode,
+    tab: ActiveTab,
+    onSelect: () => void,
+    active: boolean
   }
 
   interface HelpModal {
@@ -390,7 +394,7 @@ declare global {
 
 
   interface Icon {
-    active: boolean | null
+    active: boolean
   }
 
   interface SignInHook {

@@ -1,14 +1,20 @@
 import { useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
-import { presentManagement } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
 import { showSignOut } from "@/ReduxToolKit/Reducers/Athentication/Authentication";
 import DashboardOption from "./DashboardOption";
 import SignoutIcon from "@/components/React/Shared/IconComponents/SignoutIcon";
 import SettingsIcon from "@/components/React/Shared/IconComponents/SettingsIcon";
 import React from "react";
+import { chooseTab, type ActiveTab } from "@/ReduxToolKit/Reducers/UserContent/DashboardTabs";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "@/ReduxToolKit/store";
+
+
 
 function SessionOptions() {
-    const displayAccountManagement = useSelector((state: RootState) => state.profileNav.displayAccountManagement);
+    const tab: ActiveTab = useSelector((s: RootState) => s.dashboard.tab);
+    const signingOut = useSelector((s: RootState) => s.auth.signOut);
+    const dispatch = useDispatch<AppDispatch>();
 
     return (
         <ul
@@ -16,11 +22,11 @@ function SessionOptions() {
             className="pt-4 mt-4 space-y-2 font-medium flex flex-col 
                             items-start border-t border-gray-200 dark:border-gray-700"
         >
-            <DashboardOption name="Sign Out" actionCreator={showSignOut}>
+            <DashboardOption active={signingOut} name="Sign Out" tab={tab} onSelect={() => dispatch(showSignOut())}>
                 <SignoutIcon />
             </DashboardOption>
 
-            <DashboardOption name="Manage Account" activeCondition={displayAccountManagement} actionCreator={presentManagement}>
+            <DashboardOption active={tab === 'Manage Account'} name="Manage Account" tab={tab} onSelect={() => dispatch(chooseTab('Manage Account'))}>
                 <SettingsIcon />
             </DashboardOption>
         </ul>

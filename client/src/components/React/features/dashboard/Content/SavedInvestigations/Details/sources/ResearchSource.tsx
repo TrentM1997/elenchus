@@ -3,6 +3,7 @@ import type { AppDispatch } from "@/ReduxToolKit/store";
 import { grabAssociatedArticle } from "@/ReduxToolKit/Reducers/UserContent/UserContentReducer";
 import { presentAssociatedArticle } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
 import React from "react";
+import { chooseTab } from "@/ReduxToolKit/Reducers/UserContent/DashboardTabs";
 
 
 
@@ -11,7 +12,7 @@ function ResearchSource({ source }) {
 
     const handleArticleSelection = () => {
         dispatch(grabAssociatedArticle(source));
-        dispatch(presentAssociatedArticle());
+        dispatch(chooseTab('Associated Article'));
     };
 
 

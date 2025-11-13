@@ -9,6 +9,7 @@ import NewUserSlice from './Reducers/Athentication/NewUserSlice'
 import FeedBackSlice from './Reducers/Feedback/FeedbackSlice'
 import BlueSkySlice from './Reducers/BlueSky/BlueSkySlice'
 import ChartSlice from './Reducers/UserContent/ChartSlice';
+import DashboardTabsSlice from './Reducers/UserContent/DashboardTabs';
 
 export const store = configureStore({
     reducer: {
@@ -21,7 +22,8 @@ export const store = configureStore({
         newUser: NewUserSlice,
         feedback: FeedBackSlice,
         bluesky: BlueSkySlice,
-        chart: ChartSlice
+        chart: ChartSlice,
+        dashboard: DashboardTabsSlice
     }
 
 });

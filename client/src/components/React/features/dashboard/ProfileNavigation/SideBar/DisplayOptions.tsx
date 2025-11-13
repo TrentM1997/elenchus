@@ -2,31 +2,34 @@ import DashboardOption from "./DashboardOption";
 import BookmarkIcon from "@/components/React/Shared/IconComponents/BookmarkIcon";
 import MetricsIcon from "@/components/React/Shared/IconComponents/MetricsIcon";
 import InvestigationsIcon from "@/components/React/Shared/IconComponents/InvestigateIcon";
-import { shallowEqual, useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
-import { presentMetrics, presentResearch, presentArticles } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/ReduxToolKit/store";
 import React from "react";
+import type { ActiveTab } from "@/ReduxToolKit/Reducers/UserContent/DashboardTabs";
+import { chooseTab } from "@/ReduxToolKit/Reducers/UserContent/DashboardTabs";
+import { isArticlesTab, isInvestigationsTab } from "@/helpers/lookup/isActiveTab";
+
 
 function DisplayOptions() {
-    const { displaySavedArticles, displayMetrics, displaySavedInvestigations, displayThisInvestigation, displayThisArticle, readAssociatedArticle } = useSelector((state: RootState) => state.profileNav, shallowEqual);
-    const investigations_innit = (displaySavedInvestigations || displayThisInvestigation || readAssociatedArticle);
-    const articles_innit = (displaySavedArticles || displayThisArticle);
+    const tab: ActiveTab = useSelector((s: RootState) => s.dashboard.tab);
+    const dispatch = useDispatch<AppDispatch>();
+
 
     return (
         <ul
             id="dashboard-controls"
             className="space-y-2 font-medium">
 
-            <DashboardOption name="Metrics" activeCondition={displayMetrics} actionCreator={presentMetrics}>
-                <MetricsIcon active={displayMetrics} />
+            <DashboardOption tab={tab} name="Metrics" active={tab === 'Metrics'} onSelect={() => dispatch(chooseTab('Metrics'))}>
+                <MetricsIcon active={tab === 'Metrics'} />
             </DashboardOption>
 
-            <DashboardOption name="Investigations" activeCondition={investigations_innit} actionCreator={presentResearch}>
-                <InvestigationsIcon active={investigations_innit} />
+            <DashboardOption name="Investigations" active={isInvestigationsTab(tab)} tab={tab} onSelect={() => dispatch(chooseTab('Investigations'))}>
+                <InvestigationsIcon active={isInvestigationsTab(tab)} />
             </DashboardOption>
 
-            <DashboardOption name="Saved Articles" activeCondition={articles_innit} actionCreator={presentArticles}>
-                <BookmarkIcon active={articles_innit} />
+            <DashboardOption name="Articles" active={isArticlesTab(tab)} tab={tab} onSelect={() => dispatch(chooseTab('Articles'))}>
+                <BookmarkIcon active={isArticlesTab(tab)} />
             </DashboardOption>
         </ul>
     );

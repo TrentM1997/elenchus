@@ -11,6 +11,7 @@ import LostData from "@/components/React/Shared/ErrorBoundaries/messages/LostDat
 import DetailView from "../../../ProfileNavigation/mobile/DetailView"
 import { presentResearch } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice"
 import { ScrollUp } from "@/helpers/ScrollToTop"
+import { chooseTab } from "@/ReduxToolKit/Reducers/UserContent/DashboardTabs"
 
 export default function ResearchReview() {
     const investigation = useSelector((state: RootState) => state.userWork.investigationToReview);
@@ -33,15 +34,15 @@ export default function ResearchReview() {
 
 
     const backTo = (): void => {
-        dispatch(presentResearch());
+        dispatch(chooseTab('Investigations'))
         ScrollUp();
     };
 
 
     return (
         <section
-            className="h-full min-h-dvh w-full
-          animate-fade-in duration-200">
+            className="h-full min-h-dvh w-full opacity-0
+          animate-fade-blur animation-delay-200ms">
             <DetailView backTo={backTo} />
             {investigation && <div className="w-full h-full pb-20 overscroll-contain overflow-y-scroll no-scrollbar grow flex flex-col gap-y-24 items-center justify-start">
                 <ErrorBoundary>

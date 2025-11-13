@@ -11,6 +11,7 @@ const Article = lazy(() => import('@/components/React/Shared/Articles/SuccessFul
 import ArticleSkeleton from "@/components/React/Shared/Articles/skeletons/ArticleSkeleton";
 import { presentThisInvestigation } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
 import { grabAssociatedArticle } from "@/ReduxToolKit/Reducers/UserContent/UserContentReducer";
+import { chooseTab } from "@/ReduxToolKit/Reducers/UserContent/DashboardTabs";
 
 export default function OpenAssociatedArticle(): JSX.Element | null {
     const dispatch = useDispatch<AppDispatch>();
@@ -18,7 +19,7 @@ export default function OpenAssociatedArticle(): JSX.Element | null {
 
     const backTo = () => {
         dispatch(grabAssociatedArticle(null));
-        dispatch(presentThisInvestigation());
+        dispatch(chooseTab('Review Investigation'));
     }
 
 
@@ -29,8 +30,8 @@ export default function OpenAssociatedArticle(): JSX.Element | null {
             animate='open'
             exit='closed'
             transition={{ type: 'tween', duration: 0.4, delay: 0.7 }}
-            className="min-h-dvh h-dvh pb-32 w-fit flex items-center justify-center z-30
-                        mx-auto relative mt-16 mt:pt-12 xl:mt-8">
+            className="min-h-dvh h-full pb-[6.5rem] w-fit flex items-center justify-center z-30
+                        mx-auto relative mt-16 xl:mt-6">
             <DetailView backTo={backTo} />
 
             <main

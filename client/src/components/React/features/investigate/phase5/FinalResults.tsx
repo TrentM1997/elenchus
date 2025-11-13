@@ -7,25 +7,30 @@ import { AnimatePresence } from "framer-motion"
 import SavingResearch from "@/components/React/session/notifications/SavingResearch"
 import GoToDashboard from "./buttons/GoToDashboard"
 import FeedBackForm from "@/components/React/session/forms/UserFeedback/FeedbackForm"
+import ModalLayer from "@/components/React/Shared/modals/ModalLayer"
 
 
 export default function FinalResults() {
-    const investigateState = useSelector((state: RootState) => state.investigation)
+    const modal = useSelector((s: RootState) => s.investigation.rendering.modal);
     const saveStatus = useSelector((state: RootState) => state.saveResearch.status)
-    const saved = useSelector((state: RootState) => state.saveResearch.saved)
-    const { display } = investigateState
-    const { showFeedBackForm } = display
-    const { pov } = investigateState
-    const { idea } = pov
+    const saved = useSelector((state: RootState) => state.saveResearch.saved);
+    const idea = useSelector((s: RootState) => s.investigation.pov.idea);
 
     return (
-        <section className={`lg:p-8 h-full w-full flex justify-center mx-auto transition-all duration-200 ease-in-out 
-        ${showFeedBackForm ? 'pointer-events-none opacity-50' : 'pointer-events-auto opacity-100'}`}>
+        <section
+            className={`lg:p-8 h-full w-full flex justify-center 
+        mx-auto transition-all duration-200 ease-in-out`
+            }>
             <AnimatePresence>
                 {saveStatus !== 'idle' && <SavingResearch />}
             </AnimatePresence>
             <AnimatePresence>
-                {showFeedBackForm && <FeedBackForm />}
+                {(modal === 'Feedback Form') &&
+                    <ModalLayer
+                        key={'feedback-overlay'}
+                    ><FeedBackForm />
+                    </ModalLayer>
+                }
             </AnimatePresence>
             <div className="2xl:max-w-7xl xl:max-w-6xl lg:max-w-5xl md:max-w-4xl sm:max-w-168 h-fit py-16 lg:px-16 md:px-12 xl:px-36 items-center relative w-auto
              max-w-88 bg-gradientdown rounded-[3rem]">

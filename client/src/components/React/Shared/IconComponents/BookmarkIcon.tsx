@@ -1,6 +1,7 @@
 import { Icon } from "@/env";
+import React from "react";
 
-export default function BookmarkIcon({ active }: Icon) {
+function BookmarkIcon({ active }: Icon) {
 
     return (
         <svg className={`${active ? 'text-blue-400' : 'text-zinc-400'} shrink-0 w-6 h-6 transition-all duration-200 ease-in-out`}
@@ -9,3 +10,5 @@ export default function BookmarkIcon({ active }: Icon) {
         </svg>
     );
 };
+
+export default React.memo(BookmarkIcon);

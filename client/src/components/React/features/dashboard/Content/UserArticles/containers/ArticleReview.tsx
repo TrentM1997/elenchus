@@ -10,6 +10,7 @@ import { variants } from "@/motion/variants";
 import DetailView from "../../../ProfileNavigation/mobile/DetailView"
 import { presentArticles } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
 import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback";
+import { chooseTab } from "@/ReduxToolKit/Reducers/UserContent/DashboardTabs";
 
 export default function ArticleReview() {
     const savedArticle = useSelector((state: RootState) => state.userdata.ArticleToReview);
@@ -22,7 +23,7 @@ export default function ArticleReview() {
     const dispatch = useDispatch<AppDispatch>();
 
     const backTo = () => {
-        dispatch(presentArticles());
+        dispatch(chooseTab('Articles'));
     };
 
 
@@ -34,8 +35,8 @@ export default function ArticleReview() {
             animate='open'
             exit='closed'
             transition={{ type: 'tween', duration: 0.4, delay: 0.7 }}
-            className="min-h-dvh h-dvh pb-32 w-full flex items-center justify-center overflow-hidden
-                        mx-auto relative mt-16 mt:pt-12 xl:mt-8">
+            className="min-h-dvh h-dvh pb-[6.5rem] w-full flex items-center justify-center overflow-hidden
+                        mx-auto relative mt-16 xl:mt-6">
             <DetailView backTo={backTo} />
 
             <main

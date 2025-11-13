@@ -1,6 +1,6 @@
+import React from "react";
 
-
-export default function SignoutIcon() {
+function SignoutIcon() {
 
     return (
         <svg className="shrink-0 w-6 h-6 md:p-0.5 xl:p-0  text-white/60 transition duration-75  group-hover:text-gray-900 dark:group-hover:text-white" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0,0,256,256">
@@ -8,3 +8,5 @@ export default function SignoutIcon() {
         </svg>
     );
 };
+
+export default React.memo(SignoutIcon);

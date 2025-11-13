@@ -8,8 +8,9 @@ import { useRef, useCallback } from "react";
 import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";
 import { reviewThisResearch } from "@/ReduxToolKit/Reducers/UserContent/UserInvestigations";
 import { useSkeletons } from "@/hooks/useSkeletons";
-import { presentThisInvestigation } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
 import type { SavedInvestigation } from "./SavedResearchLayout";
+import { chooseTab } from "@/ReduxToolKit/Reducers/UserContent/DashboardTabs";
+import { wait } from "@/helpers/Presentation";
 
 interface ResearchScroller {
     timeline: SavedInvestigation[]
@@ -39,13 +40,14 @@ export default function ResearchScroller({ timeline }: ResearchScroller) {
     const virtuosoRef = useRef();
 
 
-    const review = useCallback((investigation: any) => {
+    const review = useCallback(async (investigation: any) => {
         saveNow();
         dispatch(reviewThisResearch(investigation))
-        setTimeout(() => {
-            dispatch(presentThisInvestigation());
-        }, 150);
+        await wait(200);
+        dispatch(chooseTab('Review Investigation'));
     }, []);
+
+
 
     return (
         <div

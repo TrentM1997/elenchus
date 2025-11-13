@@ -14,7 +14,7 @@ function Title({ article, handleArticleSelection }: TitleTypes): React.ReactNode
 
     return (
         <div className={`group w-full h-full px-3 xl:p-4`}
-            onClick={handleArticleSelection(article)}
+            onClick={() => handleArticleSelection(article)}
         >
             <h3
 

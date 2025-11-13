@@ -19,6 +19,8 @@ import { SigninStatus } from "@/hooks/useSignIn";
 import type { AppDispatch } from "@/ReduxToolKit/store";
 import { readSavedArticle } from "@/ReduxToolKit/Reducers/UserContent/UserContentReducer";
 import { presentThisArticle } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
+import { chooseTab } from "@/ReduxToolKit/Reducers/UserContent/DashboardTabs";
+import { wait } from "@/helpers/Presentation";
 
 export interface RenderingValues {
     fullyLoaded: boolean | null,
@@ -67,7 +69,6 @@ export default function ArticlesScroller({ sortedArticles, markIds, deletedIds, 
     const { boxShadow, onScrollHandler } = useScrollWithShadow();
     const [status, setStatus] = useState<SigninStatus>('idle');
     const dispatch = useDispatch<AppDispatch>();
-    const timerRef = useRef<number | null>(null);
     const articleScrollerStyles: CSSProperties = stylesWithShadow(boxShadow);
     const rendering_values: RenderingValues = useMemo(() => {
         const context = {
@@ -78,17 +79,11 @@ export default function ArticlesScroller({ sortedArticles, markIds, deletedIds, 
     }, [fullyLoaded, numSkeletons]);
 
 
-    const handleArticleSelection = useCallback((article: Article) => () => {
+    const handleArticleSelection = useCallback(async (article: Article) => {
         dispatch(readSavedArticle(article));
-        dispatch(presentThisArticle());
-
-        timerRef.current = window.setTimeout(() => {
-
-            saveNow();
-
-            timerRef.current = null;
-        }, 200);
-
+        dispatch(chooseTab('Review Article'));
+        await wait(200)
+        saveNow();
     }, [dispatch, visible]);
 
     const deleteHandler = useCallback(
