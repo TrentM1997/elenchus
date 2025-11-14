@@ -1,27 +1,54 @@
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/ReduxToolKit/store"
 import { incrementStory, decrementStory, incrementStoryBy } from "@/ReduxToolKit/Reducers/Investigate/Reading"
-import { useEffect } from "react"
-import { createPortal } from "react-dom"
+import type { ModalStages } from "@/ReduxToolKit/Reducers/Investigate/WikipediaSlice"
+import { clearWikiSlice, modalStages } from "@/ReduxToolKit/Reducers/Investigate/WikipediaSlice"
+import { startTransition } from "react"
+import { wait } from "@/helpers/Presentation"
+
 
 
 
 export default function StoryPaginate() {
     const currentStory = useSelector((s: RootState) => s.investigation.read.currentStory);
     const articles = useSelector((s: RootState) => s.investigation.read.articles);
+    const wikiModalState: ModalStages = useSelector((s: RootState) => s.investigation.wiki.wikiModalStages);
     const dispatch = useDispatch()
 
 
-    const decrement = () => {
+    const decrement = async () => {
         if (currentStory > 0) {
-            dispatch(decrementStory())
-        }
+            if (wikiModalState.display === true) {
+                dispatch(modalStages({
+                    display: false,
+                    highlight: false,
+                    confirmExtract: false,
+                    text: null
+                }))
+                await wait(200)
+                dispatch(decrementStory())
+            } else {
+                dispatch(decrementStory());
+            }
+        };
     };
 
-    const increment = () => {
+    const increment = async () => {
 
         if (currentStory < articles.length - 1) {
-            dispatch(incrementStory())
+            if (wikiModalState.display === true) {
+                dispatch(modalStages({
+                    display: false,
+                    highlight: false,
+                    confirmExtract: false,
+                    text: null
+                }))
+                await wait(200);
+                dispatch(incrementStory());
+            } else {
+                dispatch(incrementStory())
+
+            }
         }
     };
 

@@ -85,7 +85,6 @@ function RenderExtractContents({ article_url, setShowNotification }) {
     const disambig: WikiDisambigResponse = useAppSelector(selectWikiDisambig);
     const investigate: InvestigateState = useSelector((state: RootState) => state.investigation);
     const { status, extract } = investigate.wiki;
-
     const content: ExtractContent = extract ? (summary ?? disambig) : null;
     const title: string | null = content ? content.kind === 'disambiguation'
         ? `${content.title} could refer to:`

@@ -18,8 +18,6 @@ export const getWikiExtract = createAsyncThunk<WikiResponse, string, { rejectVal
     }
 );
 
-
-
 interface modalXY {
     x: number,
     y: number
@@ -115,7 +113,10 @@ export const WikipediaSlice = createSlice({
             state.status = 'rejected';
         })
     }
-})
+});
+
+
+export type WikiSliceState = ReturnType<typeof WikipediaSlice.reducer>;
 
 
 export const { selectingText, getModalPosition, clearWikiSlice, getSelectedText, showWikiModal, modalStages } = WikipediaSlice.actions;

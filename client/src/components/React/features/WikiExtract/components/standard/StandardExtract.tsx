@@ -6,16 +6,20 @@ import { selectWikiSummary } from "@/ReduxToolKit/Reducers/Investigate/Wikipedia
 import { WikiSummaryResponse } from "@/services/wiki/wiki";
 
 
-export default function StandardExtract(): React.ReactNode {
+export default function StandardExtract(): JSX.Element | null {
     const summary: WikiSummaryResponse = useAppSelector(selectWikiSummary);
     const [readExtract, setReadExtract] = useState<boolean>(false);
     const scrollRef = useRef(null);
     useScrollTrap(scrollRef);
 
+    if (!summary || !summary.extract || !summary.description) {
+        return null;
+    }
+
     return (
         <motion.main className="2xl:min-h-36 relative min-w-full max-w-full h-auto flex flex-col gap-y-6 mb-6 items-center justify-between transition-all duration-400 ease-in-out ">
             <AnimatePresence mode="popLayout">
-                {!readExtract &&
+                {!readExtract && (summary.description) &&
                     <motion.div
                         layout
                         key={'shortdescription'}
@@ -25,7 +29,7 @@ export default function StandardExtract(): React.ReactNode {
                         className="text-white text-lg font-light tracking-tight flex flex-col h-full grow items-center justify-center ">
                         {summary.description}
                     </motion.div>}
-                {readExtract && <motion.div
+                {readExtract && (summary.extract) && <motion.div
                     id="wiki_extract"
                     layout
                     key={'fullbackground'}

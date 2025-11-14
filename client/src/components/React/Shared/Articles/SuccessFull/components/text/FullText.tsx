@@ -1,26 +1,27 @@
 import { AppDispatch, RootState } from "@/ReduxToolKit/store"
 import { useDispatch, useSelector } from "react-redux"
-import { getModalPosition, modalStages } from "@/ReduxToolKit/Reducers/Investigate/WikipediaSlice";
+import { clearWikiSlice, getModalPosition, modalStages } from "@/ReduxToolKit/Reducers/Investigate/WikipediaSlice";
 import { AnimatePresence } from "framer-motion";
 import TermModalContainer from "@/components/React/features/WikiExtract/components/popovers/containers/TermModalContainer";
 import TermModal from "@/components/React/features/WikiExtract/components/popovers/modals/TermModal";
 import WikiTermExtract from "@/components/React/features/WikiExtract/components/WikiTermExtract";
 import ArticleBody from "./ArticleBody";
-import { useIsMobile } from "@/hooks/useIsMobile";
+import { useEffect } from "react";
+import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary";
+import { useAppSelector } from "@/ReduxToolKit/hooks/useAppSelector";
+import type { WikiSummaryResponse } from "@/services/wiki/wiki";
+import { selectWikiSummary } from "@/ReduxToolKit/Reducers/Investigate/WikipediaSlice";
 
 interface FullTextProps {
     article_text: string,
     article_url: string
 };
 
-
-//TODO: ensure that in mobile view, the user is prompted with the lookup modal, not the modal meant for desktop view w/tooltips 
-
 export default function FullText({ article_text, article_url }: FullTextProps) {
     const investigateState = useSelector((state: RootState) => state.investigation);
     const dispatch = useDispatch<AppDispatch>();
-    const isMobile = useIsMobile();
     const { wikiModalStages } = investigateState.wiki;
+    const summary: WikiSummaryResponse = useAppSelector(selectWikiSummary);
 
 
     const handleHighlightStart = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -52,6 +53,14 @@ export default function FullText({ article_text, article_url }: FullTextProps) {
     };
 
 
+    useEffect(() => {
+
+        return () => {
+            dispatch(clearWikiSlice());
+        }
+    }, []);
+
+
     return (
         <div
             onMouseDown={(e) => handleHighlightStart(e)}
@@ -65,10 +74,15 @@ export default function FullText({ article_text, article_url }: FullTextProps) {
                 <TermModalContainer>
                     <TermModal />
                 </TermModalContainer>}
+            <ErrorBoundary>
+                <AnimatePresence>
+                    {(wikiModalStages.display) &&
+                        <WikiTermExtract
+                            article_url={article_url} />
+                    }
+                </AnimatePresence>
+            </ErrorBoundary>
 
-            <AnimatePresence>
-                {wikiModalStages.display && <WikiTermExtract article_url={article_url} />}
-            </AnimatePresence>
             <ArticleBody markdown={article_text} />
         </div>
     )
