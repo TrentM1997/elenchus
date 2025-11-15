@@ -46,7 +46,7 @@ export default function PendingExtractions({ setShowPendingExtractions, status }
             <div className="h-10 w-60 p-2 bg-blue-400/90 border border-border_gray rounded-xl px-2 z-50 md:z-30">
                 <div key='title' className="flex w-full h-full items-center justify-between">
                     <div key='titleContainer' className="w-auto h-fit">
-                        <p className="text-white font-light text-sm">
+                        <p className="text-white font-light tracking-tight text-sm">
                             {`extration progress... ${progress}`}
                         </p>
                     </div>
