@@ -7,7 +7,8 @@ async function UserArticles(supabase, id) {
         const { data, error } = await supabase
             .from('articles')
             .select("*")
-            .eq('user_id', id);
+            .eq('user_id', id)
+            .order('id', { ascending: false });
         if (error) {
             console.error(error.message);
             return null;
@@ -41,7 +42,8 @@ async function UserInvestigations(supabase, id) {
         const { data, error } = await supabase
             .from('investigations')
             .select()
-            .eq('user_id', id);
+            .eq('user_id', id)
+            .order('id', { ascending: false });
         if (error) {
             console.error(error.message);
             return null;

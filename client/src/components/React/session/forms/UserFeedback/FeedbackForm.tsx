@@ -24,10 +24,9 @@ export default function FeedBackForm() {
   const dispatch = useDispatch()
 
   const closeFeedback = () => {
-    dispatch(declineFeedBack(true))
-    dispatch(displayFeedBackForm(false))
+    dispatch(populateModal(null))
     dispatch(stopAskingForFeedBack(true))
-  }
+  };
 
   const getEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     let target = e.target.value;

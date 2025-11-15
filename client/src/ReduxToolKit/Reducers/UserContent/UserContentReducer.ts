@@ -1,6 +1,7 @@
 import { RootState } from "@/ReduxToolKit/store";
-import { createSlice, createAsyncThunk, createSelector } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createSelector, PayloadAction } from "@reduxjs/toolkit";
 import type { Article } from "../Investigate/Reading";
+import { User } from "@supabase/supabase-js";
 
 interface UserContent {
     status: string,
@@ -15,7 +16,7 @@ interface UserContent {
 
 const initialState: UserContent = {
     status: 'idle',
-    userArticles: null,
+    userArticles: [],
     articleMap: null,
     error: null,
     contextForSupabase: null,
@@ -84,6 +85,9 @@ const UserContentSlice = createSlice({
         },
         grabAssociatedArticle: (state, action) => {
             state.associatedArticle = action.payload;
+        },
+        refreshArticlesStored: (state: UserContent, action: PayloadAction<Article[]>) => {
+            state.userArticles = action.payload;
         }
 
 
@@ -107,6 +111,6 @@ const UserContentSlice = createSlice({
     }
 })
 
-export const { clearUser, supabaseContext, readSavedArticle, removeSavedArticle, populateArticles, removingArticle, refreshArticles, grabAssociatedArticle } = UserContentSlice.actions
+export const { clearUser, supabaseContext, readSavedArticle, removeSavedArticle, populateArticles, removingArticle, refreshArticles, grabAssociatedArticle, refreshArticlesStored } = UserContentSlice.actions
 
 export default UserContentSlice.reducer

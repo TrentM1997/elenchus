@@ -38,6 +38,7 @@ export default function Root() {
             />
             <AnimatePresence mode="wait">
                 {signout && <ModalLayer key='overlay' ariaLabel="Sign out confirmation"><SignOutModal key='modal' /></ModalLayer>}
+
             </AnimatePresence>
             <Suspense
                 fallback={<Pageskeleton />}

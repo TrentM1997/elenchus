@@ -18,6 +18,7 @@ async function UserArticles(supabase: SupabaseClient, id: string): Promise<Saved
             .from('articles')
             .select("*")
             .eq('user_id', id)
+            .order('id', { ascending: false })
 
         if (error) {
             console.error(error.message);
@@ -50,6 +51,7 @@ async function UserInvestigations(supabase: SupabaseClient, id: string): Promise
             .from('investigations')
             .select()
             .eq('user_id', id)
+            .order('id', { ascending: false })
 
         if (error) {
             console.error(error.message);

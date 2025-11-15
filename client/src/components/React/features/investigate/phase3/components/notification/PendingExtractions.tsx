@@ -1,9 +1,13 @@
 import { motion } from "framer-motion";
-import { hideTop } from "@/motion/variants";
+import { hideTop, softEase, variants } from "@/motion/variants";
 import { SetStateAction, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
 import Pending from "@/components/React/session/notifications/Pending";
+import type { Prog } from "@/ReduxToolKit/Reducers/Investigate/Reading";
+import { createPortal } from "react-dom";
+
+
 
 interface PendingExtracts {
     setShowPendingExtractions: React.Dispatch<SetStateAction<boolean>>
@@ -12,7 +16,7 @@ interface PendingExtracts {
 };
 
 export default function PendingExtractions({ setShowPendingExtractions, status }: PendingExtracts): JSX.Element | null {
-    const progress = useSelector((state: RootState) => state.investigation.read.progress);
+    const progress: Prog = useSelector((state: RootState) => state.investigation.read.progress);
     const remove: boolean = ((status === 'fulfilled') || (status === 'rejected'));
 
     useEffect(() => {
@@ -29,26 +33,50 @@ export default function PendingExtractions({ setShowPendingExtractions, status }
     }, [remove]);
 
 
-    return (
+    const toast: JSX.Element = (
         <motion.div
             aria-label="Pending extracts notification"
-            variants={hideTop}
-            initial='hide'
-            animate='show'
-            exit='hide'
-            transition={{ type: 'tween', duration: 0.2 }}
-            className="fixed top-24 md:top-24 right-4 md:right-12 xl:right-36 h-10 w-60 p-2 bg-mirage border border-zinc-700 rounded-xl px-2 z-30"
+            variants={variants}
+            initial='closed'
+            animate='open'
+            exit='closed'
+            transition={{ type: 'tween', duration: 0.2, ease: softEase, delay: 0.2 }}
+            className="fixed top-0.5 md:top-16 z-0 pointer-events-auto h-fit w-full flex items-start justify-center md:px-12 md:justify-start"
         >
-            <div key='title' className="flex w-full h-full items-center justify-between">
-                <div key='titleContainer' className="w-auto h-fit">
-                    <p className="text-white font-light text-sm">
-                        {`extration progress: ${progress}`}
-                    </p>
-                </div>
-                <div className="w-auto h-fit relative">
-                    <Pending key={'pending-status'} />
+            <div className="h-10 w-60 p-2 bg-blue-400/90 border border-border_gray rounded-xl px-2 z-50 md:z-30">
+                <div key='title' className="flex w-full h-full items-center justify-between">
+                    <div key='titleContainer' className="w-auto h-fit">
+                        <p className="text-white font-light text-sm">
+                            {`extration progress... ${progress}`}
+                        </p>
+                    </div>
+                    <div className="w-auto h-fit relative">
+                        <PulseDot key={'pending-status'} />
+                    </div>
                 </div>
             </div>
+
         </motion.div>
+    );
+
+
+    return createPortal(toast, document.body);
+};
+
+
+function PulseDot() {
+
+
+    return (
+        <div className="flex justify-center">
+            <span className="relative flex h-4 w-4">
+                <span
+                    className="absolute inline-flex h-full w-full transform-gpu will-change-transform ease-soft animate-ping rounded-full bg-white/30 opacity-75"
+                ></span>
+                <span
+                    className="relative inline-flex h-4 w-4 rounded-full bg-white"
+                ></span>
+            </span>
+        </div>
     )
-} 
+}

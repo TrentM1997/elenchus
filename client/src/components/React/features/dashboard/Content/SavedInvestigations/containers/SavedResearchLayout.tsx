@@ -25,13 +25,13 @@ export interface SavedInvestigation {
 
 export default function SavedResearchLayout() {
     const savedInvestigations: SavedInvestigation[] = useSelector((state: RootState) => state.userWork.userResearch);
-    const timeline = useMemo(() => {
-        const populated = Array.isArray(savedInvestigations) && (savedInvestigations.length > 0);
-        if (!populated) return null;
-        const arr = savedInvestigations.slice();
-        const sorted = arr.sort((a: SavedInvestigation, b: SavedInvestigation) => b.id - a.id);
-        return sorted;
-    }, [savedInvestigations])
+    // const timeline = useMemo(() => {
+    //     const populated = Array.isArray(savedInvestigations) && (savedInvestigations.length > 0);
+    //     if (!populated) return null;
+    //     const arr = savedInvestigations.slice();
+    //     const sorted = arr.sort((a: SavedInvestigation, b: SavedInvestigation) => b.id - a.id);
+    //     return sorted;
+    // }, [savedInvestigations])
 
 
     return (
@@ -44,9 +44,9 @@ export default function SavedResearchLayout() {
             className="w-full">
             <div className="max-h-screen w-full">
 
-                {Array.isArray(timeline) && (timeline.length > 0) ? <div
+                {Array.isArray(savedInvestigations) && (savedInvestigations.length > 0) ? <div
                     className="mx-auto w-full lg:w-4/5 mt-6 animate-fade-in">
-                    <ResearchScroller timeline={timeline} />
+                    <ResearchScroller timeline={savedInvestigations} />
                 </div>
                     : <InvestigationsFallback />
                 }

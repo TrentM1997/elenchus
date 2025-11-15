@@ -26,7 +26,7 @@ export function GetTheseArticles(): JSX.Element {
     };
 
     const dontExecute = () => {
-        dispatch(displayGetArticlesModal(false));
+        dispatch(populateModal(null));
     };
 
     return (

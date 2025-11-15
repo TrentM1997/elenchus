@@ -59,6 +59,7 @@ function reconcileFailed(retrieved, failed) {
             failed.splice(i, 1);
     }
 }
+;
 export const firecrawl_extractions = async (req, res) => {
     console.log('firecrawl endpoint hit');
     const { articles } = req.body;
@@ -69,7 +70,11 @@ export const firecrawl_extractions = async (req, res) => {
     const id = crypto.randomUUID();
     jobs[id] = {
         status: 'pending',
-        result: { progress: `0/${articles.length}`, retrieved: [], rejected: [] },
+        result: {
+            progress: `0/${articles.length}`,
+            retrieved: [],
+            rejected: []
+        },
         error: null,
         createdAt: Date.now(),
     };
