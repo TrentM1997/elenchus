@@ -43,7 +43,7 @@ export default function PendingExtractions({ setShowPendingExtractions, status }
             transition={{ type: 'tween', duration: 0.2, ease: softEase, delay: 0.2 }}
             className="fixed top-0.5 md:top-16 z-0 pointer-events-auto h-fit w-full flex items-start justify-center md:px-12 md:justify-start"
         >
-            <div className="h-10 w-60 p-2 bg-blue-400/90 border border-border_gray rounded-xl px-2 z-50 md:z-30">
+            <div className="h-10 w-60 p-2 bg-blue-400/90 border border-border_gray rounded-xl px-2 z-10 md:z-30">
                 <div key='title' className="flex w-full h-full items-center justify-between">
                     <div key='titleContainer' className="w-auto h-fit">
                         <p className="text-white font-light tracking-tight text-sm">
