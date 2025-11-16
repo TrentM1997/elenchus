@@ -31,3 +31,15 @@ export const ScrollUp = (): void => {
 
     window.scroll(scrollBehavior)
 };
+
+
+export const smoothScrollUp = (): void => {
+
+    const scrollBehavior: ScrollToOptions = {
+        top: 0,
+        left: 0,
+        behavior: 'smooth' as any
+    };
+
+    window.scroll(scrollBehavior);
+};

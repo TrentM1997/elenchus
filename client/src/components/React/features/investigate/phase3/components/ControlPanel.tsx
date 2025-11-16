@@ -7,6 +7,8 @@ import GetInfo from "../buttons/GetInfo";
 import { useMemo } from "react";
 import { ReadingSliceState } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import { motion } from "framer-motion";
+import { variants, softEase } from "@/motion/variants";
 
 export default function ControlPanel({ }) {
     const isMobile = useIsMobile();
@@ -17,7 +19,13 @@ export default function ControlPanel({ }) {
     }, [status, articles]);
 
     return (
-        <div className="fixed 2xl:left-16 2xl:bottom-16 
+        <motion.div
+            variants={variants}
+            initial='closed'
+            animate='open'
+            exit='closed'
+            transition={{ type: 'tween', duration: 0.2, ease: softEase }}
+            className="fixed lg:sticky 2xl:left-16 2xl:bottom-16 transform-gpu will-change-transform
         xl:left-4 xl:bottom-10 lg:left-6 lg:bottom-6 w-fit shadow-material
         bottom-0 left-0 right-0 z-30 flex items-start lg:items-center justify-center gap-x-4 lg:gap-x-0
          lg:shadow-black py-1 md:py-0 px-4 lg:px-0 md:px-0 mx-auto lg:mx-0
@@ -37,7 +45,7 @@ export default function ControlPanel({ }) {
             <TakeNotes failedExtraction={failedExtraction} />
 
 
-        </div>
+        </motion.div>
     )
 
 

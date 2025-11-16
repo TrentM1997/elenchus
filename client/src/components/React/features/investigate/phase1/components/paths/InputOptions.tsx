@@ -30,7 +30,7 @@ function InputOptions() {
   };
 
   const inputManually = () => {
-    dispatch(choosePath('Manual Input'));
+    dispatch(choosePath('Path Chosen'));
   };
 
   const importFromBlueSky = actions[0];

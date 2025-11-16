@@ -13,12 +13,14 @@ import Pageskeleton from "../skeletons/PageSkeleton";
 import { AnimatePresence, motion } from "framer-motion";
 import ModalLayer from "../../Shared/modals/ModalLayer";
 import SignOutModal from "../../session/forms/AuthForms/SignOutModal";
+import { Phase } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 
 
 export default function Root() {
     const { user, articles, investigations } = useLoaderData() as RootPayload;
     const signout = useSelector((s: RootState) => s.auth.signOut);
     const dispatch = useDispatch<AppDispatch>();
+    const phase: Phase = useSelector((s: RootState) => s.investigation.rendering.phase);
 
 
     useEffect(() => {
@@ -36,6 +38,8 @@ export default function Root() {
         <>
             <Navigation
             />
+            {(phase === "Phase 3") && <div key="portal-root-div" id="portal-root" className="pointer-events-auto fixed inset-0"></div>}
+
             <AnimatePresence mode="wait">
                 {signout && <ModalLayer key='overlay' ariaLabel="Sign out confirmation"><SignOutModal key='modal' /></ModalLayer>}
 

@@ -145,7 +145,8 @@ declare global {
 
   interface Tooltips {
     readingTooltip: boolean,
-    selectingTooltip: boolean
+    selectingTooltip: boolean,
+
   }
 
   interface SupabaseUser {

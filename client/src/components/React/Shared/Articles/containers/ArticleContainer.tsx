@@ -56,8 +56,7 @@ export default function ArticleContainer({ }) {
 
   return (
     <div
-      className="min-h-screen h-full 2xl:max-w-7xl xl:max-w-5xl
-      lg:max-w-3xl md:max-w-3xl xs:px-2 md:px-8 scroll-smooth
+      className="min-h-screen h-full w-full scroll-smooth
       inset mx-auto border-white/10 relative"
     >
       <RenderArticles

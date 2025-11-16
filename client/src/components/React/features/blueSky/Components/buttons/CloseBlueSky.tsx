@@ -1,10 +1,17 @@
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/ReduxToolKit/store";
 import { displayBlueSkySearch } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer";
-import { changePhase } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import { changePhase, choosePath } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import { wait } from "@/helpers/Presentation";
 
 export default function CloseBlueSky() {
     const dispatch = useDispatch<AppDispatch>();
+
+    const handleClose = async () => {
+        dispatch(choosePath('Path Chosen'));
+        await wait(300);
+        dispatch(changePhase("Phase 1"));
+    };
 
     return (
         <div onClick={() => dispatch(changePhase('Phase 1'))}

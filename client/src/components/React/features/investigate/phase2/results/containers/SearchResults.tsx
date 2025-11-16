@@ -13,7 +13,6 @@ import SelectLinks from "../components/selection/containers/SelectLinks";
 
 export default function SearchResults() {
     const status = useSelector((state: RootState) => state.investigation.search.status);
-
     const articleOptions = useSelector((state: RootState) => state.investigation.search.articleOptions);
     const dispatch = useDispatch();
     const visible = useMinTimeVisible((status === 'pending'), 100, 800);

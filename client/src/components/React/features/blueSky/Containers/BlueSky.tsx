@@ -38,12 +38,13 @@ export default function BlueSky({ context, shouldAnimate = true }: BlueSkyProps)
     if (!idea) return
 
     if (idea && shouldRedirect) {
+
       redirectTimer.current = window.setTimeout(() => {
         startTransition(() => {
           navigate('/investigate');
         });
         redirectTimer.current = null;
-      }, 400);
+      }, 850);
 
     }
     dispatch(displayBlueSkySearch(false));

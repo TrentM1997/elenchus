@@ -12,28 +12,7 @@ export default function Content() {
     const tooltip: TooltipDisplayed = useSelector((s: RootState) => s.investigation.rendering.tooltip);
     const phase: Phase = useSelector((s: RootState) => s.investigation.rendering.phase);
     const wikiModalStages: ModalStages = useSelector((state: RootState) => state.investigation.wiki);
-    //  const status = useSelector((state: RootState) => state.investigation.search);
-    // const { showContent,
-    //     showBackToSearchModal,
-    //     showSearch,
-    //     showGetArticlesModal,
-    //     showSelectWarning,
-    //     showSelectTooltip,
-    //     showReadingTooltip }: DisplayReducer = useSelector((state: RootState) => state.investigation.display, shallowEqual);
-    // const animateSearch = useMemo((): boolean => {
-    //     const firstCondition: boolean = ((showSearch) && (status !== 'idle'));
-    //     const secondCondition: boolean = (!showContent);
-    //     const show: boolean = firstCondition && secondCondition;
-    //     return show;
-    //
-    // }, [showSearch, status]);
-    //
-    // const animateArticles = useMemo(() => {
-    //     const show: boolean = (showContent) && (!animateSearch);
-    //     return show;
-    // }, [animateSearch, showContent]);
 
-    // (modal === 'Extract Confirmation') || (modal === 'Back to Search') ? 'pointer-events-none' : 'pointer-events-auto'}
     return (
         <motion.div
             initial={{ opacity: 1 }}
@@ -47,7 +26,7 @@ export default function Content() {
             <ModalContainer />
 
             <div
-                className="relative 2xl:max-w-7xl w-full min-h-full flex flex-col justify-center box-border mx-auto">
+                className="relative w-full min-h-full flex flex-col justify-center box-border mx-auto">
                 <AnimatePresence mode="wait">
 
                     {(phase === 'Phase 2') &&
@@ -71,7 +50,7 @@ export default function Content() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: (tooltip === 'Finished Reading Button') ? 0.5 : 1, transition: { type: 'tween', duration: 0.2, delay: 0.3 } }}
                             exit={{ opacity: 0, transition: { type: 'tween', duration: 0.2, delay: 0 } }}
-                            className="min-h-screen w-full mx-auto lg:pb-96"
+                            className="min-h-screen w-full mx-auto"
                         >
                             <ArticleContainer />
                             <ScrolltoTop key='scroll' />

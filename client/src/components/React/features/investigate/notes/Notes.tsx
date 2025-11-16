@@ -27,7 +27,7 @@ export default function Notes({ notePosition, setNotePosition, constraints, note
                     y: prev.y + info.delta.y
                 }))
             }}
-            style={{ position: 'absolute', left: notePosition.x, top: notePosition.y }}
+            style={{ position: 'fixed', left: notePosition.x, top: notePosition.y }}
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}

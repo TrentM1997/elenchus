@@ -3,6 +3,8 @@ import { motion } from "framer-motion"
 import { useDispatch, useSelector } from "react-redux"
 import { displayReadingTooltip } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer"
 import { RootState } from "@/ReduxToolKit/store"
+import { populateTooltip } from "@/ReduxToolKit/Reducers/Investigate/Rendering"
+import { useTooltipFlags } from "@/hooks/useTooltipFlags"
 
 const variants = {
     closed: {
@@ -17,23 +19,20 @@ const variants = {
 }
 
 export default function GuideDoneReading({ }) {
-    const investigateState = useSelector((state: RootState) => state.investigation)
-    const { display } = investigateState
-    const { showReadingTooltip } = display
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+    const { setFlag } = useTooltipFlags();
 
 
     useEffect(() => {
 
-        if (!showReadingTooltip) return
-
         const timer = setTimeout(() => {
-            dispatch(displayReadingTooltip(false))
-        }, 2500)
+            dispatch(populateTooltip(null));
+            setFlag('readingTooltip', true);
+        }, 5000);
 
         return () => (clearTimeout(timer))
 
-    }, [showReadingTooltip])
+    }, []);
 
     return (
         <motion.div

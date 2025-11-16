@@ -8,6 +8,11 @@ import RetrieveChosenArticles from "../components/buttons/RetrieveChosenArticles
 import SelectTooltipWrapper from "../components/tooltips/SelectTooltipWrapper";
 import CurrentChosen from "../components/info/CurrentChosen";
 import type { ModalDisplayed, SelectionBar } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import type { Tooltips } from "@/env";
+
+interface SelectLinksProps {
+  flags: Tooltips
+}
 
 export default function SelectLinks() {
   const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
@@ -32,7 +37,7 @@ export default function SelectLinks() {
           className={`
            bg-ebony fixed bottom-0 right-0 left-0 border-t border-border_gray
         text-white font-light tracking-tight flex 2xl:gap-x-16 py-4 gap-x-4 md:px-16 cursor-pointer
-         mx-auto z-40 justify-center 2xl:justify-end content-center`
+         mx-auto z-40 justify-center xl:justify-end content-center`
           }>
 
           <SelectTooltipWrapper />

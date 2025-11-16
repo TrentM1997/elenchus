@@ -5,20 +5,16 @@ import CompletionHero from "@/components/React/features/investigate/heros/Comple
 import FinalResults from "@/components/React/features/investigate/phase5/FinalResults"
 import ScrolltoTop from "@/helpers/ScrollToTop"
 import { AnimatePresence, motion } from "framer-motion"
-import { shallowEqual, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 import { RootState } from "@/ReduxToolKit/store"
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
+import { useMemo, useRef } from "react"
 import { softEase } from "@/motion/variants"
-import { useIsMobile } from "@/hooks/useIsMobile"
 import StoryPaginate from "../../phase3/buttons/StoryPaginate"
 import { ReadingSliceState } from "@/ReduxToolKit/Reducers/Investigate/Reading"
 import type { ModalDisplayed, Phase } from "@/ReduxToolKit/Reducers/Investigate/Rendering"
 
 export default function HeroContainer({
 }) {
-    const isMobile = useIsMobile();
-    const [shouldMeasure, setShouldMeasure] = useState<boolean>(false);
-    const [spacerHeight, setSpacerHeight] = useState<number | null>(null);
     const phase: Phase = useSelector((s: RootState) => s.investigation.rendering.phase);
     const modal: ModalDisplayed = useSelector((s: RootState) => s.investigation.rendering.modal);
     const articles: ReadingSliceState = useSelector((state: RootState) => state.investigation.read.articles)
@@ -30,25 +26,6 @@ export default function HeroContainer({
     }, [articles, phase]);
 
 
-
-    useEffect(() => {
-        if (shouldMeasure === false) return;
-
-        const node = heightRef.current;
-        const ro = new ResizeObserver(([e]) => {
-            setSpacerHeight(Math.ceil(e.contentRect.height));
-        });
-
-        const t = requestAnimationFrame(() => {
-            ro.observe(node)
-            setShouldMeasure(false);
-        });
-
-        return () => {
-            cancelAnimationFrame(t);
-            ro.disconnect();
-        };
-    }, [shouldMeasure])
 
 
 
@@ -84,9 +61,6 @@ export default function HeroContainer({
                         animate={{ opacity: 1, transition: { type: 'tween', duration: 0.2, delay: 0.5, ease: softEase } }}
                         exit={{ opacity: 0, transition: { type: 'tween', duration: 0.2, delay: 0, ease: softEase } }}
                         className={`w-full h-auto mx-auto relative`}
-                        onAnimationComplete={() => {
-                            setShouldMeasure(true)
-                        }}
                     >
                         <SearchHero
                         />
@@ -94,16 +68,15 @@ export default function HeroContainer({
 
                     </motion.div>)}
 
-                {showSpacerDiv && (phase === 'Phase 3') && <motion.div
+                {showSpacerDiv && <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     exit={{ scale: 0 }}
                     transition={{ type: 'tween', duration: 0.3, delay: 0.2 }}
                     key="spacer-div"
-                    style={{ height: spacerHeight, width: '100%' }}
-                    className="flex items-center justify-center"
+                    className="flex items-center w-full h-44 md:h-52 justify-center relative"
                 >
-                    {isMobile && <StoryPaginate />}
+                    <StoryPaginate />
                 </motion.div>
                 }
 

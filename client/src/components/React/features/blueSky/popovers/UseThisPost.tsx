@@ -4,20 +4,31 @@ import { getIdea, preselected } from "@/ReduxToolKit/Reducers/Investigate/UserPO
 import { useEffect } from "react";
 import { emitFadeFooter } from "@/helpers/customEvents";
 import { changePhase, choosePath } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import { smoothScrollUp } from "@/helpers/ScrollToTop";
+import { wait } from "@/helpers/Presentation";
 
 interface UseThis {
     post: any,
     shouldRedirect?: boolean
 };
 
-export default function UseThisPost({ post }: UseThis) {
+export default function UseThisPost({ post, shouldRedirect }: UseThis) {
     const dispatch = useDispatch();
 
-    const investigateThis = () => {
+    const investigateThis = async () => {
         dispatch(getIdea(post.record.text));
-        dispatch(changePhase('Phase 1'));
-        emitFadeFooter()
-        dispatch(selectPost(null));
+        smoothScrollUp();
+        if (shouldRedirect) {
+            dispatch(changePhase('Phase 1'));
+            await wait(600);
+            dispatch(selectPost(null));
+        } else {
+            dispatch(selectPost(null));
+            await wait(400);
+            dispatch(choosePath('Path Chosen'));
+            await wait(400);
+            dispatch(changePhase('Phase 1'));
+        };
     };
 
     const unselect = () => {

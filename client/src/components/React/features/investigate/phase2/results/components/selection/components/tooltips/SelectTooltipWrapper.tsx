@@ -9,13 +9,19 @@ import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/ReduxToolKit/store";
 import MaxChosen from "./MaxChosen";
 import { useMaxSelectedToast } from "@/hooks/useAutoDismiss";
-import { populateTooltip } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import { ModalDisplayed, populateTooltip, TooltipDisplayed } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import { wait } from "@/helpers/Presentation";
+import type { Tooltips } from "@/env";
+
+interface TooltipWrapper {
+    flags: Tooltips
+};
 
 export default function SelectTooltipWrapper(): JSX.Element | null {
+    const tooltip: TooltipDisplayed = useSelector((s: RootState) => s.investigation.rendering.tooltip);
     const chosenArticles = useSelector((state: RootState) => state.investigation.getArticle.chosenArticles);
-    const showMaxToast = useSelector((state: RootState) => state.investigation.getArticle.showMaxToast);
-    const { showSelectWarning, showSelectTooltip, showGetArticlesModal } = useSelector((state: RootState) => state.investigation.display, shallowEqual);
-    const showToast = showMaxToast && (!showSelectWarning) && (!showSelectTooltip) && (!showGetArticlesModal);
+    const dispatch = useDispatch<AppDispatch>();
+    const { getFlags } = useTooltipFlags();
     const count: number = useMemo(() => {
         if (Array.isArray(chosenArticles)) {
             return chosenArticles.length;
@@ -24,35 +30,36 @@ export default function SelectTooltipWrapper(): JSX.Element | null {
         };
     }, [chosenArticles]);
     useMaxSelectedToast({ count });
-    const { getFlags, setFlag } = useTooltipFlags();
-    const dispatch = useDispatch<AppDispatch>();
+
+    const surfaceTooltip = async () => {
+        const flags = getFlags();
+        if (flags.selectingTooltip === false) {
+            await wait(1500);
+            dispatch(populateTooltip('Guide Selection'));
+        };
+    };
 
 
 
     useEffect(() => {
-        const flags = getFlags();
 
-        if (flags.selectingTooltip === false) {
-            dispatch(populateTooltip('Selection Required'));
-            setFlag('selectingTooltip', true);
-        };
+        surfaceTooltip();
 
-    }, [getFlags, setFlag, dispatch]);
+    }, []);
 
     return (
         <>
             <AnimatePresence mode="wait">
-                {showSelectWarning &&
+                {(tooltip === 'Selection Required') &&
                     <SelectionRequired key={'minimum-chosen warning'} />
                 }
 
-                {showSelectTooltip &&
-                    !showSelectWarning &&
+                {(tooltip === 'Guide Selection') &&
                     <GuideSelectingArticles key={'tooltip'}
                     />
                 }
 
-                {showToast && <MaxChosen key={'max-articles-selected'} />}
+                {(tooltip === 'Max Toast') && <MaxChosen key={'max-articles-selected'} />}
             </AnimatePresence>
         </>
     );

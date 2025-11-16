@@ -4,11 +4,11 @@ export type Phase = 'Initial' | 'Phase 1' | 'Phase 2' | 'Phase 3' | 'Phase 4' | 
 
 export type ModalDisplayed = 'Back to Search' | 'Extract Confirmation' | 'Work Modal' | 'Feedback Form' | null;
 
-export type TooltipDisplayed = 'Selection Required' | 'Guide Selection' | 'Finished Reading Button' | null;
+export type TooltipDisplayed = 'Selection Required' | 'Guide Selection' | 'Finished Reading Button' | 'Max Toast' | null;
 
 export type SelectionBar = 'active' | 'hidden'
 
-export type PathSelected = 'BlueSky Feed' | 'Manual Input' | null;
+export type PathSelected = 'BlueSky Feed' | 'Manual Input' | 'Path Chosen' | null;
 
 export type ShowOptions = 'Show Options' | 'Preselected';
 

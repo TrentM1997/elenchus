@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
 import Article from "@/components/React/Shared/Articles/SuccessFull/containers/Article";
@@ -9,8 +9,14 @@ import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBounda
 import { ReadingSliceState } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 import PendingExtractions from "./notification/PendingExtractions";
 import { useEffect } from "react";
+import PanelContainer from "../controls/containers/PanelContainer";
+import { useIsMobile } from "@/hooks/useIsMobile";
+import { variants, softEase } from "@/motion/variants";
+import StoryPaginate from "../buttons/StoryPaginate";
+import ControlPanel from "./ControlPanel";
 
 export default function RenderArticles(): JSX.Element | null {
+    const isMobile = useIsMobile();
     const [showPendingExtractions, setShowPendingExtractions] = useState<boolean>(false);
     const { articles, currentStory, status }: ReadingSliceState = useSelector((state: RootState) => state.investigation.read);
     const canRender = Array.isArray(articles) && (articles.length > 0);
@@ -18,6 +24,7 @@ export default function RenderArticles(): JSX.Element | null {
         const failed: boolean = (status === 'fulfilled') && (Array.isArray(articles)) && (articles.length === 0);
         return failed;
     }, [status, articles]);
+    const renderControlPanel = (Array.isArray(articles) && (articles.length > 0) || ((status === 'fulfilled')));
 
 
     useEffect(() => {
@@ -34,14 +41,14 @@ export default function RenderArticles(): JSX.Element | null {
     return (
         <main
 
-            className="2xl:max-w-6xl h-full w-full mx-auto
-                  mb-12 flex flex-col">
+            className="h-full w-full mx-auto
+                  flex flex-col">
             <AnimatePresence>
                 {showPendingExtractions && <PendingExtractions status={status} setShowPendingExtractions={setShowPendingExtractions} />}
             </AnimatePresence>
             <div
                 className="w-full min-h-screen mx-auto relative
-                grow shrink-0"
+                grow"
             >
                 <ErrorBoundary>
 
@@ -59,10 +66,14 @@ export default function RenderArticles(): JSX.Element | null {
                 </ErrorBoundary>
 
 
-
                 {noResults && <NoContent key='noResults' />}
 
             </div>
+            <AnimatePresence >
+                {renderControlPanel && <ControlPanel key={'controls'} />}
+
+            </AnimatePresence>
+
         </main>
     )
 

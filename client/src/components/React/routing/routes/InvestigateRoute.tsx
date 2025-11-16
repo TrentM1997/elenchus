@@ -1,12 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { RootState } from "@/ReduxToolKit/store";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/ReduxToolKit/store";
-import InvestigationWorkSpace from "@/components/React/features/investigate/InvestigationWorkSpace";
-import { displaySelectTooltip } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer";
+import InvestigationWorkSpace from "@/components/React/features/investigate/shared/containers/InvestigationWorkSpace";
 import { useBodyLock } from "@/hooks/useBodyLock";
-import { populateModal, populateTooltip } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
-
+import { ModalDisplayed, populateTooltip, TooltipDisplayed } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import { useTooltipFlags } from "@/hooks/useTooltipFlags";
+import { wait } from "@/helpers/Presentation";
 
 export const PLAYSTATE_KEYS = [
   'previous-biases',
@@ -27,28 +27,26 @@ export function clearCachedPlayStates(keys: Array<string>) {
 
 export default function InvestigateContainer() {
   const dispatch = useDispatch<AppDispatch>();
-  const modal = useSelector((s: RootState) => s.investigation.rendering.modal);
-  const showSelectTooltip = useSelector(
-    (s: RootState) => s.investigation.display.showSelectTooltip
-  );
-  const showSearch = useSelector(
-    (s: RootState) => s.investigation.display.showSearch
-  );
-  const status = useSelector(
-    (s: RootState) => s.investigation.search.status
-  );
+  const tooltip: TooltipDisplayed = useSelector((s: RootState) => s.investigation.rendering.tooltip);
+  const { getFlags, setFlag } = useTooltipFlags();
   const gettingHelp = useSelector(
     (s: RootState) => s.investigation.help.gettingHelp
   );
   const signingOut = useSelector((s: RootState) => s.auth.signOut);
-
-  const hasSearched = showSearch && status === "fulfilled";
   useBodyLock();
 
-  function removeToolTip(show: boolean, searched: boolean) {
-    if (show && searched) {
+  async function removeToolTip(tooltip: TooltipDisplayed) {
+    const flags = getFlags();
+    await wait(100);
+    if (tooltip === 'Guide Selection' && (flags.selectingTooltip === false)) {
+      setFlag('selectingTooltip', true);
       dispatch(populateTooltip(null))
-    };
+
+    } else if (tooltip === 'Finished Reading Button' && (flags.readingTooltip === false)) {
+      setFlag('readingTooltip', true);
+      dispatch(populateTooltip(null))
+
+    }
   };
 
   useEffect(() => {
@@ -63,7 +61,7 @@ export default function InvestigateContainer() {
 
   return (
     <main
-      onClick={() => removeToolTip(showSelectTooltip, hasSearched)}
+      onClick={() => removeToolTip(tooltip)}
       className={`
         max-w-dvw sm:w-full shrink-0 flex flex-col grow 
         transition-opacity duration-200 ease-in-out h-full mx-auto justify-center
