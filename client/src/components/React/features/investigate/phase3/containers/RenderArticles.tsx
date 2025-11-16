@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
 import Article from "@/components/React/Shared/Articles/SuccessFull/containers/Article";
@@ -7,16 +7,14 @@ import ArticleLoader from "@/components/React/Shared/Articles/loaders/ArticleLoa
 import NoContent from "@/components/React/Shared/Articles/Failed/NoContent";
 import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary";
 import { ReadingSliceState } from "@/ReduxToolKit/Reducers/Investigate/Reading";
-import PendingExtractions from "./notification/PendingExtractions";
+import PendingExtractions from "../components/notification/PendingExtractions";
 import { useEffect } from "react";
-import PanelContainer from "../controls/containers/PanelContainer";
-import { useIsMobile } from "@/hooks/useIsMobile";
-import { variants, softEase } from "@/motion/variants";
-import StoryPaginate from "../buttons/StoryPaginate";
-import ControlPanel from "./ControlPanel";
+import ControlPanel from "../components/controls/ControlPanel";
+import type { TooltipDisplayed } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+
 
 export default function RenderArticles(): JSX.Element | null {
-    const isMobile = useIsMobile();
+    const tooltip: TooltipDisplayed = useSelector((s: RootState) => s.investigation.rendering.tooltip);
     const [showPendingExtractions, setShowPendingExtractions] = useState<boolean>(false);
     const { articles, currentStory, status }: ReadingSliceState = useSelector((state: RootState) => state.investigation.read);
     const canRender = Array.isArray(articles) && (articles.length > 0);
@@ -33,10 +31,8 @@ export default function RenderArticles(): JSX.Element | null {
         if ((!noResults) && (Array.isArray(articles)) && (articles.length > 0) && (status === 'pending')) {
             setShowPendingExtractions(true);
         }
-
-
-
     }, [status, showPendingExtractions, articles, noResults]);
+
 
     return (
         <main
@@ -46,9 +42,12 @@ export default function RenderArticles(): JSX.Element | null {
             <AnimatePresence>
                 {showPendingExtractions && <PendingExtractions status={status} setShowPendingExtractions={setShowPendingExtractions} />}
             </AnimatePresence>
+            {/* ******** FADED DIV, REMOVED 'grow' PROPERTY W/H-AUTO & W/W-AUTO ************************** */}
             <div
-                className="w-full min-h-screen mx-auto relative
-                grow"
+                className={`transition-opacity duration-200 ease-soft 2xl:max-w-7xl
+                    ${(tooltip === 'Finished Reading Button') ? 'opacity-40' : 'opacity-100'}
+                    w-auto min-h-screen mx-auto relative h-auto
+                    `}
             >
                 <ErrorBoundary>
 
@@ -69,6 +68,9 @@ export default function RenderArticles(): JSX.Element | null {
                 {noResults && <NoContent key='noResults' />}
 
             </div>
+            {/* ******** END OF FADED DIV ************************** */}
+
+            {/* ******** CONTROL PANEL HERE ************************** */}
             <AnimatePresence >
                 {renderControlPanel && <ControlPanel key={'controls'} />}
 

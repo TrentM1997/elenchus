@@ -9,6 +9,7 @@ import { ReadingSliceState } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { motion } from "framer-motion";
 import { variants, softEase } from "@/motion/variants";
+import { createPortal } from "react-dom";
 
 export default function ControlPanel({ }) {
     const isMobile = useIsMobile();
@@ -25,9 +26,9 @@ export default function ControlPanel({ }) {
             animate='open'
             exit='closed'
             transition={{ type: 'tween', duration: 0.2, ease: softEase }}
-            className="fixed lg:sticky 2xl:left-16 2xl:bottom-16 transform-gpu will-change-transform
+            className="fixed lg:sticky 2xl:left-16 2xl:bottom-16 transform-gpu will-change-transform z-[910]
         xl:left-4 xl:bottom-10 lg:left-6 lg:bottom-6 w-fit shadow-material
-        bottom-0 left-0 right-0 z-30 flex items-start lg:items-center justify-center gap-x-4 lg:gap-x-0
+        bottom-0 left-0 right-0 flex items-start lg:items-center justify-center gap-x-4 lg:gap-x-0
          lg:shadow-black py-1 md:py-0 px-4 lg:px-0 md:px-0 mx-auto lg:mx-0
         h-14 lg:h-auto bg-zinc-900 xl:bg-astro_black rounded-t-2xl lg:rounded-full pointer-events-auto
          md:border border-border_gray">

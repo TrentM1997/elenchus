@@ -3,9 +3,9 @@ import { useSelector } from "react-redux"
 import { RootState } from "@/ReduxToolKit/store";
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import BackToSearchTooltip from "../tooltips/BackToSearchTooltip";
+import BackToSearchTooltip from "../../tooltips/BackToSearchTooltip";
 import PanelLabel from "./PanelLabel";
-import ButtonHoverTooltip from "../tooltips/ButtonHoverTooltip";
+import ButtonHoverTooltip from "../../tooltips/ButtonHoverTooltip";
 import { populateModal } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 
 interface ReturnToSearchProps {

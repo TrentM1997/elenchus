@@ -3,7 +3,7 @@ import { changePhase, populateModal } from "@/ReduxToolKit/Reducers/Investigate/
 import { resetResults } from "@/ReduxToolKit/Reducers/Investigate/SearchResults";
 import { useDispatch } from "react-redux"
 
-export function BackToSearch(): JSX.Element {
+export default function BackToSearch(): JSX.Element {
     const dispatch = useDispatch();
     const wait = (ms: number) => new Promise(res => setTimeout(res, ms));
 
@@ -41,7 +41,4 @@ export function BackToSearch(): JSX.Element {
             </div>
         </div>
     )
-
-
-
 };

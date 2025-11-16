@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { initiateFinalProcess } from "@/ReduxToolKit/Reducers/Investigate/Review";
 import { displayArticleContent, displayReadingTooltip, displayWrapUp } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer";
-import GuideDoneReading from "../../shared/tooltips/GuideDoneReading";
+import GuideDoneReading from "../../../shared/tooltips/GuideDoneReading";
 import { RootState } from "@/ReduxToolKit/store";
 import { useEffect } from "react";
 import { useTooltipFlags } from "@/hooks/useTooltipFlags";
@@ -15,11 +15,9 @@ import { wait } from "@/helpers/Presentation";
 export function FinishedReading({ failedExtraction }) {
     const articles: Article[] = useSelector((s: RootState) => s.investigation.read.articles);
     const tooltip: TooltipDisplayed = useSelector((s: RootState) => s.investigation.rendering.tooltip);
-    const investigateState = useSelector((state: RootState) => state.investigation)
-    const { showReadingTooltip } = investigateState.display
-    const { summaries } = investigateState.read;
     const { getFlags, setFlag } = useTooltipFlags();
     const dispatch = useDispatch();
+    const animateTooltip: boolean = ((Array.isArray(articles) && (articles.length > 0)) && (tooltip === 'Finished Reading Button'));
 
     useEffect(() => {
 
@@ -56,9 +54,9 @@ export function FinishedReading({ failedExtraction }) {
         2xl:max-h-8 ease-in-out group relative">
 
                 <AnimatePresence>
-                    {(tooltip === 'Finished Reading Button') && <GuideDoneReading />}
+                    {animateTooltip && <GuideDoneReading />}
                 </AnimatePresence>
-                {!showReadingTooltip && <div className="absolute p-1 bg-white z-50 opacity-0 transition-opacity delay-500 duration-200 ease-soft md:group-hover:opacity-100 bottom-[3.3rem] -left-5
+                {(tooltip === null) && <div className="absolute p-1 bg-white z-50 opacity-0 transition-opacity delay-500 duration-200 ease-soft md:group-hover:opacity-100 bottom-[3.3rem] -left-5
             rounded-md items-center border border-astro_gray shadow-thick after:content-[''] after:absolute after:bottom-[-10px] after:left-1/2 
             after:transform after:-translate-x-1/2 after:border-t-[10px] after:border-l-[10px] after:border-r-[10px] after:border-b-0 
             after:border-t-white after:border-l-transparent after:border-r-transparent after:border-b-transparent">

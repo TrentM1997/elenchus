@@ -9,7 +9,7 @@ import { useSelector } from "react-redux"
 import { RootState } from "@/ReduxToolKit/store"
 import { useMemo, useRef } from "react"
 import { softEase } from "@/motion/variants"
-import StoryPaginate from "../../phase3/buttons/StoryPaginate"
+import StoryPaginate from "../../phase3/components/buttons/StoryPaginate"
 import { ReadingSliceState } from "@/ReduxToolKit/Reducers/Investigate/Reading"
 import type { ModalDisplayed, Phase } from "@/ReduxToolKit/Reducers/Investigate/Rendering"
 

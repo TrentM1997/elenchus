@@ -1,12 +1,11 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { RootState } from "@/ReduxToolKit/store";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/ReduxToolKit/store";
 import InvestigationWorkSpace from "@/components/React/features/investigate/shared/containers/InvestigationWorkSpace";
 import { useBodyLock } from "@/hooks/useBodyLock";
-import { ModalDisplayed, populateTooltip, TooltipDisplayed } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import { populateTooltip, TooltipDisplayed } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 import { useTooltipFlags } from "@/hooks/useTooltipFlags";
-import { wait } from "@/helpers/Presentation";
 
 export const PLAYSTATE_KEYS = [
   'previous-biases',
@@ -28,7 +27,7 @@ export function clearCachedPlayStates(keys: Array<string>) {
 export default function InvestigateContainer() {
   const dispatch = useDispatch<AppDispatch>();
   const tooltip: TooltipDisplayed = useSelector((s: RootState) => s.investigation.rendering.tooltip);
-  const { getFlags, setFlag } = useTooltipFlags();
+  const { setFlag } = useTooltipFlags();
   const gettingHelp = useSelector(
     (s: RootState) => s.investigation.help.gettingHelp
   );
@@ -36,16 +35,13 @@ export default function InvestigateContainer() {
   useBodyLock();
 
   async function removeToolTip(tooltip: TooltipDisplayed) {
-    const flags = getFlags();
-    await wait(100);
-    if (tooltip === 'Guide Selection' && (flags.selectingTooltip === false)) {
+    if (tooltip === 'Guide Selection') {
       setFlag('selectingTooltip', true);
       dispatch(populateTooltip(null))
 
-    } else if (tooltip === 'Finished Reading Button' && (flags.readingTooltip === false)) {
+    } else if (tooltip === 'Finished Reading Button') {
       setFlag('readingTooltip', true);
       dispatch(populateTooltip(null))
-
     }
   };
 
@@ -66,8 +62,8 @@ export default function InvestigateContainer() {
         max-w-dvw sm:w-full shrink-0 flex flex-col grow 
         transition-opacity duration-200 ease-in-out h-full mx-auto justify-center
         items-center relative box-border min-h-svh
-        ${signingOut || gettingHelp
-          ? 'opacity-80 pointer-events-none'
+        ${gettingHelp
+          ? 'opacity-60 pointer-events-none'
           : 'opacity-100 pointer-events-auto'}`
       }
     >

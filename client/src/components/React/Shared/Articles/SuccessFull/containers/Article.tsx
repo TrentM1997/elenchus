@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import ScrolltoTop from "../../../../../../helpers/ScrollToTop";
 import ArticleHeader from "../components/hero/containers/ArticleHeader";
 import ArticleContent from "../components/text/ArticleContent";
 import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 import { useSelector } from "react-redux";
-import type { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
 import type { RootState } from "@/ReduxToolKit/store";
 
 type ArticleProps = {
@@ -25,12 +23,11 @@ function preload(src?: string) {
 
 export default function Article({ articleData, investigating }: ArticleProps): JSX.Element | null {
     if (!articleData) return null
+    const articles: Article[] = useSelector((s: RootState) => s.investigation.read.articles);
+    const currentStory: number = useSelector((s: RootState) => s.investigation.read.currentStory);
     const initial = articleData!;
     const [displayed, setDisplayed] = useState<Article>(initial);
     const [prev, setPrev] = useState<Article | null>(null);
-    const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
-    const { read } = investigateState;
-    const { articles, currentStory } = read;
 
     const renderThisArticle: boolean = investigating ? (displayed.article_url === articles[currentStory].article_url) : true;
 

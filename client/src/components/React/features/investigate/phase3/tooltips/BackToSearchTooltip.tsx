@@ -1,7 +1,7 @@
 import { SetStateAction, useEffect } from "react";
 import { motion } from "framer-motion";
 import { variants } from "@/motion/variants";
-import type { TooltipType } from "../buttons/ReturnToSearch";
+import type { TooltipType } from "../components/buttons/ReturnToSearch";
 
 interface BackToSearchTT {
     setShowBackTooltip: React.Dispatch<SetStateAction<TooltipType | null>>,

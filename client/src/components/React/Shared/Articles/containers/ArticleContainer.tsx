@@ -4,12 +4,14 @@ import { RootState } from "@/ReduxToolKit/store";
 import { useEffect, useMemo, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { recordSources } from "@/ReduxToolKit/Reducers/UserContent/SaveInvestigationSlice";
-import RenderArticles from "@/components/React/features/investigate/phase3/components/RenderArticles";
+import RenderArticles from "@/components/React/features/investigate/phase3/containers/RenderArticles";
 import { getSourcesToRecord, canUpdateSources } from "@/services/RecordSources";
 import { clearChosenArticles } from "@/ReduxToolKit/Reducers/Investigate/ChosenArticles";
 import { resetResults } from "@/ReduxToolKit/Reducers/Investigate/SearchResults";
 import { resetReadingSlice } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 import type { ReadingSliceState } from "@/ReduxToolKit/Reducers/Investigate/Reading";
+import { AnimatePresence } from "framer-motion";
+import ControlPanel from "@/components/React/features/investigate/phase3/components/controls/ControlPanel";
 
 export default function ArticleContainer({ }) {
   const sources = useSelector((state: RootState) => state.userWork.sourcesToReview);

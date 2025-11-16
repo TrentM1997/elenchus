@@ -25,6 +25,8 @@ export default function SelectLinks() {
   const results = (Array.isArray(articleOptions)) && (articleOptions.length > 0);
   const canAnimate = (!visible) && (modal === null);
 
+  console.log((canAnimate && results));
+
 
   return (
     <AnimatePresence initial={false}>

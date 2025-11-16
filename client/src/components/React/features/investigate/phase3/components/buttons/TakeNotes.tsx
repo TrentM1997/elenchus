@@ -9,13 +9,17 @@ export default function TakeNotes({ failedExtraction }) {
     const { takingNotes } = notes
     const dispatch = useDispatch()
 
+    const handleClick = () => {
+        dispatch(writingNote(takingNotes === false ? true : false))
+    }
+
     return (
         <div className={`${failedExtraction ? 'pointer-events-none opacity-30' : 'pointer-events-auto opacity-100 lg:hover:bg-border_gray'}
             shrink-0 w-fit h-10 lg:h-auto lg:rounded-r-full px-2.5 md:py-1.5 lg:px-2.5
             transition-opacity ease-in-out flex justify-center group relative
              lg:border-0 border-border_gray`}>
             <button
-                onClick={() => dispatch(writingNote(takingNotes === false ? true : false))}
+                onClick={handleClick}
                 className="md:w-fit md:h-auto max-w-8 max-h-8 xl:max-w-7 xl:max-h-7 2xl:max-w-8 2xl:max-h-8
         rounded-lg transition-all duration-300 m-auto relative
         ease-in-out group">

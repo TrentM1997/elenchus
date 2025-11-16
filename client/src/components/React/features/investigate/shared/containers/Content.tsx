@@ -48,7 +48,7 @@ export default function Content() {
                             key='articles'
                             style={{ position: 'relative' }}
                             initial={{ opacity: 0 }}
-                            animate={{ opacity: (tooltip === 'Finished Reading Button') ? 0.5 : 1, transition: { type: 'tween', duration: 0.2, delay: 0.3 } }}
+                            animate={{ opacity: 1, transition: { type: 'tween', duration: 0.2, delay: 0.3 } }}
                             exit={{ opacity: 0, transition: { type: 'tween', duration: 0.2, delay: 0 } }}
                             className="min-h-screen w-full mx-auto"
                         >
