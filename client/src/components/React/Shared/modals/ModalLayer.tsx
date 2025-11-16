@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { popoverVariants } from "@/motion/variants";
+import { popoverVariants, softEase } from "@/motion/variants";
 import { createPortal } from "react-dom";
 
 interface ModalLayer {
@@ -11,12 +11,15 @@ export default function ModalLayer({ children, ariaLabel }: ModalLayer): JSX.Ele
 
     const layer: JSX.Element = (
         <motion.div
-            variants={popoverVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            className="z-50 fixed inset-0 flex justify-center items-center
-             bg-black/60 backdrop-blur-[3px] will-change-[opacity,backdrop-filter]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1, transition: { delay: 0.15, duration: 0.25, type: 'tween', ease: softEase } }}
+            exit={{ opacity: 0, transition: { delay: 0, duration: 0.4, type: 'tween', ease: softEase } }}
+            className="z-[900] overflow-hidden fixed inset-0
+
+             contain-strict 
+
+             flex justify-center items-center bg-black/70 backdrop-blur-[3px] 
+             transform-gpu will-change-[opacity,backdrop-filter,transform]"
             role="dialog"
             aria-modal="true"
             aria-label={ariaLabel}

@@ -30,12 +30,8 @@ export default function Dashboard(): JSX.Element {
         <main
             className={
                 `w-full h-full grid relative grid-cols-1 
-            ease-in-out md:grid-cols-[auto,1fr] md:pt-6 min-h-dvh
-            transition-opacity
-            ${signingOut
-                    ? 'opacity-50 pointer-events-none'
-                    : 'opacity-100 pointer-events-auto'
-                } 
+            md:grid-cols-[auto,1fr] md:pt-6 min-h-dvh
+           
             `}>
             {!isMobile &&
                 <Suspense fallback={<DelayedFallback><SidebarLoader /></DelayedFallback>}>

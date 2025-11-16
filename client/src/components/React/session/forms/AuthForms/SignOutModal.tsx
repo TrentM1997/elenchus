@@ -1,4 +1,3 @@
-import { createPortal } from "react-dom";
 import { clearAuthSlice, showSignOut } from "@/ReduxToolKit/Reducers/Athentication/Authentication";
 import { useDispatch } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
@@ -8,7 +7,7 @@ import AuthNotification from "@/components/React/session/notifications/AuthNotif
 import { useNavigate } from "react-router-dom";
 import { SigninStatus } from "@/hooks/useSignIn";
 import { useClearUser } from "@/hooks/useClearUser";
-import { variants, softEase } from "@/motion/variants";
+import { wait } from "@/helpers/Presentation";
 
 export default function SignOutModal(): JSX.Element {
     const [status, setStatus] = useState<SigninStatus>('idle');
@@ -16,6 +15,11 @@ export default function SignOutModal(): JSX.Element {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const timerRef = useRef<number | null>();
+
+    async function redirect(): Promise<void> {
+        await wait(500);
+        navigate('/');
+    };
 
     useEffect(() => {
 
@@ -45,7 +49,7 @@ export default function SignOutModal(): JSX.Element {
 
         return () => {
             if (status === 'success') {
-                navigate('/');
+                redirect();
             }
         }
 
@@ -58,10 +62,10 @@ export default function SignOutModal(): JSX.Element {
             role="dialog"
             aria-modal="true"
             aria-labelledby="signout-title"
-            className="z-50 opacity-0 animate-fade-blur animation-delay-400ms will-change[opacity]
+            className="z-[910] relative opacity-0 animate-fade-blur animation-delay-500ms will-change-[opacity]
          xl:min-w-96 xl:min-h-80 w-80 h-60 flex flex-col items-start gap-x-8 gap-y-6 rounded-3xl p-8 
-        sm:gap-y-10 sm:p-10 lg:col-span-2 lg:flex-row lg:items-center bg-ebony
-        shadow-inset text-center">
+        sm:gap-y-10 sm:p-10 lg:col-span-2 lg:flex-row lg:items-center bg-black border border-border_gray
+        text-center">
             <AnimatePresence>
                 {(status !== 'idle') && <AuthNotification id="signout" status={status} setStatus={setStatus} action="Sign out" />}
             </AnimatePresence>
