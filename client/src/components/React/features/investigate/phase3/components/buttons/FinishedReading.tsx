@@ -1,15 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
-import { initiateFinalProcess } from "@/ReduxToolKit/Reducers/Investigate/Review";
-import { displayArticleContent, displayReadingTooltip, displayWrapUp } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer";
-import GuideDoneReading from "../../../shared/tooltips/GuideDoneReading";
+import GuideDoneReading from "../tooltips/GuideDoneReading";
 import { RootState } from "@/ReduxToolKit/store";
 import { useEffect } from "react";
 import { useTooltipFlags } from "@/hooks/useTooltipFlags";
 import PanelLabel from "./PanelLabel";
-import { changePhase, populateModal, populateTooltip, TooltipDisplayed } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import { changePhase, populateTooltip, TooltipDisplayed } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 import { AnimatePresence } from "framer-motion";
-import { ScrollUp, smoothScrollUp } from "@/helpers/ScrollToTop";
+import { smoothScrollUp } from "@/helpers/ScrollToTop";
 import { wait } from "@/helpers/Presentation";
 
 export function FinishedReading({ failedExtraction }) {
@@ -47,15 +45,16 @@ export function FinishedReading({ failedExtraction }) {
             shrink-0 w-fit h-10 lg:h-auto px-2 md:py-1.5 xl:px-2 2xl:px-2.5 relative
               transition-opacity ease-in-out flex justify-center lg:border-r 
               border-border_gray`}>
+            <AnimatePresence>
+                {animateTooltip && <GuideDoneReading />}
+            </AnimatePresence>
             <button
                 onClick={handleClick}
                 className="my-auto mx-auto rounded-lg transition-all 
         duration-300 max-w-8 max-h-8 xl:max-w-7 xl:max-h-7 2xl:max-w-8 group
         2xl:max-h-8 ease-in-out group relative">
 
-                <AnimatePresence>
-                    {animateTooltip && <GuideDoneReading />}
-                </AnimatePresence>
+
                 {(tooltip === null) && <div className="absolute p-1 bg-white z-50 opacity-0 transition-opacity delay-500 duration-200 ease-soft md:group-hover:opacity-100 bottom-[3.3rem] -left-5
             rounded-md items-center border border-astro_gray shadow-thick after:content-[''] after:absolute after:bottom-[-10px] after:left-1/2 
             after:transform after:-translate-x-1/2 after:border-t-[10px] after:border-l-[10px] after:border-r-[10px] after:border-b-0 
@@ -73,6 +72,5 @@ export function FinishedReading({ failedExtraction }) {
             </button>
             <PanelLabel description={"done"} />
         </div>
-
     );
 }

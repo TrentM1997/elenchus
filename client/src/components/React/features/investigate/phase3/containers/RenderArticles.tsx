@@ -40,7 +40,7 @@ export default function RenderArticles(): JSX.Element | null {
             className="h-full w-full mx-auto
                   flex flex-col">
             <AnimatePresence>
-                {showPendingExtractions && <PendingExtractions status={status} setShowPendingExtractions={setShowPendingExtractions} />}
+                {<PendingExtractions status={status} setShowPendingExtractions={setShowPendingExtractions} />}
             </AnimatePresence>
             {/* ******** FADED DIV, REMOVED 'grow' PROPERTY W/H-AUTO & W/W-AUTO ************************** */}
             <div

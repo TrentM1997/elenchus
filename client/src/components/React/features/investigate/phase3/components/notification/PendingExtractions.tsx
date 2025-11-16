@@ -41,18 +41,16 @@ export default function PendingExtractions({ setShowPendingExtractions, status }
             animate='open'
             exit='closed'
             transition={{ type: 'tween', duration: 0.2, ease: softEase, delay: 0.2 }}
-            className="transform-gpu will-change-transform fixed top-4 md:top-16 z-40 pointer-events-auto h-fit w-full flex items-start justify-center md:px-12 md:justify-start"
+            className="lg:fixed relative lg:left-16 lg:mx-0 top-4 md:top-12 lg:top-16 h-10 w-60 transform-gpu will-change-transform p-2 bg-button_blue border border-border_gray rounded-xl px-2 z-[900]"
         >
-            <div className="h-10 w-60 p-2 bg-button_blue border border-border_gray rounded-xl px-2 z-30">
-                <div key='title' className="flex w-full h-full items-center justify-between">
-                    <div key='titleContainer' className="w-auto h-fit">
-                        <p className="text-white font-light tracking-tight text-sm">
-                            {`extration progress... ${progress}`}
-                        </p>
-                    </div>
-                    <div className="w-auto h-fit relative">
-                        <PulseDot key={'pending-status'} />
-                    </div>
+            <div key='title' className="flex w-full h-full items-center justify-between">
+                <div key='titleContainer' className="w-auto h-fit">
+                    <p className="text-white font-light tracking-tight text-sm">
+                        {`extration progress... ${progress}`}
+                    </p>
+                </div>
+                <div className="w-auto h-fit relative">
+                    <PulseDot key={'pending-status'} />
                 </div>
             </div>
 
@@ -60,7 +58,7 @@ export default function PendingExtractions({ setShowPendingExtractions, status }
     );
 
 
-    return createPortal(toast, document.body);
+    return createPortal(toast, document.getElementById('portal-root'));
 };
 
 
