@@ -4,6 +4,10 @@ export const variants = {
     closed: { opacity: 0 }
 }
 
+
+
+
+
 export const headerTransitions = {
     initial: { opacity: 0 },
     open: { opacity: 1, transition: { duration: 0.2, delay: 0.2, type: 'tween' } },
@@ -11,6 +15,29 @@ export const headerTransitions = {
 };
 
 export const softEase: Array<number> = [0.33, 0, 0.67, 1];
+
+export const hideBottom = {
+    show: {
+        y: 0,
+        opacity: 1,
+        transition: {
+            type: 'tween',
+            duration: 0.2,
+            delay: 0.4,
+            ease: softEase
+        },
+    },
+    hide: {
+        opacity: 0,
+        y: 100,
+        transition: {
+            type: 'tween',
+            duration: 0.2,
+            delay: 0,
+            ease: softEase
+        }
+    }
+}
 
 export const hideTop = {
     show: {
@@ -144,3 +171,33 @@ export const pagesVariants = {
 };
 
 
+
+export const extractionToastVariants = {
+    initial: {
+        opacity: 0,
+        backgroundColor: "rgba(29, 78, 216, 0.90)", // darker blue-600/90
+    },
+
+    animate: {
+        opacity: 1,
+        backgroundColor: [
+            "rgba(37, 99, 235, 0.88)", // -2%
+            "rgba(37, 99, 235, 0.92)", // +2%
+            "rgba(37, 99, 235, 0.88)"
+        ],
+        transition: {
+            type: "tween",
+            opacity: { duration: 0.2, ease: softEase },
+            backgroundColor: {
+                duration: 2.2,
+                repeat: Infinity,
+                ease: softEase,
+            },
+        },
+    },
+
+    exit: {
+        opacity: 0,
+        transition: { type: 'tween', duration: 0.2, ease: softEase },
+    },
+};

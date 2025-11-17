@@ -10,7 +10,7 @@ function ArticleLink({
     isPriority,
     chooseArticle,
     mute,
-    chosenArticles
+    highlight
 }: LinkProps) {
     const {
         name,
@@ -18,15 +18,10 @@ function ArticleLink({
         description,
         logo
     } = article;
-    const chosen = chosenArticles.some((item: SelectedArticle) => item.url === article.url);
     const fallbackImage = '/images/logos/fallback.jpg';
     const thumbnail = article.image.img ?? fallbackImage;
-    const highlight = (chosen && (!inModal));
     const dimensions: string = `xl:min-h-72 xl:max-h-72 xl:min-w-80 xl:max-w-80
             lg:w-72 lg:h-72 md:h-60 md:w-60 sm:w-52 sm:h-52 h-72 w-76`;
-
-
-
 
     return (
         <li
@@ -37,13 +32,13 @@ function ArticleLink({
             className={`group cursor-pointer box-border list-none flex-shrink-0 
             ${dimensions}
             relative rounded-3xl sm:rounded-xl md:rounded-3xl text-white 
-            ${((mute) && (!chosen))
+            ${((mute) && (!highlight))
                     ? 'opacity-30 pointer-events-none'
                     : 'pointer-events-auto opacity-80 hover:opacity-100'
                 }
              transition-[opacity,background-color] transform-gpu will-change-[opacity,background-color,transform] ease-[cubic-bezier(.25,.8,.25,1)] 
             duration-300 overflow-hidden
-            ${inModal && chosen
+            ${inModal && highlight
                     ? 'opacity-75'
                     : ''
                 }
@@ -67,7 +62,7 @@ function ArticleLink({
             </div>
             <LinkDescription
                 isPriority={isPriority}
-                chosen={chosen}
+                chosen={highlight}
                 logo={logo}
                 provider={provider}
                 description={description}

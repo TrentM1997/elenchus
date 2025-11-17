@@ -4,7 +4,8 @@ import { SelectedArticle } from '@/env'
 
 interface ChosenArticles {
     chosenArticles: Array<SelectedArticle> | null,
-    showMaxToast: boolean
+    showMaxToast: boolean,
+
 }
 
 const initialState: ChosenArticles = {

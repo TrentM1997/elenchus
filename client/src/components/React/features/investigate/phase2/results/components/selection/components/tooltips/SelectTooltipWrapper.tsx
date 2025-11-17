@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/ReduxToolKit/store";
 import MaxChosen from "./MaxChosen";
 import { useMaxSelectedToast } from "@/hooks/useAutoDismiss";
-import { ModalDisplayed, populateTooltip, TooltipDisplayed } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import { populateTooltip, TooltipDisplayed } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 import { wait } from "@/helpers/Presentation";
 import type { Tooltips } from "@/env";
 

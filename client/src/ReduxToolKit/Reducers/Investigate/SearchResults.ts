@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ArticleType } from "@/env";
 import { ArticleOptionsFetch, fetchArticles } from "@/helpers/FetchRequests";
 
@@ -36,7 +36,9 @@ interface SearchResults {
     status: Status,
     pages: Array<Page> | null,
     currentPage: number | null,
-    activeRequestId: string | null
+    activeRequestId: string | null,
+    mutePagination: boolean
+
 }
 
 const initialState: SearchResults = {
@@ -45,7 +47,8 @@ const initialState: SearchResults = {
     status: 'idle',
     pages: null,
     currentPage: 0,
-    activeRequestId: null
+    activeRequestId: null,
+    mutePagination: false
 };
 
 
@@ -70,6 +73,9 @@ export const SearchResultsSlice = createSlice({
         },
         incrementPageBy: (state, action) => {
             state.currentPage = action.payload
+        },
+        temporaryPaginationMute: (state: SearchResults, action: PayloadAction<boolean>) => {
+            state.mutePagination = action.payload;
         },
         resetResults: () => initialState,
         resetArticles: (state) => {
@@ -104,7 +110,7 @@ export const SearchResultsSlice = createSlice({
 
 
 
-export const { searchResults, resetResults, resetArticles, getPages, incrementPage, incrementPageBy, decrementPage } = SearchResultsSlice.actions
+export const { searchResults, resetResults, resetArticles, getPages, incrementPage, incrementPageBy, decrementPage, temporaryPaginationMute } = SearchResultsSlice.actions
 
 export default SearchResultsSlice.reducer
 

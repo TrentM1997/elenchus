@@ -40,9 +40,8 @@ export default function RenderArticles(): JSX.Element | null {
             className="h-full w-full mx-auto
                   flex flex-col">
             <AnimatePresence>
-                {<PendingExtractions status={status} setShowPendingExtractions={setShowPendingExtractions} />}
+                {showPendingExtractions && <PendingExtractions status={status} setShowPendingExtractions={setShowPendingExtractions} />}
             </AnimatePresence>
-            {/* ******** FADED DIV, REMOVED 'grow' PROPERTY W/H-AUTO & W/W-AUTO ************************** */}
             <div
                 className={`transition-opacity duration-200 ease-soft 2xl:max-w-7xl
                     ${(tooltip === 'Finished Reading Button') ? 'opacity-40' : 'opacity-100'}
@@ -68,9 +67,6 @@ export default function RenderArticles(): JSX.Element | null {
                 {noResults && <NoContent key='noResults' />}
 
             </div>
-            {/* ******** END OF FADED DIV ************************** */}
-
-            {/* ******** CONTROL PANEL HERE ************************** */}
             <AnimatePresence >
                 {renderControlPanel && <ControlPanel key={'controls'} />}
 
@@ -78,5 +74,4 @@ export default function RenderArticles(): JSX.Element | null {
 
         </main>
     )
-
 };

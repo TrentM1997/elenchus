@@ -1,4 +1,4 @@
-import { lazy } from "react";
+import { lazy, useEffect, useMemo } from "react";
 const ArticleLink = lazy(() => import('../../results/components/links/ArticleLink'))
 import { Suspense } from "react";
 import LinkPlaceholder from "../../search/components/loaders/LinkPlaceholder";
@@ -6,18 +6,20 @@ import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback
 import type { RootState } from "@/ReduxToolKit/store";
 import type { AppDispatch } from "@/ReduxToolKit/store";
 import { useSelector, useDispatch } from "react-redux";
-import type { SelectedArticle } from "@/env";
 import { choose, discard } from "@/ReduxToolKit/Reducers/Investigate/ChosenArticles";
+import type { ArticleType, SelectedArticle } from "@/env";
+import { temporaryPaginationMute } from "@/ReduxToolKit/Reducers/Investigate/SearchResults";
 
 interface Page {
-    index: number
+    index: number,
+    urlHash: Set<string>
 };
 
-export default function Page({ index }: Page): JSX.Element | null {
+export default function Page({ index, urlHash }: Page): JSX.Element | null {
     const page = useSelector((state: RootState) => state.investigation.search.pages[index]);
-    const chosenArticles = useSelector((state: RootState) => state.investigation.getArticle.chosenArticles);
+    const chosenArticles: SelectedArticle[] = useSelector((state: RootState) => state.investigation.getArticle.chosenArticles);
     const dispatch = useDispatch<AppDispatch>();
-    const maxChosen = (Array.isArray(chosenArticles) && (chosenArticles.length === 3));
+
 
     const chooseArticle = (article: ArticleType): void => {
 
@@ -41,18 +43,19 @@ export default function Page({ index }: Page): JSX.Element | null {
         }
     };
 
+
     return (
         <ul
-            className={`transform-gpu  will-change-[opacity,transform] animation-delay-300ms
+            className={`transform-gpu  will-change-[opacity,transform] contain-layout contain-paint overflow-hidden animation-delay-200ms
             relative h-full no-scrollbar py-2 opacity-0 animate-fade-in ease-soft
-            w-full xl:max-w-6xl 2xl:w-full mx-auto justify-items-center
-            grid grid-cols-1 sm:grid-cols-3 grid-flow-row 2xl:gap-y-6 2xl:gap-x-0 gap-2`}>
+            w-full mx-auto justify-items-center
+            grid grid-cols-1 sm:grid-cols-3 grid-flow-row lg:gap-y-6 2xl:gap-x-0 gap-2`}>
             {(Array.isArray(page)) && (page.length > 0) &&
-                page.map((article, index) => (
+                page.map((article: ArticleType, index: number) => (
                     <Suspense key={article.url} fallback={<DelayedFallback><LinkPlaceholder /></DelayedFallback>}>
                         <ArticleLink
+                            highlight={urlHash.has(article.url)}
                             inModal={false}
-                            chosenArticles={chosenArticles}
                             mute={(chosenArticles?.length === 3)}
                             chooseArticle={chooseArticle}
                             isPriority={(index <= 8)}

@@ -15,7 +15,7 @@ export default function ModalContainer() {
         </ModalLayer>
         }
         {(modal === 'Extract Confirmation') &&
-            <ModalLayer key='get-these-articles-overlay'>
+            <ModalLayer key='get-these-articles-overlay' mountDelay={0.8}>
                 <GetTheseArticles key="getContent" />
             </ModalLayer>
         }

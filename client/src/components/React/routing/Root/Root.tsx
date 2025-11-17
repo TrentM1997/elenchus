@@ -38,7 +38,7 @@ export default function Root() {
         <>
             <Navigation
             />
-            {(phase === "Phase 3") && <div key="portal-root-div" id="portal-root" className="pointer-events-none fixed z-[800] inset-0 flex items-start justify-center"></div>}
+            {(phase === "Phase 3" || (phase === "Phase 2")) && <div key="portal-root-div" id="portal-root" className="pointer-events-none fixed z-[800] inset-0 flex items-start justify-center"></div>}
 
             <AnimatePresence mode="wait">
                 {signout && <ModalLayer key='overlay' ariaLabel="Sign out confirmation"><SignOutModal key='modal' /></ModalLayer>}

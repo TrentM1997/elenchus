@@ -281,6 +281,7 @@ declare global {
   }
 
   interface LinkProps {
+    highlight?: boolean,
     article: ArticleType,
     index?: number,
     isPriority?: boolean,
