@@ -1,6 +1,7 @@
 import { displayArticleContent, displaySearch, displayReturnModal } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer"
 import { changePhase, populateModal } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 import { resetResults } from "@/ReduxToolKit/Reducers/Investigate/SearchResults";
+import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
 import { useDispatch } from "react-redux"
 
 export default function BackToSearch(): JSX.Element {
@@ -13,7 +14,7 @@ export default function BackToSearch(): JSX.Element {
         await wait(200);
         dispatch(changePhase('Phase 2'))
         await wait(100);
-        dispatch(populateModal(null));
+        dispatch(renderModal(null));
     };
 
     return (

@@ -14,10 +14,10 @@ import { wait } from "@/helpers/Presentation";
 import type { Tooltips } from "@/env";
 
 interface TooltipWrapper {
-    flags: Tooltips
+    canAnimate: boolean
 };
 
-export default function SelectTooltipWrapper(): JSX.Element | null {
+export default function SelectTooltipWrapper({ canAnimate }: TooltipWrapper): JSX.Element | null {
     const tooltip: TooltipDisplayed = useSelector((s: RootState) => s.investigation.rendering.tooltip);
     const chosenArticles = useSelector((state: RootState) => state.investigation.getArticle.chosenArticles);
     const dispatch = useDispatch<AppDispatch>();
@@ -50,16 +50,20 @@ export default function SelectTooltipWrapper(): JSX.Element | null {
     return (
         <>
             <AnimatePresence mode="wait">
-                {(tooltip === 'Selection Required') &&
+                {(tooltip === 'Selection Required') && (canAnimate) &&
                     <SelectionRequired key={'minimum-chosen warning'} />
                 }
 
-                {(tooltip === 'Guide Selection') &&
+                {(tooltip === 'Guide Selection') && (canAnimate) &&
                     <GuideSelectingArticles key={'tooltip'}
                     />
                 }
 
-                {(tooltip === 'Max Toast') && <MaxChosen key={'max-articles-selected'} />}
+                {(tooltip === 'Max Toast') && (canAnimate) &&
+                    <MaxChosen
+                        key={'max-articles-selected'}
+                    />
+                }
             </AnimatePresence>
         </>
     );

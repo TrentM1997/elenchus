@@ -1,5 +1,5 @@
 import { RootState } from '@/ReduxToolKit/store';
-import { lazy, Suspense, useEffect, useRef, useState, useMemo } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ComponentLoader from '@/components/React/Shared/Loaders/ComponentLoader';
 import { AnimatePresence } from 'framer-motion';

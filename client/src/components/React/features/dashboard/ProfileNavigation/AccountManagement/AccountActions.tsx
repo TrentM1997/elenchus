@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import { presentDeleteModal } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
 import { useNavigate } from "react-router-dom";
 import ScrolltoTop from "@/helpers/ScrollToTop";
+import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
 
 export default function AccountActions() {
   const dispatch = useDispatch()
@@ -91,7 +92,7 @@ export default function AccountActions() {
                   </div>
                   <div className="mt-8 w-full">
                     <button
-                      onClick={() => dispatch(presentDeleteModal(true))}
+                      onClick={() => dispatch(renderModal('Delete Account'))}
                       type="button"
                       className="text-sm py-2 w-full px-4 border focus:ring-2 rounded-full border-transparent bg-white hover:bg-white/10 text-black duration-200 focus:ring-offset-2 focus:ring-white hover:text-white inline-flex items-center justify-center ring-1 ring-transparent"
                     >

@@ -2,11 +2,11 @@ import { runFirecrawlExtraction } from "@/ReduxToolKit/Reducers/Investigate/Read
 import { useAppdispatch } from "@/hooks/appDispatch"
 import { useSelector, useDispatch } from "react-redux"
 import { RootState } from "@/ReduxToolKit/store"
-import { displayGetArticlesModal, displayArticleContent, displaySearch } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer"
 import DisplayThese from "./DisplayThese"
 import { ChosenArticleSlice } from "@/ReduxToolKit/Reducers/Investigate/ChosenArticles";
 import { wait } from "@/helpers/Presentation"
-import { changePhase, populateModal } from "@/ReduxToolKit/Reducers/Investigate/Rendering"
+import { changePhase } from "@/ReduxToolKit/Reducers/Investigate/Rendering"
+import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice"
 
 export function GetTheseArticles(): JSX.Element {
     const { chosenArticles }: ChosenArticleSlice = useSelector((state: RootState) => state.investigation.getArticle);
@@ -22,18 +22,18 @@ export function GetTheseArticles(): JSX.Element {
         await wait(200);
         dispatch(changePhase('Phase 3'))
         await wait(200);
-        dispatch(populateModal(null));
+        dispatch(renderModal(null));
     };
 
     const dontExecute = () => {
-        dispatch(populateModal(null));
+        dispatch(renderModal(null))
     };
 
     return (
 
         <div
             aria-label="Extract the chosen articles modal"
-            className="opacity-0 animate-fade-blur animation-delay-400ms will-change-[opacity] ease-soft flex 
+            className="opacity-0 animate-fade-blur animation-delay-700ms will-change-[opacity] ease-soft flex 
             flex-col items-center gap-6 rounded-3xl p-2 md:p-8 lg:p-4 w-88 sm:w-11/12 lg:w-3/4 
             relative  xl:w-5/6 2xl:max-w-6xl h-auto
      sm:gap-y-10 sm:p-10 bg-black border border-border_gray mt-2 

@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { SigninStatus } from "@/hooks/useSignIn";
 import { useClearUser } from "@/hooks/useClearUser";
 import { wait } from "@/helpers/Presentation";
+import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
 
 export default function SignOutModal(): JSX.Element {
     const [status, setStatus] = useState<SigninStatus>('idle');
@@ -17,6 +18,7 @@ export default function SignOutModal(): JSX.Element {
     const timerRef = useRef<number | null>();
 
     async function redirect(): Promise<void> {
+        dispatch(renderModal(null));
         await wait(500);
         navigate('/');
     };
@@ -92,7 +94,7 @@ export default function SignOutModal(): JSX.Element {
                         aria-label="Cancel sign out"
                         whileTap={{ scale: 0.95 }}
                         transition={{ type: 'tween', duration: 0.2 }}
-                        onClick={() => dispatch(showSignOut())} type="button"
+                        onClick={() => dispatch(renderModal(null))} type="button"
                         className="text-sm py-2 w-full px-6 md:px-4 border md:focus:ring-2 rounded-full border-transparent 
                     bg-white md:hover:bg-white/10 text-black lg:text-base 
                     md:hover:text-white inline-flex items-center justify-center 

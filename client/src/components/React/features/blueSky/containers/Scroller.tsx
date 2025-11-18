@@ -6,16 +6,20 @@ import type { AppDispatch, RootState } from "@/ReduxToolKit/store";
 import { useCallback } from "react";
 import type { BlueSkyPost } from "@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice";
 import { softEase, variants } from "@/motion/variants";
+import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
+import { wait } from "@/helpers/Presentation";
 
 export default function Scroller({ posts }) {
     const postForPopover = useSelector((s: RootState) => s.bluesky.popoverPost);
     const dispatch = useDispatch<AppDispatch>();
 
-    const choosePost = useCallback((post: BlueSkyPost): void => {
+    const choosePost = useCallback(async (post: BlueSkyPost): Promise<void> => {
         if (postForPopover !== null) return;
         const text: string = post.record?.text ?? null;
         dispatch(getPopoverPost(post));
         dispatch(selectPost(text));
+        await wait(400);
+        dispatch(renderModal('Bluesky Post Selected'));
     }, [postForPopover]);
 
 

@@ -4,14 +4,10 @@ import { RootState } from "@/ReduxToolKit/store";
 import BlueSkyLoader from "../Loaders/BlueSkyLoader";
 import { variants } from "@/motion/variants";
 import { PostsProps } from "@/env";
-import Popover from "../Popovers/Popover";
 import Feed from "../Components/feed/Feed";
-import ModalLayer from "@/components/React/Shared/modals/ModalLayer";
 
-export default function FeedContainer({ posts, shouldRedirect, shouldAnimate = true }: PostsProps) {
+export default function FeedContainer({ posts, shouldAnimate = true }: PostsProps) {
     const status = useSelector((state: RootState) => state.bluesky.status);
-    const selected = useSelector((state: RootState) => state.bluesky.selected);
-    const popoverPost = useSelector((s: RootState) => s.bluesky.popoverPost);
 
     return (
         <motion.div
@@ -24,17 +20,6 @@ export default function FeedContainer({ posts, shouldRedirect, shouldAnimate = t
             className="h-full"
         >
             <div className="relative min-h-screen w-full">
-
-                <AnimatePresence>
-                    {popoverPost && selected &&
-                        <ModalLayer key={'selected-post-overlay'} ariaLabel="Selected Blue Sky Post">
-                            <Popover
-                                key='popoverPost'
-                                shouldRedirect={shouldRedirect} />
-                        </ModalLayer>
-                    }
-                </AnimatePresence>
-
                 <AnimatePresence mode="wait">
                     {status === 'pending' &&
                         <BlueSkyLoader key={'pendingPosts'}

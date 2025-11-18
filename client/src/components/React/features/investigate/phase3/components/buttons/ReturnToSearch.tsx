@@ -7,6 +7,7 @@ import BackToSearchTooltip from "../../tooltips/BackToSearchTooltip";
 import PanelLabel from "./PanelLabel";
 import ButtonHoverTooltip from "../../tooltips/ButtonHoverTooltip";
 import { populateModal } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
 
 interface ReturnToSearchProps {
     failed: boolean
@@ -22,7 +23,7 @@ export default function ReturnToSearch({ failed }: ReturnToSearchProps): JSX.Ele
 
 
     const handleReturn = () => {
-        dispatch(populateModal('Back to Search'));
+        dispatch(renderModal('Back to Search'));
     };
 
     useEffect(() => {

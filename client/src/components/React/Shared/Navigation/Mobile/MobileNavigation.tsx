@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
 import { showSignOut } from "@/ReduxToolKit/Reducers/Athentication/Authentication";
 import { useNavigate } from "react-router-dom";
-
+import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
+import { wait } from "@/helpers/Presentation";
 
 const variants = {
     open: {
@@ -25,14 +26,16 @@ export default function MobileNavigation({ isOpen, toggle }) {
 
 
 
-    const handleAuthChoice = () => {
+    const handleAuthChoice = async () => {
         if (!activeSession) {
+            toggle();
+            await wait(500);
             navigate('/login')
-            toggle()
 
         } else if (activeSession) {
-            dispatch(showSignOut())
             toggle()
+            await wait(300);
+            dispatch(renderModal('Sign Out'));
         }
     }
 

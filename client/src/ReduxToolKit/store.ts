@@ -10,6 +10,8 @@ import FeedBackSlice from './Reducers/Feedback/FeedbackSlice'
 import BlueSkySlice from './Reducers/BlueSky/BlueSkySlice'
 import ChartSlice from './Reducers/UserContent/ChartSlice';
 import DashboardTabsSlice from './Reducers/UserContent/DashboardTabs';
+import PipelineSlice from './Reducers/RenderingPipelines/PipelineSlice';
+
 
 export const store = configureStore({
     reducer: {
@@ -23,7 +25,8 @@ export const store = configureStore({
         feedback: FeedBackSlice,
         bluesky: BlueSkySlice,
         chart: ChartSlice,
-        dashboard: DashboardTabsSlice
+        dashboard: DashboardTabsSlice,
+        overlay: PipelineSlice
     }
 
 });

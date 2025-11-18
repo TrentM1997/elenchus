@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux";
 import { displayBlueSkySearch } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer";
 import { preselected } from "@/ReduxToolKit/Reducers/Investigate/UserPOV";
 import React from "react";
-import { choosePath, pickOption } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import { changePhase, choosePath, pickOption } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 
 
 const actions = [
@@ -30,7 +30,7 @@ function InputOptions() {
   };
 
   const inputManually = () => {
-    dispatch(choosePath('Path Chosen'));
+    dispatch(changePhase('Phase 1'));
   };
 
   const importFromBlueSky = actions[0];

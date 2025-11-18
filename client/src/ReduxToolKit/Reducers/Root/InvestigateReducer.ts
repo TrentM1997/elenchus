@@ -1,14 +1,14 @@
 import { combineReducers, ReducerType } from "@reduxjs/toolkit";
-import StepsReducer from '../Investigate/Steps'
-import UserPOVReducer from '../Investigate/UserPOV'
-import NoteReducer from '../Investigate/NoteTaking'
-import ReadingReducer from '../Investigate/Reading'
-import SelectingArticles from '../Investigate/ChosenArticles'
-import SearchResults from '../Investigate/SearchResults'
-import ReviewReducer from '../Investigate/Review'
-import HelpReducer from '../Investigate/HelpModal'
-import EndInvestigateReducer from '../Investigate/EndInvestigation'
-import DisplayReducer from '../Investigate/DisplayReducer'
+import StepsReducer from '../Investigate/Steps';
+import UserPOVReducer from '../Investigate/UserPOV';
+import NoteReducer from '../Investigate/NoteTaking';
+import ReadingReducer from '../Investigate/Reading';
+import SelectingArticles from '../Investigate/ChosenArticles';
+import SearchResults from '../Investigate/SearchResults';
+import ReviewReducer from '../Investigate/Review';
+import HelpReducer from '../Investigate/HelpModal';
+import EndInvestigateReducer from '../Investigate/EndInvestigation';
+import DisplayReducer from '../Investigate/DisplayReducer';
 import WikipediaSlice from "../Investigate/WikipediaSlice";
 import RenderingSlice from '../Investigate/Rendering';
 
@@ -25,7 +25,7 @@ const investigateReducer = combineReducers({
     end: EndInvestigateReducer,
     display: DisplayReducer,
     wiki: WikipediaSlice,
-    rendering: RenderingSlice
+    rendering: RenderingSlice,
 
 })
 
@@ -38,4 +38,4 @@ export const InvestigateFeature = (state: any, action: any) => {
     }
 
     return investigateReducer(state, action)
-}
+};

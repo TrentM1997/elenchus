@@ -1,7 +1,6 @@
-import { AnimatePresence, motion } from "framer-motion"
+import { motion } from "framer-motion"
 import AccountActions from "./AccountActions"
 import { variants } from "@/motion/variants"
-import DeleteUserAccount from "@/components/React/session/modals/DeleteUser";
 import { useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
 
@@ -18,9 +17,6 @@ export default function AccManagement() {
             className="min-h-svh 2xl:w-full md:px-8 scroll-smooth inset mx-auto relative">
             <AccountActions />
 
-            <AnimatePresence>
-                {showDeleteModal && <DeleteUserAccount />}
-            </AnimatePresence>
 
         </motion.section>
     );
