@@ -1,4 +1,4 @@
-import { motion, AnimatePresence, MotionConfigProps } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { createPortal } from "react-dom";
 import { AppDispatch, RootState } from "@/ReduxToolKit/store";

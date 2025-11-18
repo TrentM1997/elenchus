@@ -21,6 +21,7 @@ export default function InvestigateMore() {
             dispatch(renderModal('Work Modal'));
             setOpen(true)
         } else if (!activeSession) {
+            dispatch(renderModal('Feedback Form'));
             dispatch({ type: 'clear' });
             clearCachedPlayStates(PLAYSTATE_KEYS);
         }

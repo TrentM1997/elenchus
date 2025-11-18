@@ -11,6 +11,7 @@ import ModalLayer from "@/components/React/Shared/modals/ModalLayer"
 
 
 export default function FinalResults() {
+    const activeSession = useSelector((s: RootState) => s.auth.activeSession);
     const modal = useSelector((s: RootState) => s.investigation.rendering.modal);
     const saveStatus = useSelector((state: RootState) => state.saveResearch.status)
     const saved = useSelector((state: RootState) => state.saveResearch.saved);
@@ -54,7 +55,7 @@ export default function FinalResults() {
                 </div>
 
                 <div className="flex mt-16 gap-x-2 2xl:gap-x-6 w-1/2 justify-center mx-auto">
-                    {saved === true ? <GoToDashboard /> : <SaveInvestigation />}
+                    {activeSession && <SaveInvestigation />}
                     <InvestigateMore />
                 </div>
             </div>

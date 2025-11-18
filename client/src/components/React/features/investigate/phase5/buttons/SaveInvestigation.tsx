@@ -6,6 +6,7 @@ import { AppDispatch } from "@/ReduxToolKit/store"
 import { saveUserInvestigation } from "@/ReduxToolKit/Reducers/UserContent/SaveInvestigationSlice"
 import { useEffect, useState } from "react"
 import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer"
+import GoToDashboard from "./GoToDashboard"
 
 export default function SaveInvestigation({ }) {
     const saved = useSelector((state: RootState) => state.saveResearch.saved)
@@ -38,22 +39,29 @@ export default function SaveInvestigation({ }) {
 
         if (storedWork) setPrevWork(storedWork);
 
-    }, [saved]);
+    }, []);
 
     const handleSave = () => {
         dispatch(saveUserInvestigation(investigateData));
         dispatch(fetchSavedInvestigations());
     };
 
-    return (
-        <button
-            onClick={handleSave}
-            className={`bg-white w-auto 2xl:w-60 hover:bg-white/10 group shadow-thick 
+    if (saved) {
+        return <GoToDashboard />
+    }
+
+    if (!saved) {
+        return (
+            <button
+                onClick={handleSave}
+                className={`bg-white w-auto 2xl:w-60 hover:bg-white/10 group shadow-thick 
                     transition-all duration-200 ease-in-out rounded-full h-fit py-2 px-4 mx-auto flex items-center`}>
-            <p className={`${saved ? 'text-slate-500' : 'text-black'} transition-all duration-200 ease-in-out
+                <p className={`${saved ? 'text-slate-500' : 'text-black'} transition-all duration-200 ease-in-out
              w-full text-xs 2xl:text-lg text-nowrap group-hover:text-white font-light text-center`}>
-                Save your research <span className="ml-2">&#8594;</span>
-            </p>
-        </button>
-    )
+                    Save your research <span className="ml-2">&#8594;</span>
+                </p>
+            </button>
+        )
+    }
+
 }
