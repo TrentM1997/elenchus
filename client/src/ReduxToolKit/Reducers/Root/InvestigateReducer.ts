@@ -8,7 +8,6 @@ import SearchResults from '../Investigate/SearchResults';
 import ReviewReducer from '../Investigate/Review';
 import HelpReducer from '../Investigate/HelpModal';
 import EndInvestigateReducer from '../Investigate/EndInvestigation';
-import DisplayReducer from '../Investigate/DisplayReducer';
 import WikipediaSlice from "../Investigate/WikipediaSlice";
 import RenderingSlice from '../Investigate/Rendering';
 
@@ -23,7 +22,6 @@ const investigateReducer = combineReducers({
     review: ReviewReducer,
     help: HelpReducer,
     end: EndInvestigateReducer,
-    display: DisplayReducer,
     wiki: WikipediaSlice,
     rendering: RenderingSlice,
 

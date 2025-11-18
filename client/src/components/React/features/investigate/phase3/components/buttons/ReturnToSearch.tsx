@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 import BackToSearchTooltip from "../../tooltips/BackToSearchTooltip";
 import PanelLabel from "./PanelLabel";
 import ButtonHoverTooltip from "../../tooltips/ButtonHoverTooltip";
-import { populateModal } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
+import { TooltipDisplayed } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 
 interface ReturnToSearchProps {
     failed: boolean
@@ -16,9 +16,8 @@ interface ReturnToSearchProps {
 export type TooltipType = 'failed' | 'service-down';
 
 export default function ReturnToSearch({ failed }: ReturnToSearchProps): JSX.Element | null {
+    const tooltip: TooltipDisplayed = useSelector((s: RootState) => s.investigation.rendering.tooltip);
     const [showBackTooltip, setShowBackTooltip] = useState<TooltipType | null>(null);
-    const investigateState = useSelector((state: RootState) => state.investigation);
-    const { showReadingTooltip } = investigateState.display
     const dispatch = useDispatch();
 
 
@@ -55,8 +54,7 @@ export default function ReturnToSearch({ failed }: ReturnToSearchProps): JSX.Ele
                     {showBackTooltip && <BackToSearchTooltip id={showBackTooltip} setShowBackTooltip={setShowBackTooltip} />}
                 </AnimatePresence>
 
-
-                {!showReadingTooltip && <ButtonHoverTooltip description="Return to search" />
+                {(!showBackTooltip) && <ButtonHoverTooltip description="Return to search" />
                 }
 
                 <div className="h-full w-full box-border">

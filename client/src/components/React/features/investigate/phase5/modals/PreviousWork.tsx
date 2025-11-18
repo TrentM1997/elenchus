@@ -2,10 +2,10 @@ import { motion } from "framer-motion"
 import { createPortal } from "react-dom"
 import { useSelector, useDispatch } from "react-redux"
 import { RootState } from "@/ReduxToolKit/store"
-import { displayWorkModal } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer"
+import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
 
 export function PreviousWork() {
-    const id = useSelector((state: RootState) => state.auth.user_id);
+    const activeSession = useSelector((s: RootState) => s.auth.activeSession);
     const investigateState = useSelector((state: RootState) => state.investigation);
     const { pov, review } = investigateState;
     const { idea, premises, perspective, biases } = pov;
@@ -21,7 +21,6 @@ export function PreviousWork() {
         new_concepts: newConcepts,
         changed_opinion: newPOV,
         takeaway: takeaway,
-        user_id: id
     }
 
     const storedInvestigation = investigateData
@@ -33,23 +32,22 @@ export function PreviousWork() {
         open: { opacity: 1 }
     }
 
-
-
     const handlePreviousWork = () => {
 
-        if (id) {
+        if (activeSession) {
             localStorage.setItem("userWork", stringifiedData)
             //   dispatch(saveUserInvestigation(investigateData))
             dispatch({ type: 'clear' })
-            displayWorkModal(false)
+            dispatch(renderModal(null))
 
         }
 
-    }
+    };
 
     const discardWork = () => {
 
         dispatch({ type: 'clear' })
+        dispatch(renderModal(null));
     }
 
     const modal = (

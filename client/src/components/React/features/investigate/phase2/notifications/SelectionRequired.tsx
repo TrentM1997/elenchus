@@ -1,11 +1,10 @@
 import { useEffect } from "react"
 import { motion } from "framer-motion"
 import { useDispatch, useSelector } from "react-redux"
-import { displaySelectionWarning } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer"
-import React from "react"
 import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer"
 import { RootState } from "@/ReduxToolKit/store"
 import { createPortal } from "react-dom"
+import { populateTooltip } from "@/ReduxToolKit/Reducers/Investigate/Rendering"
 
 export default function SelectionRequired() {
     const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
@@ -16,7 +15,7 @@ export default function SelectionRequired() {
     useEffect(() => {
 
         const timer = setTimeout(() => {
-            dispatch(displaySelectionWarning(false))
+            dispatch(populateTooltip(null))
         }, 5000)
 
         return () => clearTimeout(timer)

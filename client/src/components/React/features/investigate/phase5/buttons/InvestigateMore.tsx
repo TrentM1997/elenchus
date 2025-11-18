@@ -1,10 +1,10 @@
 import { RootState } from "@/ReduxToolKit/store"
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { displayWorkModal } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer"
 import { PreviousWork } from "../modals/PreviousWork";
 import { clearCachedPlayStates } from "@/components/React/routing/routes/InvestigateRoute";
 import { PLAYSTATE_KEYS } from "@/components/React/routing/routes/InvestigateRoute";
+import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
 
 export default function InvestigateMore() {
     const [open, setOpen] = useState<boolean>(false)
@@ -18,7 +18,7 @@ export default function InvestigateMore() {
             dispatch({ type: 'clear' });
             clearCachedPlayStates(PLAYSTATE_KEYS);
         } else if (activeSession && !saved) {
-            displayWorkModal(true)
+            dispatch(renderModal('Work Modal'));
             setOpen(true)
         } else if (!activeSession) {
             dispatch({ type: 'clear' });

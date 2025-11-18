@@ -1,8 +1,5 @@
 import React from "react";
 import SearchButton from "../buttons/SearchButton";
-import { useSelector } from "react-redux";
-import type { RootState } from "@/ReduxToolKit/store";
-import type { ContentStatus } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer";
 
 interface SearchBarProps {
     getSearchInput: (e: React.ChangeEvent<HTMLInputElement>) => void,
@@ -12,7 +9,6 @@ interface SearchBarProps {
 }
 
 export default function SearchBar({ getSearchInput, handleSubmit, flush }: SearchBarProps): JSX.Element {
-    const contentContainerStatus: ContentStatus = useSelector((s: RootState) => s.investigation.display.contentContainer);
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         const composing = (e.nativeEvent as KeyboardEvent).isComposing;

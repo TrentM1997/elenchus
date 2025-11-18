@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { startTransition, useEffect, useLayoutEffect, useRef } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
@@ -8,7 +7,6 @@ import SearchBlueSky from "../Components/input/SearchBlueSky";
 import BlueSkyHeader from "../Components/BlueSkyHeader";
 import CloseBlueSky from "../Components/buttons/CloseBlueSky";
 import { useNavigate } from "react-router-dom";
-import { displayBlueSkySearch } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer";
 import FeedContainer from "./FeedContainer";
 
 interface BlueSkyProps {
@@ -47,7 +45,6 @@ export default function BlueSky({ context, shouldAnimate = true }: BlueSkyProps)
       }, 850);
 
     }
-    dispatch(displayBlueSkySearch(false));
 
 
     return () => {

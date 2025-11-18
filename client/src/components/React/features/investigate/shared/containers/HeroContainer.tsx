@@ -11,12 +11,13 @@ import { useMemo, useRef } from "react"
 import { softEase } from "@/motion/variants"
 import StoryPaginate from "../../phase3/components/buttons/StoryPaginate"
 import { ReadingSliceState } from "@/ReduxToolKit/Reducers/Investigate/Reading"
-import type { ModalDisplayed, Phase } from "@/ReduxToolKit/Reducers/Investigate/Rendering"
+import type { Phase } from "@/ReduxToolKit/Reducers/Investigate/Rendering"
+import { ActiveModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice"
 
 export default function HeroContainer({
 }) {
     const phase: Phase = useSelector((s: RootState) => s.investigation.rendering.phase);
-    const modal: ModalDisplayed = useSelector((s: RootState) => s.investigation.rendering.modal);
+    const modal: ActiveModal = useSelector((s: RootState) => s.overlay.modal)
     const articles: ReadingSliceState = useSelector((state: RootState) => state.investigation.read.articles)
     const heightRef = useRef(null);
     const showSpacerDiv = useMemo(() => {
@@ -24,10 +25,6 @@ export default function HeroContainer({
         const show: boolean = hasRetrievedArticles && (phase === 'Phase 3');
         return show;
     }, [articles, phase]);
-
-
-
-
 
 
     return (

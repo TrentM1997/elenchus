@@ -1,5 +1,4 @@
-import { displayArticleContent, displaySearch, displayReturnModal } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer"
-import { changePhase, populateModal } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import { changePhase } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 import { resetResults } from "@/ReduxToolKit/Reducers/Investigate/SearchResults";
 import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
 import { useDispatch } from "react-redux"
@@ -10,7 +9,6 @@ export default function BackToSearch(): JSX.Element {
 
     const returnToSearch = async () => {
         dispatch(resetResults());
-        dispatch(displayArticleContent(false));
         await wait(200);
         dispatch(changePhase('Phase 2'))
         await wait(100);
