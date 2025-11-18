@@ -1,8 +1,6 @@
-import { createPortal } from "react-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import { useDispatch, useSelector } from "react-redux"
-import { displayFeedBackForm } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer"
-import { getAuthorEmail, getFeedBackMessage, stopAskingForFeedBack, declineFeedBack } from "@/ReduxToolKit/Reducers/Feedback/FeedbackSlice"
+import { getAuthorEmail, getFeedBackMessage, stopAskingForFeedBack } from "@/ReduxToolKit/Reducers/Feedback/FeedbackSlice"
 import React, { useEffect, useState } from "react"
 import { RootState } from "@/ReduxToolKit/store"
 import { submitFeedback } from "@/services/supabase/SupabaseData"
@@ -10,21 +8,19 @@ import AuthNotification from "@/components/React/session/notifications/AuthNotif
 import type { SigninStatus } from "@/hooks/useSignIn"
 import { wait } from "@/helpers/Presentation"
 import { populateModal } from "@/ReduxToolKit/Reducers/Investigate/Rendering"
+import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice"
 
 export default function FeedBackForm() {
   const activeSession = useSelector((state: RootState) => state.auth.activeSession);
   const authorEmail = useSelector((state: RootState) => state.feedback.authorEmail)
   const message = useSelector((state: RootState) => state.feedback.message)
-  const seenFeedbackForm = useSelector((state: RootState) => state.feedback.seen)
-  const [loggedIn, setLoggedIn] = useState<boolean>(null);
   const [needInput, setNeedInput] = useState<boolean>(null)
-  const [submitted, setSubmitted] = useState<boolean>(false)
   const [feedbackSubmitted, setFeedbacksubmitted] = useState<boolean>(null);
   const [status, setStatus] = useState<SigninStatus>('idle');
   const dispatch = useDispatch()
 
   const closeFeedback = () => {
-    dispatch(populateModal(null))
+    dispatch(renderModal(null));
     dispatch(stopAskingForFeedBack(true))
   };
 
@@ -40,15 +36,7 @@ export default function FeedBackForm() {
   }
 
 
-  const giveFeedback = async () => {
-    setStatus('pending');
-    if ((!needInput && message) || (!loggedIn && message && authorEmail)) {
-      setSubmitted(true);
-      dispatch(stopAskingForFeedBack(true))
-    } else {
-      setNeedInput(true)
-    }
-  };
+
 
 
   useEffect(() => {
