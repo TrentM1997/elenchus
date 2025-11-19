@@ -1,4 +1,3 @@
-import { useMemo } from "react"
 import StepsEditor from "../../../../../Shared/TipTap/StepsEditor"
 import { getIdea } from "@/ReduxToolKit/Reducers/Investigate/UserPOV"
 import { useSelector } from "react-redux"
@@ -7,30 +6,18 @@ import { motion } from "framer-motion"
 import { stepVariants } from "@/motion/variants"
 import Requirements from "../inputs/interactive/Requirements"
 import { useCheckFirstStep } from "@/hooks/useCheckFirstStep"
-import React from "react"
+import React from "react";
+import type { PaginationStatus } from "@/ReduxToolKit/Reducers/Investigate/Steps"
+
 
 function Step1() {
-      const denied = useSelector((state: RootState) => state.investigation.stepper.denied);
+      const status: PaginationStatus = useSelector((s: RootState) => s.investigation.stepper.status);
       const idea = useSelector((state: RootState) => state.investigation.pov.idea);
       const selected = useSelector((state: RootState) => state.bluesky.selected);
       useCheckFirstStep();
-
       const chosenTake = selected
             ? selected
             : idea;
-
-      const status = (): boolean | null => {
-            if (denied) {
-                  return false;
-            } else if (denied === false) {
-                  return true;
-            } else {
-                  return null;
-            }
-      };
-
-      const statusDetails = status();
-
 
       return (
             <motion.div
@@ -44,7 +31,7 @@ function Step1() {
                         className={`w-full max-w-full overflow-hidden grow-0 max-h-full min-h-44
                         pb-8 sm:pb-7 box-border relative`}>
                         <StepsEditor id="step1" context={chosenTake} setterFunction={getIdea} />
-                        <Requirements acceptInput={statusDetails} />
+                        <Requirements status={status} />
                   </div>
             </motion.div>
       );

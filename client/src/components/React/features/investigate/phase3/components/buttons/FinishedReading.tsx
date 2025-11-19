@@ -34,8 +34,6 @@ export function FinishedReading({ failedExtraction }) {
 
 
     const handleClick = async (): Promise<void> => {
-        smoothScrollUp();
-        await wait(500);
         dispatch(changePhase('Phase 4'))
     };
 

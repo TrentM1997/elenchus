@@ -64,7 +64,7 @@ export default function SignOutModal(): JSX.Element {
             role="dialog"
             aria-modal="true"
             aria-labelledby="signout-title"
-            className="z-[910] relative opacity-0 animate-fade-blur animation-delay-500ms will-change-[opacity]
+            className="z-[910] relative opacity-0 animate-fade-blur animation-delay-500ms will-change-[opacity] pointer-events-auto
          xl:min-w-96 xl:min-h-80 w-80 h-60 flex flex-col items-start gap-x-8 gap-y-6 rounded-3xl p-8 
         sm:gap-y-10 sm:p-10 lg:col-span-2 lg:flex-row lg:items-center bg-black border border-border_gray
         text-center">

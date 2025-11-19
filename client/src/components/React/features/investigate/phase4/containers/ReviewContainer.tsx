@@ -6,11 +6,11 @@ import ScrolltoTop from "@/helpers/ScrollToTop"
 import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback"
 
 export default function ReviewContainer() {
-    const [step, setStep] = useState<number>(1)
+    const [step, setStep] = useState<number>(1);
 
 
     return (
-        <main className="w-full h-full flex flex-col pt-6 md:pt-16 lg:pt-0 items-center gap-y-1.5 p-1">
+        <main className="w-full h-full flex flex-col pt-6 md:pt-16 lg:pt-0 items-center gap-y-1.5 p-1 opacity-0 animate-fade-in animation-delay-600ms">
             <DelayedFallback>
                 <ScrolltoTop />
                 <article

@@ -1,6 +1,5 @@
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/ReduxToolKit/store";
-import { displayBlueSkySearch } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer";
 import { changePhase, choosePath } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 import { wait } from "@/helpers/Presentation";
 

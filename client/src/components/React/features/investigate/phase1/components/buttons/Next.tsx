@@ -7,7 +7,7 @@ import { useEffect, useMemo } from 'react';
 import React from 'react';
 
 function NextButton({ }): JSX.Element | null {
-  const { step, denied } = useSelector((state: RootState) => state.investigation.stepper, shallowEqual);
+  const { step, status } = useSelector((state: RootState) => state.investigation.stepper, shallowEqual);
   const idea = useSelector((state: RootState) => state.investigation.pov.idea);
   const gettingHelp = useSelector((state: RootState) => state.investigation.help.gettingHelp);
   const dispatch = useDispatch();
@@ -19,12 +19,12 @@ function NextButton({ }): JSX.Element | null {
 
   const handleStep = () => {
     window.dispatchEvent(new CustomEvent('nextStepClick'));
-    if (denied === false && idea !== '') {
+    if ((status === 'active') && (idea !== '')) {
       dispatch(increment())
       dispatch(selectPost(null))
-    } else if ((denied === null) && noInput) {
+    } else if (noInput) {
       dispatch(acceptedInput(false))
-      dispatch((denyIncrement(true)))
+      dispatch((denyIncrement('idle')))
     }
   };
 
@@ -32,7 +32,7 @@ function NextButton({ }): JSX.Element | null {
 
     return () => window.removeEventListener('nextStepClick', handleStep);
 
-  }, [denied])
+  }, [status])
 
   return (
     <motion.div

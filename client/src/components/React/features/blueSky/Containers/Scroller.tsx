@@ -8,6 +8,7 @@ import type { BlueSkyPost } from "@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice";
 import { softEase, variants } from "@/motion/variants";
 import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
 import { wait } from "@/helpers/Presentation";
+import { getIdea } from "@/ReduxToolKit/Reducers/Investigate/UserPOV";
 
 export default function Scroller({ posts }) {
     const postForPopover = useSelector((s: RootState) => s.bluesky.popoverPost);

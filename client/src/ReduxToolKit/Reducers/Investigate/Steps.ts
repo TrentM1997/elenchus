@@ -2,11 +2,12 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { bool } from 'prop-types'
 
+export type PaginationStatus = 'active' | 'idle' | null;
 
 export interface StepState {
 
     step: number,
-    denied: boolean | null,
+    status: PaginationStatus,
     acceptInput: boolean | null
 }
 
@@ -14,7 +15,7 @@ export interface StepState {
 const initialState: StepState = {
 
     step: 0,
-    denied: null,
+    status: null,
     acceptInput: null
 }
 
@@ -40,16 +41,19 @@ export const StepSlice = createSlice({
             state.step = 0
         },
         denyIncrement: (state, action) => {
-            state.denied = action.payload
+            state.status = action.payload;
         },
         acceptedInput: (state, action) => {
             state.acceptInput = action.payload
+        },
+        updatePaginateStatus: (state: StepState, action: PayloadAction<PaginationStatus>) => {
+            state.status = action.payload;
         }
     }
 
 })
 
 
-export const { increment, decrement, incrementBy, denyIncrement, acceptedInput, backToStart } = StepSlice.actions
+export const { increment, decrement, incrementBy, denyIncrement, acceptedInput, backToStart, updatePaginateStatus } = StepSlice.actions
 
 export default StepSlice.reducer

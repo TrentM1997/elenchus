@@ -1,4 +1,4 @@
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { getPopoverPost, landingPageFadeOut, selectPost } from "@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice"
 import { getIdea, preselected } from "@/ReduxToolKit/Reducers/Investigate/UserPOV"
 import { useEffect } from "react";
@@ -7,6 +7,7 @@ import { changePhase, choosePath } from "@/ReduxToolKit/Reducers/Investigate/Ren
 import { smoothScrollUp } from "@/helpers/ScrollToTop";
 import { wait } from "@/helpers/Presentation";
 import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
+import { RootState } from "@/ReduxToolKit/store";
 
 interface UseThis {
     post: any,
@@ -14,32 +15,35 @@ interface UseThis {
 };
 
 export default function UseThisPost({ post, shouldRedirect }: UseThis) {
+    const selected: string = useSelector((s: RootState) => s.bluesky.selected);
     const dispatch = useDispatch();
 
     const investigateThis = async () => {
         dispatch(getIdea(post.record.text));
+        dispatch(renderModal(null));
         smoothScrollUp();
+        await wait(400);
         if (shouldRedirect) {
+            await wait(400)
             dispatch(changePhase('Phase 1'));
-            await wait(600);
-            dispatch(renderModal(null));
-            dispatch(selectPost(null));
         } else {
-            await wait(400);
+            await wait(300);
             dispatch(changePhase('Phase 1'));
-            await wait(200);
-            dispatch(renderModal(null));
-            await wait(400);
-            dispatch(selectPost(null));
         };
     };
 
     const unselect = async () => {
         dispatch(renderModal(null));
-        await wait(400);
-        dispatch(selectPost(null));
     };
 
+
+    useEffect(() => {
+
+        return () => {
+            dispatch(selectPost(null));
+            dispatch(getPopoverPost(null));
+        }
+    }, [])
 
     return (
         <div key={post.record.createdAt} className="bg-transparent relative h-auto w-auto flex justify-center items-center gap-x-8 rounded-3xl

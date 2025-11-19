@@ -5,16 +5,11 @@ import { RootState } from "@/ReduxToolKit/store"
 import DataTable from "./DataTable"
 import { AnimatePresence } from "framer-motion"
 import SavingResearch from "@/components/React/session/notifications/SavingResearch"
-import GoToDashboard from "./buttons/GoToDashboard"
-import FeedBackForm from "@/components/React/session/forms/UserFeedback/FeedbackForm"
-import ModalLayer from "@/components/React/Shared/modals/ModalLayer"
 
 
 export default function FinalResults() {
     const activeSession = useSelector((s: RootState) => s.auth.activeSession);
-    const modal = useSelector((s: RootState) => s.investigation.rendering.modal);
     const saveStatus = useSelector((state: RootState) => state.saveResearch.status)
-    const saved = useSelector((state: RootState) => state.saveResearch.saved);
     const idea = useSelector((s: RootState) => s.investigation.pov.idea);
 
     return (
@@ -25,14 +20,7 @@ export default function FinalResults() {
             <AnimatePresence>
                 {saveStatus !== 'idle' && <SavingResearch />}
             </AnimatePresence>
-            <AnimatePresence>
-                {(modal === 'Feedback Form') &&
-                    <ModalLayer
-                        key={'feedback-overlay'}
-                    ><FeedBackForm />
-                    </ModalLayer>
-                }
-            </AnimatePresence>
+
             <div className="2xl:max-w-7xl xl:max-w-6xl lg:max-w-5xl md:max-w-4xl sm:max-w-168 h-fit py-16 lg:px-16 md:px-12 xl:px-36 items-center relative w-auto
              max-w-88 bg-gradientdown rounded-[3rem]">
                 <div className="text-center max-w-xl mx-auto">

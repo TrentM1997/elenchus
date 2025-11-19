@@ -1,23 +1,12 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/ReduxToolKit/store";
-import { getPopoverPost, selectPost } from "@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice";
+import { useSelector } from "react-redux";
+import { RootState } from "@/ReduxToolKit/store";
 import BSPost from "../Components/Post/BSPost";
 
 export default function SelectedPost(): JSX.Element {
     const popoverPost = useSelector((state: RootState) => state.bluesky.popoverPost);
-    const dispatch = useDispatch<AppDispatch>();
-
-    useEffect(() => {
-
-        return () => {
-            dispatch(getPopoverPost(null));
-        }
-    }, []);
-
 
     return (
-        <div className="relative 2xl:w-[26rem] md:w-96 w-80 h-fit">
+        <div className="relative 2xl:w-[26rem] md:w-96 w-80 h-fit opacity-0 animate-fade-in animation-delay-850ms ease-soft">
             <BSPost inPopover={true} post={popoverPost} />
         </div>
     )

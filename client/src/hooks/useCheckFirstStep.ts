@@ -2,16 +2,14 @@ import { useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
 import { AppDispatch, type RootState } from "@/ReduxToolKit/store";
-import { denyIncrement } from "@/ReduxToolKit/Reducers/Investigate/Steps";
+import { PaginationStatus, updatePaginateStatus } from "@/ReduxToolKit/Reducers/Investigate/Steps";
 
 export function useCheckFirstStep() {
     const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
-    const selected = useSelector((state: RootState) => state.bluesky.selected);
     const dispatch = useDispatch<AppDispatch>();
     const { idea } = investigateState.pov;
     const timeRef = useRef<number | null>(null);
     const min: number = 4;
-
 
     const wordCount = (statement: string): number => {
         const trimmed: string[] = statement.trim().split(' ')
@@ -20,23 +18,23 @@ export function useCheckFirstStep() {
 
 
     const check = useCallback((): void => {
-
         timeRef.current = window.setTimeout(() => {
-
             const count = wordCount(idea);
             const passes = (count >= min);
-            dispatch(denyIncrement(!passes));
-
+            const removeStatusMessage: boolean = (idea === '');
+            const statusUpdate: PaginationStatus = passes ? 'active' : 'idle';
+            if (!removeStatusMessage) {
+                dispatch(updatePaginateStatus(statusUpdate));
+            } else {
+                dispatch(updatePaginateStatus(null))
+            }
             timeRef.current = null;
         }, 300);
 
     }, [idea]);
 
     useEffect(() => {
-        if (idea === '' || idea === null) {
-            dispatch(denyIncrement(null));
-            return;
-        };
+        if (idea === null) return;
 
         check();
 
@@ -44,10 +42,6 @@ export function useCheckFirstStep() {
             if (timeRef.current !== null) {
                 clearTimeout(timeRef.current);
             };
-        }
-
-    }, [selected, idea]);
-
-
-
+        };
+    }, [idea]);
 };

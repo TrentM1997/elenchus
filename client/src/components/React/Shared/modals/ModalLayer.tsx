@@ -25,12 +25,12 @@ export default function ModalLayer({ children, ariaLabel, mountDelay = 0 }: Moda
                 opacity: 0,
                 transition: {
                     delay: 0,
-                    duration: 0.4,
+                    duration: 0.2,
                     type: 'tween',
                     ease: softEase
                 }
             }}
-            className="z-[900] overflow-hidden fixed inset-0
+            className="z-[900] overflow-hidden fixed h-screen w-screen
              pointer-events-auto
              contain-paint
              flex justify-center items-center bg-black/70 backdrop-blur-[3px] 

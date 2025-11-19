@@ -10,15 +10,10 @@ import { populateArticles } from "@/ReduxToolKit/Reducers/UserContent/UserConten
 import { populateResearch } from "@/ReduxToolKit/Reducers/UserContent/UserInvestigations";
 import { authenticate } from "@/ReduxToolKit/Reducers/Athentication/Authentication";
 import Pageskeleton from "../skeletons/PageSkeleton";
-import { AnimatePresence, motion } from "framer-motion";
-import ModalLayer from "../../Shared/modals/ModalLayer";
-import SignOutModal from "../../session/forms/AuthForms/SignOutModal";
-import ModalPipeline from "../../pipelines/ModalPipeline";
-
+import PortalRoot from "@/components/React/portal/root/PortalRoot";
 
 export default function Root() {
     const { user, articles, investigations } = useLoaderData() as RootPayload;
-    const signout = useSelector((s: RootState) => s.auth.signOut);
     const dispatch = useDispatch<AppDispatch>();
 
 
@@ -32,26 +27,19 @@ export default function Root() {
         }
     }, [user, articles, investigations, dispatch]);
 
-
     return (
         <>
             <Navigation
             />
-            <div
-                key="portal-root-div"
-                id="portal-root"
-                className="pointer-events-none fixed z-[800] inset-0 
-            flex items-start justify-center"
-            >
-                <ModalPipeline />
-            </div>
+            <PortalRoot
+            />
             <Suspense
-                fallback={<Pageskeleton />}
+                fallback={
+                    <Pageskeleton />
+                }
             >
-
                 <Outlet />
                 <ScrollRestoration />
-
             </Suspense>
         </>
     );

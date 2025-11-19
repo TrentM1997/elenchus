@@ -13,7 +13,7 @@ export default function Popover(): JSX.Element | null {
 
   return (
 
-    <div className="opacity-0 animate-fade-blur animation-delay-400ms relative bg-black border border-border_gray
+    <div className="opacity-0 animate-fade-blur animation-delay-400ms relative bg-black ring-2 ring-white/15
        h-fit w-88 sm:w-auto p-4 sm:p-8 rounded-3xl shadow-material z-[910]
       flex flex-col justify-center  items-center
       ">

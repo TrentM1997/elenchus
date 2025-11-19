@@ -1,18 +1,7 @@
-import { lazy, Suspense } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
-import { AnimatePresence, motion } from "framer-motion";
-import { softEase, variants } from "@/motion/variants";
 import type { ActiveTab } from "@/ReduxToolKit/Reducers/UserContent/DashboardTabs";
-import Metrics from "./Metrics";
-import Pageskeleton from "@/components/React/routing/skeletons/PageSkeleton";
-const SavedArticles = lazy(() => import('../UserArticles/containers/SavedArticles'));
-const SavedResearchLayout = lazy(() => import('../SavedInvestigations/containers/SavedResearchLayout'));
-import AccManagement from "../../ProfileNavigation/AccountManagement/AccManagement";
-import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback";
-import OpenAssociatedArticle from "../SavedInvestigations/containers/OpenAssociatedArticle";
-import ArticleReview from "../UserArticles/containers/ArticleReview";
-import ResearchReview from "../SavedInvestigations/containers/ResearchReview";
+import renderTab from "../../switches/renderTab";
 
 
 export default function Display() {
@@ -26,53 +15,7 @@ export default function Display() {
         >
             <div className="absolute inset-0">
 
-                {(tab === 'Metrics') &&
-                    <Metrics key={'metrics'}
-                    />
-                }
-
-                <Suspense
-                    key={'articles-boundary'}
-                    fallback={<DelayedFallback key='delayed-article-boundary-loader'><Pageskeleton key='saved-articles-page-skeleton' /></DelayedFallback>}
-                >
-                    {(tab === 'Articles') &&
-                        <SavedArticles
-                            key={'saved-articles'}
-                        />
-                    }
-                </Suspense>
-
-                <Suspense key={'research-boundary'} fallback={<DelayedFallback key='delayed-research-boundary-loader'><Pageskeleton key='saved-research-page-skeleton' /></DelayedFallback>}>
-                    {(tab === 'Investigations') &&
-                        <SavedResearchLayout
-                            key={'saved-research'}
-                        />
-                    }
-                </Suspense>
-
-                {(tab === 'Review Investigation') &&
-                    <ResearchReview
-                        key='review-saved-investigation'
-                    />
-                }
-
-                {(tab === 'Manage Account') &&
-                    <AccManagement
-                        key={'acc-management'}
-                    />
-                }
-
-                {(tab === 'Associated Article') &&
-                    <OpenAssociatedArticle
-                        key='article-from-investigation'
-                    />
-                }
-
-                {(tab === 'Review Article') &&
-                    <ArticleReview
-                        key={'article-opened-from-scroller'}
-                    />
-                }
+                {renderTab(tab)}
             </div>
         </main>
     );
