@@ -10,7 +10,7 @@ import { populateArticles } from "@/ReduxToolKit/Reducers/UserContent/UserConten
 import { populateResearch } from "@/ReduxToolKit/Reducers/UserContent/UserInvestigations";
 import { authenticate } from "@/ReduxToolKit/Reducers/Athentication/Authentication";
 import Pageskeleton from "../skeletons/PageSkeleton";
-import PortalRoot from "@/components/React/portal/root/PortalRoot";
+import Portal from "@/components/React/portal/root/PortalRoot";
 
 export default function Root() {
     const { user, articles, investigations } = useLoaderData() as RootPayload;
@@ -31,7 +31,7 @@ export default function Root() {
         <>
             <Navigation
             />
-            <PortalRoot
+            <Portal
             />
             <Suspense
                 fallback={

@@ -202,14 +202,8 @@ export const extractionToastVariants = {
     },
 };
 
-
-//had to inline this due to variance in mountDelay prop
-//export const overlayVariants = {
-//    initial: {
-//        opacity: 0
-//    },
-//    animate: {
-//        opacity: 1, transition: { delay: mountDelay, duration: 0.25, type: 'tween', ease: softEase }
-//    },
-//    exit: {}
-//}
+export const articleContent = {
+    initial: { opacity: 0 },
+    animate: { opacity: 1, transition: { type: "tween", duration: 0.25 } },
+    exit: { opacity: 0, transition: { type: "tween", duration: 0.25 } },
+};

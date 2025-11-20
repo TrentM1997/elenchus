@@ -22,7 +22,9 @@ export default function RenderArticles(): JSX.Element | null {
         const failed: boolean = (status === 'fulfilled') && (Array.isArray(articles)) && (articles.length === 0);
         return failed;
     }, [status, articles]);
-    const renderControlPanel = (Array.isArray(articles) && (articles.length > 0) || ((status === 'fulfilled')));
+    const renderControlPanel = (articles.length > 0) || ((status === 'fulfilled'));
+
+    //TODO: move transition logic from <Article /> up to this component
 
 
     useEffect(() => {

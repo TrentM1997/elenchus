@@ -3,9 +3,7 @@ import Challenge from '../../features/LandingPage/components/Challenge';
 import ChartingFeatures from '../../features/LandingPage/components/ChartingFeatures';
 import { useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/ReduxToolKit/store';
-import SignOutModal from '../../session/forms/AuthForms/SignOutModal';
-import AnimationWrapper from '../../features/LandingPage/containers/LazyHydrationSection';
-import { getStoredPosts, landingPageFadeOut, searchBlueSky } from '@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice';
+import { getStoredPosts, searchBlueSky } from '@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice';
 import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useBodyLock } from '@/hooks/useBodyLock';
@@ -15,8 +13,6 @@ import type { ExtractionToast } from '../../app/App';
 import LazyHydrationSection from '../../features/LandingPage/containers/LazyHydrationSection';
 
 export default function Home({ }) {
-    const signingOut = useSelector((state: RootState) => state.auth.signOut);
-    const fadeOut = useSelector((s: RootState) => s.bluesky.fadeOutHomePage);
     const posts = useSelector((state: RootState) => state.bluesky.posts);
     const [showToast, setShowToast] = useState<boolean>(false);
     const dispatch = useDispatch<AppDispatch>();

@@ -1,8 +1,6 @@
 import { useDispatch } from "react-redux";
-import { displayBlueSkySearch } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer";
-import { preselected } from "@/ReduxToolKit/Reducers/Investigate/UserPOV";
 import React from "react";
-import { changePhase, choosePath, pickOption } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import { changePhase, choosePath } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 
 
 const actions = [
@@ -22,8 +20,6 @@ const actions = [
 
 function InputOptions() {
   const dispatch = useDispatch();
-
-
 
   const searchBS = () => {
     dispatch(choosePath('BlueSky Feed'));

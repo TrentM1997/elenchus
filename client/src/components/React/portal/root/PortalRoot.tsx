@@ -1,6 +1,6 @@
 import ModalPipeline from "../pipelines/ModalPipeline";
 
-function PortalRoot(): JSX.Element {
+function Portal(): JSX.Element {
 
     return (
         <div
@@ -13,4 +13,4 @@ function PortalRoot(): JSX.Element {
     );
 };
 
-export default PortalRoot;
+export default Portal;

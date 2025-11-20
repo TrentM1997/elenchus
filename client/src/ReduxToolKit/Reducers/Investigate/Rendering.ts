@@ -6,9 +6,9 @@ export type ModalDisplayed = 'Back to Search' | 'Extract Confirmation' | 'Work M
 
 export type TooltipDisplayed = 'Selection Required' | 'Guide Selection' | 'Finished Reading Button' | 'Max Toast' | null;
 
-export type SelectionBar = 'active' | 'hidden'
+export type SelectionBar = 'active' | 'hidden';
 
-export type PathSelected = 'BlueSky Feed' | 'Manual Input' | 'Path Chosen' | null;
+export type PathSelected = 'BlueSky Feed' | 'Choose Path';
 
 export type ShowOptions = 'Show Options' | 'Preselected';
 
@@ -27,7 +27,7 @@ const initialState: RenderingState = {
     modal: null,
     tooltip: null,
     selection: 'hidden',
-    path: null,
+    path: 'Choose Path',
     options: 'Show Options'
 }
 

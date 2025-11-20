@@ -5,6 +5,7 @@ import ArticleContent from "../components/text/ArticleContent";
 import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/ReduxToolKit/store";
+import { softEase } from "@/motion/variants";
 
 type ArticleProps = {
     articleData: Article | null;
@@ -29,7 +30,10 @@ export default function Article({ articleData, investigating }: ArticleProps): J
     const [displayed, setDisplayed] = useState<Article>(initial);
     const [prev, setPrev] = useState<Article | null>(null);
 
-    const renderThisArticle: boolean = investigating ? (displayed.article_url === articles[currentStory].article_url) : true;
+    const renderThisArticle: boolean = investigating ? ((articles.length > 0) && (displayed.article_url === articles[currentStory].article_url)) : true;
+
+
+    //TODO: move the transition logic to parent <RenderArticles />
 
     useEffect(() => {
         if (!articleData) return;
@@ -52,8 +56,8 @@ export default function Article({ articleData, investigating }: ArticleProps): J
     return (
         <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1, transition: { type: 'tween', delay: 0.3, duration: 0.3 } }}
-            exit={{ opacity: 0, transition: { type: 'tween', delay: 0, duration: 0.3 } }}
+            animate={{ opacity: 1, transition: { type: 'tween', duration: 0.3, ease: softEase } }}
+            exit={{ opacity: 0, transition: { type: 'tween', delay: 0, duration: 0.3, ease: softEase } }}
             className="relative top-0 left-0 right-0 flex flex-col grow px-4 mx-auto
                  w-full lg:max-w-2xl xl:max-w-4xl min-h-screen scrollbar-hide
                  bg-black transition-all duration-200 ease-in-out"
@@ -62,7 +66,7 @@ export default function Article({ articleData, investigating }: ArticleProps): J
                 {renderThisArticle && <motion.div
                     key={articleData.article_url}
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 1, transition: { duration: 0.25 } }}
+                    animate={{ opacity: 1, transition: { type: 'tween', duration: 0.25 } }}
                     className="relative"
                 >
                     <ArticleHeader articleData={articleData} investigating={investigating} />

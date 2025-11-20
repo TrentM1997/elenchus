@@ -14,8 +14,8 @@ export const NoteSlice = createSlice({
     name: 'takeNotes',
     initialState: initialState,
     reducers: {
-        writingNote: (state, action) => {
-            state.takingNotes = action.payload
+        writingNote: (state) => {
+            state.takingNotes = !state.takingNotes;
         },
         saveNote: (state, action) => {
             state.noteTaken = action.payload

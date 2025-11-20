@@ -1,11 +1,9 @@
 import { motion, AnimatePresence } from "framer-motion";
-import SearchResults from "@/components/React/features/investigate/phase2/results/containers/SearchResults";
 import { useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
-import ScrolltoTop from "@/helpers/ScrollToTop";
-import ArticleContainer from "@/components/React/Shared/Articles/containers/ArticleContainer";
 import type { ModalStages } from "@/ReduxToolKit/Reducers/Investigate/WikipediaSlice";
 import { Phase } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import { renderContent } from "../../switches/renderContent";
 
 export default function Content() {
     const phase: Phase = useSelector((s: RootState) => s.investigation.rendering.phase);
@@ -17,41 +15,16 @@ export default function Content() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ type: 'tween', duration: 0.2 }}
-            className={`
-            ${wikiModalStages.highlight && 'cursor-text'}
-                relative shrink-0 w-full h-full min-h-screen mx-auto xs:px-2`}>
-
-
+            className={`${wikiModalStages.highlight
+                && 'cursor-text'
+                }
+                relative shrink-0 w-full h-full min-h-screen 
+                mx-auto xs:px-2`}
+        >
             <div
                 className="relative w-full min-h-full flex flex-col justify-center box-border mx-auto">
                 <AnimatePresence mode="wait">
-
-                    {(phase === 'Phase 2') &&
-                        <motion.div
-                            key='links'
-                            style={{ position: 'relative' }}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1, transition: { type: 'tween', duration: 0.25, delay: 0.5 } }}
-                            exit={{ opacity: 0, transition: { type: 'tween', duration: 0.25, delay: 0 } }}
-                            transition={{ type: 'tween', duration: 0.5 }}
-                            className="w-full min-h-screen mx-auto lg:pb-96"
-                        >
-                            <SearchResults />
-
-                        </motion.div>}
-
-                    {(phase === 'Phase 3') &&
-                        <motion.div
-                            key='articles'
-                            style={{ position: 'relative' }}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1, transition: { type: 'tween', duration: 0.2, delay: 0.3 } }}
-                            exit={{ opacity: 0, transition: { type: 'tween', duration: 0.2, delay: 0 } }}
-                            className="min-h-screen w-full mx-auto"
-                        >
-                            <ArticleContainer />
-                            <ScrolltoTop key='scroll' />
-                        </motion.div>}
+                    {renderContent(phase)}
                 </AnimatePresence>
             </div>
         </motion.div>

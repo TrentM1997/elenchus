@@ -1,17 +1,13 @@
-import { useDispatch, useSelector } from "react-redux"
-import { RootState } from "@/ReduxToolKit/store"
+import { useDispatch } from "react-redux"
 import { writingNote } from "@/ReduxToolKit/Reducers/Investigate/NoteTaking"
 import PanelLabel from "./PanelLabel"
 
 export default function TakeNotes({ failedExtraction }) {
-    const investigateState = useSelector((state: RootState) => state.investigation)
-    const { notes } = investigateState
-    const { takingNotes } = notes
     const dispatch = useDispatch()
 
     const handleClick = () => {
-        dispatch(writingNote(takingNotes === false ? true : false))
-    }
+        dispatch(writingNote());
+    };
 
     return (
         <div className={`${failedExtraction ? 'pointer-events-none opacity-30' : 'pointer-events-auto opacity-100 lg:hover:bg-border_gray'}
