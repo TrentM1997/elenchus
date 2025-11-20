@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { rootLoader } from "../loaderFunctions/rootLoader";
 import Root from "../Root/Root";
 import Pageskeleton from "../skeletons/PageSkeleton";
-import DelayedFallback from "../../Shared/fallbacks/DelayedFallback";
+import DelayedFallback from "@/components/React/global/fallbacks/DelayedFallback";
 
 
 
