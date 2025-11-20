@@ -6,12 +6,12 @@ import Metrics from "./Metrics";
 const SavedArticles = lazy(() => import('../UserArticles/containers/SavedArticles'));
 const SavedResearchLayout = lazy(() => import('../SavedInvestigations/containers/SavedResearchLayout'));
 import AccManagement from "../../ProfileNavigation/AccountManagement/AccManagement";
-import DisplayLoader from "@/components/React/Shared/Loaders/DisplayLoader";
-import AppWindowIcon from "@/components/React/Shared/IconComponents/AppWindowIcon";
+import DisplayLoader from "@/components/React/global/Loaders/DisplayLoader";
+import AppWindowIcon from "@/components/React/global/IconComponents/AppWindowIcon";
 import { variants } from "@/motion/variants";
 import React from "react";
-import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary";
-import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback";
+import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary";
+import DelayedFallback from "@/components/React/global/fallbacks/DelayedFallback";
 
 
 function Tabs(): JSX.Element | null {

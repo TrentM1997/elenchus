@@ -1,5 +1,5 @@
-import Loader from "@/components/React/Shared/Loaders/Loader";
-import SearchIcon from "@/components/React/Shared/IconComponents/SearchIcon";
+import Loader from "@/components/React/global/Loaders/Loader";
+import SearchIcon from "@/components/React/global/IconComponents/SearchIcon";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
 import { AppDispatch } from "@/ReduxToolKit/store";
