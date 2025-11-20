@@ -1,10 +1,8 @@
-import { motion } from "framer-motion";
-import { createPortal } from "react-dom";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import Lottie from "lottie-react";
 import blueCheck from '@/lotties/blueCheck.json'
-import Loader from "../../Shared/Loaders/Loader";
+import Loader from "../../global/Loaders/Loader";
 import { presentDeleteModal } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
 import { useNavigate } from "react-router-dom";
 import { clearAuthSlice } from "@/ReduxToolKit/Reducers/Athentication/Authentication";

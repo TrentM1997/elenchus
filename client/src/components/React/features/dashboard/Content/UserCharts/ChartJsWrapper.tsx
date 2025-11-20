@@ -8,7 +8,7 @@ import { getBiasSnapshot, getReportingRatings } from "@/ReduxToolKit/Reducers/Us
 import BiasWebWorker from '@/services/workers/biasSnapshot.js?worker';
 import IntegrityWebWorker from '@/services/workers/integrityWorker.js?worker';
 import ChartJsSkeleton from "@/components/React/features/charts/skeletons/ChartJsSkeleton";
-import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback";
+import DelayedFallback from "@/components/React/global/fallbacks/DelayedFallback";
 import { Priority } from "@/hooks/useRenderMetrics";
 const BiasChart = lazy(() => import('@/components/React/features/charts/DonutChart/BiasChart'))
 const IntegrityChart = lazy(() => import('@/components/React/features/charts/PieChart/IntegrityChart'));

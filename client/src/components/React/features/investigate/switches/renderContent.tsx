@@ -1,7 +1,7 @@
 import type { Phase } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 import { motion } from "framer-motion";
 import SearchResults from "../phase2/results/containers/SearchResults";
-import ArticleContainer from "@/components/React/Shared/Articles/containers/ArticleContainer";
+import ArticleContainer from "@/components/React/global/Articles/containers/ArticleContainer";
 import ScrolltoTop from "@/helpers/ScrollToTop";
 import { articleContent } from "@/motion/variants";
 

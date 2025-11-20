@@ -1,5 +1,4 @@
 import React from "react";
-import { limitString } from "@/helpers/Presentation";
 
 interface TitleTypes {
     handleArticleSelection?: any,
@@ -8,9 +7,6 @@ interface TitleTypes {
 
 
 function Title({ article, handleArticleSelection }: TitleTypes): React.ReactNode {
-
-    //    const limitedTitle = limitString(article.title, 60);
-
 
     return (
         <div className={`group w-full h-full px-3 xl:p-4`}

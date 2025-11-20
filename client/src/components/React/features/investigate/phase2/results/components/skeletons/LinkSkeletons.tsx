@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { variants } from "@/motion/variants";
 import LinkPlaceholder from "../../../search/components/loaders/LinkPlaceholder";
-import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback";
 
 export default function LinkSkeletons({ }) {
 

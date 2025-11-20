@@ -1,4 +1,4 @@
-import Trash from "@/components/React/Shared/IconComponents/Trash";
+import Trash from "@/components/React/global/IconComponents/Trash";
 import React from "react"
 import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 import SavedArticleThumbnail from "./SavedArticleThumbnail";

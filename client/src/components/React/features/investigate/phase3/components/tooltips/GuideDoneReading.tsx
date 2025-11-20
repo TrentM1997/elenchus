@@ -1,8 +1,6 @@
 import { useEffect } from "react"
 import { motion } from "framer-motion"
-import { useDispatch, useSelector } from "react-redux"
-import { displayReadingTooltip } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer"
-import { RootState } from "@/ReduxToolKit/store"
+import { useDispatch } from "react-redux"
 import { populateTooltip } from "@/ReduxToolKit/Reducers/Investigate/Rendering"
 import { useTooltipFlags } from "@/hooks/useTooltipFlags"
 

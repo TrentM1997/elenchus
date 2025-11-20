@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useSelector } from "react-redux";
-import { getMerit, changedStance, moved } from "@/ReduxToolKit/Reducers/Investigate/Review";
+import { getMerit, moved } from "@/ReduxToolKit/Reducers/Investigate/Review";
 import { RootState } from "@/ReduxToolKit/store";
 import Retrospect from "./Retrospect";
 import Stance from "./Stance";

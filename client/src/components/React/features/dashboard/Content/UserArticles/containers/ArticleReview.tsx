@@ -1,15 +1,13 @@
 import { AppDispatch, RootState } from "@/ReduxToolKit/store"
 import { lazy, Suspense, useMemo } from "react"
 import { useDispatch, useSelector } from "react-redux"
-const Article = lazy(() => import('@/components/React/Shared/Articles/SuccessFull/containers/Article'))
-const FullSavedArticle = lazy(() => import('../components/fullContent/containers/FullSavedArticle'));
-import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary"
-import ArticleSkeleton from "@/components/React/Shared/Articles/skeletons/ArticleSkeleton";
+const Article = lazy(() => import('@/components/React/global/Articles/SuccessFull/containers/Article'));
+import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary"
+import ArticleSkeleton from "@/components/React/global/Articles/skeletons/ArticleSkeleton";
 import { motion } from "framer-motion";
 import { variants } from "@/motion/variants";
 import DetailView from "../../../ProfileNavigation/mobile/DetailView"
-import { presentArticles } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
-import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback";
+import DelayedFallback from "@/components/React/global/fallbacks/DelayedFallback";
 import { chooseTab } from "@/ReduxToolKit/Reducers/UserContent/DashboardTabs";
 
 export default function ArticleReview() {

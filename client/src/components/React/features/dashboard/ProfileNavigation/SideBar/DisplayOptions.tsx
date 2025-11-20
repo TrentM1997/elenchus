@@ -1,7 +1,7 @@
 import DashboardOption from "./DashboardOption";
-import BookmarkIcon from "@/components/React/Shared/IconComponents/BookmarkIcon";
-import MetricsIcon from "@/components/React/Shared/IconComponents/MetricsIcon";
-import InvestigationsIcon from "@/components/React/Shared/IconComponents/InvestigateIcon";
+import BookmarkIcon from "@/components/React/global/IconComponents/BookmarkIcon";
+import MetricsIcon from "@/components/React/global/IconComponents/MetricsIcon";
+import InvestigationsIcon from "@/components/React/global/IconComponents/InvestigateIcon";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/ReduxToolKit/store";
 import React from "react";

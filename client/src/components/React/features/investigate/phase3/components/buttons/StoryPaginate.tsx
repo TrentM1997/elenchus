@@ -2,8 +2,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/ReduxToolKit/store"
 import { incrementStory, decrementStory, incrementStoryBy } from "@/ReduxToolKit/Reducers/Investigate/Reading"
 import type { ModalStages } from "@/ReduxToolKit/Reducers/Investigate/WikipediaSlice"
-import { clearWikiSlice, modalStages } from "@/ReduxToolKit/Reducers/Investigate/WikipediaSlice"
-import { startTransition } from "react"
+import { modalStages } from "@/ReduxToolKit/Reducers/Investigate/WikipediaSlice"
 import { wait } from "@/helpers/Presentation"
 
 

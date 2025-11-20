@@ -1,5 +1,5 @@
 import { limitString } from "@/helpers/Presentation";
-import { slugLogo } from "@/components/React/Shared/Articles/SuccessFull/components/hero/PublishedBy";
+import { slugLogo } from "@/components/React/global/Articles/SuccessFull/components/hero/PublishedBy";
 import { LOGOS } from "@/helpers/lookup/logos";
 import { useMemo } from "react";
 import React from "react";

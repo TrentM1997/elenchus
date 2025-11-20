@@ -1,5 +1,5 @@
 import { motion } from "framer-motion"
-import Loader from "../../Shared/Loaders/Loader"
+import Loader from "../../global/Loaders/Loader"
 
 const notificationVariants = {
     show: {

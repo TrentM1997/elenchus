@@ -1,8 +1,8 @@
 import { useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
 import DashboardOption from "./DashboardOption";
-import SignoutIcon from "@/components/React/Shared/IconComponents/SignoutIcon";
-import SettingsIcon from "@/components/React/Shared/IconComponents/SettingsIcon";
+import SignoutIcon from "@/components/React/global/IconComponents/SignoutIcon";
+import SettingsIcon from "@/components/React/global/IconComponents/SettingsIcon";
 import React from "react";
 import { chooseTab, type ActiveTab } from "@/ReduxToolKit/Reducers/UserContent/DashboardTabs";
 import { useDispatch } from "react-redux";

@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/ReduxToolKit/store';
 const BlueSkyPosts = lazy(() => import('@/components/React/features/blueSky/Containers/BlueSky'));
 import { startTransition } from 'react';
-import DelayedFallback from '@/components/React/Shared/fallbacks/DelayedFallback';
+import DelayedFallback from '@/components/React/global/fallbacks/DelayedFallback';
 
 export default function LazyHydrationSection() {
     const [showBlueSky, setShowBlueSky] = useState<boolean>(false);

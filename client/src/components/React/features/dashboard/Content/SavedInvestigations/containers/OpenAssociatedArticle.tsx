@@ -2,14 +2,12 @@ import { useSelector, useDispatch } from "react-redux";
 import type { AppDispatch, RootState } from "@/ReduxToolKit/store";
 import { motion } from "framer-motion";
 import { variants } from "@/motion/variants";
-import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback";
+import DelayedFallback from "@/components/React/global/fallbacks/DelayedFallback";
 import { Suspense, lazy } from "react";
 import DetailView from "../../../ProfileNavigation/mobile/DetailView";
-import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary";
-const FullSavedArticle = lazy(() => import("../../UserArticles/components/fullContent/containers/FullSavedArticle"));
-const Article = lazy(() => import('@/components/React/Shared/Articles/SuccessFull/containers/Article'));
-import ArticleSkeleton from "@/components/React/Shared/Articles/skeletons/ArticleSkeleton";
-import { presentThisInvestigation } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
+import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary";
+const Article = lazy(() => import('@/components/React/global/Articles/SuccessFull/containers/Article'));
+import ArticleSkeleton from "@/components/React/global/Articles/skeletons/ArticleSkeleton";
 import { grabAssociatedArticle } from "@/ReduxToolKit/Reducers/UserContent/UserContentReducer";
 import { chooseTab } from "@/ReduxToolKit/Reducers/UserContent/DashboardTabs";
 

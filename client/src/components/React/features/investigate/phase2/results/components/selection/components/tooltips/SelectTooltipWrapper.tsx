@@ -11,7 +11,6 @@ import MaxChosen from "./MaxChosen";
 import { useMaxSelectedToast } from "@/hooks/useAutoDismiss";
 import { populateTooltip, TooltipDisplayed } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 import { wait } from "@/helpers/Presentation";
-import type { Tooltips } from "@/env";
 
 interface TooltipWrapper {
     canAnimate: boolean

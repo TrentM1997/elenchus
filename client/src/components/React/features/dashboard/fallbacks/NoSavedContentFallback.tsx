@@ -1,4 +1,4 @@
-import DelayedFallback from '@/components/React/Shared/fallbacks/DelayedFallback';
+import DelayedFallback from '@/components/React/global/fallbacks/DelayedFallback';
 import { Link } from 'react-router-dom';
 
 export default function NoSavedContentFallback(): JSX.Element | null {

@@ -3,7 +3,7 @@ import { useSelector } from "react-redux"
 import Page from "./Page"
 import { RootState } from "@/ReduxToolKit/store"
 import { useMemo } from "react";
-import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary";
+import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary";
 import LinkPagination from "../components/buttons/LinkPagination";
 import { pagesVariants } from "@/motion/variants";
 import ResultsSpacer from "../components/skeletons/ResultsSpacer";

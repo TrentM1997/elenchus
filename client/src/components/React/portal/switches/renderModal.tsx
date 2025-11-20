@@ -1,4 +1,4 @@
-import ModalLayer from "@/components/React/Shared/modals/ModalLayer";
+import ModalLayer from "@/components/React/global/modals/ModalLayer";
 import SignOutModal from "@/components/React/session/forms/AuthForms/SignOutModal";
 import Popover from "@/components/React/features/blueSky/Popovers/Popover";
 import { GetTheseArticles } from "@/components/React/features/investigate/phase2/modals/GetTheseArticles";

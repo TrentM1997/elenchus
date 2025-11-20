@@ -1,7 +1,6 @@
 import { useEffect } from "react"
 import { motion } from "framer-motion"
-import { useDispatch, useSelector } from "react-redux"
-import { RootState } from "@/ReduxToolKit/store"
+import { useDispatch } from "react-redux"
 import { variants } from "@/motion/variants"
 import React from "react"
 import { populateTooltip } from "@/ReduxToolKit/Reducers/Investigate/Rendering"

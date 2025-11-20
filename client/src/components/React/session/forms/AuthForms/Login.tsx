@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import AuthNotification from "@/components/React/session/notifications/AuthNotification";
@@ -8,7 +8,6 @@ import { useCheckCredentials } from "@/hooks/useCheckCredentials";
 import { useSignIn } from "@/hooks/useSignIn";
 import { useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
-import { error } from "astro/dist/core/logger/core";
 import InvalidCredentials from "../fallbacks/InvalidCredentials";
 
 export default function Login(): JSX.Element {

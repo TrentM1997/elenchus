@@ -2,13 +2,12 @@ import { lazy, useEffect, useMemo } from "react";
 const ArticleLink = lazy(() => import('../../results/components/links/ArticleLink'))
 import { Suspense } from "react";
 import LinkPlaceholder from "../../search/components/loaders/LinkPlaceholder";
-import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback";
+import DelayedFallback from "@/components/React/global/fallbacks/DelayedFallback";
 import type { RootState } from "@/ReduxToolKit/store";
 import type { AppDispatch } from "@/ReduxToolKit/store";
 import { useSelector, useDispatch } from "react-redux";
 import { choose, discard } from "@/ReduxToolKit/Reducers/Investigate/ChosenArticles";
 import type { ArticleType, SelectedArticle } from "@/env";
-import { temporaryPaginationMute } from "@/ReduxToolKit/Reducers/Investigate/SearchResults";
 
 interface Page {
     index: number,

@@ -1,9 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
-import { displayGetArticlesModal, displaySelectionWarning, displaySelectTooltip } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer";
 import { AppDispatch } from "@/ReduxToolKit/store";
 import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
-import { populateModal, populateTooltip } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import { populateTooltip } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
 
 export default function RetrieveChosenArticles() {

@@ -3,7 +3,7 @@ import ReviewPagination from "../buttons/ReviewPagination"
 import ReviewPOV from "../ReviewPOV"
 import ReviewQuestions from "../ReviewQuestions"
 import ScrolltoTop from "@/helpers/ScrollToTop"
-import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback"
+import DelayedFallback from "@/components/React/global/fallbacks/DelayedFallback"
 
 export default function ReviewContainer() {
     const [step, setStep] = useState<number>(1);

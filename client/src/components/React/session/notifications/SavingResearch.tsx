@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
 import { useDispatch } from "react-redux";
 import { removeNotification } from "@/ReduxToolKit/Reducers/UserContent/SaveInvestigationSlice";
-import { displayFeedBackForm } from "@/ReduxToolKit/Reducers/Investigate/DisplayReducer";
 import Failed from "./Failed";
 import Pending from "./Pending";
 import Success from "./Success";

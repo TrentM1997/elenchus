@@ -7,8 +7,6 @@ import PanelLabel from "./PanelLabel";
 import { changePhase, populateTooltip, TooltipDisplayed } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 import { AnimatePresence } from "framer-motion";
-import { smoothScrollUp } from "@/helpers/ScrollToTop";
-import { wait } from "@/helpers/Presentation";
 
 export function FinishedReading({ failedExtraction }) {
     const articles: Article[] = useSelector((s: RootState) => s.investigation.read.articles);

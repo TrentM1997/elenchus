@@ -9,7 +9,6 @@ import { ReadingSliceState } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { motion } from "framer-motion";
 import { variants, softEase } from "@/motion/variants";
-import { createPortal } from "react-dom";
 
 export default function ControlPanel({ }) {
     const isMobile = useIsMobile();

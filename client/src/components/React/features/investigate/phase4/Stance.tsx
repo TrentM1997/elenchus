@@ -1,4 +1,4 @@
-import StepsEditor from "../../../Shared/TipTap/StepsEditor"
+import StepsEditor from "../../../global/TipTap/StepsEditor"
 import EndInvestigateButton from "./buttons/FinishInvestigation"
 import { getTakeAways } from "@/ReduxToolKit/Reducers/Investigate/Review"
 import { useSelector, useDispatch } from "react-redux"

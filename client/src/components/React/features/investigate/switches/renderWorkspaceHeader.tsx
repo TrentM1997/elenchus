@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react";
 import type { Phase } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
-import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback";
-import ComponentLoader from "@/components/React/Shared/Loaders/ComponentLoader";
+import DelayedFallback from "@/components/React/global/fallbacks/DelayedFallback";
+import ComponentLoader from "@/components/React/global/Loaders/ComponentLoader";
 import InitialPhase from "../initial/InitialPhase";
 const HeroContainer = lazy(() => import('@/components/React/features/investigate/shared/containers/HeroContainer'));
 
