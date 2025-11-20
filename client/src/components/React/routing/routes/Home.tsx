@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useBodyLock } from '@/hooks/useBodyLock';
 import { AnimatePresence } from 'framer-motion';
-import ArticleExtractionToast from '../../Shared/modals/ArticleExtactionToast';
+import ArticleExtractionToast from '../../global/modals/ArticleExtactionToast';
 import type { ExtractionToast } from '../../app/App';
 import LazyHydrationSection from '../../features/LandingPage/containers/LazyHydrationSection';
 

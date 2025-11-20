@@ -5,7 +5,7 @@ import { AppDispatch, RootState } from "@/ReduxToolKit/store";
 import Display from "../../features/dashboard/Content/containers/Display";
 import FooterBarLoader from "../../features/dashboard/ProfileNavigation/skeletons/FooterBarSkeleton";
 import SidebarLoader from "../../features/dashboard/ProfileNavigation/skeletons/SidebarSkeleton";
-import DelayedFallback from "../../Shared/fallbacks/DelayedFallback";
+import DelayedFallback from "../../global/fallbacks/DelayedFallback";
 import { clearResearchScrollPos, clearScrollPosition, presentMetrics } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
 const MobileProfileNav = lazy(() => import('../../features/dashboard/ProfileNavigation/mobile/ProfileMenu'));
 const SideBar = lazy(() => import('../../features/dashboard/ProfileNavigation/SideBar/Sidebar'));

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/ReduxToolKit/store";
 import { useLoaderData, ScrollRestoration, useLocation } from "react-router-dom";
 import type { RootPayload } from "../loaderFunctions/rootLoader";
-import Navigation from "../../Shared/Navigation/Navigation";
+import Navigation from "@/components/React/global/Navigation/Navigation";
 import { Outlet } from "react-router-dom";
 import { populateArticles } from "@/ReduxToolKit/Reducers/UserContent/UserContentReducer";
 import { populateResearch } from "@/ReduxToolKit/Reducers/UserContent/UserInvestigations";
