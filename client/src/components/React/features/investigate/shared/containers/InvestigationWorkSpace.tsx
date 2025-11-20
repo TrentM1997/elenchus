@@ -4,7 +4,7 @@ import { AnimatePresence } from 'framer-motion';
 import Content from '@/components/React/features/investigate/shared/containers/Content';
 import Notes from '@/components/React/features/investigate/notes/Notes';
 import { useNoteConstraints } from '@/hooks/useNoteConstraints';
-import Headers from './Headers';
+import WorkspaceHeaders from './WorkspaceHeaders';
 
 export default function InvestigationWorkSpace() {
     const takingNotes = useSelector((s: RootState) => s.investigation.notes.takingNotes);
@@ -29,7 +29,7 @@ export default function InvestigationWorkSpace() {
                     />
                 }
             </AnimatePresence>
-            <Headers />
+            <WorkspaceHeaders />
             <Content />
         </section>
     );
