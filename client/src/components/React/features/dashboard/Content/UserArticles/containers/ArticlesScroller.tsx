@@ -13,7 +13,7 @@ import ArticleThumbnail from "../components/ArticleThumbnail";
 import { useSkeletons } from "@/hooks/useSkeletons";
 import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";
 import type { CSSProperties } from "react";
-import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary";
+import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary";
 import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 import { SigninStatus } from "@/hooks/useSignIn";
 import type { AppDispatch } from "@/ReduxToolKit/store";

@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
-import Loader from "@/components/React/Shared/Loaders/Loader";
+import Loader from "@/components/React/global/Loaders/Loader";
 import { useMinTimeVisible } from "@/hooks/useMinTimeVisible";
 import type { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
 

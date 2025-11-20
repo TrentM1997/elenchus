@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/ReduxToolKit/store";
 import { useEffect, useRef } from "react";
 import { RetrieveArticles, resetArticles } from "@/ReduxToolKit/Reducers/Investigate/SearchResults";
-import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary";
+import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary";
 import SearchBar from "../components/input/SearchBar";
 import { clearChosenArticles } from "@/ReduxToolKit/Reducers/Investigate/ChosenArticles";
 import { normalize } from "@/helpers/Normailize";

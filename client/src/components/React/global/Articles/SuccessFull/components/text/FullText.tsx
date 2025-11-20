@@ -7,7 +7,7 @@ import TermModal from "@/components/React/features/WikiExtract/components/popove
 import WikiTermExtract from "@/components/React/features/WikiExtract/components/WikiTermExtract";
 import ArticleBody from "./ArticleBody";
 import { useEffect } from "react";
-import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary";
+import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary";
 import { useAppSelector } from "@/ReduxToolKit/hooks/useAppSelector";
 import type { WikiSummaryResponse } from "@/services/wiki/wiki";
 import { selectWikiSummary } from "@/ReduxToolKit/Reducers/Investigate/WikipediaSlice";

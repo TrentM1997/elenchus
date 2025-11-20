@@ -9,7 +9,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading"
 import { useDispatch } from "react-redux"
 import type { AppDispatch } from "@/ReduxToolKit/store"
-import { populateArticles, refreshArticlesStored } from "@/ReduxToolKit/Reducers/UserContent/UserContentReducer"
+import { refreshArticlesStored } from "@/ReduxToolKit/Reducers/UserContent/UserContentReducer"
 
 export default function SavedArticles({ }) {
     const userArticles: Article[] = useSelector((state: RootState) => state.userdata.userArticles);
