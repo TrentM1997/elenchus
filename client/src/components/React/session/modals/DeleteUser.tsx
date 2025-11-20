@@ -7,7 +7,6 @@ import { presentDeleteModal } from "@/ReduxToolKit/Reducers/UserContent/ProfileN
 import { useNavigate } from "react-router-dom";
 import { clearAuthSlice } from "@/ReduxToolKit/Reducers/Athentication/Authentication";
 import { confirmFirstPassword, emailValidation } from "@/helpers/validation";
-import { variants } from "@/motion/variants";
 import { deleteAccount, DeleteAccountRes } from "@/services/supabase/SupabaseData";
 import { SigninStatus } from "@/hooks/useSignIn";
 import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";

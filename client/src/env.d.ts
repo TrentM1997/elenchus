@@ -258,7 +258,7 @@ declare global {
     id?: 'login' | 'signout',
     complete?: boolean | null,
     setterFunction?: any,
-    authStatus?: AuthStatus,
+    authStatus?: SigninStatus,
     status?: SigninStatus,
     redirect?: Function,
     loginStatus?: SigninStatus,

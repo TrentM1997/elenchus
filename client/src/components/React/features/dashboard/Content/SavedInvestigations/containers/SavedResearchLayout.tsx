@@ -1,10 +1,9 @@
 import { RootState } from "@/ReduxToolKit/store"
 import { useSelector } from "react-redux"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 import InvestigationsFallback from "../fallbacks/InvestigationsFallback"
 import { investigationsVariants } from "@/motion/variants"
 import ResearchScroller from "./ResearchScroller"
-import { useMemo } from "react"
 
 
 export interface SavedInvestigation {
@@ -25,14 +24,6 @@ export interface SavedInvestigation {
 
 export default function SavedResearchLayout() {
     const savedInvestigations: SavedInvestigation[] = useSelector((state: RootState) => state.userWork.userResearch);
-    // const timeline = useMemo(() => {
-    //     const populated = Array.isArray(savedInvestigations) && (savedInvestigations.length > 0);
-    //     if (!populated) return null;
-    //     const arr = savedInvestigations.slice();
-    //     const sorted = arr.sort((a: SavedInvestigation, b: SavedInvestigation) => b.id - a.id);
-    //     return sorted;
-    // }, [savedInvestigations])
-
 
     return (
         <motion.section

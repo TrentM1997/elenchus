@@ -11,8 +11,10 @@ import { AnimatePresence } from "framer-motion"
 import { pwReset } from "@/services/supabase/SupabaseData"
 import AuthNotification from "../../notifications/AuthNotification"
 import { passwordChangeStatus } from "../../notifications/AuthStatus"
+import { SigninStatus } from "@/hooks/useSignIn"
 
 export default function ResetPassword({ }) {
+    const [status, setStatus] = useState<SigninStatus>('idle');
     const [storedEmail, setStoredEmail] = useState<string>();
     const [validEntries, setValidEntries] = useState<boolean>(null)
     const [first_pw_valid, setValidFirstPassword] = useState<boolean>(null)
@@ -37,17 +39,18 @@ export default function ResetPassword({ }) {
 
     const resetPassword = async (e: any) => {
         e.preventDefault()
-        setResetting(true)
+        setStatus('pending');
 
         if (canSubmit && storedEmail) {
             const data = await pwReset(storedEmail, firstPassword);
 
             if (data) {
                 setSuccessFullyChanged(true);
-
+                setStatus('success')
 
             } else {
                 setSuccessFullyChanged(false)
+                setStatus('failed');
             };
         } else {
             console.log("Passwords must match")
@@ -87,7 +90,7 @@ export default function ResetPassword({ }) {
     return (
         <div className="w-full max-w-md md:max-w-sm mx-auto">
             <AnimatePresence>
-                {resetting && <AuthNotification complete={successfullyChanged} setterFunction={setResetting} status={passwordChangeStatus} />}
+                {resetting && <AuthNotification complete={successfullyChanged} setterFunction={setResetting} setStatus={setStatus} status={status} />}
             </AnimatePresence>
             <div className="flex flex-col">
                 <div className="border-b pb-12">

@@ -1,17 +1,16 @@
-import { motion, AnimatePresence } from "framer-motion";
-import WikiExtractLoader from "@/components/React/Loaders/WikiExtractLoader";
+import { motion } from "framer-motion";
 
 export default function Extraction({ data }) {
     const { status, title, extract, } = data;
 
     const variants = {
-        open: { opacity: 1},
+        open: { opacity: 1 },
         closed: { opacity: 0 }
     };
 
 
-    
-      
+
+
     return (
         <motion.div
             variants={variants}
@@ -32,24 +31,24 @@ export default function Extraction({ data }) {
                     </p>
                 </div>
             </div>
- 
-                    <motion.div
-                        key='extract'
-                        variants={variants}
-                        initial='closed'
-                        animate='open'
-                        exit='closed'
-                        transition={{ type: "tween", duration: 0.2 }}
-                    >
-                        <figcaption className="flex flex-col items-center gap-y-2">
 
-                            <h1 className="text-white font-light tracking-tight text-base"><span className="text-zinc-400">Term: </span> <em>{title}</em></h1>
-                        </figcaption>
-                        <main className="text-white text-sm font-light tracking-tight mt-4">
-                            {extract}
-                        </main>
-                
-                    </motion.div>
+            <motion.div
+                key='extract'
+                variants={variants}
+                initial='closed'
+                animate='open'
+                exit='closed'
+                transition={{ type: "tween", duration: 0.2 }}
+            >
+                <figcaption className="flex flex-col items-center gap-y-2">
+
+                    <h1 className="text-white font-light tracking-tight text-base"><span className="text-zinc-400">Term: </span> <em>{title}</em></h1>
+                </figcaption>
+                <main className="text-white text-sm font-light tracking-tight mt-4">
+                    {extract}
+                </main>
+
+            </motion.div>
         </motion.div>
     );
 }

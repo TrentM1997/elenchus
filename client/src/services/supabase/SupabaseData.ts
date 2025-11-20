@@ -78,7 +78,7 @@ export const fetchSignOut = async (): Promise<SignOutResponse> => {
 
 
 
-export const sendEmailResetLink = async (email: string, setEmailSent: (emailSent: boolean) => void): Promise<void> => {
+export const sendEmailResetLink = async (email: string): Promise<boolean> => {
 
     try {
 
@@ -92,21 +92,18 @@ export const sendEmailResetLink = async (email: string, setEmailSent: (emailSent
             }),
         });
         if (!response.ok) {
-            setEmailSent(false);
             throw new Error('could not connect to password reset endpoint');
         };
 
         const result = await response.json();
 
         if (result.message === 'Reset email sent.') {
-            setEmailSent(true)
-            return;
+            return true;
         };
 
     } catch (error) {
         console.error(error);
-        setEmailSent(false);
-        return;
+        return false;
     };
 };
 

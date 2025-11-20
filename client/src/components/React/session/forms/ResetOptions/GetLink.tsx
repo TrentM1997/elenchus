@@ -3,31 +3,41 @@ import { emailValidation } from "@/helpers/validation"
 import { AnimatePresence } from "framer-motion"
 import { Link } from "react-router-dom"
 import { sendEmailResetLink } from "@/services/supabase/SupabaseData"
-import { emailStatus } from "../../notifications/AuthStatus"
 import AuthNotification from "../../notifications/AuthNotification";
+import { SigninStatus } from "@/hooks/useSignIn"
 
 export default function GetLink({ }) {
     const [emailToReset, setEmailToReset] = useState<string>(null)
     const [validEmail, setValidEmail] = useState<boolean>(null)
     const [emailSent, setEmailSent] = useState<boolean>(null)
-    const [pending, setPending] = useState<boolean>(null)
+    const [status, setStatus] = useState<SigninStatus>()
 
     const emailInput = (e: any) => {
         setEmailToReset(e.target.value)
     }
 
-    const handleResetLink = async (e: any, email: string) => {
+    const handleResetLink = async (e: any, email: string): Promise<void> => {
         e.preventDefault()
-        setPending(true)
+        setStatus('pending')
         if (validEmail) {
             window.localStorage.setItem('email_for_pw_reset', JSON.stringify({ email: emailToReset }));
-            sendEmailResetLink(email, setEmailSent);
+            try {
+                const res: boolean = await sendEmailResetLink(email);
+                if (!res) {
+                    throw new Error('unexpected error sending email request for reset');
+                }
+                setEmailSent(true);
+                setStatus('success')
+
+            } catch (err) { }
+            setStatus('failed');
+            setEmailSent(false)
         };
     };
 
     useEffect(() => {
 
-        if (emailToReset !== null) emailValidation(emailToReset, setValidEmail);
+        if (emailToReset !== null) emailValidation(emailToReset);
     }, [emailToReset, validEmail]);
 
 
@@ -35,7 +45,7 @@ export default function GetLink({ }) {
     return (
         <div className="w-full max-w-md md:max-w-sm mx-auto">
             <AnimatePresence>
-                {pending && <AuthNotification complete={emailSent} setterFunction={setPending} status={emailStatus} />}
+                {pending && <AuthNotification complete={emailSent} setStatus={setStatus} status={status} />}
             </AnimatePresence>
             <div className="flex flex-col">
                 <div className="border-b pb-12">

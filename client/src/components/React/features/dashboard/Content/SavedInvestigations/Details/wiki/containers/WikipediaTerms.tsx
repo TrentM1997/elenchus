@@ -1,9 +1,8 @@
-import ErrMessage from "@/components/React/Shared/ErrorBoundaries/messages/ErrMessage";
 import { RootState } from "@/ReduxToolKit/store"
 import { useSelector } from "react-redux"
 import type { Extracts } from "@/ReduxToolKit/Reducers/Investigate/Review";
 import { TermList } from "./TermList";
-import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary";
+import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary";
 import NoSavedExtracts from "../fallbacks/NoSavedExtracts";
 
 export interface TermsTypes {

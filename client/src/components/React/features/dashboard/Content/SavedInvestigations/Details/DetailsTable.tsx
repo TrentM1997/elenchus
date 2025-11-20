@@ -2,8 +2,8 @@ import { RootState } from "@/ReduxToolKit/store";
 import { useSelector } from "react-redux";
 import ProcessMap from "./ProcessMap";
 import { useEffect } from "react";
-import ErrorBoundary from "@/components/React/Shared/ErrorBoundaries/ErrorBoundary";
-import LostData from "@/components/React/Shared/ErrorBoundaries/messages/LostData";
+import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary";
+import LostData from "@/components/React/global/ErrorBoundaries/messages/LostData";
 
 interface InvestigationData {
     id: string,

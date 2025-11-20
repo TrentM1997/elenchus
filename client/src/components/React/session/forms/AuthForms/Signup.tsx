@@ -14,7 +14,6 @@ import ConfirmNewPassword from "../InputFields/ConfirmNewPassword"
 import OAuthLogins from "../InputFields/OauthLogins"
 import NewPasswordGuide from "../InputGuides/NewPasswordGuide"
 import { newUser } from "@/services/supabase/SupabaseData"
-import { newAccStatus } from "@/components/React/session/notifications/AuthStatus"
 import AuthNotification from "@/components/React/session/notifications/AuthNotification";
 import { authenticate } from "@/ReduxToolKit/Reducers/Athentication/Authentication"
 import { SigninStatus } from "@/hooks/useSignIn"

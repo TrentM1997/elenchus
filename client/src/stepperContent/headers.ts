@@ -1,5 +1,3 @@
-import { time } from "framer-motion";
-
 interface Header {
     title: string,
     subheader?: string | null
