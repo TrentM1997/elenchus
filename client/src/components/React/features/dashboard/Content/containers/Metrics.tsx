@@ -13,7 +13,7 @@ import NoSavedContentFallback from "../../fallbacks/NoSavedContentFallback";
 import StatsWorker from '@/services/workers/statsWorker.js?worker';
 import StatsFallback from "../../../charts/ChartFallbacks/StatsFallback";
 import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";
-import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback";
+import DelayedFallback from "@/components/React/global/fallbacks/DelayedFallback";
 import { useRenderMetrics } from "@/hooks/useRenderMetrics";
 import ChartFallbackContainer from "../../../charts/ChartFallbacks/FbContainer";
 const StatsSection = lazy(() => import('../../../charts/ResearchStats/StatsSection'));

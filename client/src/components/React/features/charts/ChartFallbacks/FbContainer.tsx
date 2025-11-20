@@ -1,6 +1,6 @@
 import { ScaleIcon, SheildIcon } from "./FallbackIcons";
 import ChartFallback from "./ChartFallback";
-import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback";
+import DelayedFallback from "@/components/React/global/fallbacks/DelayedFallback";
 
 export default function ChartFallbackContainer() {
     const integrityMessage = `

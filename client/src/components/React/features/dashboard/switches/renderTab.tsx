@@ -5,7 +5,7 @@ import Pageskeleton from "@/components/React/routing/skeletons/PageSkeleton";
 const SavedArticles = lazy(() => import('@/components/React/features/dashboard/Content/UserArticles/containers/SavedArticles'));
 const SavedResearchLayout = lazy(() => import('@/components/React/features/dashboard/Content/SavedInvestigations/containers/SavedResearchLayout'));
 import AccManagement from "@/components/React/features/dashboard/ProfileNavigation/AccountManagement/AccManagement";
-import DelayedFallback from "@/components/React/Shared/fallbacks/DelayedFallback";
+import DelayedFallback from "@/components/React/global/fallbacks/DelayedFallback";
 import OpenAssociatedArticle from "@/components/React/features/dashboard/Content/SavedInvestigations/containers/OpenAssociatedArticle";
 import ArticleReview from "@/components/React/features/dashboard/Content/UserArticles/containers/ArticleReview";
 import ResearchReview from "@/components/React/features/dashboard/Content/SavedInvestigations/containers/ResearchReview";
