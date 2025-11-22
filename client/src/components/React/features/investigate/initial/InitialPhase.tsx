@@ -9,7 +9,7 @@ function InitialPhase() {
     return (
         <div
             id="initial-phase-container"
-            className=""
+            className="mx-auto"
         >
             {renderInitialPhase(path)}
         </div>

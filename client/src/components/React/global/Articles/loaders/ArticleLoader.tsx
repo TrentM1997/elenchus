@@ -1,14 +1,16 @@
 import Lottie from "lottie-react"
 import { motion } from "framer-motion"
 import vortex from '@/lotties/vortex.json'
-import { useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/ReduxToolKit/store";
 import { useEffect, useRef, useState } from "react";
+import { setCanMeasureStatus } from "@/ReduxToolKit/Reducers/Investigate/NoteTaking";
 
 export default function ArticleLoader(): JSX.Element | null {
     const [showWaitCaution, setShowWaitCaution] = useState<boolean>(false);
     const progress: string | null = useSelector((state: RootState) => state.investigation.read.progress);
     const timeRef = useRef<number | null>(null);
+    const dispatch = useDispatch<AppDispatch>();
 
 
     useEffect(() => {
@@ -21,6 +23,7 @@ export default function ArticleLoader(): JSX.Element | null {
 
 
         return () => {
+            dispatch(setCanMeasureStatus('available'));
             if (timeRef.current !== null) {
                 clearTimeout(timeRef.current);
             }

@@ -15,17 +15,18 @@ export default function Notes({ notePosition, setNotePosition, constraints, note
 
     return (
         <motion.div
+            layout
             ref={notesRef}
             drag
             dragConstraints={constraints}
             dragMomentum={false}
-            onDragEnd={(e, info) => {
+            onDragEnd={(_, info) => {
                 setNotePosition((prev: NotePosition) => ({
                     x: prev.x + info.delta.x,
                     y: prev.y + info.delta.y
                 }))
             }}
-            style={{ position: 'fixed' }}
+            style={{ position: 'absolute' }}
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1, x: notePosition.x, y: notePosition.y }}
             exit={{ scale: 0, opacity: 0 }}

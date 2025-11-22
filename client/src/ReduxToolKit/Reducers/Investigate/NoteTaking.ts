@@ -1,28 +1,43 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import type { DragConstraints } from '@/hooks/useNoteConstraints'
+
+export type CanMeasureStatus = 'idle' | 'available';
 
 interface NoteState {
     takingNotes: boolean,
-    noteTaken: string | null
-}
+    noteTaken: string | null,
+    constraints: DragConstraints | null,
+    status: CanMeasureStatus
+};
 
 const initialState: NoteState = {
     takingNotes: false,
-    noteTaken: ''
-}
+    noteTaken: '',
+    constraints: null,
+    status: 'idle'
+};
 
 export const NoteSlice = createSlice({
     name: 'takeNotes',
     initialState: initialState,
     reducers: {
-        writingNote: (state) => {
+        writingNote: (state: NoteState) => {
             state.takingNotes = !state.takingNotes;
         },
-        saveNote: (state, action) => {
+        saveNote: (state: NoteState, action: PayloadAction<string | null>) => {
             state.noteTaken = action.payload
+        },
+        getDragConstraints: (state: NoteState, action: PayloadAction<DragConstraints | null>) => {
+            state.constraints = action.payload;
+        },
+        setCanMeasureStatus: (state: NoteState, action: PayloadAction<CanMeasureStatus>) => {
+            state.status = action.payload;
         }
     }
-})
+});
 
-export const { writingNote, saveNote } = NoteSlice.actions
+export type NoteReducer = ReturnType<typeof NoteSlice.reducer>;
 
-export default NoteSlice.reducer
+export const { writingNote, saveNote, getDragConstraints, setCanMeasureStatus } = NoteSlice.actions
+
+export default NoteSlice.reducer;

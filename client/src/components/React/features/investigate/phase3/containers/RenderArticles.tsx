@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { AnimatePresence } from "framer-motion";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
 import Article from "@/components/React/global/Articles/SuccessFull/containers/Article";
 import ArticleLoader from "@/components/React/global/Articles/loaders/ArticleLoader";
@@ -25,7 +25,6 @@ export default function RenderArticles(): JSX.Element | null {
     const renderControlPanel = (articles.length > 0) || ((status === 'fulfilled'));
 
     //TODO: move transition logic from <Article /> up to this component
-
 
     useEffect(() => {
         if (showPendingExtractions || noResults) return;

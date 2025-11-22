@@ -1,6 +1,10 @@
 import { useLayoutEffect, useState, useRef, useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState, AppDispatch } from "@/ReduxToolKit/store";
+import { getDragConstraints } from "@/ReduxToolKit/Reducers/Investigate/NoteTaking";
+import type { CanMeasureStatus } from "@/ReduxToolKit/Reducers/Investigate/NoteTaking";
 
-export type NotePosition = {
+type NotePosition = {
     x: number,
     y: number
 };
@@ -16,32 +20,34 @@ type DragConstraints = {
 type UseNoteConstraintsReturn = {
     notePosition: NotePosition;
     setNotePosition: React.Dispatch<React.SetStateAction<NotePosition>>;
-    constraints: DragConstraints;
     notesRef: React.RefObject<HTMLDivElement | null>;
     containerRef: React.RefObject<HTMLDivElement | null>;
 };
 
-export const useNoteConstraints = (): UseNoteConstraintsReturn => {
+export type { NotePosition, DragConstraints, UseNoteConstraintsReturn }
+
+
+const useNoteConstraints = (): UseNoteConstraintsReturn => {
+    const measureStatus: CanMeasureStatus = useSelector((s: RootState) => s.investigation.notes.status);
     const notesRef = useRef(null);
     const containerRef = useRef(null);
     const [notePosition, setNotePosition] = useState<NotePosition>({ x: 20, y: 250 });
-    const [constraints, setConstraints] = useState<DragConstraints>(null);
+    const dispatch = useDispatch<AppDispatch>();
 
     const handleDragConstraints = useCallback(() => {
         if (!containerRef.current) return;
 
         const containerRect = containerRef.current.getBoundingClientRect();
-
-        setConstraints({
+        dispatch(getDragConstraints({
             top: 0,
             left: 0,
-            right: containerRect.width,
+            right: containerRect.right,
             bottom: containerRect.height
-        });
+        }))
     }, []);
 
-
     useLayoutEffect(() => {
+        if (measureStatus === 'idle') return;
 
         if (containerRef.current) {
             requestAnimationFrame(() => {
@@ -53,13 +59,14 @@ export const useNoteConstraints = (): UseNoteConstraintsReturn => {
             setNotePosition({ x: 20, y: 300 });
         };
 
-    }, [handleDragConstraints]);
+    }, [handleDragConstraints, measureStatus]);
 
     return {
         notePosition: notePosition,
         setNotePosition: setNotePosition,
-        constraints: constraints,
         notesRef: notesRef,
         containerRef: containerRef
     };
 };
+
+export { useNoteConstraints };

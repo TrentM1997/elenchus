@@ -16,7 +16,7 @@ export const renderContent = (phase: Phase): JSX.Element | null => {
                     initial="initial"
                     animate="animate"
                     exit="exit"
-                    className="w-full min-h-screen mx-auto lg:pb-96 relative"
+                    className="w-full min-h-screen mx-auto relative"
                 >
                     <SearchResults />
 
@@ -31,7 +31,7 @@ export const renderContent = (phase: Phase): JSX.Element | null => {
                     initial="initial"
                     animate="animate"
                     exit="exit"
-                    className="min-h-screen w-full mx-auto"
+                    className="min-h-screen w-full mx-auto px-2"
                 >
                     <ArticleContainer />
                     <ScrolltoTop key='scroll' />

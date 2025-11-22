@@ -18,11 +18,11 @@ export default function Content() {
             className={`${wikiModalStages.highlight
                 && 'cursor-text'
                 }
-                relative shrink-0 w-full h-full min-h-screen 
-                mx-auto xs:px-2`}
+                relative w-full h-full min-h-screen 
+                mx-auto`}
         >
             <div
-                className="relative w-full min-h-full flex flex-col justify-center box-border mx-auto">
+                className="relative w-full min-h-full box-border">
                 <AnimatePresence mode="wait">
                     {renderContent(phase)}
                 </AnimatePresence>

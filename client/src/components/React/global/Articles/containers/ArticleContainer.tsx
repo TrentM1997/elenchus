@@ -10,8 +10,6 @@ import { clearChosenArticles } from "@/ReduxToolKit/Reducers/Investigate/ChosenA
 import { resetResults } from "@/ReduxToolKit/Reducers/Investigate/SearchResults";
 import { resetReadingSlice } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 import type { ReadingSliceState } from "@/ReduxToolKit/Reducers/Investigate/Reading";
-import { AnimatePresence } from "framer-motion";
-import ControlPanel from "@/components/React/features/investigate/phase3/components/controls/ControlPanel";
 
 export default function ArticleContainer({ }) {
   const sources = useSelector((state: RootState) => state.userWork.sourcesToReview);
