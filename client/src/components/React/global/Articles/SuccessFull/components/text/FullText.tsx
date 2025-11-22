@@ -2,15 +2,12 @@ import { AppDispatch, RootState } from "@/ReduxToolKit/store"
 import { useDispatch, useSelector } from "react-redux"
 import { clearWikiSlice, getModalPosition, modalStages } from "@/ReduxToolKit/Reducers/Investigate/WikipediaSlice";
 import { AnimatePresence } from "framer-motion";
-import TermModalContainer from "@/components/React/features/WikiExtract/components/popovers/containers/TermModalContainer";
-import TermModal from "@/components/React/features/WikiExtract/components/popovers/modals/TermModal";
-import WikiTermExtract from "@/components/React/features/WikiExtract/components/WikiTermExtract";
+import TermModalContainer from "@/components/React/features/wiki/components/popovers/containers/TermModalContainer";
+import TermModal from "@/components/React/features/wiki/components/popovers/modals/TermModal";
+import WikiTermExtract from "@/components/React/features/wiki/components/WikiTermExtract";
 import ArticleBody from "./ArticleBody";
 import { useEffect } from "react";
 import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary";
-import { useAppSelector } from "@/ReduxToolKit/hooks/useAppSelector";
-import type { WikiSummaryResponse } from "@/services/wiki/wiki";
-import { selectWikiSummary } from "@/ReduxToolKit/Reducers/Investigate/WikipediaSlice";
 
 interface FullTextProps {
     article_text: string,
@@ -21,7 +18,6 @@ export default function FullText({ article_text, article_url }: FullTextProps) {
     const investigateState = useSelector((state: RootState) => state.investigation);
     const dispatch = useDispatch<AppDispatch>();
     const { wikiModalStages } = investigateState.wiki;
-    const summary: WikiSummaryResponse = useAppSelector(selectWikiSummary);
 
 
     const handleHighlightStart = (e: React.MouseEvent<HTMLDivElement>) => {

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export type ActiveModal = 'Back to Search' | 'Extract Confirmation' | 'Work Modal' | 'Feedback Form' | 'Sign Out' | 'Bluesky Post Selected' | 'Delete Account' | null;
+export type ActiveModal = 'Back to Search' | 'Extract Confirmation' | 'Work Modal' | 'Feedback Form' | 'Sign Out' | 'Bluesky Post Selected' | 'Delete Account' | 'Article Extraction Warning' | null;
 
 export type ActiveToast = 'Pending Extractions Status' | 'Sign In Status' | 'Sign Out Status' | 'Deleting Article Status' | 'Maximum Articles Selected' | 'Article Saving Status' | null;
 

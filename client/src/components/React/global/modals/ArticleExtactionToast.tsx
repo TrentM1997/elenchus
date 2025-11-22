@@ -1,14 +1,10 @@
-import { motion } from "framer-motion";
-import { variants } from "@/motion/variants";
-import { createPortal } from "react-dom";
-import { SetStateAction } from "react";
 import { ExtractionToast } from "../../app/App";
+import { useDispatch } from "react-redux";
+import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
+import type { AppDispatch } from "@/ReduxToolKit/store";
 
-interface ArticleExtractionToast {
-    setShowToast: React.Dispatch<SetStateAction<boolean>>
-};
-
-export default function ArticleExtractionToast({ setShowToast }): JSX.Element | null {
+export default function ArticleExtractionToast(): JSX.Element | null {
+    const dispatch = useDispatch<AppDispatch>();
 
     const handleClick = (): void => {
         const TOASTKEY = 'extraction-toast:v1';
@@ -18,26 +14,20 @@ export default function ArticleExtractionToast({ setShowToast }): JSX.Element | 
             const updatedToast: ExtractionToast = { shownToast: true };
             window.sessionStorage.setItem(TOASTKEY, JSON.stringify(updatedToast));
         }
-        setShowToast(false);
+        dispatch(renderModal(null));
     };
 
-    const toast = (
-        <motion.div
-            variants={variants}
-            initial={'closed'}
-            animate={{ opacity: 1, transition: { type: 'tween', duration: 0.2, delay: 0.5, ease: [0.33, 0, 0.67, 1] } }}
-            exit={{ opacity: 1, scale: 0, transition: { type: 'tween', duration: 0.25, ease: [0.33, 0, 0.67, 1] } }}
-            className="fixed inset-0 flex items-center justify-center bg-black/60 pointer-events-auto">
-            <div className="w-88 h-88 lg:h-88 lg:w-96 rounded-3xl p-6 bg-black border opacity-0 animate-fade-blur animation-delay-400ms transition-opacity ease-soft will-change-[opacity] transform-gpu border-border_gray">
-                <div className="flex flex-col items-center h-full justify-between">
-                    <ToastCopy />
-                    <GotItButton handleClick={handleClick} />
-                </div>
+    return (
+        <div className="w-88 h-88 lg:h-88 lg:w-96 rounded-3xl p-6 bg-black ring-2 ring-white/20 opacity-0 
+            animate-fade-blur animation-delay-700ms transition-opacity ease-soft will-change-[opacity] 
+            transform-gpu "
+        >
+            <div className="flex flex-col items-center h-full justify-between">
+                <ToastCopy />
+                <GotItButton handleClick={handleClick} />
             </div>
-        </motion.div>
+        </div>
     )
-
-    return createPortal(toast, document.body);
 };
 
 

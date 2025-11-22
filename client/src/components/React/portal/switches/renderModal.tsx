@@ -7,6 +7,7 @@ import DeleteUserAccount from "@/components/React/session/modals/DeleteUser";
 import FeedBackForm from "@/components/React/session/forms/UserFeedback/FeedbackForm";
 import { PreviousWork } from "../../features/investigate/phase5/modals/PreviousWork";
 import type { ActiveModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
+import ArticleExtractionToast from "../../global/modals/ArticleExtactionToast";
 
 const renderModal = (modal: ActiveModal): JSX.Element | null => {
 
@@ -54,6 +55,12 @@ const renderModal = (modal: ActiveModal): JSX.Element | null => {
             return (
                 <ModalLayer key={'prev-work-modal'}>
                     <PreviousWork />
+                </ModalLayer>
+            )
+        case "Article Extraction Warning":
+            return (
+                <ModalLayer key={'extraction-warning'}>
+                    <ArticleExtractionToast />
                 </ModalLayer>
             )
         case null:

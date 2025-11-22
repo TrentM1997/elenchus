@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion"
 import type { WikiDisambigCandidate } from "@/services/wiki/wiki"
-import Candidate from "@/components/React/features/WikiExtract/components/disambig/term/Candidate"
+import Candidate from "@/components/React/features/wiki/components/disambig/term/Candidate"
 
 export interface SavedDisambig {
     terms: WikiDisambigCandidate[],

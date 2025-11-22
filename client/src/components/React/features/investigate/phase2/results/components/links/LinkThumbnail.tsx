@@ -1,5 +1,11 @@
 import React from "react";
 
+interface LinkThumnailProps {
+    thumbnail: string,
+    name: string,
+    isPriority?: boolean
+};
+
 type FetchPriority = 'high' | 'low' | 'auto';
 
 type LoadingTypes = 'eager' | 'lazy'
@@ -15,7 +21,7 @@ interface LinkThumbnail {
     imgProps: ImgProps
 };
 
-function LinkThumbnail({ thumbnail, name, isPriority }): JSX.Element | null {
+function LinkThumbnail({ thumbnail, name, isPriority }: LinkThumnailProps): JSX.Element | null {
 
     const imgProps: ImgProps = {
         src: thumbnail,
