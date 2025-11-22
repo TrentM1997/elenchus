@@ -8,14 +8,9 @@ function ModalPipeline(): JSX.Element {
     const modal: ActiveModal = useSelector((s: RootState) => s.overlay.modal);
 
     return (
-        <>
-            <AnimatePresence
-                mode="wait"
-            >
-                {renderModal(modal)}
-            </AnimatePresence>
-
-        </>
+        <AnimatePresence mode="wait">
+            {renderModal(modal)}
+        </AnimatePresence>
     );
 };
 
