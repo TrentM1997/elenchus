@@ -10,7 +10,7 @@ export default function ReviewContainer() {
 
 
     return (
-        <main className="w-full h-full flex flex-col pt-6 md:pt-16 lg:pt-0 items-center gap-y-1.5 p-1 opacity-0 animate-fade-in animation-delay-600ms">
+        <main className="w-full h-full flex flex-col pt-6 md:pt-16 lg:pt-0 lg:px-6 md:max-w-3xl lg:max-w-5xl xl:max-w-6xl 2xl:max-w-7xl mx-auto 2xl:px-0 items-center gap-y-1.5 p-1 opacity-0 animate-fade-in animation-delay-600ms">
             <DelayedFallback>
                 <ScrolltoTop />
                 <article

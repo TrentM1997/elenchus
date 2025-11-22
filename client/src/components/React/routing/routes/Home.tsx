@@ -58,7 +58,7 @@ export default function Home({ }) {
 
 
     return (
-        <section className={`flex h-auto flex-col gap-y-20 w-full grow scroll-smooth
+        <section className={`flex h-auto flex-col gap-y-0 md:gap-y-20 w-full grow scroll-smooth
           
          ${showToast
                 ? 'pointer-events-none'
