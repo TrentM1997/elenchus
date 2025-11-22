@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { AnimatePresence } from "framer-motion";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/ReduxToolKit/store";
 import Article from "@/components/React/global/Articles/SuccessFull/containers/Article";
 import ArticleLoader from "@/components/React/global/Articles/loaders/ArticleLoader";

@@ -2,8 +2,8 @@ import { RootState } from "@/ReduxToolKit/store"
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { PreviousWork } from "../modals/PreviousWork";
-import { clearCachedPlayStates } from "@/components/React/routing/routes/InvestigateRoute";
-import { PLAYSTATE_KEYS } from "@/components/React/routing/routes/InvestigateRoute";
+import { clearCachedPlayStates, PLAYSTATE_KEYS } from "@/hooks/flags/useClearInvestigation";
+import { CLEAR_INVESTIGATION } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
 import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
 
 export default function InvestigateMore() {
@@ -22,7 +22,7 @@ export default function InvestigateMore() {
             setOpen(true)
         } else if (!activeSession) {
             dispatch(renderModal('Feedback Form'));
-            dispatch({ type: 'clear' });
+            dispatch({ type: CLEAR_INVESTIGATION });
             clearCachedPlayStates(PLAYSTATE_KEYS);
         }
     };
