@@ -7,7 +7,7 @@ import { renderContent } from "../../switches/renderContent";
 
 export default function Content() {
     const phase: Phase = useSelector((s: RootState) => s.investigation.rendering.phase);
-    const wikiModalStages: ModalStages = useSelector((state: RootState) => state.investigation.wiki);
+    const wikiModalStages: ModalStages = useSelector((state: RootState) => state.investigation.wiki.wikiModalStages);
 
     return (
         <motion.div
