@@ -14,10 +14,6 @@ import { firecrawlExtract } from '../../services/firecrawl.js';
 import { getMediaBiases } from '../supabase/mediaBias.js';
 import { cleanURL } from '../../helpers/cleanUrl.js';
 
-//───────────────────────────────
-// Types
-//───────────────────────────────
-
 interface JobResult {
     status: 'pending' | 'fulfilled' | 'rejected';
     result?: {
@@ -31,9 +27,6 @@ interface JobResult {
 
 const jobs: Record<string, JobResult> = {};
 
-//───────────────────────────────
-// Helpers
-//───────────────────────────────
 
 export async function createFirecrawlClient(): Promise<Firecrawl | null> {
     try {

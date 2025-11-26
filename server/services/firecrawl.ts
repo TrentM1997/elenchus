@@ -4,6 +4,8 @@ import type { ScrapedArticle, Bias, FcParam } from '../types/types.js';
 import type { FailedAttempt } from "../types/types.js";
 import { toFailedAttempt } from "../endpoints/articles/firecrawl_extractions.js";
 
+//TODO: add schema validation on the extracted article content 
+
 export interface FirecrawlContent {
     content_markdown: string;
 };
@@ -32,9 +34,7 @@ type MBFC = Map<string, BiasInfo>
 
 export const firecrawlExtract = async (article: FcParam, firecrawl: Firecrawl, MBFC_DATA: MBFC, pushRetrieved: (a: ScrapedArticle) => void, pushFailed: (f: FailedAttempt) => void): Promise<void> => {
 
-
     const urlClean = cleanURL(article.url);
-
 
     try {
         const data = await firecrawl.scrape(urlClean, {
