@@ -8,7 +8,7 @@ dotenv.config({ path: envPath })
 import { SUPABASE_KEY, SUPABASE_URL } from '../../src/Config.js';
 import { Request, Response } from "express";
 import { validateUser, type ValidateUserResp } from "../../schemas/Users.js";
-import { validateLoginBody, type ValidateLoginResp } from '../../schemas/LoginSchema';
+import { validateLoginBody, type ValidateLoginResp } from '../../schemas/LoginSchema.js';
 import type { LoginBody } from '../../types/interfaces.js';
 import { createClient } from '@supabase/supabase-js';
 import { getUserContent } from '../../services/getUserContent';
