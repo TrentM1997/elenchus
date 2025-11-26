@@ -24,7 +24,6 @@ export const saveArticleForUser = async (supabase, id, dataToSave) => {
             onConflict: 'user_id,article_url',
         })
             .select();
-        console.log(data);
         if (error) {
             console.log(error.message);
             const db_error = "couldn't save the provided article to the database";

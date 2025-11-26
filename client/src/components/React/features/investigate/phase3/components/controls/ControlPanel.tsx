@@ -20,11 +20,9 @@ export default function ControlPanel({ }) {
 
     return (
         <motion.div
-            variants={variants}
-            initial='closed'
-            animate='open'
-            exit='closed'
-            transition={{ type: 'tween', duration: 0.2, ease: softEase }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1, transition: { type: 'tween', delay: 1, duration: 0.25, ease: softEase } }}
+            exit={{ opacity: 0, transition: { type: 'tween', delay: 0, duration: 0.25, ease: softEase } }}
             className="fixed lg:sticky 2xl:left-16 2xl:bottom-16 transform-gpu will-change-transform z-[910]
         xl:left-4 xl:bottom-10 lg:left-6 lg:bottom-6 w-fit shadow-material
         bottom-0 left-0 right-0 flex items-start lg:items-center justify-center gap-x-4 lg:gap-x-0

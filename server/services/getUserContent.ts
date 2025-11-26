@@ -1,5 +1,5 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import { Investigation } from "../endpoints/interfaces";
+import { Investigation } from "../types/interfaces";
 import { SavedArticleRes, UserContent, SavedArticle } from "../types/types";
 
 

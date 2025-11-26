@@ -5,11 +5,11 @@ const envUrl = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(envUrl)
 const envPath = path.resolve(__dirname, '../.env');
 dotenv.config({ path: envPath })
-import { SUPABASE_KEY, SUPABASE_URL } from '../src/Config.js';
+import { SUPABASE_KEY, SUPABASE_URL } from '../../src/Config.js';
 import { Request, Response } from 'express'
 import { createClient } from '@supabase/supabase-js';
-import { Database } from './databaseInterfaces.js';
-import { DeleteUserBody } from './interfaces.js';
+import { Database } from '../../types/databaseInterfaces.js';
+import { DeleteUserBody } from '../../types/interfaces.js';
 
 
 const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_KEY, {

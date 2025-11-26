@@ -1,8 +1,8 @@
-import { BLUESKY_EMAIL, BLUESKY_PASSWORD } from '../src/Config.js';
+import { BLUESKY_EMAIL, BLUESKY_PASSWORD } from '../../src/Config.js';
 import { Request, Response as ExpRes } from 'express'
-import decodeItem from '../helpers/decodeItem.js';
+import decodeItem from '../../helpers/decodeItem.js';
 import { AtpAgent } from '@atproto/api';
-import { unwrapObjects } from '../helpers/unwrapObjects.js';
+import { unwrapObjects } from '../../helpers/unwrapObjects.js';
 
 const agent = new AtpAgent({ service: 'https://bsky.social' })
 

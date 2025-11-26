@@ -11,7 +11,7 @@ export default function HeroContainer() {
     const modal: ActiveModal = useSelector((s: RootState) => s.overlay.modal)
 
     return (
-        <section className={`w-dvw h-full shrink-0 mx-auto 
+        <section className={`w-dvw h-full min-h-44 lg:min-h-52 shrink-0 mx-auto 
             transition-opacity duration-200 ease-in-out flex items-center
         ${(modal === 'Work Modal')
                 ? 'opacity-50'

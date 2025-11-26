@@ -1,10 +1,8 @@
 import type Firecrawl from "@mendable/firecrawl-js";
-import { TldrRequest } from '../types/types.js';
-import { getMediaBiases } from '../endpoints/mediaBias.js';
 import { cleanURL } from '../helpers/cleanUrl.js';
 import type { ScrapedArticle, Bias, FcParam } from '../types/types.js';
 import type { FailedAttempt } from "../types/types.js";
-import { toFailedAttempt } from "../endpoints/firecrawl_extractions.js";
+import { toFailedAttempt } from "../endpoints/articles/firecrawl_extractions.js";
 
 export interface FirecrawlContent {
     content_markdown: string;

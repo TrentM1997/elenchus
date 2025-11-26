@@ -1,5 +1,5 @@
 import { cleanURL } from '../helpers/cleanUrl.js';
-import { toFailedAttempt } from "../endpoints/firecrawl_extractions.js";
+import { toFailedAttempt } from "../endpoints/articles/firecrawl_extractions.js";
 ;
 ;
 export const schema = {

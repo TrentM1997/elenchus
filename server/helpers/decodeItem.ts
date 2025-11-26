@@ -1,6 +1,5 @@
 import he from 'he';
 import sanitizeHtml from 'sanitize-html';
-import { TldrRequest } from '../endpoints/interfaces';
 
 
 export default function decodeItem(item: any) {
