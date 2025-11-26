@@ -1,4 +1,4 @@
-export const signUserOut = async (res) => {
+export const signUserOut = async (req, res) => {
     try {
         res.clearCookie('sb-access-token');
         res.clearCookie('sb-refresh-token');

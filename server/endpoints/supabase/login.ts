@@ -11,7 +11,7 @@ import { validateUser, type ValidateUserResp } from "../../schemas/Users.js";
 import { validateLoginBody, type ValidateLoginResp } from '../../schemas/LoginSchema.js';
 import type { LoginBody } from '../../types/interfaces.js';
 import { createClient } from '@supabase/supabase-js';
-import { getUserContent } from '../../services/getUserContent';
+import { getUserContent } from '../../services/getUserContent.js';
 import type { SupabaseLoginResponse } from '../../types/types';
 
 export const supabaseLogin = async (req: Request, res: Response): Promise<void> => {

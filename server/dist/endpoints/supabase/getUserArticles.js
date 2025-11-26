@@ -1,4 +1,4 @@
-import { getUserAndSupabase } from "./serverClient";
+import { getUserAndSupabase } from "./serverClient.js";
 export const getUserArticles = async (req, res) => {
     const session = await getUserAndSupabase(req, res);
     if (!session)

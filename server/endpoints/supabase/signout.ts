@@ -1,7 +1,7 @@
-import { Response } from "express";
+import { Response, Request } from "express";
 
 
-export const signUserOut = async (res: Response): Promise<void> => {
+export const signUserOut = async (req: Request, res: Response): Promise<void> => {
     try {
         res.clearCookie('sb-access-token');
         res.clearCookie('sb-refresh-token');

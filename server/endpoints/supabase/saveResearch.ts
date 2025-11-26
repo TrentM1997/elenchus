@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getUserAndSupabase } from "./serverClient";
+import { getUserAndSupabase } from "./serverClient.js";
 import type { InvestigationBody } from "../../types/interfaces.js";
 
 export const saveResearch = async (req: Request, res: Response): Promise<void> => {

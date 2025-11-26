@@ -1,4 +1,4 @@
-import { getUserAndSupabase } from "./serverClient";
+import { getUserAndSupabase } from "./serverClient.js";
 import { Request, Response } from "express";
 
 export const getUserResearch = async (req: Request, res: Response): Promise<void> => {

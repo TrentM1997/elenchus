@@ -1,6 +1,6 @@
-import { getUserAndSupabase } from "./serverClient";
-import { saveArticleForUser } from "../../services/saveArticle";
-import { deleteArticleForUser } from "../../services/deleteArticle";
+import { getUserAndSupabase } from "./serverClient.js";
+import { saveArticleForUser } from "../../services/saveArticle.js";
+import { deleteArticleForUser } from "../../services/deleteArticle.js";
 export const handleArticleSave = async (req, res) => {
     const { articleExists, dataToSave } = req.body;
     const session = await getUserAndSupabase(req, res);

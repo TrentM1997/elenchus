@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { getUserAndSupabase } from "./serverClient";
-import { saveArticleForUser } from "../../services/saveArticle";
-import { deleteArticleForUser } from "../../services/deleteArticle";
+import { getUserAndSupabase } from "./serverClient.js";
+import { saveArticleForUser } from "../../services/saveArticle.js";
+import { deleteArticleForUser } from "../../services/deleteArticle.js";
 import type { Article } from "../../types/types";
 import type { ArticleBody, ArticleSaveResponse } from "../../types/interfaces.js";
 

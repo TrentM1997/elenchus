@@ -85,7 +85,7 @@ app.post('/getUserArticles', getUserArticles);
 app.post('/getUserResearch', getUserResearch);
 app.post('/articleOperation', handleArticleSave);
 app.post('/saveResearch', saveResearch);
-app.post('/signUserOut', signUserOut);
+app.post('/signUserOut', (req, res) => signUserOut(req, res));
 app.post('/resetUserPassword', resetUserPassword);
 app.post('/getCurrentUser', getCurrentUser);
 app.post('/createNewUser', createNewUser);
