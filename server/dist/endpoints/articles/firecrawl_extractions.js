@@ -7,7 +7,7 @@ const envPath = path.resolve(__dirname, '../.env');
 dotenv.config({ path: envPath });
 import Firecrawl from '@mendable/firecrawl-js';
 import { firecrawlExtract } from '../../services/firecrawl.js';
-import { getMediaBiases } from './mediaBias.js';
+import { getMediaBiases } from '../supabase/mediaBias.js';
 import { cleanURL } from '../../helpers/cleanUrl.js';
 const jobs = {};
 //───────────────────────────────

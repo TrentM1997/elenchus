@@ -1,8 +1,8 @@
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
-import decodeItem from '../helpers/decodeItem.js';
-import { logoMap } from './logoMap.js';
+import decodeItem from '../../helpers/decodeItem.js';
+import { logoMap } from '../logos/logoMap.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
