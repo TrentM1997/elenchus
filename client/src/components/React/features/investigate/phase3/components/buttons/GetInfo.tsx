@@ -19,7 +19,7 @@ export default function GetInfo({ failedExtraction }) {
 
 
     return (
-        <div className={`${failedExtraction ? 'pointer-events-none opacity-30' : 'pointer-events-auto opacity-100 lg:hover:bg-border_gray/70'}
+        <div className={`${failedExtraction ? 'pointer-events-none opacity-30' : 'pointer-events-auto opacity-100 lg:hover:bg-border_gray/40'}
             flex shrink-0 w-fit h-10 lg:h-auto md:py-1.5 px-2.5 xl:px-2.5 group relative  group cursor-pointer
              transition-all ease-soft duration-300 justify-center items-center 
             `}>
