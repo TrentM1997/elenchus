@@ -22,6 +22,7 @@
 		"@atproto/api": "^0.15.5",
 		"@mendable/firecrawl-js": "^4.4.1",
 		"@mozilla/readability": "^0.6.0",
+		"@sinclair/typebox": "^0.34.41",
 		"@supabase/supabase-js": "^2.49.3",
 		"axios": "^1.6.8",
 		"azure-cognitiveservices-websearch": "^2.0.0",
@@ -52,6 +53,6 @@
 		"@types/pg": "^8.11.5",
 		"@types/sanitize-html": "^2.13.0",
 		"ts-node": "^10.9.2",
-		"typescript": "^5.8.3"
+		"typescript": "^5.9.3"
 	}
 }

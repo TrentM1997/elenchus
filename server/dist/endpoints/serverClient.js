@@ -10,6 +10,8 @@ import { createClient } from '@supabase/supabase-js';
 import { saveArticleForUser } from '../services/saveArticle.js';
 import { deleteArticleForUser } from '../services/deleteArticle.js';
 import { getUserContent } from '../services/getUserContent.js';
+import { validateUser } from '../schemas/Users.js';
+import { validateLoginBody } from '../schemas/LoginSchema.js';
 export const createSupabaseFromRequest = (req) => {
     const accessToken = req.cookies['sb-access-token'];
     return createClient(SUPABASE_URL, SUPABASE_KEY, {
@@ -30,6 +32,14 @@ export const getUserAndSupabase = async (req, res) => {
         res.status(401).json({ error: 'Unauthorized' });
         return null;
     }
+    const checkUser = validateUser(user);
+    if (!checkUser.isValid) {
+        res.status(500).json({
+            error: `Invalid user schema from Supabase`,
+            details: checkUser.details
+        });
+        return null;
+    }
     return { supabase, user };
 };
 export const getCurrentUser = async (req, res) => {
@@ -38,6 +48,14 @@ export const getCurrentUser = async (req, res) => {
     if (!session)
         return;
     const { user } = session;
+    const checkUser = validateUser(user);
+    if (!checkUser.isValid) {
+        res.status(500).json({
+            error: 'Invalid user schema from Supabase',
+            details: checkUser.details
+        });
+        return;
+    }
     const { id } = user;
     const content = await getUserContent(supabase, id);
     const userData = { sess: session, userContent: content };
@@ -47,6 +65,14 @@ export const getCurrentUser = async (req, res) => {
 export const supabaseLogin = async (req, res) => {
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
     const { email, password } = req.body;
+    const checkLoginBody = validateLoginBody(req.body);
+    if (!checkLoginBody.isValid) {
+        res.status(400).json({
+            error: 'invalid login credentials sent from UI',
+            details: checkLoginBody.details
+        });
+        return;
+    }
     try {
         const response = await supabase.auth.signInWithPassword({
             email: email,
@@ -68,6 +94,15 @@ export const supabaseLogin = async (req, res) => {
                 maxAge: 7 * 24 * 60 * 60 * 1000,
             });
             const sessionData = response.data.session;
+            const checkUser = validateUser(sessionData.user);
+            if (!checkUser.isValid) {
+                res.status(500).json({
+                    error: 'invalid user schema from Supabase',
+                    details: checkUser.details
+                });
+                return;
+            }
+            ;
             const { id } = sessionData.user;
             const content = await getUserContent(supabase, id);
             const userData = { sess: sessionData, userContent: content };

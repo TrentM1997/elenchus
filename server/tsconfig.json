@@ -15,6 +15,7 @@
 		"DOM"
 	],
 	"include": [
+		"schemas/",
 		"src/",
 		"helpers/",
 		"endpoints/",
