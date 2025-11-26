@@ -8,11 +8,11 @@ dotenv.config({ path: envPath });
 
 import { Request, Response } from 'express';
 import Firecrawl from '@mendable/firecrawl-js';
-import { FcParam, ScrapedArticle } from '../types/types.js';
-import type { Bias, FailedAttempt } from '../types/types.js';
-import { firecrawlExtract } from '../services/firecrawl.js';
+import { FcParam, ScrapedArticle } from '../../types/types.js';
+import type { Bias, FailedAttempt } from '../../types/types.js';
+import { firecrawlExtract } from '../../services/firecrawl.js';
 import { getMediaBiases } from './mediaBias.js';
-import { cleanURL } from '../helpers/cleanUrl.js';
+import { cleanURL } from '../../helpers/cleanUrl.js';
 
 //───────────────────────────────
 // Types

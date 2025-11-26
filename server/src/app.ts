@@ -9,22 +9,22 @@ import cors from 'cors';
 import mime from 'mime'
 import cookieParser from 'cookie-parser';
 const app = express();
-import { firecrawl_extractions } from '../endpoints/firecrawl_extractions.js';
-import { deleteUser } from '../endpoints/deleteUser.js';
-import { searchBlueSkyPosts } from '../endpoints/blueskyApi.js';
-import { getBlueSkyFeed } from '../endpoints/blueskyApi.js';
-import { supabaseLogin } from '../endpoints/serverClient.js';
-import { getUserArticles } from '../endpoints/serverClient.js';
-import { getUserResearch } from '../endpoints/serverClient.js';
-import { handleArticleSave } from '../endpoints/serverClient.js';
-import { saveResearch } from '../endpoints/serverClient.js';
-import { signUserOut } from '../endpoints/serverClient.js';
-import { resetUserPassword } from '../endpoints/serverClient.js';
-import { getCurrentUser } from '../endpoints/serverClient.js';
-import { createNewUser } from '../endpoints/serverClient.js';
-import { sendFeedback } from '../endpoints/serverClient.js';
-import { newsApi } from '../endpoints/newsApi.js';
-import { get_firecrawl_job } from '../endpoints/firecrawl_extractions.js';
+import { firecrawl_extractions } from '../endpoints/articles/firecrawl_extractions.js';
+import { deleteUser } from '../endpoints/supabase/deleteUser.js';
+import { searchBlueSkyPosts } from '../endpoints/bluesky/blueskyApi.js';
+import { getBlueSkyFeed } from '../endpoints/bluesky/blueskyApi.js';
+import { supabaseLogin } from '../endpoints/supabase/login.js';
+import { getUserArticles } from '../endpoints/supabase/getUserArticles.js';
+import { getUserResearch } from '../endpoints/supabase/getUserResearch.js';
+import { handleArticleSave } from '../endpoints/supabase/handleArticleSave.js';
+import { saveResearch } from '../endpoints/supabase/saveResearch.js';
+import { signUserOut } from '../endpoints/supabase/signout.js';
+import { resetUserPassword } from '../endpoints/supabase/resetPassword.js';
+import { getCurrentUser } from '../endpoints/supabase/serverClient.js';
+import { createNewUser } from '../endpoints/supabase/createNewUser.js';
+import { sendFeedback } from '../endpoints/supabase/sendFeedback.js';
+import { newsApi } from '../endpoints/articles/newsApi.js';
+import { get_firecrawl_job } from '../endpoints/articles/firecrawl_extractions.js';
 
 const corsOptions: object = {
 	origin: ['https://elenchusapp.io', 'http://localhost:5173'],

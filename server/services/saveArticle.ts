@@ -1,4 +1,3 @@
-import { SavedArticle } from "../endpoints/interfaces";
 import { SupabaseClient } from "@supabase/supabase-js";
 import type { Article } from "../types/types";
 
@@ -42,7 +41,6 @@ export const saveArticleForUser = async (
             )
             .select();
 
-        console.log(data);
 
         if (error) {
             console.log(error.message);

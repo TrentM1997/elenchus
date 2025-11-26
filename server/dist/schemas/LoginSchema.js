@@ -8,10 +8,6 @@ const validator = TypeCompiler.Compile(LoginSchema);
 export const validateLoginBody = (loginBody) => {
     const isValid = validator.Check(loginBody);
     const details = isValid ? null : [...validator.Errors(loginBody)];
-    console.log({ Valid: isValid, details: details });
-    return {
-        isValid,
-        details
-    };
+    return { isValid, details };
 };
 //# sourceMappingURL=LoginSchema.js.map

@@ -15,13 +15,9 @@ const validator = TypeCompiler.Compile(LoginSchema);
 export const validateLoginBody = (loginBody: LoginBody) => {
 
     const isValid = validator.Check(loginBody);
+    const details = isValid ? null : [...validator.Errors(loginBody)];
 
-    const details = isValid ? null : [...validator.Errors(loginBody)]
-    console.log({ Valid: isValid, details: details });
-    return {
-        isValid,
-        details
-    } as const;
+    return { isValid, details } as const;
 };
 
 export type ValidateLoginResp = ReturnType<typeof validateLoginBody>;
