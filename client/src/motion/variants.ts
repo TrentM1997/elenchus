@@ -207,3 +207,26 @@ export const articleContent = {
     animate: { opacity: 1, transition: { type: "tween", duration: 0.25 } },
     exit: { opacity: 0, transition: { type: "tween", duration: 0.25 } },
 };
+
+
+export const panelmotions: any = {
+    initial: { opacity: 0 },
+    animate: {
+        opacity: 1,
+        transition: {
+            type: "tween",
+            delay: 1,
+            duration: 0.25,
+            ease: softEase
+        }
+    },
+    exit: {
+        opacity: 0,
+        transition: {
+            type: "tween",
+            delay: 0,
+            duration: 0.25,
+            ease: softEase
+        }
+    }
+};

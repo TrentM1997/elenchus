@@ -30,7 +30,7 @@ export default function BackToSearchTooltip({ setShowBackTooltip, id }: BackToSe
             animate="open"
             exit="closed"
             transition={{ type: "tween", duration: 0.2 }}
-            className="absolute z-50 bg-white rounded-lg h-auto w-auto flex flex-col
+            className="absolute z-50 bg-white rounded-lg h-auto w-auto flex flex-col pointer-events-none
             bottom-14 -left-2 lg:bottom-12 lg:-left-4
              items-center border border-astro_gray shadow-thick
              after:content-[''] after:absolute after:bottom-[-10px] after:left-4

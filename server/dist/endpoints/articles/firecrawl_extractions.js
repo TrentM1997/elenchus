@@ -10,9 +10,6 @@ import { firecrawlExtract } from '../../services/firecrawl.js';
 import { getMediaBiases } from '../supabase/mediaBias.js';
 import { cleanURL } from '../../helpers/cleanUrl.js';
 const jobs = {};
-//───────────────────────────────
-// Helpers
-//───────────────────────────────
 export async function createFirecrawlClient() {
     try {
         return new Firecrawl({ apiKey: process.env.FIRECRAWL_KEY });

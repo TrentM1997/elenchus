@@ -8,7 +8,7 @@ dotenv.config({ path: envPath });
 
 import { Request, Response } from 'express';
 import Firecrawl from '@mendable/firecrawl-js';
-import { FcParam, ScrapedArticle } from '../../types/types.js';
+import { FcParam, ScrapedArticle, Article } from '../../types/types.js';
 import type { Bias, FailedAttempt } from '../../types/types.js';
 import { firecrawlExtract } from '../../services/firecrawl.js';
 import { getMediaBiases } from '../supabase/mediaBias.js';
@@ -18,7 +18,7 @@ interface JobResult {
     status: 'pending' | 'fulfilled' | 'rejected';
     result?: {
         progress: string;
-        retrieved: ScrapedArticle[] | null;
+        retrieved: Article[] | null;
         rejected: FailedAttempt[];
     };
     error?: string | null;
@@ -71,7 +71,7 @@ async function getBiasData(articles: FcParam[]) {
     return biasRatings;
 }
 
-function reconcileFailed(retrieved: ScrapedArticle[], failed: FailedAttempt[]) {
+function reconcileFailed(retrieved: Article[], failed: FailedAttempt[]) {
     const success = new Set(retrieved.map(r => cleanURL(r.article_url)));
     for (let i = failed.length - 1; i >= 0; i--) {
         if (success.has(cleanURL(failed[i].article_url))) failed.splice(i, 1);
@@ -109,7 +109,7 @@ export const firecrawl_extractions = async (req: Request, res: Response): Promis
 
     (async () => {
         const failed: FailedAttempt[] = [];
-        const retrieved: ScrapedArticle[] = [];
+        const retrieved: Article[] = [];
 
         try {
             const firecrawl = await createFirecrawlClient();
@@ -139,7 +139,7 @@ export const firecrawl_extractions = async (req: Request, res: Response): Promis
                 };
             };
 
-            const pushRetrieved = (a: ScrapedArticle) => {
+            const pushRetrieved = (a: Article) => {
                 retrieved.push(a);
                 updateJobSnapshot();
             };

@@ -1,6 +1,4 @@
 import { Type } from "@sinclair/typebox";
-import { Static } from "@sinclair/typebox";
-
 export const BiasSchema = Type.Union([
     Type.Literal("Left"),
     Type.Literal("Left-Center"),
@@ -15,5 +13,4 @@ export const BiasSchema = Type.Union([
     Type.Literal("Unknown"),
     Type.Null()
 ]);
-
-export type BiasSchema = Static<typeof BiasSchema>;
+//# sourceMappingURL=BiasSchema.js.map

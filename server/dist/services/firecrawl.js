@@ -1,7 +1,8 @@
 import { cleanURL } from '../helpers/cleanUrl.js';
 import { toFailedAttempt } from "../endpoints/articles/firecrawl_extractions.js";
-;
-;
+import { validateArticle } from "../schemas/ArticleSchema.js";
+import { shapeArticle } from "../helpers/formatting/shapeArticle.js";
+import { isContentInvalid } from "../helpers/formatting/isContentInvalid.js";
 export const schema = {
     type: "object",
     properties: {
@@ -9,48 +10,34 @@ export const schema = {
     },
     required: ["content_markdown"],
 };
+const FIRECRAWL_OPTIONS = {
+    onlyMainContent: true,
+    blockAds: true,
+    maxAge: 31449600000, // 1 year
+    waitFor: 1500,
+    formats: [{
+            type: "json",
+            schema,
+            prompt: "Extract ONLY the main article body. Return it as markdown in content_markdown. Preserve paragraph breaks, headings, bullet lists, and quoted passages. Exclude navigation menus, cookie notices, paywall blurbs, newsletter signups, and unrelated promos."
+        }],
+};
 export const firecrawlExtract = async (article, firecrawl, MBFC_DATA, pushRetrieved, pushFailed) => {
     const urlClean = cleanURL(article.url);
     try {
-        const data = await firecrawl.scrape(urlClean, {
-            onlyMainContent: true,
-            blockAds: true,
-            maxAge: 31449600000, // 1 year in ms
-            waitFor: 1500,
-            formats: [{
-                    type: "json",
-                    schema: schema,
-                    prompt: "Extract ONLY the main article body. Return it as markdown in content_markdown. Preserve paragraph breaks, headings, bullet lists, and quoted passages. Exclude navigation menus, cookie notices, paywall blurbs, newsletter signups, and unrelated promos."
-                }],
-        });
-        const results = data;
-        const content = results.json;
-        const rating = MBFC_DATA.has(article.source) ? MBFC_DATA.get(article.source) : null;
-        if (!content ||
-            typeof content.content_markdown !== "string" ||
-            content.content_markdown.trim().length < 80) {
+        const { json: content } = await firecrawl.scrape(urlClean, FIRECRAWL_OPTIONS);
+        if (isContentInvalid(content)) {
             const failedArticle = toFailedAttempt(article, "empty or incomplete body");
             pushFailed(failedArticle);
             return;
         }
-        const article_extracted = {
-            title: article.title,
-            provider: article.source,
-            authors: "N/A",
-            article_url: urlClean,
-            image_url: article.image,
-            date_published: article.date ?? null,
-            fallbackDate: article?.date ?? null,
-            summary: null,
-            full_text: content?.content_markdown,
-            logo: article.logo,
-            id: null,
-            factual_reporting: rating?.factual_reporting,
-            bias: rating?.bias,
-            country: rating?.country
-        };
-        pushRetrieved(article_extracted);
-        return;
+        ;
+        const extracted = shapeArticle(content, article, MBFC_DATA, urlClean);
+        const { isValid, details } = validateArticle(extracted);
+        if (!isValid) {
+            console.log(details);
+            throw new Error("invalid schema from Firecrawl extraction");
+        }
+        pushRetrieved(extracted);
     }
     catch (error) {
         console.error(error);

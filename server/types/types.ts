@@ -89,12 +89,21 @@ export interface Article {
     fallbackDate: string | null,
     summary: any,
     full_text: string,
-    logo?: string,
+    logo: string,
     id: string | number | null,
     factual_reporting?: string | null,
-    bias?: Bias,
+    bias: Bias,
     country?: string | null
 }
+
+
+export interface BiasInfo {
+    bias: Bias | null;
+    factual_reporting: string | null;
+    country: string | null;
+}
+
+export type MBFC = Map<string, BiasInfo>
 
 export type Bias = | "Left"
     | "Left-Center"
@@ -103,7 +112,7 @@ export type Bias = | "Left"
     | "Right"
     | "Conspiracy-Pseudoscience"
     | "Questionable"
-    | "LeastBiased"
+    | "Least Biased"
     | "Satire"
     | "Pro-Science"
     | "Unknown"
@@ -124,6 +133,17 @@ export interface SavedArticle {
     bias?: Bias,
     country?: string | null
 }
+
+export interface FirecrawlContent {
+    content_markdown: string;
+};
+
+export interface FirecrawlResponse {
+    metadata: { /* massive meta tag map */ },
+    json: FirecrawlContent
+};
+
+export type FirecrawlResults = Array<FirecrawlResponse>;
 
 export interface ArticleBody {
     articleExists: boolean,

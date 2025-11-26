@@ -1,9 +1,6 @@
 import { Type } from '@sinclair/typebox';
 import { TypeCompiler } from '@sinclair/typebox/compiler';
-import type { Static } from '@sinclair/typebox';
-import { Article } from '../types/types';
 import { BiasSchema } from './BiasSchema.js';
-
 export const ArticleSchema = Type.Object({
     title: Type.String(),
     provider: Type.String(),
@@ -26,24 +23,14 @@ export const ArticleSchema = Type.Object({
         Type.Number(),
         Type.Null()
     ]),
-    factual_reporting: Type.Optional(
-        Type.Union([Type.String(), Type.Null()])
-    ),
+    factual_reporting: Type.Optional(Type.Union([Type.String(), Type.Null()])),
     bias: Type.Optional(BiasSchema),
-    country: Type.Optional(
-        Type.Union([Type.String(), Type.Null()])
-    )
+    country: Type.Optional(Type.Union([Type.String(), Type.Null()]))
 });
-
-export type ArticleSchema = Static<typeof ArticleSchema>;
-
 const validator = TypeCompiler.Compile(ArticleSchema);
-
-export const validateArticle = (article: Article) => {
-
+export const validateArticle = (article) => {
     const isValid = validator.Check(article);
-
     const details = [...validator.Errors(article)];
-
-    return { isValid, details } as const;
+    return { isValid, details };
 };
+//# sourceMappingURL=ArticleSchema.js.map
