@@ -1,12 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
 import GuideDoneReading from "../tooltips/GuideDoneReading";
 import { RootState } from "@/ReduxToolKit/store";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useTooltipFlags } from "@/hooks/useTooltipFlags";
 import PanelLabel from "./PanelLabel";
 import { changePhase, populateTooltip, TooltipDisplayed } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
 import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 import { AnimatePresence } from "framer-motion";
+import { smoothScrollUp } from "@/helpers/ScrollToTop";
+import { wait } from "@/helpers/Presentation";
 
 export function FinishedReading({ failedExtraction }) {
     const articles: Article[] = useSelector((s: RootState) => s.investigation.read.articles);
@@ -14,6 +16,7 @@ export function FinishedReading({ failedExtraction }) {
     const { getFlags, setFlag } = useTooltipFlags();
     const dispatch = useDispatch();
     const animateTooltip: boolean = ((Array.isArray(articles) && (articles.length > 0)) && (tooltip === 'Finished Reading Button'));
+    const flagTimer = useRef<number | null>(null);
 
     useEffect(() => {
 
@@ -24,15 +27,20 @@ export function FinishedReading({ failedExtraction }) {
         const flags = getFlags();
 
         if (flags.readingTooltip === false) {
-            dispatch(populateTooltip('Finished Reading Button'));
-            setFlag('readingTooltip', true);
+            flagTimer.current = window.setTimeout(() => {
+                dispatch(populateTooltip('Finished Reading Button'));
+                setFlag('readingTooltip', true);
+                flagTimer.current = null;
+            }, 2000);
         };
 
     }, [getFlags, setFlag, dispatch]);
 
 
     const handleClick = async (): Promise<void> => {
-        dispatch(changePhase('Phase 4'))
+        smoothScrollUp();
+        await wait(500);
+        dispatch(changePhase('Phase 4'));
     };
 
 

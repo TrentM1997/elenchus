@@ -10,12 +10,13 @@ export default function HeroWrapper({ children }: HeroWrapper): JSX.Element | nu
     return (
         <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{
-                type: 'tween',
-                duration: 0.3,
-                ease: softEase,
+            animate={{ opacity: 1, transition: { type: 'tween', duration: 0.3, ease: softEase } }}
+            exit={{
+                opacity: 0, transition: {
+                    type: 'tween',
+                    duration: 0.3,
+                    ease: softEase,
+                }
             }}
             className={`w-full h-auto mx-auto relative`}
         >

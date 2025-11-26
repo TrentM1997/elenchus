@@ -34,7 +34,6 @@ export const renderContent = (phase: Phase): JSX.Element | null => {
                     className="min-h-screen w-full mx-auto px-2"
                 >
                     <ArticleContainer />
-                    <ScrolltoTop key='scroll' />
                 </motion.div>
             );
 

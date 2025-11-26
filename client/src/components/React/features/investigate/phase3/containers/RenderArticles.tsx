@@ -11,6 +11,7 @@ import PendingExtractions from "../components/notification/PendingExtractions";
 import { useEffect } from "react";
 import ControlPanel from "../components/controls/ControlPanel";
 import type { TooltipDisplayed } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import { usePreload } from "@/hooks/content/usePreload";
 
 
 export default function RenderArticles(): JSX.Element | null {
@@ -23,8 +24,8 @@ export default function RenderArticles(): JSX.Element | null {
         return failed;
     }, [status, articles]);
     const renderControlPanel = (articles.length > 0) || ((status === 'fulfilled'));
+    const { displayed } = usePreload(articles[currentStory]);
 
-    //TODO: move transition logic from <Article /> up to this component
 
     useEffect(() => {
         if (showPendingExtractions || noResults) return;
@@ -56,8 +57,8 @@ export default function RenderArticles(): JSX.Element | null {
                         {(canRender) && (!noResults) &&
                             (articles[currentStory]) &&
                             <Article
-                                key="article"
-                                articleData={articles[currentStory]}
+                                key={articles[currentStory].article_url}
+                                articleData={displayed}
                                 investigating={true}
                             />
                         }
