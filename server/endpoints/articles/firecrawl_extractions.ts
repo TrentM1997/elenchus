@@ -11,7 +11,7 @@ import Firecrawl from '@mendable/firecrawl-js';
 import { FcParam, ScrapedArticle } from '../../types/types.js';
 import type { Bias, FailedAttempt } from '../../types/types.js';
 import { firecrawlExtract } from '../../services/firecrawl.js';
-import { getMediaBiases } from './mediaBias.js';
+import { getMediaBiases } from '../supabase/mediaBias.js';
 import { cleanURL } from '../../helpers/cleanUrl.js';
 
 //───────────────────────────────
