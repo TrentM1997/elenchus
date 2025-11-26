@@ -6,7 +6,7 @@ const __dirname = path.dirname(envUrl);
 const envPath = path.resolve(__dirname, '../.env');
 dotenv.config({ path: envPath });
 import { SUPABASE_KEY, SUPABASE_URL } from '../../src/Config.js';
-import { validateUser } from "../../schemas/Users";
+import { validateUser } from "../../schemas/Users.js";
 import { validateLoginBody } from '../../schemas/LoginSchema';
 import { createClient } from '@supabase/supabase-js';
 import { getUserContent } from '../../services/getUserContent';

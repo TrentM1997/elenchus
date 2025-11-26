@@ -7,7 +7,7 @@ const envPath = path.resolve(__dirname, '../.env');
 dotenv.config({ path: envPath })
 import { SUPABASE_KEY, SUPABASE_URL } from '../../src/Config.js';
 import { Request, Response } from "express";
-import { validateUser, type ValidateUserResp } from "../../schemas/Users";
+import { validateUser, type ValidateUserResp } from "../../schemas/Users.js";
 import { validateLoginBody, type ValidateLoginResp } from '../../schemas/LoginSchema';
 import type { LoginBody } from '../../types/interfaces.js';
 import { createClient } from '@supabase/supabase-js';
