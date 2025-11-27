@@ -1,4 +1,3 @@
-;
 export const saveArticleForUser = async (supabase, id, dataToSave) => {
     const { full_text, article_url, image_url, summary, title, authors, date_published, provider, fallbackDate, factual_reporting, bias, country } = dataToSave;
     const date = date_published ?? fallbackDate;

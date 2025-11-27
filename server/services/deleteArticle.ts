@@ -1,15 +1,15 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-
-interface DeleteResponse {
+import type { ArticleTransactionResponse } from "../types/types";
+export interface DeleteResponse {
     message: string,
     id: null
 };
 
 export const deleteArticleForUser = async (
     supabase: SupabaseClient,
-    user_id: string,
-    id: string | number
-): Promise<DeleteResponse | null> => {
+    user_id: string | number,
+    id: string | number | null
+): Promise<ArticleTransactionResponse | null> => {
 
     try {
 

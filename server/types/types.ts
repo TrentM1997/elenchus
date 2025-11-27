@@ -133,6 +133,10 @@ export interface Article {
     country?: string | null
 }
 
+export interface ArticleTransactionResponse {
+    message: string,
+    id: string | number | null
+};
 
 export interface BiasInfo {
     bias: Bias | null;

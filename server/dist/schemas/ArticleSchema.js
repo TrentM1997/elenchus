@@ -11,10 +11,10 @@ export const ArticleSchema = Type.Object({
     article_url: Type.String(),
     image_url: Type.String(),
     date_published: Type.String(),
-    fallbackDate: Type.Union([
+    fallbackDate: Type.Optional(Type.Union([
         Type.String(),
         Type.Null()
-    ]),
+    ])),
     summary: Type.Any(),
     full_text: Type.String(),
     logo: Type.Optional(Type.String()),

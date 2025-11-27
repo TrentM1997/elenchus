@@ -1,34 +1,38 @@
-import { getUserAndSupabase } from "./serverClient.js";
-import { saveArticleForUser } from "../../services/saveArticle.js";
-import { deleteArticleForUser } from "../../services/deleteArticle.js";
+import { validateArticle } from "../../schemas/ArticleSchema.js";
+import { saveOrDeleteArticle } from "../../helpers/orchestrators/saveOrDeleteArticle.js";
+import { getUserContext } from "../../helpers/orchestrators/getUserContext.js";
 export const handleArticleSave = async (req, res) => {
     const { articleExists, dataToSave } = req.body;
-    const session = await getUserAndSupabase(req, res);
-    if (!session)
+    const { isValid, details } = validateArticle(dataToSave);
+    if (!isValid) {
+        console.log("***********INVALID SCHEMA*********************");
+        console.log(details);
+        res.status(400).json({
+            success: false,
+            message: `Invalid article schema • ${details}`
+        });
         return;
-    const { supabase, user } = session;
-    const user_id = user?.id;
-    const { id } = dataToSave;
+    }
+    ;
+    const ctx = await getUserContext(req, res);
+    if (!ctx)
+        return;
+    const { supabase, user_id } = ctx;
     try {
-        let result;
-        if ((articleExists === true) && (id)) {
-            console.log('deleting');
-            result = await deleteArticleForUser(supabase, user_id, id);
-        }
-        else {
-            console.log('saving');
-            result = await saveArticleForUser(supabase, user_id, dataToSave);
-        }
-        if (result) {
-            console.log(result);
-            const responseObject = { success: true, data: result };
-            res.status(200).send(responseObject);
+        const result = await saveOrDeleteArticle(dataToSave, articleExists, supabase, user_id);
+        if (!result) {
+            res.status(400).json({
+                success: false,
+                data: `Database operation failed to execute.`
+            });
             return;
         }
-        else {
-            res.status(400).json({ success: false, message: `Database operation failed to execute.` });
-            return;
-        }
+        ;
+        const response = {
+            success: true,
+            data: result
+        };
+        res.status(200).send(response);
     }
     catch (error) {
         console.log(error);

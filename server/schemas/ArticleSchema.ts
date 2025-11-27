@@ -14,10 +14,12 @@ export const ArticleSchema = Type.Object({
     article_url: Type.String(),
     image_url: Type.String(),
     date_published: Type.String(),
-    fallbackDate: Type.Union([
-        Type.String(),
-        Type.Null()
-    ]),
+    fallbackDate: Type.Optional(
+        Type.Union([
+            Type.String(),
+            Type.Null()
+        ])
+    ),
     summary: Type.Any(),
     full_text: Type.String(),
     logo: Type.Optional(Type.String()),
@@ -39,7 +41,7 @@ export type ArticleSchema = Static<typeof ArticleSchema>;
 
 const validator = TypeCompiler.Compile(ArticleSchema);
 
-export const validateArticle = (article: Article) => {
+export const validateArticle = (article: unknown) => {
 
     const isValid = validator.Check(article);
 

@@ -1,16 +1,12 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import type { Article } from "../types/types";
+import type { Article, ArticleTransactionResponse } from "../types/types";
 
-interface SavedResponse {
-    message: string,
-    id: number | null
-};
 
 export const saveArticleForUser = async (
     supabase: SupabaseClient,
-    id: string,
+    id: string | number | null,
     dataToSave: Article
-): Promise<SavedResponse | null> => {
+): Promise<ArticleTransactionResponse | null> => {
 
     const { full_text, article_url, image_url, summary, title, authors, date_published, provider, fallbackDate, factual_reporting, bias, country } = dataToSave;
     const date = date_published ?? fallbackDate;

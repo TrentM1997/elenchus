@@ -1,38 +1,55 @@
 import { Request, Response } from "express";
-import { getUserAndSupabase } from "./serverClient.js";
-import { saveArticleForUser } from "../../services/saveArticle.js";
-import { deleteArticleForUser } from "../../services/deleteArticle.js";
-import type { Article } from "../../types/types";
-import type { ArticleBody, ArticleSaveResponse } from "../../types/interfaces.js";
+import type { ArticleBody } from "../../types/interfaces.js";
+import { validateArticle } from "../../schemas/ArticleSchema.js";
+import { saveOrDeleteArticle } from "../../helpers/orchestrators/saveOrDeleteArticle.js";
+import { ArticleTransactionResponse } from "../../types/types.js";
+import { getUserContext } from "../../helpers/orchestrators/getUserContext.js";
 
 export const handleArticleSave = async (req: Request, res: Response): Promise<void> => {
-
     const { articleExists, dataToSave } = req.body as ArticleBody;
-    const session = await getUserAndSupabase(req, res);
-    if (!session) return;
-    const { supabase, user } = session;
-    const user_id: string = user?.id;
-    const { id } = dataToSave as Article
+    const { isValid, details } = validateArticle(dataToSave as unknown);
+
+    if (!isValid) {
+        console.log("***********INVALID SCHEMA*********************");
+        console.log(details);
+        res.status(400).json({
+            success: false,
+            message: `Invalid article schema • ${details}`
+        });
+        return;
+    };
+
+    const ctx = await getUserContext(req, res);
+    if (!ctx) return;
+    const {
+        supabase,
+        user_id
+    } = ctx;
+
     try {
-        let result: any;
+        const result: ArticleTransactionResponse | null = await saveOrDeleteArticle(
+            dataToSave,
+            articleExists,
+            supabase,
+            user_id
+        );
 
-        if ((articleExists === true) && (id)) {
-            console.log('deleting')
-            result = await deleteArticleForUser(supabase, user_id, id);
-        } else {
-            console.log('saving')
-            result = await saveArticleForUser(supabase, user_id, dataToSave);
-        }
+        if (!result) {
+            res.status(400).json(
+                {
+                    success: false,
+                    data: `Database operation failed to execute.`
+                }
+            );
+            return;
+        };
 
-        if (result) {
-            console.log(result);
-            const responseObject: ArticleSaveResponse = { success: true, data: result };
-            res.status(200).send(responseObject);
-            return;
-        } else {
-            res.status(400).json({ success: false, message: `Database operation failed to execute.` });
-            return;
-        }
+        const response = {
+            success: true,
+            data: result
+        };
+        res.status(200).send(response);
+
     } catch (error) {
         console.log(error);
 
