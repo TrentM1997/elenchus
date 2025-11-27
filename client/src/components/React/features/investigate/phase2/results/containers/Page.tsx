@@ -28,7 +28,7 @@ export default function Page({ index, urlHash }: Page): JSX.Element | null {
             date: article.date_published,
             logo: article.logo,
             title: article.name,
-            image: article.image.img
+            image: article.image
         };
 
         const exists = chosenArticles.some(((chosen: SelectedArticle) => chosen.url === article.url));

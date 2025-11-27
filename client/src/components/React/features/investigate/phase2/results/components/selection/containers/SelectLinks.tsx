@@ -11,13 +11,12 @@ import { softEase } from "@/motion/variants";
 
 export default function SelectLinks() {
   const modal: ActiveModal = useSelector((s: RootState) => s.overlay.modal);
-  const articleOptions: ArticleType = useSelector((s: RootState) => s.investigation.search.articleOptions);
+  const articleOptions: ArticleType[] = useSelector((s: RootState) => s.investigation.search.articleOptions);
   const status = useSelector((s: RootState) => s.investigation.search.status);
   const chosenArticles = useSelector((s: RootState) => s.investigation.getArticle.chosenArticles);
   const visible = useMinTimeVisible((status === 'pending'), 150, 800);
   const results = (Array.isArray(articleOptions)) && (articleOptions.length > 0);
   const canAnimate = (!visible) && (modal === null);
-
 
 
   return (

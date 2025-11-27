@@ -2,23 +2,13 @@ import * as dotenv from 'dotenv';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import type { Request, Response } from 'express';
-import decodeItem from '../../helpers/decodeItem.js';
-import { logoMap } from '../logos/logoMap.js';
+import { decodeResults, shapeBrowsingOptions } from '../../helpers/formatting/shapeArticleOption.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 const NEWSAPI_KEY = process.env.NEWS_API as string;
-const logoMapData = new Map(Object.entries(logoMap));
-
-
-interface NewsAPI {
-    message: string,
-    data: any
-}
-
 
 export async function newsApi(req: Request, res: Response): Promise<void> {
-    console.log('/newsArticles hit')
 
     try {
         const q = (req.query.q as string) || '';
@@ -41,36 +31,10 @@ export async function newsApi(req: Request, res: Response): Promise<void> {
         }
 
         const json = await r.json();
+        const articles = json.articles ?? [];
+        const shapedBrowsingOptions = shapeBrowsingOptions(articles);
 
-        const mapped = (json.articles ?? []).map((a: any) => {
-            const d = new Date(a.publishedAt);
-            const datePublished = d.toString().split(' ').splice(0, 4).join(' ');
-            return {
-                name: a.title ?? '',
-                url: a.url ?? '',
-                image: { img: a.urlToImage ?? null, width: null, height: null },
-                description: a.description ?? '',
-                keywords: [[]],
-                provider: a.source.name,
-                date_published: datePublished ?? null,
-            };
-        });
-        const shapedArticles = mapped.map((article: any) => {
-            const provider = article.provider.replace(/\s+/g, '').toLowerCase();
-
-            if (logoMapData.has(provider)) {
-                article.logo = logoMapData.get(provider)
-            } else {
-                article.logo = logoMapData.get("fallback")
-            }
-            return article
-        });
-
-        const decoded = shapedArticles.map((article: any) => {
-            return (decodeItem(article));
-        });
-
-        res.status(200).json({ message: "success", data: decoded });
+        res.status(200).json({ message: "success", data: shapedBrowsingOptions });
         return;
     } catch (err) {
         console.error('newsApiArticles error:', err);

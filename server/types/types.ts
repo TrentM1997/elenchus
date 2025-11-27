@@ -78,6 +78,43 @@ export interface ArticleSaveResponse {
 //    country?: string | null
 //};
 
+// The nested "source" object
+export interface ArticleSource {
+    id: string | null;
+    name: string;
+}
+
+// Full structure
+export interface NewsArticle {
+    source: ArticleSource;
+    author: string | null;         // author may sometimes be null in NewsAPI
+    title: string;
+    description: string;    // same with description
+    url: string;
+    urlToImage: string | null;     // can be null when image missing
+    publishedAt: string;           // ISO datetime string
+    content: string | null;        // sometimes null or truncated text
+}
+
+
+export interface Image {
+    img: string,
+    width: number,
+    height: number
+}
+
+
+export interface BrowsingOption {
+    date_published: string,
+    description: string,
+    image: string | null,
+    keywords: string[] | null,
+    name: string,
+    provider: string,
+    url: string,
+    logo: string | null
+}
+
 
 export interface Article {
     title: string,

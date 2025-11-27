@@ -48,7 +48,7 @@ function NotesButton(): JSX.Element {
             stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round"
             className={`
                 ${takingNotes ? 'text-blue-500' : 'text-white'}
-                md:group-hover:text-blue-500 transition-colors duration-300 ease-soft icon icon-tabler icons-tabler-outline icon-tabler-note`}
+                md:group-hover:text-blue-500 transition-colors delay-200 duration-300 ease-soft icon icon-tabler icons-tabler-outline icon-tabler-note`}
         >
             <path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M13 20l7 -7" />
             <path d="M13 20v-6a1 1 0 0 1 1 -1h6v-7a2 2 0 0 0 -2 -2h-12a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7" />

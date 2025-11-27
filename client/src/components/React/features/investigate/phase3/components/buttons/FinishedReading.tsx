@@ -18,6 +18,8 @@ export function FinishedReading({ failedExtraction }) {
     const animateTooltip: boolean = ((Array.isArray(articles) && (articles.length > 0)) && (tooltip === 'Finished Reading Button'));
     const flagTimer = useRef<number | null>(null);
 
+    console.log(tooltip);
+
     useEffect(() => {
 
         if ((!Array.isArray(articles) || (articles.length === 0))) {
@@ -59,7 +61,7 @@ export function FinishedReading({ failedExtraction }) {
         2xl:max-h-8 ease-in-out group relative">
 
 
-                {(tooltip === null) && <div className="absolute pointer-events-none p-1 bg-white z-50 opacity-0 transition-opacity delay-1000 duration-200 ease-soft md:group-hover:opacity-100 bottom-[3.3rem] -left-5
+                {(tooltip !== 'Finished Reading Button') && <div className="absolute pointer-events-none p-1 bg-white z-50 opacity-0 transition-opacity delay-1000 duration-200 ease-soft md:group-hover:opacity-100 bottom-[3.3rem] -left-5
             rounded-md items-center border border-astro_gray shadow-thick after:content-[''] after:absolute after:bottom-[-10px] after:left-1/2 
             after:transform after:-translate-x-1/2 after:border-t-[10px] after:border-l-[10px] after:border-r-[10px] after:border-b-0 
             after:border-t-white after:border-l-transparent after:border-r-transparent after:border-b-transparent">
@@ -83,7 +85,7 @@ function ForwardArrow(): JSX.Element {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" width={'100%'} height={'100%'} viewBox="0 0 24 24" fill="currentColor"
             className="icon icon-tabler icons-tabler-filled icon-tabler-circle-arrow-right
-        text-button_blue/90 delay-200 lg:group-hover:scale-125 lg:group-hover:text-button_blue transition-all ease-soft duration-300"
+        text-button_blue/90 delay-200 lg:group-hover:scale-[1.4] lg:group-hover:text-button_blue transition-all ease-soft duration-300"
         ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 2l.324 .005a10 10 0 1 1 -.648 0l.324 -.005zm.613 5.21a1 1 0 0 0 -1.32 1.497l2.291 2.293h-5.584l-.117 .007a1 1 0 0 0 .117 1.993h5.584l-2.291 2.293l-.083 .094a1 1 0 0 0 1.497 1.32l4 -4l.073 -.082l.064 -.089l.062 -.113l.044 -.11l.03 -.112l.017 -.126l.003 -.075l-.007 -.118l-.029 -.148l-.035 -.105l-.054 -.113l-.071 -.111a1.008 1.008 0 0 0 -.097 -.112l-4 -4z" /></svg>
 
     )

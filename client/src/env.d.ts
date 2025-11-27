@@ -49,7 +49,7 @@ declare global {
   interface ArticleType {
     date_published: string,
     description: string,
-    image: Image
+    image: string,
     keywords: string[]
     name: string,
     provider: string,

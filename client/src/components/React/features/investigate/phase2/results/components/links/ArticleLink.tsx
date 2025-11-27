@@ -14,7 +14,7 @@ function ArticleLink({
 }: LinkProps) {
 
     const fallbackImage = '/images/logos/fallback.jpg';
-    const thumbnail = article.image.img ?? fallbackImage;
+    const thumbnail = article?.image ?? fallbackImage;
     const dimensions: string = `xl:min-h-72 xl:max-h-72 xl:min-w-80 xl:max-w-80
             lg:w-72 lg:h-72 md:h-60 md:w-60 sm:w-52 sm:h-52 h-72 w-76`;
     const transitions: string = `transition-[opacity,background-color] transform-gpu 
