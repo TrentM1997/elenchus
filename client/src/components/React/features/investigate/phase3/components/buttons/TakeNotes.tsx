@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { writingNote } from "@/ReduxToolKit/Reducers/Investigate/NoteTaking"
 import PanelLabel from "./PanelLabel"
 import { RootState } from "@/ReduxToolKit/store"
+import ButtonHoverTooltip from "../../tooltips/ButtonHoverTooltip";
 
 export default function TakeNotes({ failedExtraction }) {
     const takingNotes = useSelector((s: RootState) => s.investigation.notes.takingNotes);
@@ -22,12 +23,8 @@ export default function TakeNotes({ failedExtraction }) {
         rounded-lg transition-all duration-300 m-auto relative
         ease-in-out group">
 
-                {!takingNotes && <div className="absolute p-1 bg-white z-50 opacity-0 transition-opacity pointer-events-none duration-200 ease-soft delay-1000 md:group-hover:opacity-100 bottom-[3.3rem] -left-4
-            rounded-md items-center border border-astro_gray shadow-thick after:content-[''] after:absolute after:bottom-[-10px] after:left-1/2 
-            after:transform after:-translate-x-1/2 after:border-t-[10px] after:border-l-[10px] after:border-r-[10px] after:border-b-0 
-            after:border-t-white after:border-l-transparent after:border-r-transparent after:border-b-transparent">
-                    <p className="text-black" >Take Notes</p>
-                </div>}
+                {!takingNotes && <ButtonHoverTooltip description="take notes" />
+                }
 
                 <div className="h-full w-full box-border">
                     <NotesButton />
@@ -48,7 +45,7 @@ function NotesButton(): JSX.Element {
             stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round"
             className={`
                 ${takingNotes ? 'text-blue-500' : 'text-white'}
-                md:group-hover:text-blue-500 transition-colors delay-200 duration-300 ease-soft icon icon-tabler icons-tabler-outline icon-tabler-note`}
+                md:group-hover:text-blue-500 will-change-transform transition-colors delay-150 duration-300 ease-soft icon icon-tabler icons-tabler-outline icon-tabler-note`}
         >
             <path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M13 20l7 -7" />
             <path d="M13 20v-6a1 1 0 0 1 1 -1h6v-7a2 2 0 0 0 -2 -2h-12a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7" />
