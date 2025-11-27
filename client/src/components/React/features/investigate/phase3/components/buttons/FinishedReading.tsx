@@ -18,8 +18,6 @@ export function FinishedReading({ failedExtraction }) {
     const animateTooltip: boolean = ((Array.isArray(articles) && (articles.length > 0)) && (tooltip === 'Finished Reading Button'));
     const flagTimer = useRef<number | null>(null);
 
-    console.log(tooltip);
-
     useEffect(() => {
 
         if ((!Array.isArray(articles) || (articles.length === 0))) {
