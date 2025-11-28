@@ -1,53 +1,26 @@
-import { getUserAndSupabase } from "./serverClient.js";
+import { validateInvestigation } from "../../schemas/InvestigationSchema.js";
+import { saveInvestigation } from "../../helpers/inserts/saveInvestigation.js";
+import { clientErrorResponse, serverErrorResponse, successResponse } from "../../utils/responses.js";
 export const saveResearch = async (req, res) => {
-    const session = await getUserAndSupabase(req, res);
-    if (!session)
-        return;
-    const { supabase, user } = session;
     const { investigation } = req.body;
+    const { isValid, details } = validateInvestigation(investigation);
+    if (!isValid) {
+        clientErrorResponse(res, "invalid investigation schema", details, 400);
+        return;
+    }
     try {
-        const { data, error } = await supabase
-            .from('investigations')
-            .upsert([
-            {
-                idea: investigation.idea,
-                initial_perspective: investigation.initial_perspective,
-                premises: investigation.premises,
-                ending_perspective: investigation.ending_perspective,
-                changed_opinion: investigation.changed_opinion,
-                new_concepts: investigation.new_concepts,
-                takeaway: investigation.takeaway,
-                had_merit: investigation.had_merit,
-                user_id: user.id,
-                sources: investigation.sources,
-                wikipedia_extracts: investigation.wikipedia_extracts
-            }
-        ])
-            .select();
-        if (error) {
-            const response = { message: error.message, data: null };
-            res.status(400).send(response);
+        const result = await saveInvestigation(req, res, investigation);
+        if (result.status === 'failed') {
+            serverErrorResponse(res);
             return;
         }
-        else if (data) {
-            const response = { message: "Saved research data", data: data };
-            res.status(200).send(response);
-            return;
-        }
-        ;
+        successResponse(res, result.message, result.data);
+        return;
     }
     catch (error) {
-        if (error instanceof Error) {
-            console.error(`Unexpected error saving research: ${error}`);
-            res.status(500).json({ message: "Internal Server Error", data: null });
-            return;
-        }
-        else {
-            console.error('Unexpected server error', error);
-            res.status(500).json({ message: "Internal Server Error", data: null });
-            return;
-        }
-        ;
+        console.error('Unexpected server error', error);
+        serverErrorResponse(res, "Unexpected error querying supabase", null, 500);
+        return;
     }
     ;
 };
