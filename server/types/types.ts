@@ -182,7 +182,7 @@ export type FirecrawlResults = Array<FirecrawlResponse>;
 
 export interface ArticleBody {
     articleExists: boolean,
-    dataToSave: SavedArticle
+    dataToSave: Article
 };
 
 export interface GetLinkBody {

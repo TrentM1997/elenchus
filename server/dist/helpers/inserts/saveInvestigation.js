@@ -1,4 +1,4 @@
-import { getUserAndSupabase } from "../../endpoints/supabase/serverClient.js";
+import { getUserAndSupabase } from "../../endpoints/supabase/client/serverClient.js";
 import { ServerError } from "../../core/errors/ServerError.js";
 const saveInvestigation = async (req, res, investigation) => {
     const session = await getUserAndSupabase(req, res);

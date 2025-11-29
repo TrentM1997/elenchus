@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getUserAndSupabase } from "../../endpoints/supabase/serverClient.js";
+import { getUserAndSupabase } from "../../endpoints/supabase/client/serverClient.js";
 import { SupabaseClient, User } from "@supabase/supabase-js";
 
 type GetUserContextReturn = { supabase: SupabaseClient, user: User, user_id: string | number };

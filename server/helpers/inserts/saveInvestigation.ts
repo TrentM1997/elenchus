@@ -1,4 +1,4 @@
-import { getUserAndSupabase } from "../../endpoints/supabase/serverClient.js";
+import { getUserAndSupabase } from "../../endpoints/supabase/client/serverClient.js";
 import { Request, Response } from "express";
 import type { InvestigationSchema } from "../../schemas/InvestigationSchema.js";
 import type { SaveInvestigationResponse } from "../../types/types.js";
