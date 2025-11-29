@@ -1,5 +1,5 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import type { Article, ArticleTransactionResponse } from "../types/types";
+import type { Article, ArticleTransactionResponse } from "../../types/types";
 
 
 export const saveArticleForUser = async (

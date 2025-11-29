@@ -2,7 +2,7 @@ import { wrapAsync } from "../../../core/async/wrapAsync.js";
 import { getUserAndSupabase } from "../client/serverClient.js";
 import { validateOrThrow } from "../../../core/validation/validateOrThrow.js";
 import { UserSchema } from "../../../schemas/Users.js";
-import { getUserContent } from "../../../services/getUserContent.js";
+import { getUserContent } from "../../../services/supabase/getUserContent.js";
 export const getCurrentUser = wrapAsync(async (req, res) => {
     const session = await getUserAndSupabase(req, res);
     if (!session)

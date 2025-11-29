@@ -1,6 +1,6 @@
 import type { Article, ArticleTransactionResponse } from "../../types/types";
-import { saveArticleForUser } from "../../services/saveArticle.js";
-import { deleteArticleForUser } from "../../services/deleteArticle.js";
+import { saveArticleForUser } from "../../services/supabase/saveArticle.js";
+import { deleteArticleForUser } from "../../services/supabase/deleteArticle.js";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 const saveOrDeleteArticle = async (

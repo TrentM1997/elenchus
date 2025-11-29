@@ -1,5 +1,5 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import type { ArticleTransactionResponse } from "../types/types";
+import type { ArticleTransactionResponse } from "../../types/types";
 export interface DeleteResponse {
     message: string,
     id: null

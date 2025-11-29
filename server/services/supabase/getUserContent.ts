@@ -1,6 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import { Investigation } from "../types/interfaces";
-import { SavedArticleRes, UserContent, SavedArticle } from "../types/types";
+import { Investigation } from "../../types/interfaces";
+import { SavedArticleRes, UserContent, SavedArticle } from "../../types/types";
 
 
 const mapped = (articles: SavedArticle[]): Map<string, SavedArticle> => {

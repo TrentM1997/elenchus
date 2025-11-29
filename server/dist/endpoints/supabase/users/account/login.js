@@ -9,7 +9,7 @@ import { SUPABASE_KEY, SUPABASE_URL } from '../../../../src/Config.js';
 import { validateUser } from "../../../../schemas/Users.js";
 import { validateLoginBody } from '../../../../schemas/LoginSchema.js';
 import { createClient } from '@supabase/supabase-js';
-import { getUserContent } from '../../../../services/getUserContent.js';
+import { getUserContent } from '../../../../services/supabase/getUserContent.js';
 export const supabaseLogin = async (req, res) => {
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
     const { email, password } = req.body;
