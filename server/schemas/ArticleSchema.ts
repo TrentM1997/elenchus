@@ -1,7 +1,6 @@
 import { Type } from '@sinclair/typebox';
 import { TypeCompiler } from '@sinclair/typebox/compiler';
 import type { Static } from '@sinclair/typebox';
-import { Article } from '../types/types';
 import { BiasSchema } from './BiasSchema.js';
 
 export const ArticleSchema = Type.Object({
