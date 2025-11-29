@@ -1,3 +1,4 @@
+import { ServerError } from "../../core/errors/ServerError.js";
 import { getUserAndSupabase } from "./serverClient.js";
 export const getUserArticles = async (req, res) => {
     const session = await getUserAndSupabase(req, res);
@@ -11,7 +12,7 @@ export const getUserArticles = async (req, res) => {
             .eq('user_id', user.id);
         if (error) {
             console.error(error.message);
-            throw new Error(`Unexpected error encountered: ${error.message}`);
+            throw new ServerError(`Unexpected error encountered: ${error.message}`);
         }
         else {
             res.status(200).send(data);

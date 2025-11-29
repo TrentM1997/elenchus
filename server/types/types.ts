@@ -1,4 +1,5 @@
 import { SupabaseClient, User, Session } from "@supabase/supabase-js";
+import { InvestigationSchema } from "../schemas/InvestigationSchema";
 
 export interface ChangePasswordBody {
     email: string,
@@ -49,6 +50,10 @@ export interface Investigation {
     wikipedia_extracts: any;
 };
 
+export type RequestBody = {
+    data: unknown
+}
+
 export type InvestigationBody = {
     investigation: Investigation
 };
@@ -62,23 +67,6 @@ export interface ArticleSaveResponse {
     data: any
 }
 
-//export interface SavedArticle {
-//    title: string,
-//    provider: string,
-//    authors: string[],
-//    url: string,
-//    image_url: string,
-//    date: string,
-//    fallbackDate: string | null,
-//    summary: any,
-//    text: string,
-//    id: string,
-//    factual_reporting?: string | null,
-//    bias?: string | null,
-//    country?: string | null
-//};
-
-// The nested "source" object
 export interface ArticleSource {
     id: string | null;
     name: string;
@@ -87,15 +75,21 @@ export interface ArticleSource {
 // Full structure
 export interface NewsArticle {
     source: ArticleSource;
-    author: string | null;         // author may sometimes be null in NewsAPI
+    author: string | null;
     title: string;
-    description: string;    // same with description
+    description: string;
     url: string;
-    urlToImage: string | null;     // can be null when image missing
-    publishedAt: string;           // ISO datetime string
-    content: string | null;        // sometimes null or truncated text
+    urlToImage: string | null;
+    publishedAt: string;
+    content: string | null;
 }
 
+
+export type SaveResearchStatus = 'success' | 'failed';
+
+export interface SaveInvestigationResponse {
+    data: any | null
+}
 
 export interface Image {
     img: string,

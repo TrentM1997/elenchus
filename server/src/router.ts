@@ -1,0 +1,40 @@
+import { Router } from "express";
+import { firecrawl_extractions, get_firecrawl_job } from "../endpoints/articles/firecrawl_extractions.js";
+import { newsApi } from "../endpoints/articles/newsApi.js";
+import { saveResearch } from "../endpoints/supabase/saveResearch.js";
+import { handleArticleSave } from "../endpoints/supabase/handleArticleSave.js";
+import { supabaseLogin } from "../endpoints/supabase/login.js";
+import { getUserArticles } from "../endpoints/supabase/getUserArticles.js";
+import { getUserResearch } from "../endpoints/supabase/getUserResearch.js";
+import { createNewUser } from "../endpoints/supabase/createNewUser.js";
+import { signUserOut } from "../endpoints/supabase/signout.js";
+import { resetUserPassword } from "../endpoints/supabase/resetPassword.js";
+import { getCurrentUser } from "../endpoints/supabase/serverClient.js";
+import { deleteUser } from "../endpoints/supabase/deleteUser.js";
+import { sendFeedback } from "../endpoints/supabase/sendFeedback.js";
+import { searchBlueSkyPosts, getBlueSkyFeed } from "../endpoints/bluesky/blueskyApi.js";
+
+const router = Router();
+
+router.get("/newsArticles", newsApi);
+router.post("/firecrawl_extractions", firecrawl_extractions);
+router.get("/firecrawl_extractions/:jobId", get_firecrawl_job);
+
+router.get("/searchBlueSky", searchBlueSkyPosts);
+router.get("/getBlueSkyFeed", getBlueSkyFeed);
+
+router.post("/supabaseLogIn", supabaseLogin);
+router.post("/createNewUser", createNewUser);
+router.post("/deleteUser", deleteUser);
+router.post("/signUserOut", signUserOut);
+router.post("/resetUserPassword", resetUserPassword);
+
+router.post("/getUserArticles", getUserArticles);
+router.post("/getUserResearch", getUserResearch);
+router.post("/articleOperation", handleArticleSave);
+router.post("/saveResearch", saveResearch);
+router.post("/getCurrentUser", getCurrentUser);
+
+router.post("/sendFeedback", sendFeedback);
+
+export { router };

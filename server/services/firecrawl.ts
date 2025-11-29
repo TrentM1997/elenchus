@@ -11,6 +11,7 @@ import type {
     FirecrawlResponse,
     FcParam
 } from "../types/types.js";
+import { ServerError } from '../core/errors/ServerError.js';
 
 export const schema = {
     type: "object",
@@ -62,7 +63,7 @@ export const firecrawlExtract = async (article: FcParam, firecrawl: Firecrawl, M
 
         if (!isValid) {
             console.log(details);
-            throw new Error("invalid schema from Firecrawl extraction");
+            throw new ServerError("invalid schema from Firecrawl extraction");
         }
         pushRetrieved(extracted);
 

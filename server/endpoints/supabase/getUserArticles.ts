@@ -1,3 +1,4 @@
+import { ServerError } from "../../core/errors/ServerError.js";
 import { getUserAndSupabase } from "./serverClient.js";
 import { Request, Response } from "express";
 
@@ -14,7 +15,7 @@ export const getUserArticles = async (req: Request, res: Response): Promise<void
 
         if (error) {
             console.error(error.message);
-            throw new Error(`Unexpected error encountered: ${error.message}`);
+            throw new ServerError(`Unexpected error encountered: ${error.message}`);
         } else {
             res.status(200).send(data)
         }

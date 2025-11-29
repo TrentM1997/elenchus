@@ -3,6 +3,7 @@ import { toFailedAttempt } from "../endpoints/articles/firecrawl_extractions.js"
 import { validateArticle } from "../schemas/ArticleSchema.js";
 import { shapeArticle } from "../helpers/formatting/shapeArticle.js";
 import { isContentInvalid } from "../helpers/formatting/isContentInvalid.js";
+import { ServerError } from '../core/errors/ServerError.js';
 export const schema = {
     type: "object",
     properties: {
@@ -35,7 +36,7 @@ export const firecrawlExtract = async (article, firecrawl, MBFC_DATA, pushRetrie
         const { isValid, details } = validateArticle(extracted);
         if (!isValid) {
             console.log(details);
-            throw new Error("invalid schema from Firecrawl extraction");
+            throw new ServerError("invalid schema from Firecrawl extraction");
         }
         pushRetrieved(extracted);
     }

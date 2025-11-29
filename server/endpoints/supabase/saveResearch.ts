@@ -1,33 +1,13 @@
 import { Request, Response } from "express";
-import { validateInvestigation } from "../../schemas/InvestigationSchema.js";
 import { saveInvestigation } from "../../helpers/inserts/saveInvestigation.js";
-import { clientErrorResponse, serverErrorResponse, successResponse } from "../../utils/responses.js";
+import { validateOrThrow } from "../../core/validation/validateOrThrow.js";
+import { wrapAsync } from "../../core/async/wrapAsync.js";
+import { InvestigationSchema } from "../../schemas/InvestigationSchema.js";
 
-export const saveResearch = async (req: Request, res: Response): Promise<void> => {
+export const saveResearch = wrapAsync(async (req: Request, res: Response) => {
+    const investigation = validateOrThrow(InvestigationSchema, req.body.investigation);
 
-    const { investigation } = req.body;
+    const result = await saveInvestigation(req, res, investigation);
 
-    const { isValid, details } = validateInvestigation(investigation);
-
-    if (!isValid) {
-        clientErrorResponse(res, "invalid investigation schema", details, 400);
-        return;
-    }
-
-    try {
-        const result = await saveInvestigation(req, res, investigation);
-
-        if (result.status === 'failed') {
-            serverErrorResponse(res);
-            return;
-        }
-
-        successResponse(res, result.message, result.data);
-        return;
-
-    } catch (error) {
-        console.error('Unexpected server error', error);
-        serverErrorResponse(res, "Unexpected error querying supabase", null, 500);
-        return;
-    };
-};
+    res.success("investigation saved", result?.data)
+});

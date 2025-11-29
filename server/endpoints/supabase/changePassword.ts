@@ -9,13 +9,14 @@ import { SUPABASE_KEY, SUPABASE_URL } from '../../src/Config.js';
 import { Request, Response } from 'express'
 import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
 import type { ChangePasswordSuccess, ChangePasswordError, ChangePasswordBody } from '../../types/interfaces.js';
+import { ServerError } from '../../core/errors/ServerError.js';
 
 export const changePassword = async (req: Request, res: Response<ChangePasswordSuccess | ChangePasswordError>): Promise<void> => {
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
     const { email, newPassword } = req.body as ChangePasswordBody;
     const { data, error } = await supabase.auth.admin.listUsers();
 
-    if (error) throw new Error(error.message);
+    if (error) throw new ServerError("failed to connect to Supabase during change password attempt");
 
     const user: User | undefined = data.users.find((user) => user.email === email);
 

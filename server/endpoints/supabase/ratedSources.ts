@@ -8,6 +8,7 @@ dotenv.config({ path: envPath })
 import { SUPABASE_KEY, SUPABASE_URL } from '../../src/Config.js';
 import { createClient } from '@supabase/supabase-js';
 import { Database } from '../../types/databaseInterfaces.js';
+import { ServerError } from '../../core/errors/ServerError.js';
 
 export const sourceSet = new Set();
 
@@ -29,7 +30,7 @@ export const ratedSources = async () => {
                 }
             }
         } else if (error) {
-            throw new Error(`issue retreving sources from database ${error}`);
+            throw new ServerError(`issue retreving sources from database ${error}`);
         }
 
         console.log(sourceSet)

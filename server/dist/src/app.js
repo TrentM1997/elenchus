@@ -1,3 +1,11 @@
+process.on("uncaughtException", (err) => {
+    console.error("🔥🔥🔥 UNCAUGHT EXCEPTION");
+    console.error("TYPE:", typeof err);
+    console.error("INSTANCE:", err instanceof Error);
+    console.error("RAW ERROR:", err);
+    console.error("STACK:", err?.stack);
+    process.exit(1); // let nodemon restart cleanly
+});
 import './Config.js';
 import { PORT } from './Config.js';
 import { fileURLToPath } from 'url';
@@ -25,6 +33,9 @@ import { createNewUser } from '../endpoints/supabase/createNewUser.js';
 import { sendFeedback } from '../endpoints/supabase/sendFeedback.js';
 import { newsApi } from '../endpoints/articles/newsApi.js';
 import { get_firecrawl_job } from '../endpoints/articles/firecrawl_extractions.js';
+import { responseBinder } from '../core/middleware/responseBinder.js';
+import { globalErrorHandler } from '../core/middleware/globalErrorHandler.js';
+//import { router } from './router.js';
 const corsOptions = {
     origin: ['https://elenchusapp.io', 'http://localhost:5173'],
     credentials: true,
@@ -56,6 +67,9 @@ app.options('*', (req, res) => {
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
     res.sendStatus(200);
 });
+app.use(responseBinder);
+//app.use("/api", router);
+//app.use(router);
 app.get('/newsArticles', newsApi);
 app.post('/firecrawl_extractions', firecrawl_extractions);
 app.post('/deleteUser', deleteUser);
@@ -72,6 +86,7 @@ app.post('/getCurrentUser', getCurrentUser);
 app.post('/createNewUser', createNewUser);
 app.post('/sendFeedback', sendFeedback);
 app.get('/firecrawl_extractions/:jobId', get_firecrawl_job);
+app.use(globalErrorHandler);
 app.get('*', (req, res) => {
     if (req) {
         console.log("catch-all route hit");

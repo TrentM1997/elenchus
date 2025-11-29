@@ -7,12 +7,13 @@ const envPath = path.resolve(__dirname, '../.env');
 dotenv.config({ path: envPath });
 import { SUPABASE_KEY, SUPABASE_URL } from '../../src/Config.js';
 import { createClient } from '@supabase/supabase-js';
+import { ServerError } from '../../core/errors/ServerError.js';
 export const changePassword = async (req, res) => {
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
     const { email, newPassword } = req.body;
     const { data, error } = await supabase.auth.admin.listUsers();
     if (error)
-        throw new Error(error.message);
+        throw new ServerError("failed to connect to Supabase during change password attempt");
     const user = data.users.find((user) => user.email === email);
     if (user) {
         try {
