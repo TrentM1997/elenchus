@@ -9,7 +9,7 @@ import { getUserResearch } from "../../endpoints/supabase/getUserResearch.js";
 import { createNewUser } from "../../endpoints/supabase/createNewUser.js";
 import { signUserOut } from "../../endpoints/supabase/signout.js";
 import { resetUserPassword } from "../../endpoints/supabase/resetPassword.js";
-import { getCurrentUser } from "../../endpoints/supabase/serverClient.js";
+import { getCurrentUser } from "../../endpoints/supabase/recovery/getCurrentUser.js";
 import { deleteUser } from "../../endpoints/supabase/deleteUser.js";
 import { sendFeedback } from "../../endpoints/supabase/sendFeedback.js";
 import { searchBlueSkyPosts, getBlueSkyFeed } from "../../endpoints/bluesky/blueskyApi.js";

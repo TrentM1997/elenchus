@@ -7,11 +7,7 @@ const envPath = path.resolve(__dirname, '../.env');
 dotenv.config({ path: envPath });
 import { SUPABASE_KEY, SUPABASE_URL } from '../../src/Config.js';
 import { createClient } from '@supabase/supabase-js';
-import { getUserContent } from '../../services/getUserContent.js';
-import { UserSchema, validateUser } from '../../schemas/Users.js';
-import { wrapAsync } from '../../core/async/wrapAsync.js';
-import { validateOrThrow } from '../../core/validation/validateOrThrow.js';
-//TODO: implement new wrapAsync && validateOrThrow approach
+import { validateUser } from '../../schemas/Users.js';
 export const createSupabaseFromRequest = (req) => {
     const accessToken = req.cookies['sb-access-token'];
     return createClient(SUPABASE_URL, SUPABASE_KEY, {
@@ -42,25 +38,4 @@ export const getUserAndSupabase = async (req, res) => {
     }
     return { supabase, user };
 };
-export const getCurrentUser = wrapAsync(async (req, res) => {
-    const session = await getUserAndSupabase(req, res);
-    if (!session)
-        return;
-    const { user, supabase } = session;
-    validateOrThrow(UserSchema, user);
-    const { id } = user;
-    const content = await getUserContent(supabase, id);
-    console.log('***************** getCurrentUser() RESULTS **************************************');
-    const results = {
-        user: user,
-        data: {
-            userArticles: content?.userArticles ?? null,
-            userResearch: content?.userResearch ?? null
-        }
-    };
-    console.log(results);
-    console.log('***************** getCurrentUser() RESULTS **************************************');
-    res.success("user recovered", results, 200);
-    return;
-});
 //# sourceMappingURL=serverClient.js.map

@@ -362,12 +362,17 @@ declare global {
     setActiveTab: (activeTab: Help) => void,
   }
 
-  interface CurrentUser {
-    data: UserContent
+  interface RecoverUserResults {
+    data: RecoveredUser
+  }
+
+  interface RecoveredUser {
+    user: User
+    userArticles: SavedArticleRes | null;
+    userResearch: Investigation[] | null;
   }
 
   interface UserContent {
-    user: User
     userArticles: SavedArticleRes | null;
     userResearch: Investigation[] | null;
   }
@@ -457,5 +462,5 @@ export {
   Tooltips, SidebarItemData, LinkProps, SaveArticleResponse, WikiTerm, Bias, BiasCounts, LoadedArticle, ChartFallbackProps,
   UserContent, LoginResponse, LoginFormProps, DashboardOption, HelpModal, NotifySaved, SaveArticleButton,
   WikiTypes, ArticleSavedComponent, Icon, ArticleToSave, SignInHook, WebWorkerResponse, WebWorkerRequest, ChartType, StatBreakdownTypes,
-  DeleteStatus, SavedArticleRes, CurrentUser,
+  DeleteStatus, SavedArticleRes, RecoverUserResults,
 };

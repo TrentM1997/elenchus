@@ -1,5 +1,5 @@
 import type { LoaderFunctionArgs } from "react-router-dom";
-import type { CurrentUser } from "@/env";
+import type { RecoverUserResults } from "@/env";
 import { User } from "@supabase/supabase-js";
 import type { SavedArticleRes } from "@/env";
 
@@ -23,7 +23,7 @@ export async function rootLoader({ request }: LoaderFunctionArgs): Promise<RootP
 
     };
     if (!res.ok) throw new Response("Failed session check", { status: res.status });
-    const payload: CurrentUser = await res.json();
+    const payload: RecoverUserResults = await res.json();
     const { data } = payload;
     const {
         userArticles,

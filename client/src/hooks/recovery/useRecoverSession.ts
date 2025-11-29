@@ -8,10 +8,8 @@ import { useLoaderData } from "react-router-dom";
 import { useEffect } from "react";
 
 const useRecoverSession = (): void => {
-    const data = useLoaderData() as RootPayload | undefined;
-    const user = data?.user ?? null;
-    const articles = data?.articles ?? null;
-    const investigations = data?.investigations ?? null;
+    const data = useLoaderData() as RootPayload;
+    const { user, investigations, articles } = data;
     const dispatch = useDispatch<AppDispatch>();
 
 
@@ -19,7 +17,7 @@ const useRecoverSession = (): void => {
 
         console.log(articles, investigations);
 
-        if (data && user) {
+        if (user) {
             dispatch(authenticate(true));
             if (articles) dispatch(populateArticles(articles));
             if (investigations) dispatch(populateResearch(investigations));

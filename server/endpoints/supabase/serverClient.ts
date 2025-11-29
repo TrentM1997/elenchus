@@ -9,14 +9,9 @@ import { SUPABASE_KEY, SUPABASE_URL } from '../../src/Config.js';
 import { Request, Response } from 'express'
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { SupabaseSession } from '../../types/interfaces.js';
-import { UserContent } from '../../types/types.js'
 import { Database } from '../../types/databaseInterfaces.js';
-import { getUserContent } from '../../services/getUserContent.js';
-import { UserSchema, validateUser, ValidateUserResp } from '../../schemas/Users.js';
-import { wrapAsync } from '../../core/async/wrapAsync.js';
-import { validateOrThrow } from '../../core/validation/validateOrThrow.js';
+import { validateUser, ValidateUserResp } from '../../schemas/Users.js';
 
-//TODO: implement new wrapAsync && validateOrThrow approach
 
 export const createSupabaseFromRequest = (req: Request): SupabaseClient<Database> => {
     const accessToken = req.cookies['sb-access-token'];
@@ -56,28 +51,3 @@ export const getUserAndSupabase = async (req: Request, res: Response): Promise<S
     return { supabase, user };
 };
 
-
-
-
-
-export const getCurrentUser = wrapAsync(async (req: Request, res: Response): Promise<void> => {
-    const session = await getUserAndSupabase(req, res);
-    if (!session) return;
-    const { user, supabase } = session;
-    validateOrThrow(UserSchema, user);
-
-    const { id } = user;
-    const content: UserContent = await getUserContent(supabase, id);
-    console.log('***************** getCurrentUser() RESULTS **************************************')
-    const results = {
-        user: user,
-        data: {
-            userArticles: content?.userArticles ?? null,
-            userResearch: content?.userResearch ?? null
-        }
-    };
-    console.log(results);
-    console.log('***************** getCurrentUser() RESULTS **************************************')
-    res.success("user recovered", results, 200);
-    return;
-});
