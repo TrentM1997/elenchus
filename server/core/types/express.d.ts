@@ -1,11 +1,9 @@
-import "express";
+import 'express-serve-static-core';
 
-declare global {
-    namespace Express {
-        interface Response {
-            success(message: string, data?: unknown, status?: number): Response;
-            clientError(message: string, data?: unknown, status?: number): Response;
-            serverError(message?: string, data?: unknown, status?: number): Response;
-        }
+declare module 'express-serve-static-core' {
+    interface Response {
+        success(message: string, data?: unknown, status?: number): this;
+        clientError(message: string, data?: unknown, status?: number): this;
+        serverError(message?: string, data?: unknown, status?: number): this;
     }
 }
