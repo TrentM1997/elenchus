@@ -7,12 +7,13 @@ const envPath = path.resolve(__dirname, '../.env');
 dotenv.config({ path: envPath });
 
 import { Request, Response } from 'express';
-import { FcParam, Article } from '../../types/types.js';
+import { Article } from '../../types/types.js';
 import type { FailedAttempt } from '../../types/types.js';
 import { getBiasData } from '../../services/firecrawl/preload/getBiasData.js';
 import { firecrawlJobRunner } from '../../services/firecrawl/orchestrate/runFirecrawlJobs.js';
 import { validateOrThrow } from '../../core/validation/validateOrThrow.js';
 import { ScrapeRequestSchema } from '../../schemas/ScrapeRequestSchema.js';
+import { wrapAsync } from '../../core/async/wrapAsync.js';
 
 
 export interface JobResult {
@@ -30,7 +31,7 @@ const jobs: Record<string, JobResult> = {};
 
 type ReqBody = { articles: unknown };
 
-export const firecrawl_extractions = async (req: Request, res: Response): Promise<void> => {
+export const firecrawl_extractions = wrapAsync(async (req: Request, res: Response): Promise<void> => {
 
     const { articles } = validateOrThrow(ScrapeRequestSchema, req.body as ReqBody);
 
@@ -52,7 +53,7 @@ export const firecrawl_extractions = async (req: Request, res: Response): Promis
     const MBFC_DATA = await getBiasData(articles);
 
     await firecrawlJobRunner(id, articles, MBFC_DATA, jobs);
-};
+});
 
 
 export const get_firecrawl_job = (req: Request, res: Response): void => {
