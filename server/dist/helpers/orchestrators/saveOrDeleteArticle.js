@@ -1,5 +1,5 @@
-import { saveArticleForUser } from "../../services/saveArticle.js";
-import { deleteArticleForUser } from "../../services/deleteArticle.js";
+import { saveArticleForUser } from "../../services/supabase/saveArticle.js";
+import { deleteArticleForUser } from "../../services/supabase/deleteArticle.js";
 const saveOrDeleteArticle = async (article, exists, supabase, user_id) => {
     const id = article?.id;
     try {

@@ -23,7 +23,7 @@
 		"scripts/generateLogoMap.ts",
 		"src/Config.ts",
 		"types/",
-		"utils/"
+		"core/"
 	],
 	"exclude": [
 		"node_modules"

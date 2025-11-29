@@ -1,4 +1,4 @@
-import { getUserAndSupabase } from "../../endpoints/supabase/serverClient.js";
+import { getUserAndSupabase } from "../../endpoints/supabase/client/serverClient.js";
 async function getUserContext(req, res) {
     const session = await getUserAndSupabase(req, res);
     if (!session)

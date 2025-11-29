@@ -13,8 +13,8 @@
     "build:server": "cd server && npm install && npm run build",
     "build:client": "cd client && npm install --include=dev && npm run build",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
-    "dev:server": "cd server && npm run dev",
-    "dev:client": "cd client && npm run dev"
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev"
   },
   "dependencies": {
     "@tabler/icons-react": "^3.34.1",

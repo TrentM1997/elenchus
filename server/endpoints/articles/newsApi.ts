@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import type { Request, Response } from 'express';
-import { decodeResults, shapeBrowsingOptions } from '../../helpers/formatting/shapeArticleOption.js';
+import { shapeBrowsingOptions } from '../../helpers/formatting/shapeArticleOption.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.resolve(__dirname, '../../../.env') });

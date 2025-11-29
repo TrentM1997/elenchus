@@ -1,19 +1,19 @@
 import { config } from 'dotenv';
 import { fileURLToPath } from 'url';
 import path from 'path';
+import { ServerError } from '../core/errors/ServerError.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const envPath = path.resolve(__dirname, '../.env');
+const envPath = path.resolve(process.cwd(), '.env');
 config({ path: envPath });
 
 export function getEnvVar(name: string): string {
     const val = process.env[name];
-    if (!val) throw new Error(`Missing required env var: ${name}`);
+    if (!val) throw new ServerError(`Missing required env var: ${name}`);
     return val;
 }
 
-export const BING_KEY = getEnvVar('BING_KEY');
 export const TLDR_KEY = getEnvVar('TLDR_KEY');
 export const FIRECRAWL_KEY = getEnvVar('FIRECRAWL_KEY');
 export const SUPABASE_URL = getEnvVar('SUPABASE_URL');
