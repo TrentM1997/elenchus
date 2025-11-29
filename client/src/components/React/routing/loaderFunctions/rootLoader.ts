@@ -23,12 +23,18 @@ export async function rootLoader({ request }: LoaderFunctionArgs): Promise<RootP
 
     };
     if (!res.ok) throw new Response("Failed session check", { status: res.status });
-
     const payload: CurrentUser = await res.json();
-    const user = payload?.user ?? null;
-    const articles = payload?.data?.userArticles ?? null;
-    const investigations = payload?.data?.userResearch ?? null;
+    const { data } = payload;
+    const {
+        userArticles,
+        userResearch,
+        user
+    } = data
 
-    return { user, articles, investigations };
+    return {
+        user: user,
+        articles: userArticles,
+        investigations: userResearch
+    };
 
 };

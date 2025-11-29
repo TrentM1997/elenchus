@@ -1,13 +1,3 @@
-process.on("uncaughtException", (err) => {
-	console.error("🔥🔥🔥 UNCAUGHT EXCEPTION");
-	console.error("TYPE:", typeof err);
-	console.error("INSTANCE:", err instanceof Error);
-	console.error("RAW ERROR:", err);
-	console.error("STACK:", err?.stack);
-	process.exit(1); // let nodemon restart cleanly
-});
-
-
 import './Config.js'
 import { PORT } from './Config.js';
 import { fileURLToPath } from 'url';
@@ -19,25 +9,10 @@ import cors from 'cors';
 import mime from 'mime'
 import cookieParser from 'cookie-parser';
 const app = express();
-import { firecrawl_extractions } from '../endpoints/articles/firecrawl_extractions.js';
-import { deleteUser } from '../endpoints/supabase/deleteUser.js';
-import { searchBlueSkyPosts } from '../endpoints/bluesky/blueskyApi.js';
-import { getBlueSkyFeed } from '../endpoints/bluesky/blueskyApi.js';
-import { supabaseLogin } from '../endpoints/supabase/login.js';
-import { getUserArticles } from '../endpoints/supabase/getUserArticles.js';
-import { getUserResearch } from '../endpoints/supabase/getUserResearch.js';
-import { handleArticleSave } from '../endpoints/supabase/handleArticleSave.js';
-import { saveResearch } from '../endpoints/supabase/saveResearch.js';
-import { signUserOut } from '../endpoints/supabase/signout.js';
-import { resetUserPassword } from '../endpoints/supabase/resetPassword.js';
-import { getCurrentUser } from '../endpoints/supabase/serverClient.js';
-import { createNewUser } from '../endpoints/supabase/createNewUser.js';
-import { sendFeedback } from '../endpoints/supabase/sendFeedback.js';
-import { newsApi } from '../endpoints/articles/newsApi.js';
-import { get_firecrawl_job } from '../endpoints/articles/firecrawl_extractions.js';
 import { responseBinder } from '../core/middleware/responseBinder.js';
 import { globalErrorHandler } from '../core/middleware/globalErrorHandler.js';
-//import { router } from './router.js';
+import { router } from '../core/routes/router.js';
+import { spaFallback } from '../core/routes/spaFallback.js';
 
 const corsOptions: object = {
 	origin: ['https://elenchusapp.io', 'http://localhost:5173'],
@@ -89,47 +64,11 @@ app.options('*', (req, res) => {
 
 app.use(responseBinder);
 
-//app.use("/api", router);
-//app.use(router);
-app.get('/newsArticles', newsApi);
-app.post('/firecrawl_extractions', firecrawl_extractions);
-app.post('/deleteUser', deleteUser);
-app.get('/searchBlueSky', searchBlueSkyPosts);
-app.get('/getBlueSkyFeed', getBlueSkyFeed);
-app.post('/supabaseLogIn', supabaseLogin);
-app.post('/getUserArticles', getUserArticles);
-app.post('/getUserResearch', getUserResearch);
-app.post('/articleOperation', handleArticleSave);
-app.post('/saveResearch', saveResearch);
-app.post('/signUserOut', (req, res) => signUserOut(req, res));
-app.post('/resetUserPassword', resetUserPassword);
-app.post('/getCurrentUser', getCurrentUser);
-app.post('/createNewUser', createNewUser);
-app.post('/sendFeedback', sendFeedback);
-app.get('/firecrawl_extractions/:jobId', get_firecrawl_job);
-
+app.use(router);
 
 app.use(globalErrorHandler);
 
-app.get('*', (req: Request, res: Response) => {
-
-	if (req) {
-		console.log("catch-all route hit")
-	}
-
-	try {
-		console.log('running catch-all route')
-		const filePath = path.resolve(clientDistPath, 'index.html');
-		console.log("Serving:", filePath);
-		res.sendFile(filePath);
-	} catch (err: any) {
-		if (err.code === 'ECONNRESET') {
-			console.error('Connection reset by client');
-			res.status(500).send('Lost Network Connection');
-		}
-	}
-});
-
+app.use(spaFallback);
 
 app.listen(PORT, () => {
 

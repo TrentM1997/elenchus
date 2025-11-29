@@ -363,8 +363,13 @@ declare global {
   }
 
   interface CurrentUser {
-    user: User,
     data: UserContent
+  }
+
+  interface UserContent {
+    user: User
+    userArticles: SavedArticleRes | null;
+    userResearch: Investigation[] | null;
   }
 
   interface SavedArticleRes {
@@ -373,10 +378,7 @@ declare global {
   }
 
 
-  interface UserContent {
-    userArticles: SavedArticleRes | null;
-    userResearch: Investigation[] | null;
-  }
+
 
   interface NotifySaved {
     setNotification: React.Dispatch<React.SetStateAction<string | null>>,
