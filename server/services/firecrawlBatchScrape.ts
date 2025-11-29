@@ -1,7 +1,7 @@
 import Firecrawl from "@mendable/firecrawl-js";
 import { cleanURL } from '../helpers/cleanUrl.js';
 import type { FailedAttempt, ScrapedArticle, Bias, FcParam } from '../types/types.js';
-import { toFailedAttempt } from "../endpoints/articles/firecrawl_extractions.js";
+import { toFailedAttempt } from "./firecrawl/chunking/toFailedAttempt.js";
 import type { BatchScrapeJob } from "@mendable/firecrawl-js";
 
 export interface BatchItem {

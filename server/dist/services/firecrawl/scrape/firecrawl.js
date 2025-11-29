@@ -1,9 +1,9 @@
-import { cleanURL } from '../helpers/cleanUrl.js';
-import { toFailedAttempt } from "../endpoints/articles/firecrawl_extractions.js";
-import { validateArticle } from "../schemas/ArticleSchema.js";
-import { shapeArticle } from "../helpers/formatting/shapeArticle.js";
-import { isContentInvalid } from "../helpers/formatting/isContentInvalid.js";
-import { ServerError } from '../core/errors/ServerError.js';
+import { cleanURL } from '../../../helpers/cleanUrl.js';
+import { toFailedAttempt } from '../chunking/toFailedAttempt.js';
+import { validateArticle } from '../../../schemas/ArticleSchema.js';
+import { shapeArticle } from '../../../helpers/formatting/shapeArticle.js';
+import { isContentInvalid } from '../../../helpers/formatting/isContentInvalid.js';
+import { ServerError } from '../../../core/errors/ServerError.js';
 export const schema = {
     type: "object",
     properties: {

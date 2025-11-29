@@ -5,58 +5,12 @@ const envUrl = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(envUrl);
 const envPath = path.resolve(__dirname, '../.env');
 dotenv.config({ path: envPath });
-import Firecrawl from '@mendable/firecrawl-js';
-import { firecrawlExtract } from '../../services/firecrawl.js';
-import { getMediaBiases } from '../supabase/users/transactions/mediaBias.js';
-import { cleanURL } from '../../helpers/cleanUrl.js';
+import { firecrawlExtract } from '../../services/firecrawl/scrape/firecrawl.js';
+import { createFirecrawlClient } from '../../services/firecrawl/client/firecrawlClient.js';
+import { toFailedAttempt } from '../../services/firecrawl/chunking/toFailedAttempt.js';
+import { getBiasData } from '../../services/firecrawl/preload/getBiasData.js';
+import { reconcileFailed } from '../../services/firecrawl/chunking/reconcileFailed.js';
 const jobs = {};
-export async function createFirecrawlClient() {
-    try {
-        return new Firecrawl({ apiKey: process.env.FIRECRAWL_KEY });
-    }
-    catch (err) {
-        console.error(err);
-        return null;
-    }
-}
-export function toFailedAttempt(a, reason) {
-    const cleaned = cleanURL(a.url);
-    return {
-        title: a.title,
-        summary: [{ denied: reason, failedArticle: a.url }],
-        logo: a.logo,
-        source: a.source,
-        date: a.date,
-        article_url: cleaned,
-    };
-}
-async function getBiasData(articles) {
-    const biasRatings = new Map();
-    const uniqueSources = Array.from(new Set(articles.map(a => a.source)));
-    const lookups = uniqueSources.map(async (source) => {
-        const rating = await getMediaBiases(source);
-        return {
-            source,
-            normalized: {
-                bias: rating?.bias ?? null,
-                factual_reporting: rating?.factual_reporting ?? null,
-                country: rating?.country ?? null,
-            },
-        };
-    });
-    const results = await Promise.all(lookups);
-    for (const { source, normalized } of results)
-        biasRatings.set(source, normalized);
-    return biasRatings;
-}
-function reconcileFailed(retrieved, failed) {
-    const success = new Set(retrieved.map(r => cleanURL(r.article_url)));
-    for (let i = failed.length - 1; i >= 0; i--) {
-        if (success.has(cleanURL(failed[i].article_url)))
-            failed.splice(i, 1);
-    }
-}
-;
 export const firecrawl_extractions = async (req, res) => {
     console.log('firecrawl endpoint hit');
     const { articles } = req.body;

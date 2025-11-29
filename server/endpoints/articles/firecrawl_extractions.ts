@@ -7,12 +7,13 @@ const envPath = path.resolve(__dirname, '../.env');
 dotenv.config({ path: envPath });
 
 import { Request, Response } from 'express';
-import Firecrawl from '@mendable/firecrawl-js';
-import { FcParam, ScrapedArticle, Article } from '../../types/types.js';
-import type { Bias, FailedAttempt } from '../../types/types.js';
-import { firecrawlExtract } from '../../services/firecrawl.js';
-import { getMediaBiases } from '../supabase/users/transactions/mediaBias.js';
-import { cleanURL } from '../../helpers/cleanUrl.js';
+import { FcParam, Article } from '../../types/types.js';
+import type { FailedAttempt } from '../../types/types.js';
+import { firecrawlExtract } from '../../services/firecrawl/scrape/firecrawl.js';
+import { createFirecrawlClient } from '../../services/firecrawl/client/firecrawlClient.js';
+import { toFailedAttempt } from '../../services/firecrawl/chunking/toFailedAttempt.js';
+import { getBiasData } from '../../services/firecrawl/preload/getBiasData.js';
+import { reconcileFailed } from '../../services/firecrawl/chunking/reconcileFailed.js';
 
 interface JobResult {
     status: 'pending' | 'fulfilled' | 'rejected';
@@ -26,58 +27,6 @@ interface JobResult {
 }
 
 const jobs: Record<string, JobResult> = {};
-
-
-export async function createFirecrawlClient(): Promise<Firecrawl | null> {
-    try {
-        return new Firecrawl({ apiKey: process.env.FIRECRAWL_KEY });
-    } catch (err) {
-        console.error(err);
-        return null;
-    }
-}
-
-export function toFailedAttempt(a: FcParam, reason: string): FailedAttempt {
-    const cleaned = cleanURL(a.url);
-    return {
-        title: a.title,
-        summary: [{ denied: reason, failedArticle: a.url }],
-        logo: a.logo,
-        source: a.source,
-        date: a.date,
-        article_url: cleaned,
-    };
-}
-
-async function getBiasData(articles: FcParam[]) {
-    const biasRatings = new Map<string, { bias: Bias | null; factual_reporting: string | null; country: string | null }>();
-    const uniqueSources = Array.from(new Set(articles.map(a => a.source)));
-
-    const lookups = uniqueSources.map(async (source) => {
-        const rating = await getMediaBiases(source);
-        return {
-            source,
-            normalized: {
-                bias: rating?.bias ?? null,
-                factual_reporting: rating?.factual_reporting ?? null,
-                country: rating?.country ?? null,
-            },
-        };
-    });
-
-    const results = await Promise.all(lookups);
-    for (const { source, normalized } of results) biasRatings.set(source, normalized);
-
-    return biasRatings;
-}
-
-function reconcileFailed(retrieved: Article[], failed: FailedAttempt[]) {
-    const success = new Set(retrieved.map(r => cleanURL(r.article_url)));
-    for (let i = failed.length - 1; i >= 0; i--) {
-        if (success.has(cleanURL(failed[i].article_url))) failed.splice(i, 1);
-    }
-};
-
 
 type ReqBody = { articles: FcParam[] };
 
