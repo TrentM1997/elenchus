@@ -10,6 +10,7 @@ export const SourceSchema = Type.Object({
 export type SourceSchema = Static<typeof SourceSchema>;
 
 export const SearchResultsSchema = Type.Object({
+
     source: SourceSchema,
     author: Type.Union([Type.String(), Type.Null()]),
     title: Type.String(),

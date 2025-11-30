@@ -23,6 +23,7 @@ const logo_or_fallback = (str: string) => {
 
 const shapeBrowsingOptions = (results: unknown[]): BrowsingOption[] => {
 
+
     const validResults = results.filter(
         (a: any): a is NewsArticle => validateSearchResult(a).isValid
     );
