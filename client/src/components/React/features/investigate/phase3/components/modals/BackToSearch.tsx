@@ -16,16 +16,16 @@ export default function BackToSearch(): JSX.Element {
     };
 
     return (
-        <div className="z-50 opacity-0 animate-fade-blur animation-delay-400ms
+        <div className="z-50 opacity-0 animate-fade-blur animation-delay-400ms transform-gpu will-change-transform
                      xl:min-w-96 xl:min-h-80 w-auto h-auto flex flex-col items-start gap-x-8 gap-y-6 rounded-3xl p-8 
-                    sm:gap-y-10 sm:p-10 lg:col-span-2 lg:flex-row lg:items-center bg-ebony mt-2 
-                    shadow-inset text-center">
+                    sm:gap-y-10 sm:p-10 lg:col-span-2 lg:flex-row lg:items-center   bg-rich_black ring-2 ring-white/20 mt-2   backdrop-blur-xl
+                       shadow-[0_0_0_1px_rgba(255,255,255,0.07),0_30px_60px_-10px_rgba(0,0,0,0.85)] text-center">
             <div className="lg:min-w-0 lg:flex-1 w-full mx-auto">
                 <p className="text-white xl:text-3xl font-light tracking-tight">Are you sure?</p>
                 <p className="mt-4">
                     <span className="text-2xl font-lighter text-white" />
-                    <span className="text-base font-medium text-zinc-400">You will lose the articles you just loaded.</span><br></br>
-                    <span className="text-base font-medium text-zinc-400">This action cannot be undone</span>
+                    <span className="text-base font-medium text-zinc-400/80">You will lose the articles you just loaded.</span><br></br>
+                    <span className="text-base font-medium text-zinc-400/80">This action cannot be undone</span>
                 </p>
                 <p className="mx-auto mt-6 text-sm text-white" />
                 <div className="inline-flex flex-no-wrap gap-x-4 items-center mt-8 w-full">
