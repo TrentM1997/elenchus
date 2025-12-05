@@ -16,4 +16,4 @@ export const BiasSchema = Type.Union([
     Type.Null()
 ]);
 
-export type BiasSchema = Static<typeof BiasSchema>;
+export type BiasSchemaType = Static<typeof BiasSchema>;

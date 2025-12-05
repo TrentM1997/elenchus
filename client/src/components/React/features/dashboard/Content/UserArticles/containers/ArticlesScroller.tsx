@@ -91,8 +91,9 @@ export default function ArticlesScroller({ sortedArticles, markIds, deletedIds, 
             if (status === 'pending') return;
             setStatus('pending')
             try {
-                const results = await saveArticle(article, true);
-                if (results.data.message === "Deleted") {
+                const result = await saveArticle(article, true);
+                console.log(result);
+                if (result.data.message === "Deleted") {
                     setStatus('success')
                     markIds(article.id, true)
                 } else {

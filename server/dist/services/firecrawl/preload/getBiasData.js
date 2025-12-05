@@ -1,4 +1,6 @@
 import { getMediaBiases } from "../../../endpoints/supabase/users/transactions/mediaBias.js";
+;
+;
 async function getBiasData(articles) {
     const biasRatings = new Map();
     const uniqueSources = Array.from(new Set(articles.map(a => a.source)));

@@ -1,5 +1,7 @@
 import { SupabaseClient, User, Session } from "@supabase/supabase-js";
-import { InvestigationSchema } from "../schemas/InvestigationSchema";
+import { InvestigationSchema } from "../schemas/InvestigationSchema.js";
+import { Static, Type } from "@sinclair/typebox";
+import { ArticleSchema } from "../schemas/ArticleSchema.js";
 
 export interface ChangePasswordBody {
     email: string,
@@ -180,10 +182,12 @@ export interface FirecrawlResponse {
 
 export type FirecrawlResults = Array<FirecrawlResponse>;
 
-export interface ArticleBody {
-    articleExists: boolean,
-    dataToSave: Article
-};
+export const ArticleBodySchema = Type.Object({
+    articleExists: Type.Boolean(),
+    dataToSave: ArticleSchema,
+});
+
+export type ArticleBody = Static<typeof ArticleBodySchema>;
 
 export interface GetLinkBody {
     email: string

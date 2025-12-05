@@ -6,7 +6,7 @@ import { Static } from '@sinclair/typebox';
 function validateOrThrow<T extends TSchema>(
     schema: T,
     data: unknown
-) {
+): Static<T> {
     const validator = TypeCompiler.Compile(schema);
 
     const isValid = validator.Check(data);
@@ -17,7 +17,7 @@ function validateOrThrow<T extends TSchema>(
         throw new ClientError("Invalid Schema", details, 400);
     }
 
-    return data as Static<T>;
+    return data;
 };
 
 export { validateOrThrow };

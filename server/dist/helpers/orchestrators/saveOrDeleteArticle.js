@@ -5,7 +5,6 @@ const saveOrDeleteArticle = async (article, exists, supabase, user_id) => {
     try {
         if (exists) {
             const deleteOperation = await deleteArticleForUser(supabase, user_id, id);
-            console.log(deleteOperation);
             return deleteOperation;
         }
         else {

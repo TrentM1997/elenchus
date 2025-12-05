@@ -8,8 +8,10 @@ dotenv.config({ path: envPath })
 import { SUPABASE_KEY, SUPABASE_URL } from '../../../../src/Config.js';
 import { createClient } from '@supabase/supabase-js';
 import type { Bias } from '../../../../types/types.js';
+import type { Database } from '../../../../types/databaseInterfaces.js';
+import type { BiasSchemaType } from '../../../../schemas/BiasSchema.js';
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
+const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_KEY, {
     auth: {
         persistSession: true
     }
@@ -17,7 +19,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
 
 export interface BiasTypes {
     country: string | null,
-    bias: Bias | null,
+    bias: BiasSchemaType,
     factual_reporting: string | null,
     name: string | null
 }
@@ -39,7 +41,7 @@ export const getMediaBiases = async (provider: string) => {
             return null;
         }
 
-        const { country, bias, factual_reporting, name } = data[0] as BiasTypes;
+        const { country, bias, factual_reporting, name } = data[0];
 
         return { country, bias, factual_reporting, name };
     } catch (err) {
