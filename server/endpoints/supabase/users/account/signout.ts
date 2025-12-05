@@ -1,13 +1,12 @@
 import { Response, Request } from "express";
-
+import { clearAuthCookies } from "../../../../core/auth/clearAuthCookies.js";
 
 export const signUserOut = async (req: Request, res: Response): Promise<void> => {
     try {
-        res.clearCookie('sb-access-token');
-        res.clearCookie('sb-refresh-token');
-        res.status(200).json({ message: 'Signed out successfully' });
+        await clearAuthCookies(res);
+        res.success("Signed out successfully", null, 200);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Failed to sign out' });
+        res.serverError("Failed to sign out", null, 500);
     };
 };

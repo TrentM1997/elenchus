@@ -77,10 +77,8 @@ export function useSaveArticle({ article, isSaved }: SaveHookParams): SaveArticl
         };
 
         try {
-            const resp = await saveArticle(dataToSave, isSaved);
-            const res: unknown = resp?.data.message;
-            if (typeof res === 'string') setResult(res);
-
+            const resp: SavedResponse | null = await saveArticle(dataToSave, isSaved);
+            setResult(resp?.message ?? null);
             dispatch(fetchSavedArticles());
 
         } catch (error) {

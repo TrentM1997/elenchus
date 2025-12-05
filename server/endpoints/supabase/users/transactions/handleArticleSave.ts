@@ -1,22 +1,12 @@
 import { Request, Response } from "express";
-import type { ArticleTransactionResponse, ArticleBody } from "../../../../types/types.js";
-import { validateArticle } from "../../../../schemas/ArticleSchema.js";
+import { type ArticleTransactionResponse, ArticleBodySchema } from "../../../../types/types.js";
 import { saveOrDeleteArticle } from "../../../../helpers/orchestrators/saveOrDeleteArticle.js";
 import { getUserContext } from "../../../../helpers/orchestrators/getUserContext.js";
+import { validateOrThrow } from "../../../../core/validation/validateOrThrow.js";
+import { wrapAsync } from "../../../../core/async/wrapAsync.js";
 
-export const handleArticleSave = async (req: Request, res: Response): Promise<void> => {
-    const { articleExists, dataToSave } = req.body as ArticleBody;
-    const { isValid, details } = validateArticle(dataToSave as unknown);
-
-    if (!isValid) {
-        console.log("***********INVALID SCHEMA*********************");
-        console.log(details);
-        res.status(400).json({
-            success: false,
-            message: `Invalid article schema • ${details}`
-        });
-        return;
-    };
+export const handleArticleSave = wrapAsync(async (req: Request, res: Response): Promise<void> => {
+    const { articleExists, dataToSave } = validateOrThrow(ArticleBodySchema, req.body);
 
     const ctx = await getUserContext(req, res);
     if (!ctx) return;
@@ -25,39 +15,13 @@ export const handleArticleSave = async (req: Request, res: Response): Promise<vo
         user_id
     } = ctx;
 
-    try {
-        const result: ArticleTransactionResponse | null = await saveOrDeleteArticle(
-            dataToSave,
-            articleExists,
-            supabase,
-            user_id
-        );
+    const result: ArticleTransactionResponse | null = await saveOrDeleteArticle(
+        dataToSave,
+        articleExists,
+        supabase,
+        user_id
+    );
+    //TODO: swap boolean check on success for res.status code on client
 
-        if (!result) {
-            res.status(400).json(
-                {
-                    success: false,
-                    data: `Database operation failed to execute.`
-                }
-            );
-            return;
-        };
-
-        const response = {
-            success: true,
-            data: result
-        };
-        res.status(200).send(response);
-
-    } catch (error) {
-        console.log(error);
-
-        if (error instanceof Error) {
-            res.status(500).json({ success: false, message: `Unknown server error ${error}` });
-            return;
-        } else {
-            res.status(500).json({ success: false, message: 'Unknown server error, check server logs for more info' });
-            return;
-        };
-    };
-};
+    res.success("success", result, 200);
+});

@@ -1,10 +1,11 @@
 import type { Article, ArticleTransactionResponse } from "../../types/types";
+import type { ArticleSchema } from "../../schemas/ArticleSchema";
 import { saveArticleForUser } from "../../services/supabase/saveArticle.js";
 import { deleteArticleForUser } from "../../services/supabase/deleteArticle.js";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 const saveOrDeleteArticle = async (
-    article: Article,
+    article: ArticleSchema,
     exists: boolean,
     supabase: SupabaseClient,
     user_id: string | number,
@@ -15,7 +16,6 @@ const saveOrDeleteArticle = async (
     try {
         if (exists) {
             const deleteOperation: ArticleTransactionResponse | null = await deleteArticleForUser(supabase, user_id, id);
-            console.log(deleteOperation);
             return deleteOperation;
         } else {
             const saveOperation: ArticleTransactionResponse | null = await saveArticleForUser(supabase, user_id, article);

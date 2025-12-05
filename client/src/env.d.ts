@@ -292,16 +292,17 @@ declare global {
     inModal?: boolean
   }
 
-  interface SavedResponse {
+  interface ArticleOperationData {
     message: string,
     id: number | null
+  }
+
+  interface SavedResponse {
+    data: ArticleOperationData,
 
   }
 
-  interface SaveArticleResponse {
-    success: boolean,
-    data: SavedResponse
-  }
+
 
   interface WikiTerm {
     article_url?: string,
@@ -459,7 +460,7 @@ declare global {
 export {
   ArticleType, OptionsTypes, SelectedArticle, Perspectives, State, PremiseProps, Help, SavedArticle,
   Calculations, PostsProps, SupabaseUser, ResetPW, Investigation, ScrapedArticle, TipTapProps, AuthStatus, AuthNotificationProps,
-  Tooltips, SidebarItemData, LinkProps, SaveArticleResponse, WikiTerm, Bias, BiasCounts, LoadedArticle, ChartFallbackProps,
+  Tooltips, SidebarItemData, LinkProps, WikiTerm, Bias, BiasCounts, LoadedArticle, ChartFallbackProps,
   UserContent, LoginResponse, LoginFormProps, DashboardOption, HelpModal, NotifySaved, SaveArticleButton,
   WikiTypes, ArticleSavedComponent, Icon, ArticleToSave, SignInHook, WebWorkerResponse, WebWorkerRequest, ChartType, StatBreakdownTypes,
   DeleteStatus, SavedArticleRes, RecoverUserResults,

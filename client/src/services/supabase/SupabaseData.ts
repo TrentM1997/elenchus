@@ -165,7 +165,7 @@ export const newUser = async (
 export const saveArticle = async (
     dataToSave: Article,
     articleExists?: boolean,
-): Promise<SaveArticleResponse | null> => {
+): Promise<SavedResponse | null> => {
 
     try {
 
@@ -186,13 +186,13 @@ export const saveArticle = async (
             throw new Error('could not fetch endpoint');
         };
 
-        const result: SaveArticleResponse = await response.json();
-
-        if (result) {
+        if (response.status === 200) {
+            const result: SavedResponse = await response.json();
             return result;
         } else {
             return null;
         }
+
     } catch (error) {
         console.error(error);
         return null;

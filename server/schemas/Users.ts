@@ -29,12 +29,12 @@ export const UserSchema = Type.Object({
     factors: Type.Optional(Type.Array(Type.Any())),
 });
 
-export type User = Static<typeof UserSchema>;
+export type UserSchema = Static<typeof UserSchema>;
 
 const validator = TypeCompiler.Compile(UserSchema);
 
 
-export const validateUser = (user: User) => {
+export const validateUser = (user: unknown) => {
     const isValid = validator.Check(user);
     const details = isValid ? null : [...validator.Errors(user)];
 

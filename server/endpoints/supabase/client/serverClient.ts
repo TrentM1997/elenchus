@@ -28,7 +28,7 @@ export const createSupabaseFromRequest = (req: Request): SupabaseClient<Database
     });
 };
 
-
+//TODO: wrapAsync() on this function, validateOrThrow will streamline the logic
 export const getUserAndSupabase = async (req: Request, res: Response): Promise<SupabaseSession | null> => {
     const supabase = createSupabaseFromRequest(req);
     const { data: { user }, error } = await supabase.auth.getUser();

@@ -1,4 +1,5 @@
 import type { Bias, BiasInfo, MBFC, FirecrawlContent, Article, FcParam } from "../../types/types";
+import type { BiasSchemaType } from "../../schemas/BiasSchema";
 
 const shapeArticle = (c: FirecrawlContent, a: FcParam, mb: MBFC, urlClean: string): Article => {
     const rating: BiasInfo | null | undefined = mb.has(a.source)
@@ -21,7 +22,7 @@ const shapeArticle = (c: FirecrawlContent, a: FcParam, mb: MBFC, urlClean: strin
         logo: logo,
         id: null,
         factual_reporting: factual_reporting ?? null,
-        bias: bias as Bias,
+        bias: bias as BiasSchemaType,
         country: country
     };
 
