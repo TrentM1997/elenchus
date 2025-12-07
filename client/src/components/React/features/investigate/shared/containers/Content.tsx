@@ -18,7 +18,8 @@ export default function Content() {
             className={`${wikiModalStages.highlight
                 && 'cursor-text'
                 }
-                relative w-full h-full min-h-screen 
+                ${((phase === 'Phase 2') || (phase === 'Phase 3')) ? 'min-h-screen' : ''}
+                relative w-full h-full
                 mx-auto`}
         >
             <div

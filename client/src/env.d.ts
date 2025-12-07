@@ -302,8 +302,6 @@ declare global {
 
   }
 
-
-
   interface WikiTerm {
     article_url?: string,
     data?: Extracts
