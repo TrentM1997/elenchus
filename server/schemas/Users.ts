@@ -42,3 +42,12 @@ export const validateUser = (user: unknown) => {
 };
 
 export type ValidateUserResp = ReturnType<typeof validateUser>;
+
+
+
+export const ChangePasswordSchema = Type.Object({
+    email: Type.String(),
+    newPassword: Type.String()
+});
+
+export type ChangePasswordRequestBody = Static<typeof ChangePasswordSchema>;
