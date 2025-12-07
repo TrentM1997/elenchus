@@ -7,10 +7,13 @@ const envPath = path.resolve(__dirname, '../.env');
 dotenv.config({ path: envPath })
 import { SUPABASE_KEY, SUPABASE_URL } from '../../../../src/Config.js';
 import { Request, Response } from 'express'
+import { wrapAsync } from '../../../../core/async/wrapAsync.js';
+import { validateOrThrow } from '../../../../core/validation/validateOrThrow.js';
+import { LoginSchema } from '../../../../schemas/LoginSchema.js';
+import { executeAccountDeletion } from '../../../../services/supabase/executeAccountDeletion.js';
+import { retrieveUserWithAdminKey } from '../../../../services/supabase/retrieveUserWithAdminKey.js';
 import { createClient } from '@supabase/supabase-js';
-import { Database } from '../../../../types/databaseInterfaces.js';
-import { DeleteUserBody } from '../../../../types/interfaces.js';
-
+import type { Database } from '../../../../types/databaseInterfaces.js';
 
 const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_KEY, {
     auth: {
@@ -18,40 +21,13 @@ const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_KEY, {
     }
 });
 
+export const deleteUser = wrapAsync(async (req: Request, res: Response): Promise<void> => {
+    const body = validateOrThrow(LoginSchema, req.body);
 
-export const deleteUser = async (req: Request, res: Response): Promise<void> => {
-    const { email, password } = req.body as DeleteUserBody;
+    const user_id = await retrieveUserWithAdminKey(body, supabase);
 
-    if (!email || !password) {
-        res.status(400).json({ message: "Email and password are required." });
-        return;
-    }
+    const results = await executeAccountDeletion(user_id, supabase);
 
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    res.success("account deleted", { message: "User deleted successfully.", data: results }, 200);
 
-    if (error || !data.session) {
-        res.status(401).json({ message: 'Invalid Credentials ' });
-        return;
-    };
-
-    const user_id = data.session.user.id;
-
-    try {
-        const { data, error } = await supabase
-            .auth
-            .admin
-            .deleteUser(user_id);
-
-        if (data) {
-            res.status(200).send({ message: 'User deleted successfully.' });
-            return;
-        } else if (error) {
-            res.status(500).json({ message: `Database responded with an error: ${error.message}` });
-            return;
-        };
-    } catch (error) {
-        console.error({ 'Encountered Error': error });
-        res.status(500).json({ message: error });
-        return;
-    };
-};
+});

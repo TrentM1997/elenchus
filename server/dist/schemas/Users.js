@@ -32,4 +32,8 @@ export const validateUser = (user) => {
     const details = isValid ? null : [...validator.Errors(user)];
     return { isValid, details };
 };
+export const ChangePasswordSchema = Type.Object({
+    email: Type.String(),
+    newPassword: Type.String()
+});
 //# sourceMappingURL=Users.js.map
