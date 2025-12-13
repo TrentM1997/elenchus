@@ -10,10 +10,8 @@ import { Request, Response } from 'express'
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { SupabaseSession } from '../../../types/interfaces.js';
 import { Database } from '../../../types/databaseInterfaces.js';
-import { UserSchema, type UserSchemaType } from '../../../schemas/Users.js';
-import { wrapAsync } from '../../../core/async/wrapAsync.js';
+import { UserSchema } from '../../../schemas/Users.js';
 import { validateOrThrow } from '../../../core/validation/validateOrThrow.js';
-import { ServerError } from '../../../core/errors/ServerError.js';
 import { ClientError } from '../../../core/errors/ClientError.js';
 
 
@@ -32,26 +30,23 @@ export const createSupabaseFromRequest = (req: Request): SupabaseClient<Database
     });
 };
 
-export const getUserAndSupabase = wrapAsync(
-    async (
-        req: Request,
-        res: Response
-    ): Promise<
-        SupabaseSession
-        | null
-    > => {
-        const supabase = createSupabaseFromRequest(req);
-        const { data, error } = await supabase.auth.getUser();
+export const getUserAndSupabase = async (
+    req: Request,
+    res?: Response
+): Promise<
+    SupabaseSession
+> => {
+    const supabase = createSupabaseFromRequest(req);
+    const { data, error } = await supabase.auth.getUser();
 
-        if (!data?.user) {
-            throw new ClientError("User not authorized", error, 401);
-        }
+    if (!data?.user) {
+        throw new ClientError("User not authorized", error, 401);
+    }
 
-        const user = validateOrThrow(UserSchema, data.user);
+    const user = validateOrThrow(UserSchema, data.user);
 
-        return {
-            supabase,
-            user
-        };
-    });
-
+    return {
+        supabase,
+        user
+    };
+};

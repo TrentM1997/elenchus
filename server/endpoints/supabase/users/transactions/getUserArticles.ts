@@ -1,31 +1,25 @@
+import { wrapAsync } from "../../../../core/async/wrapAsync.js";
 import { ServerError } from "../../../../core/errors/ServerError.js";
+import { validateOrThrow } from "../../../../core/validation/validateOrThrow.js";
+import { AritclesArraySchema } from "../../../../schemas/ArticleSchema.js";
 import { getUserAndSupabase } from "../../client/serverClient.js";
 import { Request, Response } from "express";
 
-export const getUserArticles = async (req: Request, res: Response): Promise<void> => {
-    const session = await getUserAndSupabase(req, res);
-    if (!session) return;
-    const { supabase, user } = session;
+export const getUserArticles = wrapAsync(async (
+    req: Request,
+    res: Response
+): Promise<void> => {
 
-    try {
-        const { data, error } = await supabase
-            .from('articles')
-            .select()
-            .eq('user_id', user.id)
+    const { supabase, user } = await getUserAndSupabase(req);
 
-        if (error) {
-            console.error(error.message);
-            throw new ServerError(`Unexpected error encountered: ${error.message}`);
-        } else {
-            res.status(200).send(data)
-        }
+    const { data, error } = await supabase
+        .from('articles')
+        .select()
+        .eq('user_id', user.id)
 
-    } catch (error) {
-        console.error(error);
-        const error_message = error instanceof Error
-            ? `Unknown server error: ${error.message}`
-            : 'Unknown server error, check server logs for more info';
-        res.status(500).json({ error: error_message });
-        return;
-    };
-};
+    if (error) throw new ServerError("Failed to retrieve articles from DB", 500, error);
+
+    const articles = validateOrThrow(AritclesArraySchema, data);
+
+    res.success("retrieved user articles", articles, 200);
+});

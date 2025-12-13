@@ -48,3 +48,13 @@ export const validateArticle = (article: unknown) => {
 
     return { isValid, details } as const;
 };
+
+
+export const AritclesArraySchema = Type.Object({
+    articles: Type.Array(
+        Type.Object(ArticleSchema)
+    )
+});
+
+export type AritclesArraySchemaType = Static<typeof AritclesArraySchema>;
+
