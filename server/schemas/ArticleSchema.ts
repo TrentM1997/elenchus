@@ -6,12 +6,12 @@ import { BiasSchema } from './BiasSchema.js';
 export const ArticleSchema = Type.Object({
     title: Type.String(),
     provider: Type.String(),
-    authors: Type.Union([
+    authors: Type.Optional(Type.Union([
         Type.String(),
         Type.Array(Type.String())
-    ]),
+    ])),
     article_url: Type.String(),
-    image_url: Type.String(),
+    image_url: Type.Optional(Type.String()),
     date_published: Type.String(),
     fallbackDate: Type.Optional(
         Type.Union([
@@ -19,7 +19,7 @@ export const ArticleSchema = Type.Object({
             Type.Null()
         ])
     ),
-    summary: Type.Any(),
+    summary: Type.Optional(Type.Any()),
     full_text: Type.String(),
     logo: Type.Optional(Type.String()),
     id: Type.Union([
@@ -50,11 +50,7 @@ export const validateArticle = (article: unknown) => {
 };
 
 
-export const AritclesArraySchema = Type.Object({
-    articles: Type.Array(
-        Type.Object(ArticleSchema)
-    )
-});
+export const AritclesArraySchema = Type.Array(ArticleSchema);
 
 export type AritclesArraySchemaType = Static<typeof AritclesArraySchema>;
 

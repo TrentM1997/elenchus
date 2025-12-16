@@ -19,7 +19,7 @@ export const getUserArticles = wrapAsync(async (
 
     if (error) throw new ServerError("Failed to retrieve articles from DB", 500, error);
 
-    const articles = validateOrThrow(AritclesArraySchema, data);
+    //const articles = validateOrThrow(AritclesArraySchema, data);
 
-    res.success("retrieved user articles", articles, 200);
+    res.success("retrieved user articles", data, 200);
 });

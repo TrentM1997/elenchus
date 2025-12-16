@@ -299,7 +299,8 @@ declare global {
 
   interface SavedResponse {
     data: ArticleOperationData,
-
+    message: string,
+    status: 'success' | 'failed'
   }
 
   interface WikiTerm {

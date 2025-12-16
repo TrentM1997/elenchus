@@ -186,12 +186,9 @@ export const saveArticle = async (
             throw new Error('could not fetch endpoint');
         };
 
-        if (response.status === 200) {
-            const result: SavedResponse = await response.json();
-            return result;
-        } else {
-            return null;
-        }
+        const result: SavedResponse = await response.json();
+        console.log(result);
+        return result;
 
     } catch (error) {
         console.error(error);

@@ -4,18 +4,18 @@ import { BiasSchema } from './BiasSchema.js';
 export const ArticleSchema = Type.Object({
     title: Type.String(),
     provider: Type.String(),
-    authors: Type.Union([
+    authors: Type.Optional(Type.Union([
         Type.String(),
         Type.Array(Type.String())
-    ]),
+    ])),
     article_url: Type.String(),
-    image_url: Type.String(),
+    image_url: Type.Optional(Type.String()),
     date_published: Type.String(),
     fallbackDate: Type.Optional(Type.Union([
         Type.String(),
         Type.Null()
     ])),
-    summary: Type.Any(),
+    summary: Type.Optional(Type.Any()),
     full_text: Type.String(),
     logo: Type.Optional(Type.String()),
     id: Type.Union([
@@ -33,4 +33,5 @@ export const validateArticle = (article) => {
     const details = [...validator.Errors(article)];
     return { isValid, details };
 };
+export const AritclesArraySchema = Type.Array(ArticleSchema);
 //# sourceMappingURL=ArticleSchema.js.map

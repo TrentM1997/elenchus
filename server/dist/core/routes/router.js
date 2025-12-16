@@ -24,7 +24,7 @@ router.post("/createNewUser", createNewUser);
 router.post("/deleteUser", deleteUser);
 router.post("/signUserOut", signUserOut);
 router.post("/resetUserPassword", resetUserPassword);
-router.post("/getUserArticles", getUserArticles);
+router.get("/getUserArticles", getUserArticles);
 router.post("/getUserResearch", getUserResearch);
 router.post("/articleOperation", handleArticleSave);
 router.post("/saveResearch", saveResearch);
