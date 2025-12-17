@@ -6,7 +6,7 @@ import ThumbnailSwap from "./ThumbnailSwap";
 
 interface SavedThumbnail {
     article: Article,
-    deleteHandler: (article: Article) => Promise<void>,
+    deleteHandler: (article: Article) => () => Promise<void>,
     articleDeleted: boolean,
     fastScroll: boolean,
     isPriority?: boolean

@@ -29,4 +29,4 @@ const step5: Header = {
     subheader: null
 };
 
-export const stepContent: Header[] = [step1, step2, step3, step4, step5];
+export const titles: Header[] = [step1, step2, step3, step4, step5];

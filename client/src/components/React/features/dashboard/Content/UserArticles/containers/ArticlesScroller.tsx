@@ -18,7 +18,6 @@ import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 import { SigninStatus } from "@/hooks/useSignIn";
 import type { AppDispatch } from "@/ReduxToolKit/store";
 import { readSavedArticle } from "@/ReduxToolKit/Reducers/UserContent/UserContentReducer";
-import { presentThisArticle } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
 import { chooseTab } from "@/ReduxToolKit/Reducers/UserContent/DashboardTabs";
 import { wait } from "@/helpers/Presentation";
 
@@ -27,18 +26,6 @@ export interface RenderingValues {
     numSkeletons: number | null
 };
 
-
-function stylesWithShadow(shadow: string): CSSProperties {
-
-    const boxShadow = shadow;
-
-    return {
-        height: '94.5%',
-        width: '100%',
-        boxShadow: boxShadow
-    }
-}
-
 interface ArticleScroller {
     sortedArticles: Article[] | null,
     markIds: (id: number, deleted: boolean) => void,
@@ -46,7 +33,21 @@ interface ArticleScroller {
     restorePosition: VirtuosoScrollPos | null
 };
 
-export default function ArticlesScroller({ sortedArticles, markIds, deletedIds, restorePosition }: ArticleScroller): JSX.Element | null {
+function stylesWithShadow(shadow: string): CSSProperties {
+    const boxShadow = shadow;
+    return {
+        height: '94.5%',
+        width: '100%',
+        boxShadow: boxShadow
+    }
+};
+
+export default function ArticlesScroller({
+    sortedArticles,
+    markIds,
+    deletedIds,
+    restorePosition
+}: ArticleScroller): JSX.Element | null {
     const virutuosoRef = useRef(null)
     if (!sortedArticles) return null;
     const {
@@ -79,31 +80,40 @@ export default function ArticlesScroller({ sortedArticles, markIds, deletedIds, 
     }, [fullyLoaded, numSkeletons]);
 
 
-    const handleArticleSelection = useCallback(async (article: Article) => {
-        dispatch(readSavedArticle(article));
-        dispatch(chooseTab('Review Article'));
-        await wait(200)
-        saveNow();
-    }, [dispatch, visible]);
+    const handleArticleSelection = useCallback(
+        (article: Article) => {
+            return async () => {
+                dispatch(readSavedArticle(article));
+                dispatch(chooseTab('Review Article'));
+                await wait(200)
+                saveNow();
+            };
+
+        }, [dispatch, visible]);
 
     const deleteHandler = useCallback(
-        async (article: Article): Promise<void> => {
-            if (status === 'pending') return;
-            setStatus('pending')
-            try {
-                const result = await saveArticle(article, true);
-                console.log(result);
-                if (result.data.message === "Deleted") {
-                    setStatus('success')
-                    markIds(article.id, true)
-                } else {
-                    setStatus('failed')
-                };
+        (article: Article) => {
 
-            } catch (err) {
-                setStatus('failed');
-                console.error(err);
-            };
+            return async (): Promise<void> => {
+                if (status === 'pending') return;
+
+                setStatus('pending')
+                try {
+                    const result = await saveArticle(article, true);
+                    console.log(result);
+                    if (result.data.message === "Deleted") {
+                        setStatus('success')
+                        markIds(article.id, true)
+                    } else {
+                        setStatus('failed')
+                    };
+
+                } catch (err) {
+                    setStatus('failed');
+                    console.error(err);
+                };
+            }
+
         }, [status]);
 
     return (
