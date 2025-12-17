@@ -1,8 +1,8 @@
 import { SupabaseUser } from "@/env";
 import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
-
-
-
+import { executeSaveArticle } from "./executeSaveArticle";
+import { validateSchema } from "../../../../schemas/api/validation/validateSchema";
+import { ArticleSchema } from "../../../../schemas/api/types/ArticlesSchema";
 
 export const supabaseSignIn = async (
     email: string,
@@ -161,33 +161,26 @@ export const newUser = async (
 };
 
 
-
 export const saveArticle = async (
-    dataToSave: Article,
-    articleExists?: boolean,
+    article: Article,
+    exists?: boolean,
 ): Promise<SavedResponse | null> => {
 
     try {
+        const {
+            ok,
+            data
+        } = validateSchema(
+            ArticleSchema,
+            article
+        );
 
-        const response = await fetch('/articleOperation', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                dataToSave: dataToSave,
-                articleExists: articleExists
-            }),
-        })
+        if (!ok) {
+            throw new Error("Invalid Schema submitted to saveArticles()");
+        }
 
-        if (!response.ok) {
-            console.error(response.statusText);
-            throw new Error('could not fetch endpoint');
-        };
+        const result = await executeSaveArticle(data, exists);
 
-        const result: SavedResponse = await response.json();
-        console.log(result);
         return result;
 
     } catch (error) {
