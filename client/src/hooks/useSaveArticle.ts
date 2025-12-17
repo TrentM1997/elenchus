@@ -78,8 +78,12 @@ export function useSaveArticle({ article, isSaved }: SaveHookParams): SaveArticl
 
         try {
             const resp: SavedResponse | null = await saveArticle(dataToSave, isSaved);
-            setResult(resp?.message ?? null);
-            dispatch(fetchSavedArticles());
+            resp.status === "success"
+                ? (() => {
+                    setResult(resp.data.message ?? "saved article");
+                    dispatch(fetchSavedArticles());
+                })()
+                : setResult("failed to execute");
 
         } catch (error) {
             console.error(error);

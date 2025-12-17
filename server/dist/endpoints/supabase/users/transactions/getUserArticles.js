@@ -1,31 +1,15 @@
+import { wrapAsync } from "../../../../core/async/wrapAsync.js";
 import { ServerError } from "../../../../core/errors/ServerError.js";
 import { getUserAndSupabase } from "../../client/serverClient.js";
-export const getUserArticles = async (req, res) => {
-    const session = await getUserAndSupabase(req, res);
-    if (!session)
-        return;
-    const { supabase, user } = session;
-    try {
-        const { data, error } = await supabase
-            .from('articles')
-            .select()
-            .eq('user_id', user.id);
-        if (error) {
-            console.error(error.message);
-            throw new ServerError(`Unexpected error encountered: ${error.message}`);
-        }
-        else {
-            res.status(200).send(data);
-        }
-    }
-    catch (error) {
-        console.error(error);
-        const error_message = error instanceof Error
-            ? `Unknown server error: ${error.message}`
-            : 'Unknown server error, check server logs for more info';
-        res.status(500).json({ error: error_message });
-        return;
-    }
-    ;
-};
+export const getUserArticles = wrapAsync(async (req, res) => {
+    const { supabase, user } = await getUserAndSupabase(req);
+    const { data, error } = await supabase
+        .from('articles')
+        .select()
+        .eq('user_id', user.id);
+    if (error)
+        throw new ServerError("Failed to retrieve articles from DB", 500, error);
+    //const articles = validateOrThrow(AritclesArraySchema, data);
+    res.success("retrieved user articles", data, 200);
+});
 //# sourceMappingURL=getUserArticles.js.map

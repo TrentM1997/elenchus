@@ -29,7 +29,7 @@ export const UserSchema = Type.Object({
     factors: Type.Optional(Type.Array(Type.Any())),
 });
 
-export type UserSchema = Static<typeof UserSchema>;
+export type UserSchemaType = Static<typeof UserSchema>;
 
 const validator = TypeCompiler.Compile(UserSchema);
 

@@ -7,7 +7,9 @@ const envPath = path.resolve(__dirname, '../.env');
 dotenv.config({ path: envPath });
 import { SUPABASE_KEY, SUPABASE_URL } from '../../../src/Config.js';
 import { createClient } from '@supabase/supabase-js';
-import { validateUser } from '../../../schemas/Users.js';
+import { UserSchema } from '../../../schemas/Users.js';
+import { validateOrThrow } from '../../../core/validation/validateOrThrow.js';
+import { ClientError } from '../../../core/errors/ClientError.js';
 export const createSupabaseFromRequest = (req) => {
     const accessToken = req.cookies['sb-access-token'];
     return createClient(SUPABASE_URL, SUPABASE_KEY, {
@@ -21,22 +23,16 @@ export const createSupabaseFromRequest = (req) => {
         },
     });
 };
-//TODO: wrapAsync() on this function, validateOrThrow will streamline the logic
 export const getUserAndSupabase = async (req, res) => {
     const supabase = createSupabaseFromRequest(req);
-    const { data: { user }, error } = await supabase.auth.getUser();
-    if (!user || error) {
-        res.status(401).json({ error: 'Unauthorized' });
-        return null;
+    const { data, error } = await supabase.auth.getUser();
+    if (!data?.user) {
+        throw new ClientError("User not authorized", error, 401);
     }
-    const checkUser = validateUser(user);
-    if (!checkUser.isValid) {
-        res.status(500).json({
-            error: `Invalid user schema from Supabase`,
-            details: checkUser.details
-        });
-        return null;
-    }
-    return { supabase, user };
+    const user = validateOrThrow(UserSchema, data.user);
+    return {
+        supabase,
+        user
+    };
 };
 //# sourceMappingURL=serverClient.js.map

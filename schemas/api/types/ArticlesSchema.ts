@@ -1,6 +1,9 @@
 import { Type } from '@sinclair/typebox';
 import { TypeCompiler } from '@sinclair/typebox/compiler';
-import { BiasSchema } from './BiasSchema.js';
+import type { Static } from '@sinclair/typebox';
+import { TSchema } from '@sinclair/typebox';
+import { BiasSchema } from './BiasSchema';
+
 export const ArticleSchema = Type.Object({
     title: Type.String(),
     provider: Type.String(),
@@ -11,27 +14,32 @@ export const ArticleSchema = Type.Object({
     article_url: Type.String(),
     image_url: Type.Optional(Type.String()),
     date_published: Type.String(),
-    fallbackDate: Type.Optional(Type.Union([
-        Type.String(),
-        Type.Null()
-    ])),
+    fallbackDate: Type.Optional(
+        Type.Union([
+            Type.String(),
+            Type.Null()
+        ])
+    ),
     summary: Type.Optional(Type.Any()),
     full_text: Type.String(),
     logo: Type.Optional(Type.String()),
-    id: Type.Union([
+    id: Type.Optional(Type.Union([
         Type.String(),
         Type.Number(),
         Type.Null()
-    ]),
-    factual_reporting: Type.Optional(Type.Union([Type.String(), Type.Null()])),
+    ])),
+    factual_reporting: Type.Optional(
+        Type.Union([Type.String(), Type.Null()])
+    ),
     bias: Type.Optional(BiasSchema),
-    country: Type.Optional(Type.Union([Type.String(), Type.Null()]))
+    country: Type.Optional(
+        Type.Union([Type.String(), Type.Null()])
+    )
 });
-const validator = TypeCompiler.Compile(ArticleSchema);
-export const validateArticle = (article) => {
-    const isValid = validator.Check(article);
-    const details = [...validator.Errors(article)];
-    return { isValid, details };
-};
+
+export type ArticleSchemaType = Static<typeof ArticleSchema>;
+
 export const AritclesArraySchema = Type.Array(ArticleSchema);
-//# sourceMappingURL=ArticleSchema.js.map
+
+export type AritclesArraySchemaType = Static<typeof AritclesArraySchema>;
+

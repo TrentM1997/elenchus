@@ -21,7 +21,6 @@ export const handleArticleSave = wrapAsync(async (req: Request, res: Response): 
         supabase,
         user_id
     );
-    //TODO: swap boolean check on success for res.status code on client
 
     res.success("success", result, 200);
 });

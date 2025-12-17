@@ -3,6 +3,12 @@ import { createSlice, createAsyncThunk, createSelector, PayloadAction } from "@r
 import type { Article } from "../Investigate/Reading";
 import { User } from "@supabase/supabase-js";
 
+export interface FetchArticlesPayload {
+    success: boolean;
+    message: string;
+    data: Article[];
+};
+
 interface UserContent {
     status: string,
     userArticles: Article[] | null,
@@ -27,10 +33,10 @@ const initialState: UserContent = {
 
 export const fetchSavedArticles = createAsyncThunk(
     'user/articles',
-    async (thunkAPI) => {
+    async (_, thunkAPI) => {
         try {
             const response = await fetch('/getUserArticles', {
-                method: 'POST',
+                method: 'GET',
                 credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
@@ -38,9 +44,12 @@ export const fetchSavedArticles = createAsyncThunk(
             })
 
             if (!response.ok) {
+                console.log(response)
+
                 throw new Error(`Failed to fetch articles: ${response.statusText}`);
             }
             const results = await response.json();
+            console.log(results);
             return results;
 
         } catch (error) {
@@ -98,15 +107,15 @@ const UserContentSlice = createSlice({
             .addCase(fetchSavedArticles.pending, (state) => {
                 state.status = 'loading'
             })
-            .addCase(fetchSavedArticles.fulfilled, (state, action) => {
+            .addCase(fetchSavedArticles.fulfilled, (state, action: PayloadAction<FetchArticlesPayload>) => {
                 state.status = 'succeeded';
                 if (state.userArticles) {
-                    state.userArticles = action.payload;
+                    state.userArticles = action.payload.data;
                 }
             })
             .addCase(fetchSavedArticles.rejected, (state, action) => {
                 state.status = 'failed';
-                state.error = action.payload
+
             })
     }
 })
