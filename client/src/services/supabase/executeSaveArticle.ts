@@ -1,7 +1,6 @@
 import type { ArticleSchemaType } from "../../../../schemas/api/types/ArticlesSchema"
 
-
-async function executeSaveArticle(
+async function executeSaveArticleRequest(
     article: ArticleSchemaType,
     exists: boolean
 ) {
@@ -26,4 +25,4 @@ async function executeSaveArticle(
     return response.json() as Promise<SavedResponse>
 };
 
-export { executeSaveArticle };
+export { executeSaveArticleRequest };

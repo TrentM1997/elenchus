@@ -1,6 +1,6 @@
 import { SupabaseUser } from "@/env";
 import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
-import { executeSaveArticle } from "./executeSaveArticle";
+import { executeSaveArticleRequest } from "./executeSaveArticle";
 import { validateSchema } from "../../../../schemas/api/validation/validateSchema";
 import { ArticleSchema } from "../../../../schemas/api/types/ArticlesSchema";
 
@@ -164,23 +164,20 @@ export const newUser = async (
 export const saveArticle = async (
     article: Article,
     exists?: boolean,
-): Promise<SavedResponse | null> => {
+): Promise<
+    SavedResponse
+    | null
+> => {
 
     try {
-        const {
-            ok,
-            data
-        } = validateSchema(
-            ArticleSchema,
-            article
-        );
+        const { ok, data, errors } = validateSchema(ArticleSchema, article);
 
         if (!ok) {
-            throw new Error("Invalid Schema submitted to saveArticles()");
+            console.error("Invalid Schema submitted to saveArticles()", errors);
+            return null;
         }
 
-        const result = await executeSaveArticle(data, exists);
-
+        const result = await executeSaveArticleRequest(data, exists);
         return result;
 
     } catch (error) {
@@ -190,35 +187,18 @@ export const saveArticle = async (
 };
 
 
+export const getInvestigationSources = (sources: string[], savedArticles: Array<Article>) => {
+    if (
+        !sources
+        || !Array.isArray(sources)
+        || savedArticles.length === 0
+    ) return;
 
-export const getInvestigationSources = (sources: string[], savedArticles: any) => {
-    if (!sources || !Array.isArray(sources)) return;
+    const sourceSet = new Set(sources);
 
-    function getSaved() {
-        let savedSources = []
+    return savedArticles.filter((article: Article) => sourceSet.has(article.article_url));
 
-        for (let i = 0; i < sources.length; i++) {
-
-            let sourceURL = sources[i]
-
-            for (let j = 0; j < savedArticles.length; j++) {
-
-                let articleSaved = savedArticles[j].article_url
-
-                if (sourceURL === articleSaved) {
-
-                    savedSources.push(savedArticles[j])
-                }
-            }
-        }
-        return savedSources
-
-    }
-    const savedFromResearch = getSaved()
-    return savedFromResearch
-}
-
-
+};
 
 
 export const submitFeedback = async (authorEmail: string, message: string): Promise<boolean> => {
@@ -242,9 +222,7 @@ export const submitFeedback = async (authorEmail: string, message: string): Prom
         };
         const result = await response.json();
 
-        if (result) {
-            return true
-        };
+        return result ? true : false;
 
     } catch (error) {
         console.error(error);
