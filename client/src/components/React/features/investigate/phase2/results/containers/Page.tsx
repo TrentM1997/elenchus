@@ -1,47 +1,21 @@
-import { lazy, useEffect, useMemo } from "react";
+import { lazy } from "react";
 const ArticleLink = lazy(() => import('../../results/components/links/ArticleLink'))
 import { Suspense } from "react";
 import LinkPlaceholder from "../../search/components/loaders/LinkPlaceholder";
 import DelayedFallback from "@/components/React/global/fallbacks/DelayedFallback";
 import type { RootState } from "@/ReduxToolKit/store";
-import type { AppDispatch } from "@/ReduxToolKit/store";
-import { useSelector, useDispatch } from "react-redux";
-import { choose, discard } from "@/ReduxToolKit/Reducers/Investigate/ChosenArticles";
+import { useSelector } from "react-redux";
 import type { ArticleType, SelectedArticle } from "@/env";
 
 interface Page {
     index: number,
-    urlHash: Set<string>
+    urlHash: Set<string>,
+    select: (article: ArticleType) => () => void
 };
 
-export default function Page({ index, urlHash }: Page): JSX.Element | null {
+export default function Page({ index, urlHash, select }: Page): JSX.Element | null {
     const page = useSelector((state: RootState) => state.investigation.search.pages[index]);
     const chosenArticles: SelectedArticle[] = useSelector((state: RootState) => state.investigation.getArticle.chosenArticles);
-    const dispatch = useDispatch<AppDispatch>();
-
-
-    const chooseArticle = (article: ArticleType): void => {
-
-        const dataForServer: SelectedArticle = {
-            url: article.url,
-            source: article.provider,
-            date: article.date_published,
-            logo: article.logo,
-            title: article.name,
-            image: article.image
-        };
-
-        const exists = chosenArticles.some(((chosen: SelectedArticle) => chosen.url === article.url));
-
-        if (!exists && chosenArticles.length <= 2) {
-            dispatch(choose(dataForServer));
-
-        } else if (exists) {
-            const locatedAt = chosenArticles.findIndex((chosen => chosen.url === article.url))
-            dispatch(discard(locatedAt))
-        }
-    };
-
 
     return (
         <ul
@@ -56,7 +30,7 @@ export default function Page({ index, urlHash }: Page): JSX.Element | null {
                             highlight={urlHash.has(article.url)}
                             inModal={false}
                             mute={(chosenArticles?.length === 3)}
-                            chooseArticle={chooseArticle}
+                            chooseArticle={select}
                             isPriority={(index <= 8)}
                             article={article}
                         />

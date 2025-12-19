@@ -39,15 +39,14 @@ export default function ResearchScroller({ timeline }: ResearchScroller) {
     const { fastScroll, clockScrollSpeed } = useSkeletons(180);
     const virtuosoRef = useRef();
 
-
-    const review = useCallback(async (investigation: any) => {
-        saveNow();
-        dispatch(reviewThisResearch(investigation))
-        await wait(200);
-        dispatch(chooseTab('Review Investigation'));
+    const review = useCallback((investigation: any) => {
+        return async () => {
+            saveNow();
+            dispatch(reviewThisResearch(investigation))
+            await wait(200);
+            dispatch(chooseTab('Review Investigation'));
+        }
     }, []);
-
-
 
     return (
         <div

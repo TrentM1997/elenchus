@@ -285,7 +285,7 @@ declare global {
     article: ArticleType,
     index?: number,
     isPriority?: boolean,
-    chooseArticle?: (article: ArticleType) => void,
+    chooseArticle?: (article: ArticleType) => () => void,
     showGetArticlesModal?: boolean,
     mute?: boolean,
     chosenArticles?: Array<SelectedArticle>,

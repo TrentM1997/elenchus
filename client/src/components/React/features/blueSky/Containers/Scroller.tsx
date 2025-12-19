@@ -13,13 +13,17 @@ export default function Scroller({ posts }) {
     const postForPopover = useSelector((s: RootState) => s.bluesky.popoverPost);
     const dispatch = useDispatch<AppDispatch>();
 
-    const choosePost = useCallback(async (post: BlueSkyPost): Promise<void> => {
-        if (postForPopover !== null) return;
-        const text: string = post.record?.text ?? null;
-        dispatch(getPopoverPost(post));
-        dispatch(selectPost(text));
-        await wait(400);
-        dispatch(renderModal('Bluesky Post Selected'));
+    const choosePost = useCallback((post: BlueSkyPost) => {
+
+        return async () => {
+            if (postForPopover !== null) return;
+
+            const text: string = post.record?.text ?? null;
+            dispatch(getPopoverPost(post));
+            dispatch(selectPost(text));
+            await wait(400);
+            dispatch(renderModal('Bluesky Post Selected'));
+        }
     }, [postForPopover]);
 
 

@@ -52,7 +52,7 @@ export default function DisplayThese() {
                         boxShadow &&
                         selected.map((article, i) => (
                             <ArticleLink
-                                key={article.url}
+                                key={i}
                                 inModal={true}
                                 chosenArticles={chosenArticles}
                                 article={article}
