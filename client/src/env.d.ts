@@ -4,11 +4,11 @@
 import { Session } from "@supabase/supabase-js";
 import { Extracts } from "./ReduxToolKit/Reducers/Investigate/Review";
 import React, { ReactEventHandler, ReactNode, SetStateAction } from "react";
-import { ActionCreatorWithoutPayload } from "@reduxjs/toolkit";
 import { User } from "@supabase/supabase-js";
 import { SigninStatus } from "./hooks/useSignIn";
 import type { Article } from "./ReduxToolKit/Reducers/Investigate/Reading";
 import { ActiveTab } from "./ReduxToolKit/Reducers/UserContent/DashboardTabs";
+import type { BlueSkyPost } from "./ReduxToolKit/Reducers/BlueSky/BlueSkySlice";
 
 declare global {
   interface ImportMetaEnv {
@@ -452,6 +452,12 @@ declare global {
     }
   }
 
+  interface BSPostProps {
+    post: BlueSkyPost,
+    choosePost?: (post: BlueSkyPost) => () => Promise<void>,
+    inPopover?: boolean
+  }
+
 
 }
 
@@ -462,5 +468,5 @@ export {
   Tooltips, SidebarItemData, LinkProps, WikiTerm, Bias, BiasCounts, LoadedArticle, ChartFallbackProps,
   UserContent, LoginResponse, LoginFormProps, DashboardOption, HelpModal, NotifySaved, SaveArticleButton,
   WikiTypes, ArticleSavedComponent, Icon, ArticleToSave, SignInHook, WebWorkerResponse, WebWorkerRequest, ChartType, StatBreakdownTypes,
-  DeleteStatus, SavedArticleRes, RecoverUserResults,
+  DeleteStatus, SavedArticleRes, RecoverUserResults, BSPostProps
 };

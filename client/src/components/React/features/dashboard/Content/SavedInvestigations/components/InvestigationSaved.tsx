@@ -34,5 +34,4 @@ function PriorInvestigation({ investigation, review, inSeek }: PriorInvestigatio
     );
 };
 
-
 export default React.memo(PriorInvestigation);
