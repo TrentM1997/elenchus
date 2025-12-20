@@ -36,22 +36,22 @@ export const supabaseSignIn = async (
     };
 };
 
-//TODO: remove all state setters from this function — it's uneccessary and makes this impossible to debug
 
 export const newUser = async (
     email: string,
     password: string,
-): Promise<any> => {
+): Promise<Response["status"]> => {
+    const body = { email, password }
 
     try {
-        //  const { data, ok, errors } = validateSchema(CredentialsSchema, { email, password });
-        //
-        //  if (!ok) {
-        //      logValidationError(errors);
-        //      throw new Error("Failed to validate email and password schema for new user creation");
-        //  }
+        const { data, ok, errors } = validateSchema(CredentialsSchema, body);
 
-        const request = await createNewUser(email, password);
+        if (!ok) {
+            logValidationError(errors);
+            throw new Error("Failed to validate email and password schema for new user creation");
+        }
+
+        const request = await createNewUser(data.email, data.password);
 
         return request
 

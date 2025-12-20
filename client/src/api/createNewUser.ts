@@ -19,9 +19,9 @@ async function createNewUser(email: string, password: string): Promise<any> {
             throw new Error("Failed to create new user");
         }
 
-        const result = response.json();
+        const result: Response = await response.json();
 
-        return result;
+        return result.status;
 
     } catch (err) {
         console.error(err);

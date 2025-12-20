@@ -459,6 +459,26 @@ declare global {
   }
 
 
+  type ValidationStatus = 'idle' | 'valid' | 'rejected';
+
+  type SignupFields = {
+    email: string | null,
+    password: string | null,
+    confirmPw: string | null
+  };
+
+  type FieldStatus = {
+    e: ValidationStatus,
+    p: ValidationStatus,
+    c: ValidationStatus
+  };
+
+  interface SignupValidationHook {
+    fieldStatus: FieldStatus,
+    canSubmit: boolean,
+    setFieldValue: (key: keyof SignupFields, value: string) => void,
+    fields: SignupFields
+  }
 }
 
 
@@ -468,5 +488,6 @@ export {
   Tooltips, SidebarItemData, LinkProps, WikiTerm, Bias, BiasCounts, LoadedArticle, ChartFallbackProps,
   UserContent, LoginResponse, LoginFormProps, DashboardOption, HelpModal, NotifySaved, SaveArticleButton,
   WikiTypes, ArticleSavedComponent, Icon, ArticleToSave, SignInHook, WebWorkerResponse, WebWorkerRequest, ChartType, StatBreakdownTypes,
-  DeleteStatus, SavedArticleRes, RecoverUserResults, BSPostProps
+  DeleteStatus, SavedArticleRes, RecoverUserResults, BSPostProps, ValidationStatus,
+  FieldStatus, SignupValidationHook, SignupFields
 };
