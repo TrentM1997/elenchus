@@ -4,11 +4,11 @@
 import { Session } from "@supabase/supabase-js";
 import { Extracts } from "./ReduxToolKit/Reducers/Investigate/Review";
 import React, { ReactEventHandler, ReactNode, SetStateAction } from "react";
-import { ActionCreatorWithoutPayload } from "@reduxjs/toolkit";
 import { User } from "@supabase/supabase-js";
 import { SigninStatus } from "./hooks/useSignIn";
 import type { Article } from "./ReduxToolKit/Reducers/Investigate/Reading";
 import { ActiveTab } from "./ReduxToolKit/Reducers/UserContent/DashboardTabs";
+import type { BlueSkyPost } from "./ReduxToolKit/Reducers/BlueSky/BlueSkySlice";
 
 declare global {
   interface ImportMetaEnv {
@@ -285,7 +285,7 @@ declare global {
     article: ArticleType,
     index?: number,
     isPriority?: boolean,
-    chooseArticle?: (article: ArticleType) => void,
+    chooseArticle?: (article: ArticleType) => () => void,
     showGetArticlesModal?: boolean,
     mute?: boolean,
     chosenArticles?: Array<SelectedArticle>,
@@ -452,7 +452,33 @@ declare global {
     }
   }
 
+  interface BSPostProps {
+    post: BlueSkyPost,
+    choosePost?: (post: BlueSkyPost) => () => Promise<void>,
+    inPopover?: boolean
+  }
 
+
+  type ValidationStatus = 'idle' | 'valid' | 'rejected';
+
+  type SignupFields = {
+    email: string | null,
+    password: string | null,
+    confirmPw: string | null
+  };
+
+  type FieldStatus = {
+    e: ValidationStatus,
+    p: ValidationStatus,
+    c: ValidationStatus
+  };
+
+  interface SignupValidationHook {
+    fieldStatus: FieldStatus,
+    canSubmit: boolean,
+    setFieldValue: (key: keyof SignupFields, value: string) => void,
+    fields: SignupFields
+  }
 }
 
 
@@ -462,5 +488,6 @@ export {
   Tooltips, SidebarItemData, LinkProps, WikiTerm, Bias, BiasCounts, LoadedArticle, ChartFallbackProps,
   UserContent, LoginResponse, LoginFormProps, DashboardOption, HelpModal, NotifySaved, SaveArticleButton,
   WikiTypes, ArticleSavedComponent, Icon, ArticleToSave, SignInHook, WebWorkerResponse, WebWorkerRequest, ChartType, StatBreakdownTypes,
-  DeleteStatus, SavedArticleRes, RecoverUserResults,
+  DeleteStatus, SavedArticleRes, RecoverUserResults, BSPostProps, ValidationStatus,
+  FieldStatus, SignupValidationHook, SignupFields
 };

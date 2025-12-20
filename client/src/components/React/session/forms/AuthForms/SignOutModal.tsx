@@ -1,8 +1,8 @@
-import { clearAuthSlice, showSignOut } from "@/ReduxToolKit/Reducers/Athentication/Authentication";
+import { clearAuthSlice } from "@/ReduxToolKit/Reducers/Athentication/Authentication";
 import { useDispatch } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState, useRef } from "react";
-import { fetchSignOut } from "@/services/supabase/SupabaseData";
+import { logOut } from "@/api/logOut";
 import AuthNotification from "@/components/React/session/notifications/AuthNotification";
 import { useNavigate } from "react-router-dom";
 import { SigninStatus } from "@/hooks/useSignIn";
@@ -28,7 +28,7 @@ export default function SignOutModal(): JSX.Element {
         const executeSignOut = async (): Promise<void> => {
             try {
 
-                const data: SignOutResponse = await fetchSignOut();
+                const data: SignOutResponse = await logOut();
                 if (data.loggedOut === true) {
                     setStatus("success");
                     timerRef.current = window.setTimeout(() => {

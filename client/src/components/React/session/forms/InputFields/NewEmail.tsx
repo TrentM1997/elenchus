@@ -1,33 +1,18 @@
-import { RootState } from "@/ReduxToolKit/store"
-import { useEffect } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { emailValidation } from "@/helpers/validation"
-import { getNewEmail } from "@/ReduxToolKit/Reducers/Athentication/NewUserSlice"
+import type { SignupValidationHook, ValidationStatus } from "@/env";
 
-export default function NewEmail({ emailValid, enterValidEmail, setEmailValid }) {
-    const newEmail = useSelector((state: RootState) => state.newUser.emailInput)
-    const dispatch = useDispatch()
+type NewEmailFieldType = {
+    emailStatus: ValidationStatus,
+    setFieldValue: SignupValidationHook["setFieldValue"]
+};
 
-    const checkEmail = () => {
-
-        const valid = emailValidation(newEmail);
-        setEmailValid(valid);
-    }
-
+export default function NewEmail({ emailStatus, setFieldValue }: NewEmailFieldType) {
 
     const handleEmail = (e: any) => {
 
         const email = e.target.value
-        dispatch(getNewEmail(email))
-    }
+        setFieldValue('email', email);
+    };
 
-    useEffect(() => {
-
-        if (newEmail) {
-            checkEmail()
-        }
-
-    }, [emailValid, enterValidEmail, handleEmail])
 
     return (
         <div className="col-span-full">
@@ -36,15 +21,15 @@ export default function NewEmail({ emailValid, enterValidEmail, setEmailValid })
                     <div className="text-xs sm:text-sm font-medium text-white">
                         Email
                     </div>
-                    {emailValid === false && enterValidEmail && <div className="w-auto">
-                        <p className="text-red-500 text-xs sm:text-sm font-light">{enterValidEmail}</p>
+                    {(emailStatus === "rejected") && <div className="w-auto">
+                        <p className="text-red-500 text-xs sm:text-sm font-light">Please enter a valid email address</p>
                     </div>}
                     <div className="w-fit">
-                        {emailValid === true && <svg xmlns="http://www.w3.org/2000/svg" className={`icon icon-tabler icon-tabler-check text-green-500 mx-auto`} width={16} height={16} viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                        {(emailStatus === "valid") && <svg xmlns="http://www.w3.org/2000/svg" className={`icon icon-tabler icon-tabler-check text-green-500 mx-auto`} width={16} height={16} viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                             <path d="M5 12l5 5l10 -10" />
                         </svg>}
-                        {emailValid === false && <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                        {(emailStatus === 'rejected') && <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                             className="icon icon-tabler icons-tabler-outline text-red-500 icon-tabler-x"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M18 6l-12 12" /><path d="M6 6l12 12" /></svg>
                         }
                     </div>
@@ -53,9 +38,9 @@ export default function NewEmail({ emailValid, enterValidEmail, setEmailValid })
             <input onChange={(e) => handleEmail(e)} id="email" name="email" type="email" autoComplete="email" placeholder="email@example.com"
                 className={`block w-full px-3 py-3 border-2 rounded-xl appearance-none bg-black text-white bg-white/5 focus:bg-black placeholder-black/50 focus:border-white/5 
                                      focus:outline-none focus:ring-black text-base placeholder-zinc-500 h-10
-                                    ${emailValid === false && 'border-red-500 focus:border-green-500'} 
-                                    ${emailValid === true && 'border-green-500 focus:border-green-500'}
-                                    ${emailValid === null && 'border-white/5 focus:border-white'}
+                                    ${(emailStatus === 'rejected') && 'border-red-500 focus:border-green-500'} 
+                                    ${(emailStatus === 'valid') && 'border-green-500 focus:border-green-500'}
+                                    ${(emailStatus === 'idle') && 'border-white/5 focus:border-white'}
                                     `}
                 required />
         </div>

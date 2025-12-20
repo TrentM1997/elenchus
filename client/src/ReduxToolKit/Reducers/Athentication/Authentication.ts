@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface Authentication {
     activeSession: boolean,
@@ -30,7 +30,7 @@ export const AuthenticationSlice = createSlice({
         getCurrentSession: (state, action) => {
             state.activeSession = action.payload
         },
-        authenticate: (state, action) => {
+        authenticate: (state, action: PayloadAction<boolean>) => {
             state.activeSession = action.payload;
         },
         clearAuthSlice: () => { return initialState }

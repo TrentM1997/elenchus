@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { emailValidation } from "@/helpers/validation"
 import { AnimatePresence } from "framer-motion"
 import { Link } from "react-router-dom"
-import { sendEmailResetLink } from "@/services/supabase/SupabaseData"
+import { sendResetEmail } from "@/api/sendResetEmail"
 import AuthNotification from "../../notifications/AuthNotification";
 import { SigninStatus } from "@/hooks/useSignIn"
 
@@ -22,7 +22,7 @@ export default function GetLink({ }) {
         if (validEmail) {
             window.localStorage.setItem('email_for_pw_reset', JSON.stringify({ email: emailToReset }));
             try {
-                const res: boolean = await sendEmailResetLink(email);
+                const res: boolean = await sendResetEmail(email);
                 if (!res) {
                     throw new Error('unexpected error sending email request for reset');
                 }

@@ -3,7 +3,7 @@ import TrashTooltip from "../../features/dashboard/Content/UserArticles/tooltips
 import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 
 interface Trash {
-    deleteHandler?: (article: Article) => Promise<void>,
+    deleteHandler?: (article: Article) => () => Promise<void>,
     article: Article,
     articleDeleted: boolean
 };
@@ -15,7 +15,7 @@ function Trash({ article, deleteHandler, articleDeleted }: Trash) {
         <div className="absolute top-3 right-3 z-10 group">
             <button
                 id="trash-article"
-                onClick={() => deleteHandler(article)}
+                onClick={deleteHandler(article)}
                 type="button"
                 className="rounded-lg p-2 hover:bg-white/20
                 transition-all ease-out duration-200

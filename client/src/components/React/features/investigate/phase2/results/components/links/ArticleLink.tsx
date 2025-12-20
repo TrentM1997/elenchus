@@ -26,14 +26,18 @@ function ArticleLink({
     const mutedStyles: string = ((mute) && (!highlight)) ? 'opacity-30 pointer-events-none' : 'pointer-events-auto opacity-80 hover:opacity-100';
     const inModalStyles: string = ((inModal) && (highlight)) ? 'opacity-75' : '';
 
+    const dynamicProps = inModal ? {} : {
+        onClick: chooseArticle(article)
+    }
+
     return (
         <li
             aria-label="Article to select"
             id="article-option"
-            onClick={() => { chooseArticle(article) }}
             key={article.url}
             className={`${dimensions} ${transitions} ${styling}
             ${highlightedStyles} ${mutedStyles} ${inModalStyles}`}
+            {...dynamicProps}
         >
             <div className='relative w-full overflow-hidden
             xl:max-h-36 xl:min-h-36 md:min-h-28 md:min-w-28 sm:max-h-24 sm:min-h-24 min-h-32 max-h-32'>

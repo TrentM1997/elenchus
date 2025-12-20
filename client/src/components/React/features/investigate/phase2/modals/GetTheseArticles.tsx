@@ -25,7 +25,8 @@ export function GetTheseArticles(): JSX.Element {
         dispatch(renderModal(null));
     };
 
-    const dontExecute = () => {
+    const dontExecute = (e: React.MouseEvent<HTMLButtonElement>) => {
+
         dispatch(renderModal(null))
     };
 
@@ -54,7 +55,7 @@ export function GetTheseArticles(): JSX.Element {
 
 interface ExtractThese {
     executeExtraction: () => Promise<void>,
-    dontExecute: () => void
+    dontExecute: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 
 function ExtractThese({ executeExtraction, dontExecute }: ExtractThese): JSX.Element {
@@ -68,7 +69,7 @@ function ExtractThese({ executeExtraction, dontExecute }: ExtractThese): JSX.Ele
                     hover:text-white inline-flex items-center justify-center">
                 Yes
             </button>
-            <button onClick={dontExecute} type="button"
+            <button onClick={(e) => dontExecute(e)} type="button"
                 className="text-base py-2 min-w-36 md:w-52 px-4 rounded-full shadow-material
                      bg-white hover:bg-white/15 text-black duration-200 
                      hover:text-white inline-flex items-center justify-center">

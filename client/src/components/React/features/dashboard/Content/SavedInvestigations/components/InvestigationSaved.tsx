@@ -7,7 +7,7 @@ import SavedTimestamp from "./SavedTimestamp";
 interface PriorInvestigation {
     investigation: any,
     inSeek?: boolean,
-    review: (investigation: any) => void
+    review: (investigation: any) => () => Promise<void>
 };
 
 function PriorInvestigation({ investigation, review, inSeek }: PriorInvestigation) {
@@ -33,6 +33,5 @@ function PriorInvestigation({ investigation, review, inSeek }: PriorInvestigatio
         </div>
     );
 };
-
 
 export default React.memo(PriorInvestigation);

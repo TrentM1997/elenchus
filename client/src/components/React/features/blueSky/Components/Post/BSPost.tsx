@@ -1,33 +1,31 @@
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/ReduxToolKit/store";
-import { getPopoverPost, selectPost } from "@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice";
+import { useSelector } from "react-redux";
+import { RootState } from "@/ReduxToolKit/store";
 import Avatar from "./Avatar";
 import Author from "./Author";
 import PostContent from "./PostContent";
 import React from "react";
-import type { BlueSkyPost } from "@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice";
-
-
-interface BSPostProps {
-  post: BlueSkyPost,
-  choosePost?: (post: BlueSkyPost) => void,
-  inPopover?: boolean
-}
+import type { BSPostProps } from "@/env";
+import { BSPostFooter } from "./BSPostFooter";
 
 function BSPost({ post, choosePost, inPopover }: BSPostProps): JSX.Element {
   const selected = useSelector((state: RootState) => state.bluesky.selected)
-  const dispatch = useDispatch<AppDispatch>();
   const text: string = post.record?.text ?? null;
+  const dynamicHandler = inPopover
+    ? {}
+    : {
+      onClick: choosePost(post)
+    };
 
   return (
     <div
-      onClick={() => choosePost(post)}
-      className={`relative rounded-3xl shadow-inset my-8 md:hover:bg-white/15 transition-colors duration-200 ease-soft
+      className={`relative rounded-3xl shadow-inset my-8 
+        md:hover:bg-white/15 transition-colors duration-200 ease-soft
         py-2 px-2  lg:p-6 ring-1 ring-white/5 cursor-pointer flex flex-col gap-y-2
         ${(text === selected) || (inPopover)
           ? 'bg-white shadow-material z-40 pointer-events-none'
           : 'pointer-events-auto bg-white/5'}
         `}
+      {...dynamicHandler}
     >
       <figcaption className={`relative flex flex-row items-center gap-2 pb-6 border-b 
         ${text === selected
@@ -47,11 +45,11 @@ function BSPost({ post, choosePost, inPopover }: BSPostProps): JSX.Element {
           text={text}
         />
       </figure>
-      <footer className="w-full mx-auto flex items-center relative bottom-0 pt-2">
-
-        <svg className={`icon icon-tabler icons-tabler-outline icon-tabler-heart ${post.record.text === selected ? 'text-zinc-500' : 'text-zinc-300'}`} xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" /></svg>
-        <p className={`text-sm ${post.record.text === selected ? 'text-black/70' : 'text-zinc-300'}`}>{post.likeCount} </p>
-      </footer>
+      <BSPostFooter
+        likeCount={post.likeCount}
+        text={post?.record?.text}
+        selected={selected}
+      />
     </div>
   );
 };
