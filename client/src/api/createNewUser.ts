@@ -1,37 +1,42 @@
+import type { AuthRequestConfig } from "@/transport/types";
+
 export type CreateUserResult =
     | { ok: true }
     | { ok: false };
 
 
-async function createNewUser(email: string, password: string): Promise<CreateUserResult> {
+function createNewUser(config: AuthRequestConfig) {
+    return async (email: string, password: string): Promise<CreateUserResult> => {
+        try {
+            const response = await fetch(config.endpoint, {
+                method: 'POST',
+                credentials: config.credentials,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                }),
+            }
+            );
 
-    try {
-        const response = await fetch('/createNewUser', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: email,
-                password: password
-            }),
-        }
-        );
+            if (!response.ok) {
+                throw new Error("Failed to create new user");
+            }
 
-        if (!response.ok) {
-            throw new Error("Failed to create new user");
-        }
-
-        return { ok: true }
+            return { ok: true }
 
 
-    } catch (err) {
-        console.error(err);
-        return {
-            ok: false
+        } catch (err) {
+            console.error(err);
+            return {
+                ok: false
+            }
         }
     }
+
+
 };
 
 export { createNewUser };

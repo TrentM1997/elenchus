@@ -6,7 +6,7 @@ interface NewPasswordFieldType {
     passwordStatus: ValidationStatus
 }
 
-export default function NewPassword({ setFieldValue, passwordStatus }: NewPasswordFieldType) {
+export function NewPassword({ setFieldValue, passwordStatus }: NewPasswordFieldType) {
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
     const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {

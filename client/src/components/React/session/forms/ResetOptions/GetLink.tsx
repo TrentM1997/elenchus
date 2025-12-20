@@ -10,7 +10,7 @@ export default function GetLink({ }) {
     const [emailToReset, setEmailToReset] = useState<string>(null)
     const [validEmail, setValidEmail] = useState<boolean>(null)
     const [emailSent, setEmailSent] = useState<boolean>(null)
-    const [status, setStatus] = useState<SigninStatus>()
+    const [status, setStatus] = useState<SigninStatus>('idle')
 
     const emailInput = (e: any) => {
         setEmailToReset(e.target.value)
@@ -29,23 +29,30 @@ export default function GetLink({ }) {
                 setEmailSent(true);
                 setStatus('success')
 
-            } catch (err) { }
-            setStatus('failed');
-            setEmailSent(false)
+            } catch (err) {
+                setStatus('failed');
+                setEmailSent(false)
+            }
+
         };
     };
 
     useEffect(() => {
 
-        if (emailToReset !== null) emailValidation(emailToReset);
-    }, [emailToReset, validEmail]);
+        if (emailToReset !== null) {
+            const valid = emailValidation(emailToReset)
+            setValidEmail(valid);
+        }
+
+        if (status === 'success') setEmailSent(true);
+    }, [emailToReset, validEmail, status]);
 
 
 
     return (
         <div className="w-full max-w-md md:max-w-sm mx-auto">
             <AnimatePresence>
-                {pending && <AuthNotification complete={emailSent} setStatus={setStatus} status={status} />}
+                {(status !== 'idle') && <AuthNotification complete={emailSent} setStatus={setStatus} status={status} />}
             </AnimatePresence>
             <div className="flex flex-col">
                 <div className="border-b pb-12">
@@ -91,7 +98,7 @@ function Instructions() {
         <div className="bg-white/5 w-full my-8 p-6 h-auto rounded-lg">
             <header className="w-full mx-auto">
                 <h1 className="text-white text-wrap font-light tracking-tight text-lg">
-                    Check your email for a reset link, which will route you back to change your password!
+                    Check your email, we sent a link to reset your password!
                 </h1>
             </header>
         </div>

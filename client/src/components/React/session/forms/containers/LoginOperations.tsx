@@ -1,5 +1,5 @@
 import LoginForm from "../AuthForms/LoginForm";
-import OAuthLogins from "../InputFields/OauthLogins";
+import { OAuthLogins } from "../InputFields/OauthLogins";
 
 export default function LoginOperations({ submitAuth, status, setUserEmail, setUserPassword, validEmail, acceptedInput, }) {
 

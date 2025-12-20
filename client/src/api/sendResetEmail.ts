@@ -17,6 +17,8 @@ const sendResetEmail = async (email: string): Promise<boolean> => {
 
         const result = await response.json();
 
+        console.log(result)
+
         if (result.message === 'Reset email sent.') {
             return true;
         };

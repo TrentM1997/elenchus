@@ -1,7 +1,7 @@
 import { googleAuth } from "@/helpers/OauthLogin"
 
 
-export default function OAuthLogins() {
+export function OAuthLogins() {
 
     return (
         <div className="flex flex-col text-center space-y-2">
