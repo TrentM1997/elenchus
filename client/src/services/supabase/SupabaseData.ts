@@ -3,6 +3,9 @@ import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
 import { executeSaveArticleRequest } from "./executeSaveArticle";
 import { validateSchema } from "../../../../schemas/api/validation/validateSchema";
 import { ArticleSchema } from "../../../../schemas/api/types/ArticlesSchema";
+import { CredentialsSchema } from "../../../../schemas/api/types/LoginSchema";
+import { executeSignIn } from "./executeSignin";
+import { logValidationError } from "@/helpers/errors/logValidationError";
 
 export const supabaseSignIn = async (
     email: string,
@@ -11,42 +14,24 @@ export const supabaseSignIn = async (
 
     try {
 
-        const response = await fetch('/supabaseLogIn', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: email,
-                password: password
-            }),
-        }
-        );
+        const { data, ok, errors } = validateSchema(CredentialsSchema, { email, password });
 
-        if (!response.ok) {
-            throw new Error(`Server error: ${response.status}`);
+        if (!ok) {
+            logValidationError(errors);
+            throw new Error("Invalid schema submitted by client");
         }
-        const sessionData = await response.json();
-        if (sessionData) {
-            const data: LoginResponse = { message: 'success', session: sessionData }
-            return data;
-        };
 
-        if (!sessionData) {
-            const errorData: LoginResponse = { message: 'failed', session: null };
-            return errorData;
-        };
+        const result = await executeSignIn(data.email, data.password);
+
+        return result;
 
     } catch (error) {
+        console.error(error);
 
-        //   console.error(error);
-        const error_message: LoginResponse = {
-            message: error instanceof Error ? error.message : 'Unknown error',
+        return {
+            message: "Failed to signin user",
             session: null
-        };
-        console.error(error_message)
-        return error_message;
+        }
     };
 };
 
