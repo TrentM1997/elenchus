@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "@/ReduxToolKit/store"
 import { Link, useNavigate } from "react-router-dom"
 import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary"
@@ -13,6 +13,7 @@ import AuthNotification from "@/components/React/session/notifications/AuthNotif
 import { SigninStatus } from "@/hooks/useSignIn"
 import { useSignupValidation } from "@/hooks/auth/useSignupValidation"
 import { newUser } from "@/services/supabase/SupabaseData"
+import { authenticate } from "@/ReduxToolKit/Reducers/Athentication/Authentication"
 
 
 
@@ -21,6 +22,7 @@ export default function Signup() {
     const [status, setStatus] = useState<SigninStatus>('idle');
     const navigate = useNavigate();
     const { fieldStatus, setFieldValue, canSubmit, fields } = useSignupValidation();
+    const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
         if (!activeSession) return;
@@ -38,6 +40,7 @@ export default function Signup() {
         setStatus('pending');
         const result = await newUser(fields.email, fields.password);
         setStatus((result.ok) ? 'success' : 'failed');
+        dispatch(authenticate(true))
     }
 
 
