@@ -7,7 +7,7 @@ interface Confirm {
 }
 
 
-export default function ConfirmNewPassword({ confirmStatus, setFieldValue }: Confirm) {
+export function ConfirmNewPassword({ confirmStatus, setFieldValue }: Confirm) {
     const [showPassword, setShowPassword] = useState<boolean>(false)
 
     const handleSecondEntry = (e: React.ChangeEvent<HTMLInputElement>) => {

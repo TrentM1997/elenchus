@@ -1,12 +1,10 @@
 import { SupabaseUser } from "@/env";
 import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
-import { executeSaveArticleRequest } from "@/api/executeSaveArticle";
 import { validateSchema } from "../../../../schemas/api/validation/validateSchema";
 import { ArticleSchema } from "../../../../schemas/api/types/ArticlesSchema";
 import { CredentialsSchema } from "../../../../schemas/api/types/LoginSchema";
-import { executeSignIn } from "@/api/executeSignin";
 import { logValidationError } from "@/helpers/errors/logValidationError";
-import { createNewUser } from "@/api/createNewUser";
+import { createArticleRequest, createSigninRequest, createUserRequest } from "@/transport/apiClinet"
 import type { CreateUserResult } from "@/api/createNewUser"
 
 export const supabaseSignIn = async (
@@ -24,7 +22,7 @@ export const supabaseSignIn = async (
         }
 
         const { email, password } = data;
-        const result = await executeSignIn(email, password);
+        const result = await createSigninRequest(email, password);
         return result;
 
     } catch (error) {
@@ -52,10 +50,9 @@ export const newUser = async (
             throw new Error("Failed to validate email and password schema for new user creation");
         }
 
-        const request = await createNewUser(data.email, data.password);
+        const result = await createUserRequest(data.email, data.password);
 
-        return request
-
+        return result;
 
     } catch (error) {
         if (error) {
@@ -82,7 +79,7 @@ export const saveArticle = async (
             return null;
         }
 
-        const result = await executeSaveArticleRequest(data, exists);
+        const result = await createArticleRequest(data, exists);
         return result;
 
     } catch (error) {

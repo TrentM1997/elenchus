@@ -1,9 +1,10 @@
 import type { LoginResponse } from "@/env";
+import type { AuthRequestConfig } from "@/transport/types";
 
-function createSigninRequest(email: string, password: string): RequestInit {
+function createSigninRequest(email: string, password: string, config: AuthRequestConfig): RequestInit {
     return {
         method: 'POST',
-        credentials: 'include',
+        credentials: config.credentials,
         headers: {
             'Content-Type': 'application/json',
         },
@@ -15,27 +16,30 @@ function createSigninRequest(email: string, password: string): RequestInit {
 }
 
 
-async function executeSignIn(email: string, password: string): Promise<LoginResponse> {
+function executeSignIn(config: AuthRequestConfig) {
+    return async (email: string, password: string): Promise<LoginResponse> => {
+        try {
+            const response = await fetch(config.endpoint, createSigninRequest(email, password, config));
 
-    try {
-        const response = await fetch('/supabaseLogIn', createSigninRequest(email, password));
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.status}`);
+            }
+            const sessionData = await response.json();
+            return {
+                message: 'success',
+                session: sessionData
+            }
 
-        if (!response.ok) {
-            throw new Error(`Server error: ${response.status}`);
-        }
-        const sessionData = await response.json();
-        return {
-            message: 'success',
-            session: sessionData
-        }
+        } catch (err) {
+            console.error("executeSignIn failed:", err);
+            return {
+                message: err instanceof Error ? err.message : 'failed',
+                session: null
+            }
+        };
+    }
 
-    } catch (err) {
-        console.error("executeSignIn failed:", err);
-        return {
-            message: err instanceof Error ? err.message : 'failed',
-            session: null
-        }
-    };
+
 }
 
 

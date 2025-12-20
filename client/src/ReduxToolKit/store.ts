@@ -5,7 +5,6 @@ import UserContentSlice from './Reducers/UserContent/UserContentReducer'
 import userInvestigationSlice from './Reducers/UserContent/UserInvestigations'
 import ProfileNavigationSlice from './Reducers/UserContent/ProfileNavigationSlice'
 import SaveInvestigationSlice from './Reducers/UserContent/SaveInvestigationSlice'
-import NewUserSlice from './Reducers/Athentication/NewUserSlice'
 import FeedBackSlice from './Reducers/Feedback/FeedbackSlice'
 import BlueSkySlice from './Reducers/BlueSky/BlueSkySlice'
 import ChartSlice from './Reducers/UserContent/ChartSlice';
@@ -21,7 +20,6 @@ export const store = configureStore({
         userWork: userInvestigationSlice,
         profileNav: ProfileNavigationSlice,
         saveResearch: SaveInvestigationSlice,
-        newUser: NewUserSlice,
         feedback: FeedBackSlice,
         bluesky: BlueSkySlice,
         chart: ChartSlice,

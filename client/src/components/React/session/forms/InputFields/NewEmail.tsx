@@ -5,7 +5,7 @@ type NewEmailFieldType = {
     setFieldValue: SignupValidationHook["setFieldValue"]
 };
 
-export default function NewEmail({ emailStatus, setFieldValue }: NewEmailFieldType) {
+export function NewEmail({ emailStatus, setFieldValue }: NewEmailFieldType) {
 
     const handleEmail = (e: any) => {
 
