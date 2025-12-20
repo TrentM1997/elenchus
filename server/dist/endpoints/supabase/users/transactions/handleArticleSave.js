@@ -10,7 +10,6 @@ export const handleArticleSave = wrapAsync(async (req, res) => {
         return;
     const { supabase, user_id } = ctx;
     const result = await saveOrDeleteArticle(dataToSave, articleExists, supabase, user_id);
-    //TODO: swap boolean check on success for res.status code on client
     res.success("success", result, 200);
 });
 //# sourceMappingURL=handleArticleSave.js.map

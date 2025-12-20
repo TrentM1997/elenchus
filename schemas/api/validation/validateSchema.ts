@@ -10,12 +10,12 @@ type ValidateSchemaResp<T extends TSchema> =
     | {
         ok: true;
         data: Static<T>;
-        errors: [];
+        errors: ValidationErrors;
     }
     | {
         ok: false;
         data: null;
-        errors: readonly ValueError[];
+        errors: ValidationErrors;
     };
 
 

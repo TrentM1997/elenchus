@@ -16,6 +16,12 @@ export const supabaseSignIn = async (
 
         const { data, ok, errors } = validateSchema(CredentialsSchema, { email, password });
 
+        console.log({
+            schema: data,
+            ok: ok,
+            errors: errors ?? null
+        })
+
         if (!ok) {
             logValidationError(errors);
             throw new Error("Invalid schema submitted by client");
