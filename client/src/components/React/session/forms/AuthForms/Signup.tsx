@@ -1,11 +1,9 @@
-import { requiredInput } from "@/helpers/validation"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { AppDispatch, RootState } from "@/ReduxToolKit/store"
 import { Link, useNavigate } from "react-router-dom"
 import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary"
-import { confirmPassword } from "@/helpers/validation"
-import { getFirstPassword, getSecondPassword, requestValidEmail, matchPasswords } from "@/ReduxToolKit/Reducers/Athentication/NewUserSlice"
+import { getFirstPassword, getSecondPassword, getNewEmail } from "@/ReduxToolKit/Reducers/Athentication/NewUserSlice"
 import { useDispatch } from "react-redux"
 import { AnimatePresence, motion } from "framer-motion"
 import NewEmail from "../InputFields/NewEmail"
@@ -17,16 +15,17 @@ import { newUser } from "@/services/supabase/SupabaseData"
 import AuthNotification from "@/components/React/session/notifications/AuthNotification";
 import { authenticate } from "@/ReduxToolKit/Reducers/Athentication/Authentication"
 import { SigninStatus } from "@/hooks/useSignIn"
+import { useCheckCredentials } from "@/hooks/useCheckCredentials"
+
+
+//TODO: finish refactor — old code is messy and difficult to debug 
+
 
 
 export default function Signup() {
     const activeSession = useSelector((state: RootState) => state.auth.activeSession);
-    const [acceptedInput, setAcceptedInput] = useState<boolean>(null)
     const [first_pw_valid, setValidFirstPassword] = useState<boolean>(null)
-    const [canSubmit, setCanSubmit] = useState<boolean>(null)
     const [status, setStatus] = useState<SigninStatus>('idle');
-    const [createdUser, setCreatedUser] = useState<boolean>(null)
-    const [emailValid, setEmailValid] = useState<boolean>(null)
     const [errorMessage, setErrorMessage] = useState<string>(null)
     const [needSpecialChar, setNeedSpecialChar] = useState<string>(null)
     const newEmail = useSelector((state: RootState) => state.newUser.emailInput)
@@ -35,7 +34,8 @@ export default function Signup() {
     const enterValidEmail = useSelector((state: RootState) => state.newUser.enterValidEmail)
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
-
+    // — ought to create new custom hook to handle this validation
+    const { validEmail, acceptedInput } = useCheckCredentials(newEmail, firstPassword, secondPassword);
 
     const handlePassword = (e: any) => {
         const password = e.target.value
@@ -47,16 +47,12 @@ export default function Signup() {
         dispatch(getSecondPassword(secondEntry))
     }
 
-
-    const checkInput = () => {
-        requiredInput(newEmail, firstPassword, setValidFirstPassword)
-    }
     const createUser = async () => {
-        if (canSubmit) {
+        if (acceptedInput) {
             setStatus('pending');
             console.log('triggered')
             try {
-                const data = await newUser(newEmail, firstPassword, setCreatedUser, setCanSubmit, setAcceptedInput, setErrorMessage, setValidFirstPassword);
+                const data = await newUser(newEmail, secondPassword);
                 if (data) {
                     dispatch(authenticate(true));
                     setStatus('success')
@@ -65,49 +61,28 @@ export default function Signup() {
                 console.error(error);
                 setStatus('failed');
             }
-        } else {
-            setAcceptedInput(false)
-        };
+        }
     };
 
 
     const submitAccountCreation = (e: any) => {
-
         e.preventDefault()
 
-        console.log(emailValid)
-        if (emailValid && canSubmit) {
-            createUser()
-        } else {
-        }
-    }
+        if (!acceptedInput) return;
 
+        console.log(validEmail)
+        createUser()
+    }
 
     useEffect(() => {
 
-
-        if (emailValid === false) {
-            dispatch(requestValidEmail('please enter a valid email address'))
-        } else if (emailValid === true) {
-            dispatch(requestValidEmail(null))
+        return () => {
+            dispatch(getNewEmail(""))
+            dispatch(getFirstPassword(""))
+            dispatch(getSecondPassword(""))
         }
+    }, [])
 
-        if (firstPassword && newEmail) {
-            checkInput()
-        }
-
-        if (firstPassword && secondPassword) {
-            confirmPassword(firstPassword, secondPassword, setCanSubmit, setNeedSpecialChar)
-        }
-
-        if (canSubmit === false) {
-            dispatch(matchPasswords("Password entered must match the entry above"))
-        } else if (canSubmit === true) {
-            dispatch(matchPasswords(''))
-        }
-
-
-    }, [firstPassword, secondPassword, acceptedInput, canSubmit, dispatch, newEmail, confirmPassword]);
 
 
     useEffect(() => {
@@ -152,9 +127,9 @@ export default function Signup() {
                         className="w-full gap-6 sm:gap-24 mx-auto grid grid-cols-1 mt-12 lg:grid-cols-2 items-start relative">
                         <form>
                             <div className="space-y-4">
-                                <NewEmail emailValid={emailValid} enterValidEmail={enterValidEmail} setEmailValid={setEmailValid} />
-                                <NewPassword needSpecialChar={needSpecialChar} first_pw_valid={first_pw_valid} acceptedInput={acceptedInput} canSubmit={canSubmit} handlePassword={handlePassword} />
-                                <ConfirmNewPassword acceptedInput={acceptedInput} canSubmit={canSubmit} handleSecondEntry={handleSecondEntry} setCanSubmit={setCanSubmit} setNeedSpecialChar={setNeedSpecialChar} />
+                                <NewEmail emailValid={validEmail} enterValidEmail={enterValidEmail} />
+                                <NewPassword needSpecialChar={needSpecialChar} first_pw_valid={first_pw_valid} acceptedInput={acceptedInput} canSubmit={acceptedInput} handlePassword={handlePassword} />
+                                <ConfirmNewPassword acceptedInput={acceptedInput} canSubmit={acceptedInput} handleSecondEntry={handleSecondEntry} setCanSubmit={() => { }} setNeedSpecialChar={setNeedSpecialChar} />
                                 <div className="col-span-full">
                                     <button onClick={(e) => submitAccountCreation(e)} type="submit" className="text-sm py-2 px-4 border focus:ring-2 h-10 rounded-full border-zinc-100 
                                 bg-white hover:bg-black text-black duration-200 focus:ring-offset-2 focus:ring-white hover:text-white
@@ -171,7 +146,7 @@ export default function Signup() {
                                 </div>
                             </div>
                             <AnimatePresence>
-                                {canSubmit !== true && <NewPasswordGuide />}
+                                {acceptedInput !== true && <NewPasswordGuide />}
 
                             </AnimatePresence>
                         </form>

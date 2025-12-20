@@ -1,34 +1,29 @@
 import { SupabaseUser } from "@/env";
 import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
-import { executeSaveArticleRequest } from "./executeSaveArticle";
+import { executeSaveArticleRequest } from "@/api/executeSaveArticle";
 import { validateSchema } from "../../../../schemas/api/validation/validateSchema";
 import { ArticleSchema } from "../../../../schemas/api/types/ArticlesSchema";
 import { CredentialsSchema } from "../../../../schemas/api/types/LoginSchema";
-import { executeSignIn } from "./executeSignin";
+import { executeSignIn } from "@/api/executeSignin";
 import { logValidationError } from "@/helpers/errors/logValidationError";
+import { createNewUser } from "@/api/createNewUser";
 
 export const supabaseSignIn = async (
     email: string,
     password: string,
 ): Promise<LoginResponse> => {
+    const body = { email: email, password: password };
 
     try {
-
-        const { data, ok, errors } = validateSchema(CredentialsSchema, { email, password });
-
-        console.log({
-            schema: data,
-            ok: ok,
-            errors: errors ?? null
-        })
+        const { data, ok, errors } = validateSchema(CredentialsSchema, body);
 
         if (!ok) {
             logValidationError(errors);
             throw new Error("Invalid schema submitted by client");
         }
 
-        const result = await executeSignIn(data.email, data.password);
-
+        const { email, password } = data;
+        const result = await executeSignIn(email, password);
         return result;
 
     } catch (error) {
@@ -41,107 +36,25 @@ export const supabaseSignIn = async (
     };
 };
 
-
-export const fetchSignOut = async (): Promise<SignOutResponse> => {
-
-    try {
-        const response = await fetch('/signUserOut', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error('Could not reach endpoint for signout');
-        }
-        const result = await response.json();
-        const message = { loggedOut: true, data: result };
-        return message;
-
-    } catch (error) {
-        console.error(error);
-        const error_message = { loggedOut: false, data: null };
-        return error_message;
-    };
-};
-
-
-
-export const sendEmailResetLink = async (email: string): Promise<boolean> => {
-
-    try {
-
-        const response = await fetch('/resetUserPassword', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: email,
-            }),
-        });
-        if (!response.ok) {
-            throw new Error('could not connect to password reset endpoint');
-        };
-
-        const result = await response.json();
-
-        if (result.message === 'Reset email sent.') {
-            return true;
-        };
-
-    } catch (error) {
-        console.error(error);
-        return false;
-    };
-};
-
-
+//TODO: remove all state setters from this function — it's uneccessary and makes this impossible to debug
 
 export const newUser = async (
     email: string,
     password: string,
-    setCreatedUser: any,
-    setAcceptedInput: any,
-    setValidFirstPassword: any,
-    setErrorMessage: any,
-    setCanSubmit: any): Promise<any> => {
+): Promise<any> => {
 
     try {
+        //  const { data, ok, errors } = validateSchema(CredentialsSchema, { email, password });
+        //
+        //  if (!ok) {
+        //      logValidationError(errors);
+        //      throw new Error("Failed to validate email and password schema for new user creation");
+        //  }
 
-        const response = await fetch('/createNewUser', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: email,
-                password: password
-            }),
-        }
-        );
+        const request = await createNewUser(email, password);
 
-        if (!response.ok) {
-            console.log(response.statusText);
-            setErrorMessage(response.statusText);
-            setCreatedUser(false)
-            throw new Error(`Couldn't reach createNewUser Endpoint: ${response.statusText}`);
-        };
+        return request
 
-        const session = await response.json();
-
-        if (session) {
-            console.log(session.data);
-            setCreatedUser(true);
-            setCanSubmit(null);
-            setAcceptedInput(null);
-            setValidFirstPassword(null);
-            setErrorMessage(null);
-            return { user: session.data };
-        };
 
     } catch (error) {
         if (error) {
@@ -164,7 +77,7 @@ export const saveArticle = async (
         const { ok, data, errors } = validateSchema(ArticleSchema, article);
 
         if (!ok) {
-            console.error("Invalid Schema submitted to saveArticles()", errors);
+            logValidationError(errors);
             return null;
         }
 

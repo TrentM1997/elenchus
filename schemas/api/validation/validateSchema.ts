@@ -3,7 +3,6 @@ import { TypeCompiler } from '@sinclair/typebox/compiler';
 import { Static } from '@sinclair/typebox';
 import type { ValueError } from "@sinclair/typebox/compiler";
 
-
 export type ValidationErrors = readonly ValueError[];
 
 type ValidateSchemaResp<T extends TSchema> =
@@ -18,16 +17,13 @@ type ValidateSchemaResp<T extends TSchema> =
         errors: ValidationErrors;
     };
 
-
-
 function validateSchema<T extends TSchema>(
     schema: T,
     data: unknown
 ): ValidateSchemaResp<T> {
+
     const validator = TypeCompiler.Compile(schema);
-
     const valid = validator.Check(data);
-
 
     if (valid) {
         return {

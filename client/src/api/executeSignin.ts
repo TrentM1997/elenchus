@@ -30,9 +30,9 @@ async function executeSignIn(email: string, password: string): Promise<LoginResp
         }
 
     } catch (err) {
-        console.error(err);
+        console.error("executeSignIn failed:", err);
         return {
-            message: 'failed',
+            message: err instanceof Error ? err.message : 'failed',
             session: null
         }
     };

@@ -1,4 +1,4 @@
-import type { ArticleSchemaType } from "../../../../schemas/api/types/ArticlesSchema"
+import type { ArticleSchemaType } from "../../../schemas/api/types/ArticlesSchema";
 
 async function executeSaveArticleRequest(
     article: ArticleSchemaType,

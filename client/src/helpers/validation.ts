@@ -16,6 +16,7 @@ const checkSpecialChars = (arr: string[]) => {
 
 
 export const requiredInput = (emailString: string, passwordString: string, setterFunction: Function) => {
+    console.log(emailString, passwordString);
 
     const validateEmail = /[A-Za-z0-9\._%+\-]+@[A-Za-z0-9\.\-]+\.[A-Za-z]{2,}/gm
 
@@ -62,13 +63,12 @@ export const confirmPassword = (firstEntry?: string | null, secondEntry?: string
     const noSpecialChars = checkSpecialChars(splitPW)
 
     if (noSpecialChars) {
-        errorSetter('Password must contain at least one special character');
+        setter('Password must contain at least one special character');
         return false;
     }
 
     if (firstEntry === secondEntry && !noSpecialChars && longEnough) {
         setter(true)
-        errorSetter(null)
         return true;
     } else {
         setter(false)
