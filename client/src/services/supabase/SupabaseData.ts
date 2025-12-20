@@ -7,6 +7,7 @@ import { CredentialsSchema } from "../../../../schemas/api/types/LoginSchema";
 import { executeSignIn } from "@/api/executeSignin";
 import { logValidationError } from "@/helpers/errors/logValidationError";
 import { createNewUser } from "@/api/createNewUser";
+import type { CreateUserResult } from "@/api/createNewUser"
 
 export const supabaseSignIn = async (
     email: string,
@@ -40,7 +41,7 @@ export const supabaseSignIn = async (
 export const newUser = async (
     email: string,
     password: string,
-): Promise<Response["status"]> => {
+): Promise<CreateUserResult> => {
     const body = { email, password }
 
     try {
@@ -59,7 +60,7 @@ export const newUser = async (
     } catch (error) {
         if (error) {
             console.error(error);
-            return null
+            return { ok: false }
         }
     };
 };

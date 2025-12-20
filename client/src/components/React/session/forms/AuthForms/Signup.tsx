@@ -36,8 +36,8 @@ export default function Signup() {
     const submitNewUserRequest = async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
         e.preventDefault();
         setStatus('pending');
-        const statusCode = await newUser(fields.email, fields.password);
-        setStatus((statusCode === 200) ? 'success' : 'failed');
+        const result = await newUser(fields.email, fields.password);
+        setStatus((result.ok) ? 'success' : 'failed');
     }
 
 

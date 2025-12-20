@@ -1,5 +1,9 @@
+export type CreateUserResult =
+    | { ok: true }
+    | { ok: false };
 
-async function createNewUser(email: string, password: string): Promise<any> {
+
+async function createNewUser(email: string, password: string): Promise<CreateUserResult> {
 
     try {
         const response = await fetch('/createNewUser', {
@@ -19,12 +23,14 @@ async function createNewUser(email: string, password: string): Promise<any> {
             throw new Error("Failed to create new user");
         }
 
-        const result: Response = await response.json();
+        return { ok: true }
 
-        return result.status;
 
     } catch (err) {
         console.error(err);
+        return {
+            ok: false
+        }
     }
 };
 
