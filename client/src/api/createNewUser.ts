@@ -1,4 +1,4 @@
-import type { AuthRequestConfig } from "@/transport/types";
+import type { AuthRequestConfig } from "@/transport/types/types";
 
 export type CreateUserResult =
     | { ok: true }

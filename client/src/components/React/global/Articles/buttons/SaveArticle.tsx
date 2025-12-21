@@ -9,7 +9,6 @@ import { selectSavedUrlSet } from "@/ReduxToolKit/Reducers/UserContent/UserConte
 export default function Bookmark({ article, open }: SaveArticleButton) {
     const savedSet = useAppSelector(selectSavedUrlSet);
     const isSaved: boolean = !!article.article_url && savedSet.has(article.article_url);
-    console.log(isSaved)
     const { handleSaveArticle, result } = useSaveArticle({ article, isSaved });
     const [notification, setNotification] = useState<string | null>(null);
 

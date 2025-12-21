@@ -1,5 +1,5 @@
 import type { LoginResponse } from "@/env";
-import type { AuthRequestConfig } from "@/transport/types";
+import type { AuthRequestConfig } from "@/transport/types/types";
 
 function createSigninRequest(email: string, password: string, config: AuthRequestConfig): RequestInit {
     return {

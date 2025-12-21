@@ -1,18 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { emailValidation, requiredInput, confirmPassword } from "@/helpers/validation";
 
 type CheckStatusType = 'confirmation' | 'n/a';
 
-
-
-
-export const useCheckCredentials = (userEmail: string | null, userPassword: string | null, secondPW?: string | null) => {
+const useCheckCredentials = (userEmail: string | null, userPassword: string | null, secondPW?: string | null) => {
     const [validEmail, setValidEmail] = useState<boolean>(null)
     const [acceptedInput, setAcceptedInput] = useState<boolean>(null)
     const [checkStatus, setCheckStatus] = useState<CheckStatusType>('n/a');
-
-    console.log(userEmail, userPassword)
-
 
     useEffect(() => {
         if ((userEmail === "") || (userPassword === "")) return;
@@ -23,10 +17,7 @@ export const useCheckCredentials = (userEmail: string | null, userPassword: stri
         if (userEmail && userPassword) {
             requiredInput(userEmail, userPassword, setAcceptedInput);
         };
-
-
     }, [userEmail, userPassword]);
-
 
     useEffect(() => {
         if (secondPW) {
@@ -35,12 +26,13 @@ export const useCheckCredentials = (userEmail: string | null, userPassword: stri
 
 
         if ((checkStatus === 'confirmation')) {
-            confirmPassword(userPassword, secondPW, setAcceptedInput)
+            const valid = confirmPassword(userPassword, secondPW)
+            setAcceptedInput(valid);
         }
 
-    }, [secondPW])
-
+    }, [secondPW]);
 
     return { validEmail, acceptedInput };
-
 };
+
+export { useCheckCredentials }

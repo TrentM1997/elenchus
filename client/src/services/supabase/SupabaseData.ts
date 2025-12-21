@@ -4,8 +4,9 @@ import { validateSchema } from "../../../../schemas/api/validation/validateSchem
 import { ArticleSchema } from "../../../../schemas/api/types/ArticlesSchema";
 import { CredentialsSchema } from "../../../../schemas/api/types/LoginSchema";
 import { logValidationError } from "@/helpers/errors/logValidationError";
-import { createArticleRequest, createSigninRequest, createUserRequest } from "@/transport/apiClinet"
+import { createArticleRequest, createSigninRequest, createUserRequest } from "@/transport/request/apiClient"
 import type { CreateUserResult } from "@/api/createNewUser"
+import { SaveArticleResult } from "@/transport/types/types";
 
 export const supabaseSignIn = async (
     email: string,
@@ -67,25 +68,18 @@ export const saveArticle = async (
     article: Article,
     exists?: boolean,
 ): Promise<
-    SavedResponse
-    | null
+    SaveArticleResult
 > => {
 
-    try {
-        const { ok, data, errors } = validateSchema(ArticleSchema, article);
+    const { ok, data, errors } = validateSchema(ArticleSchema, article);
 
-        if (!ok) {
-            logValidationError(errors);
-            return null;
-        }
+    if (!ok) {
+        logValidationError(errors);
+        return
+    }
 
-        const result = await createArticleRequest(data, exists);
-        return result;
-
-    } catch (error) {
-        console.error(error);
-        return null;
-    };
+    const result = await createArticleRequest(data, exists);
+    return result;
 };
 
 

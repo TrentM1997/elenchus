@@ -1,28 +1,34 @@
 import type { ArticleSchemaType } from "../../../schemas/api/types/ArticlesSchema";
-import type { ArticleEndpointConfig } from "@/transport/types";
+import type { ArticleEndpointConfig, SaveArticleResult } from "@/transport/types/types";
+import { adaptSaveArticleResponse } from "@/transport/response/apiResponses";
 
 function executeSaveArticleRequest(config: ArticleEndpointConfig) {
-    return async (article: ArticleSchemaType, exists: boolean) => {
-        const response = await fetch(config.endpoint, {
-            method: 'POST',
-            credentials: config.credentials,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                dataToSave: article,
-                articleExists: exists
-            }),
-        });
+    return async (article: ArticleSchemaType, exists: boolean): Promise<SaveArticleResult> => {
 
-        if (!response.ok) {
-            console.error(response.statusText);
-            throw new Error('could not fetch endpoint');
-        };
+        try {
+            const response = await fetch(config.endpoint, {
+                method: 'POST',
+                credentials: config.credentials,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    dataToSave: article,
+                    articleExists: exists
+                }),
+            });
 
-        return response.json() as Promise<SavedResponse>
-    }
+            const results = await adaptSaveArticleResponse(response)
+            return results;
+        } catch (error) {
 
+            console.error(error);
+            return {
+                ok: false,
+                reason: 'network'
+            }
+        }
+    };
 };
 
 export { executeSaveArticleRequest };

@@ -15,8 +15,6 @@ const useRecoverSession = (): void => {
 
     useEffect(() => {
 
-        console.log(articles, investigations);
-
         if (user) {
             dispatch(authenticate(true));
             if (articles) dispatch(populateArticles(articles));

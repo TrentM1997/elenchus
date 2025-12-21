@@ -30,3 +30,8 @@ export type AuthRequestConfig = {
     endpoint: AuthEndpoint,
     credentials: RequestCredentials
 };
+
+
+export type SaveArticleResult =
+    | { ok: true; id: string }
+    | { ok: false; reason: "unauthorized" | "validation" | "unknown" | "network" };
