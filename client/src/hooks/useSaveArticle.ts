@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/ReduxToolKit/store";
 import { fetchSavedArticles } from "@/ReduxToolKit/Reducers/UserContent/UserContentReducer";
 import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
+import { SaveArticleResult } from "@/transport/types/types";
 
 interface SaveArticleHook {
     handleSaveArticle: () => Promise<void>,
@@ -77,10 +78,10 @@ export function useSaveArticle({ article, isSaved }: SaveHookParams): SaveArticl
         };
 
         try {
-            const resp: SavedResponse | null = await saveArticle(dataToSave, isSaved);
-            resp.status === "success"
+            const { ok }: SaveArticleResult = await saveArticle(dataToSave, isSaved);
+            ok
                 ? (() => {
-                    setResult(resp.data.message ?? "saved article");
+                    setResult("saved article");
                     dispatch(fetchSavedArticles());
                 })()
                 : setResult("failed to execute");

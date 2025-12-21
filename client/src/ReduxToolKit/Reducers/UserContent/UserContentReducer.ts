@@ -44,8 +44,6 @@ export const fetchSavedArticles = createAsyncThunk(
             })
 
             if (!response.ok) {
-                console.log(response)
-
                 throw new Error(`Failed to fetch articles: ${response.statusText}`);
             }
             const results = await response.json();
