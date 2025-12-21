@@ -1,8 +1,9 @@
 import { useState } from "react"
 import type { SignupValidationHook, ValidationStatus } from "@/env"
+import type { ValidateNewPasswordHook } from "@/hooks/auth/useValidateNewPassword"
 
 interface NewPasswordFieldType {
-    setFieldValue: SignupValidationHook["setFieldValue"],
+    setFieldValue: SignupValidationHook["setFieldValue"] | ValidateNewPasswordHook["setFieldValue"],
     passwordStatus: ValidationStatus
 }
 
