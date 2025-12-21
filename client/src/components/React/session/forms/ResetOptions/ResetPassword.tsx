@@ -1,76 +1,42 @@
-import { useEffect, useState, useLayoutEffect } from "react"
-import { confirmPassword, confirmFirstPassword } from "@/helpers/validation"
-import ConfirmNewPassword from "../InputFields/ConfirmNewPassword"
-import NewPassword from "../InputFields/NewPassword"
-import { getFirstPassword, getSecondPassword, matchPasswords } from "@/ReduxToolKit/Reducers/Athentication/NewUserSlice"
-import { useDispatch } from "react-redux"
-import { useSelector } from "react-redux"
-import { RootState } from "@/ReduxToolKit/store"
-import { Link } from "react-router-dom"
+import { useState, useLayoutEffect, useEffect } from "react"
+import { NewPassword, ConfirmNewPassword } from "@/components/React/session/forms/InputFields"
+import { Link, useNavigate } from "react-router-dom"
 import { AnimatePresence } from "framer-motion"
 import { pwReset } from "@/services/supabase/SupabaseData"
 import AuthNotification from "../../notifications/AuthNotification"
-import { passwordChangeStatus } from "../../notifications/AuthStatus"
 import { SigninStatus } from "@/hooks/useSignIn"
+import { useValidateNewPassword } from "@/hooks/auth/useValidateNewPassword"
 
 export default function ResetPassword({ }) {
     const [status, setStatus] = useState<SigninStatus>('idle');
-    const [storedEmail, setStoredEmail] = useState<string>();
-    const [validEntries, setValidEntries] = useState<boolean>(null)
-    const [first_pw_valid, setValidFirstPassword] = useState<boolean>(null)
-    const [needSpecialChar, setNeedSpecialChar] = useState<string>(null)
-    const [canSubmit, setCanSubmit] = useState<boolean>()
-    const secondPassword = useSelector((state: RootState) => state.newUser.secondPassword)
-    const firstPassword = useSelector((state: RootState) => state.newUser.firstPassword)
-    const [successfullyChanged, setSuccessFullyChanged] = useState<boolean>(null)
-    const [resetting, setResetting] = useState<boolean>(null)
-    const dispatch = useDispatch()
+    const [storedEmail, setStoredEmail] = useState<string | null>(null);
+    const { fields, fieldStatus, setFieldValue, canSubmit } = useValidateNewPassword()
+    const navigate = useNavigate()
 
+    const submitReset = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        setStatus('pending')
 
-    const handlePassword = (e: any) => {
-        const password = e.target.value
-        dispatch(getFirstPassword(password))
-    }
-
-    const handleSecondEntry = (e: any) => {
-        const secondEntry = e.target.value
-        dispatch(getSecondPassword(secondEntry))
-    }
-
-    const resetPassword = async (e: any) => {
-        e.preventDefault()
-        setStatus('pending');
-
-        if (canSubmit && storedEmail) {
-            const data = await pwReset(storedEmail, firstPassword);
-
-            if (data) {
-                setSuccessFullyChanged(true);
-                setStatus('success')
-
-            } else {
-                setSuccessFullyChanged(false)
-                setStatus('failed');
-            };
+        const result = await pwReset(storedEmail, fields.password);
+        if (result.id) {
+            setStatus('success')
         } else {
-            console.log("Passwords must match")
+            setStatus('failed');
         }
     };
 
     useEffect(() => {
+        if (status !== "success") return;
 
-        if (firstPassword) {
-            confirmFirstPassword(firstPassword, setValidFirstPassword)
+
+        const timer = window.setTimeout(() => {
+            navigate('/login');
+        }, 2500)
+
+        return () => {
+            clearTimeout(timer);
         }
-        if (firstPassword && secondPassword) {
-            confirmPassword(firstPassword, secondPassword, setCanSubmit, setNeedSpecialChar)
-        }
-        if (canSubmit === false) {
-            dispatch(matchPasswords("Password entered must match the entry above"))
-        } else if (canSubmit === true) {
-            dispatch(matchPasswords(''))
-        }
-    }, [firstPassword, secondPassword, validEntries, storedEmail]);
+    }, [status])
 
 
     useLayoutEffect(() => {
@@ -90,7 +56,7 @@ export default function ResetPassword({ }) {
     return (
         <div className="w-full max-w-md md:max-w-sm mx-auto">
             <AnimatePresence>
-                {resetting && <AuthNotification complete={successfullyChanged} setterFunction={setResetting} setStatus={setStatus} status={status} />}
+                {(status === 'pending') && <AuthNotification setStatus={setStatus} status={status} />}
             </AnimatePresence>
             <div className="flex flex-col">
                 <div className="border-b pb-12">
@@ -104,10 +70,13 @@ export default function ResetPassword({ }) {
             </div>
             <form className="mt-12">
                 <div className="space-y-6">
-                    <NewPassword handlePassword={handlePassword} canSubmit={canSubmit} first_pw_valid={first_pw_valid} needSpecialChar={needSpecialChar} />
-                    <ConfirmNewPassword canSubmit={canSubmit} setCanSubmit={setCanSubmit} handleSecondEntry={handleSecondEntry} setNeedSpecialChar={setNeedSpecialChar} />
+                    <NewPassword passwordStatus={fieldStatus.p} setFieldValue={setFieldValue} />
+                    <ConfirmNewPassword confirmStatus={fieldStatus.c} setFieldValue={setFieldValue} />
                     <div className="col-span-full">
-                        <button onClick={(e) => resetPassword(e)} type="button" className="text-sm py-2 px-4 border focus:ring-2 h-10 rounded-full border-zinc-100 
+                        <button
+                            onClick={(e) => submitReset(e)}
+                            disabled={!canSubmit}
+                            type="button" className="text-sm py-2 px-4 border focus:ring-2 h-10 rounded-full border-zinc-100 
                         bg-white hover:bg-black/10 text-black duration-200 focus:ring-offset-2 focus:ring-white hover:text-white w-full inline-flex items-center 
                         justify-center ring-1 ring-transparent">
                             Submit
@@ -126,19 +95,3 @@ export default function ResetPassword({ }) {
         </div>
     )
 }
-
-
-
-
-//     const { data, error } = await supabase.auth.updateUser({
-//         password: secondPassword
-//     })
-//
-//     console.log(data, error)
-//
-//     if (error) {
-//         console.log(error.message)
-//         setSuccessFullyChanged(false)
-//     } else if (data) {
-//         setSuccessFullyChanged(true)
-//     }

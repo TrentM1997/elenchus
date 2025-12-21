@@ -1,9 +1,9 @@
 import { useState } from "react"
-import type { ValidationStatus, SignupValidationHook } from "@/env"
+import type { ValidateNewPasswordHook, NewPasswordStatus } from "@/hooks/auth/useValidateNewPassword"
 
 interface Confirm {
-    confirmStatus: ValidationStatus,
-    setFieldValue: SignupValidationHook["setFieldValue"]
+    confirmStatus: NewPasswordStatus["c"],
+    setFieldValue: ValidateNewPasswordHook["setFieldValue"]
 }
 
 
@@ -12,7 +12,7 @@ export function ConfirmNewPassword({ confirmStatus, setFieldValue }: Confirm) {
 
     const handleSecondEntry = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
-        setFieldValue('confirmPw', value);
+        setFieldValue("confirmPassword", value);
     };
 
     return (
