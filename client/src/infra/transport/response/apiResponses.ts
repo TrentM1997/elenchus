@@ -1,4 +1,4 @@
-import type { SaveArticleResult } from "@/transport/types/types";
+import type { SaveArticleResult } from "@/infra/transport/types/types";
 
 
 async function adaptSaveArticleResponse(

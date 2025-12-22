@@ -2,7 +2,7 @@ import { clearAuthSlice } from "@/ReduxToolKit/Reducers/Athentication/Authentica
 import { useDispatch } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState, useRef } from "react";
-import { logOut } from "@/api/logOut";
+import { logOut } from "@/infra/api/logOut";
 import AuthNotification from "@/components/React/session/notifications/AuthNotification";
 import { useNavigate } from "react-router-dom";
 import { SigninStatus } from "@/hooks/useSignIn";

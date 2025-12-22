@@ -1,6 +1,6 @@
-import { createNewUser } from "@/api/createNewUser";
-import { executeSaveArticleRequest } from "@/api/executeSaveArticle";
-import { executeSignIn } from "@/api/executeSignin";
+import { createNewUser } from "@/infra/api/createNewUser";
+import { executeSaveArticleRequest } from "@/infra/api/executeSaveArticle";
+import { executeSignIn } from "@/infra/api/executeSignin";
 
 const createUserRequest = createNewUser({
     endpoint: "/createNewUser",
