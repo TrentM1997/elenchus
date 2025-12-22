@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { WebWorkerRequest, WebWorkerResponse } from "@/env";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/ReduxToolKit/store";
-import { getBiasSnapshot, getReportingRatings } from "@/ReduxToolKit/Reducers/UserContent/ChartSlice";
+import { AppDispatch } from "@/state/store";
+import { getBiasSnapshot, getReportingRatings } from "@/state/Reducers/UserContent/ChartSlice";
 
 
 

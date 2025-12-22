@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import StatItem from "./StatItem"
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 
 interface Stats {
     percentChanged: number | null,

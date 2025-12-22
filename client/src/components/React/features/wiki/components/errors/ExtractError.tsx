@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
-import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
+import { RootState } from "@/state/store";
+import { InvestigateState } from "@/state/Reducers/Root/InvestigateReducer";
 
 export default function ExtractError(): JSX.Element {
     const investigate: InvestigateState = useSelector((state: RootState) => state.investigation);

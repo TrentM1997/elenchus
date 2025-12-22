@@ -1,7 +1,7 @@
 import StepsEditor from "@/components/React/global/TipTap/StepsEditor";
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import { useSelector } from "react-redux";
-import { getPremises } from "@/ReduxToolKit/Reducers/Investigate/UserPOV";
+import { getPremises } from "@/state/Reducers/Investigate/UserPOV";
 import { motion } from "framer-motion"
 import { stepVariants } from "@/motion/variants"
 import React from "react";

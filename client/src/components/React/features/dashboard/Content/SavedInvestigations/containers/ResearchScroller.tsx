@@ -1,15 +1,15 @@
 import { Virtuoso, ListRange } from "react-virtuoso";
 import { useVirtuoso } from "@/hooks/useVirtuoso";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/ReduxToolKit/store";
+import { AppDispatch, RootState } from "@/state/store";
 import PriorInvestigation from "../components/InvestigationSaved";
 import InvestigationSkeletons from "../skeletons/InvestigationSkeletons";
 import { useRef, useCallback } from "react";
 import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";
-import { reviewThisResearch } from "@/ReduxToolKit/Reducers/UserContent/UserInvestigations";
+import { reviewThisResearch } from "@/state/Reducers/UserContent/UserInvestigations";
 import { useSkeletons } from "@/hooks/useSkeletons";
 import type { SavedInvestigation } from "./SavedResearchLayout";
-import { chooseTab } from "@/ReduxToolKit/Reducers/UserContent/DashboardTabs";
+import { chooseTab } from "@/state/Reducers/UserContent/DashboardTabs";
 import { wait } from "@/helpers/Presentation";
 
 interface ResearchScroller {

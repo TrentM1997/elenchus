@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
-import type { PathSelected } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
-import { RootState } from "@/ReduxToolKit/store";
+import type { PathSelected } from "@/state/Reducers/Investigate/Rendering";
+import { RootState } from "@/state/store";
 import { renderInitialPhase } from "../switches/renderInitialPhase";
 
 function InitialPhase() {

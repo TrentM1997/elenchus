@@ -1,14 +1,14 @@
 import { useMemo, useRef } from "react";
 import { useScrollTrap } from "@/hooks/useOverScrollTrap";
 import { AnimatePresence } from "framer-motion";
-import { useAppSelector } from "@/ReduxToolKit/hooks/useAppSelector";
-import { selectWikiSummary, selectWikiDisambig } from "@/ReduxToolKit/Reducers/Investigate/WikipediaSlice";
+import { useAppSelector } from "@/state/hooks/useAppSelector";
+import { selectWikiSummary, selectWikiDisambig } from "@/state/Reducers/Investigate/WikipediaSlice";
 import { WikiSummaryResponse, WikiDisambigResponse } from "@/services/wiki/wiki";
 import StandardExtract from "./standard/StandardExtract";
 import DisambigExtract from "./disambig/DisambigExtract";
-import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
+import { InvestigateState } from "@/state/Reducers/Root/InvestigateReducer";
 import { useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import ExtractError from "./errors/ExtractError";
 
 export default function Description(): JSX.Element | null {

@@ -1,13 +1,13 @@
 import StepsEditor from "@/components/React/global/TipTap/StepsEditor";
-import { getIdea } from "@/ReduxToolKit/Reducers/Investigate/UserPOV"
+import { getIdea } from "@/state/Reducers/Investigate/UserPOV"
 import { useSelector } from "react-redux"
-import { RootState } from "@/ReduxToolKit/store"
+import { RootState } from "@/state/store"
 import { motion } from "framer-motion"
 import { stepVariants } from "@/motion/variants"
 import Requirements from "../inputs/interactive/Requirements"
 import { useCheckFirstStep } from "@/hooks/useCheckFirstStep"
 import React from "react";
-import type { PaginationStatus } from "@/ReduxToolKit/Reducers/Investigate/Steps"
+import type { PaginationStatus } from "@/state/Reducers/Investigate/Steps"
 
 
 function Step1() {

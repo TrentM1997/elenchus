@@ -1,6 +1,6 @@
-import { RootState } from "@/ReduxToolKit/store"
+import { RootState } from "@/state/store"
 import { useSelector } from "react-redux"
-import type { Extracts } from "@/ReduxToolKit/Reducers/Investigate/Review";
+import type { Extracts } from "@/state/Reducers/Investigate/Review";
 import { TermList } from "./TermList";
 import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary";
 import NoSavedExtracts from "../fallbacks/NoSavedExtracts";

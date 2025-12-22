@@ -1,4 +1,4 @@
-import type { ActiveTab } from "@/ReduxToolKit/Reducers/UserContent/DashboardTabs";
+import type { ActiveTab } from "@/state/Reducers/UserContent/DashboardTabs";
 
 export const isInvestigationsTab = (tab: ActiveTab) =>
     tab === "Investigations" ||

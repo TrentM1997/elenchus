@@ -1,7 +1,7 @@
 import { ExtractionToast } from "../../app/App";
 import { useDispatch } from "react-redux";
-import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
-import type { AppDispatch } from "@/ReduxToolKit/store";
+import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+import type { AppDispatch } from "@/state/store";
 
 export default function ArticleExtractionToast(): JSX.Element | null {
     const dispatch = useDispatch<AppDispatch>();

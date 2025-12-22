@@ -1,5 +1,5 @@
 import { SupabaseUser } from "@/env";
-import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
+import type { Article } from "@/state/Reducers/Investigate/Reading";
 import { validateSchema } from "../../../../schemas/api/validation/validateSchema";
 import { ArticleSchema } from "../../../../schemas/api/types/ArticlesSchema";
 import { CredentialsSchema } from "../../../../schemas/api/types/LoginSchema";

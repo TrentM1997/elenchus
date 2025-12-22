@@ -1,6 +1,6 @@
-import { changePhase } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
-import { resetResults } from "@/ReduxToolKit/Reducers/Investigate/SearchResults";
-import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
+import { changePhase } from "@/state/Reducers/Investigate/Rendering";
+import { resetResults } from "@/state/Reducers/Investigate/SearchResults";
+import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 import { useDispatch } from "react-redux"
 
 export default function BackToSearch(): JSX.Element {

@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/ReduxToolKit/store";
-import { authenticate } from '@/ReduxToolKit/Reducers/Athentication/Authentication';
-import { populateArticles } from '@/ReduxToolKit/Reducers/UserContent/UserContentReducer';
-import { populateResearch } from '@/ReduxToolKit/Reducers/UserContent/UserInvestigations';
+import { AppDispatch, RootState } from "@/state/store";
+import { authenticate } from '@/state/Reducers/Athentication/Authentication';
+import { populateArticles } from '@/state/Reducers/UserContent/UserContentReducer';
+import { populateResearch } from '@/state/Reducers/UserContent/UserInvestigations';
 import { User } from '@supabase/supabase-js';
 
 

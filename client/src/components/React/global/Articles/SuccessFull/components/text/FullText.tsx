@@ -1,6 +1,6 @@
-import { AppDispatch, RootState } from "@/ReduxToolKit/store"
+import { AppDispatch, RootState } from "@/state/store"
 import { useDispatch, useSelector } from "react-redux"
-import { clearWikiSlice, getModalPosition, modalStages } from "@/ReduxToolKit/Reducers/Investigate/WikipediaSlice";
+import { clearWikiSlice, getModalPosition, modalStages } from "@/state/Reducers/Investigate/WikipediaSlice";
 import { AnimatePresence } from "framer-motion";
 import TermModalContainer from "@/components/React/features/wiki/components/popovers/containers/TermModalContainer";
 import TermModal from "@/components/React/features/wiki/components/popovers/modals/TermModal";

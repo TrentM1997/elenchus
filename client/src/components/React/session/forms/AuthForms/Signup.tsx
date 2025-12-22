@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { AppDispatch, RootState } from "@/ReduxToolKit/store"
+import { AppDispatch, RootState } from "@/state/store"
 import { Link, useNavigate } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import { NewEmail, NewPassword, OAuthLogins, ConfirmSignupPassword } from "@/components/React/session/forms/InputFields"
@@ -9,7 +9,7 @@ import AuthNotification from "@/components/React/session/notifications/AuthNotif
 import type { SigninStatus } from "@/hooks/useSignIn"
 import { useSignupValidation } from "@/hooks/auth/useSignupValidation"
 import { newUser } from "@/services/supabase/SupabaseData"
-import { authenticate } from "@/ReduxToolKit/Reducers/Athentication/Authentication"
+import { authenticate } from "@/state/Reducers/Athentication/Authentication"
 
 
 

@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import type { Phase } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import type { Phase } from "@/state/Reducers/Investigate/Rendering";
 import DelayedFallback from "@/components/React/global/fallbacks/DelayedFallback";
 import ComponentLoader from "@/components/React/global/Loaders/ComponentLoader";
 import InitialPhase from "../initial/InitialPhase";

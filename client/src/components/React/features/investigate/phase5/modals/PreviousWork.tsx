@@ -1,8 +1,8 @@
 import { motion } from "framer-motion"
 import { createPortal } from "react-dom"
 import { useSelector, useDispatch } from "react-redux"
-import { RootState } from "@/ReduxToolKit/store"
-import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
+import { RootState } from "@/state/store"
+import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 
 export function PreviousWork() {
     const activeSession = useSelector((s: RootState) => s.auth.activeSession);

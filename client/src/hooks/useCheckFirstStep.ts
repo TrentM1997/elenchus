@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import type { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
-import { AppDispatch, type RootState } from "@/ReduxToolKit/store";
-import { PaginationStatus, updatePaginateStatus } from "@/ReduxToolKit/Reducers/Investigate/Steps";
+import type { InvestigateState } from "@/state/Reducers/Root/InvestigateReducer";
+import { AppDispatch, type RootState } from "@/state/store";
+import { PaginationStatus, updatePaginateStatus } from "@/state/Reducers/Investigate/Steps";
 
 export function useCheckFirstStep() {
     const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);

@@ -1,13 +1,13 @@
 import { useDispatch, useSelector } from "react-redux"
-import { getPopoverPost, landingPageFadeOut, selectPost } from "@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice"
-import { getIdea, preselected } from "@/ReduxToolKit/Reducers/Investigate/UserPOV"
+import { getPopoverPost, landingPageFadeOut, selectPost } from "@/state/Reducers/BlueSky/BlueSkySlice"
+import { getIdea, preselected } from "@/state/Reducers/Investigate/UserPOV"
 import { useEffect } from "react";
 import { emitFadeFooter } from "@/helpers/customEvents";
-import { changePhase, choosePath } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import { changePhase, choosePath } from "@/state/Reducers/Investigate/Rendering";
 import { smoothScrollUp } from "@/helpers/ScrollToTop";
 import { wait } from "@/helpers/Presentation";
-import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
-import { RootState } from "@/ReduxToolKit/store";
+import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+import { RootState } from "@/state/store";
 
 interface UseThis {
     post: any,

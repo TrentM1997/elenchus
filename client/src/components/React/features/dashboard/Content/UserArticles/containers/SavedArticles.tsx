@@ -1,15 +1,15 @@
 import { useSelector } from "react-redux"
-import type { RootState } from "@/ReduxToolKit/store"
+import type { RootState } from "@/state/store"
 import { motion } from "framer-motion"
 import { delays } from "@/motion/variants"
 import ScrolltoTop from "@/helpers/ScrollToTop"
 import NoSavedArticles from "../fallbacks/NoSavedArticles"
 import ArticlesScroller from "./ArticlesScroller";
 import { useEffect, useMemo, useRef, useState } from "react"
-import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading"
+import type { Article } from "@/state/Reducers/Investigate/Reading"
 import { useDispatch } from "react-redux"
-import type { AppDispatch } from "@/ReduxToolKit/store"
-import { refreshArticlesStored } from "@/ReduxToolKit/Reducers/UserContent/UserContentReducer"
+import type { AppDispatch } from "@/state/store"
+import { refreshArticlesStored } from "@/state/Reducers/UserContent/UserContentReducer"
 
 export default function SavedArticles({ }) {
     const userArticles: Article[] = useSelector((state: RootState) => state.userdata.userArticles);

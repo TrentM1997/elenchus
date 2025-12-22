@@ -1,11 +1,11 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import { useMinTimeVisible } from "@/hooks/useMinTimeVisible";
 import RetrieveChosenArticles from "../components/buttons/RetrieveChosenArticles";
 import SelectTooltipWrapper from "../components/tooltips/SelectTooltipWrapper";
 import CurrentChosen from "../components/info/CurrentChosen";
-import type { ActiveModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
+import type { ActiveModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 import { softEase } from "@/motion/variants";
 
 

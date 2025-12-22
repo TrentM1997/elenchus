@@ -2,9 +2,9 @@ import Lottie from "lottie-react"
 import { motion } from "framer-motion"
 import vortex from '@/lotties/vortex.json'
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/ReduxToolKit/store";
+import { AppDispatch, RootState } from "@/state/store";
 import { useEffect, useRef, useState } from "react";
-import { setCanMeasureStatus } from "@/ReduxToolKit/Reducers/Investigate/NoteTaking";
+import { setCanMeasureStatus } from "@/state/Reducers/Investigate/NoteTaking";
 
 export default function ArticleLoader(): JSX.Element | null {
     const [showWaitCaution, setShowWaitCaution] = useState<boolean>(false);

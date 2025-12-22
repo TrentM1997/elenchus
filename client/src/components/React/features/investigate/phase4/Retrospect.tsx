@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from "react-redux"
-import { finalPerspective } from "@/ReduxToolKit/Reducers/Investigate/Review"
+import { finalPerspective } from "@/state/Reducers/Investigate/Review"
 import Lottie from "lottie-react"
 import blueCheck from '@/lotties/blueCheck.json'
-import { RootState } from "@/ReduxToolKit/store"
+import { RootState } from "@/state/store"
 
 const opinions: string[] = [
     "Agree",

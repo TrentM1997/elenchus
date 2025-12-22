@@ -1,10 +1,10 @@
 import { SetStateAction, useEffect, useState } from "react";
 import { supabaseSignIn } from "@/services/supabase/SupabaseData";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/ReduxToolKit/store";
-import { populateArticles } from "@/ReduxToolKit/Reducers/UserContent/UserContentReducer"
-import { populateResearch } from "@/ReduxToolKit/Reducers/UserContent/UserInvestigations"
-import { authenticate } from "@/ReduxToolKit/Reducers/Athentication/Authentication";
+import { AppDispatch } from "@/state/store";
+import { populateArticles } from "@/state/Reducers/UserContent/UserContentReducer"
+import { populateResearch } from "@/state/Reducers/UserContent/UserInvestigations"
+import { authenticate } from "@/state/Reducers/Athentication/Authentication";
 
 export type SigninStatus = "pending" | "success" | "failed" | "idle";
 export type SigninError = 'Invalid email or password' | null;

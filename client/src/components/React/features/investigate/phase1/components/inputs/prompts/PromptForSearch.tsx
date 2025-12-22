@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import type { RootState } from "@/ReduxToolKit/store";
+import type { RootState } from "@/state/store";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { limitString } from "@/helpers/Presentation";
 

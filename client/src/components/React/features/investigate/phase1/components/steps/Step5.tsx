@@ -1,10 +1,10 @@
 import { motion } from "framer-motion"
 import { useDispatch } from "react-redux"
-import { changePhase } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import { changePhase } from "@/state/Reducers/Investigate/Rendering";
 import { stepVariants } from "@/motion/variants"
 import PromptForSearch from "../inputs/prompts/PromptForSearch"
 import React from "react"
-import { AppDispatch } from "@/ReduxToolKit/store";
+import { AppDispatch } from "@/state/store";
 
 function Step5(): JSX.Element | null {
     const dispatch = useDispatch<AppDispatch>();

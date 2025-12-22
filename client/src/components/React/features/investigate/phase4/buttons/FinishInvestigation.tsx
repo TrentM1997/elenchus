@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux"
-import { changePhase } from "@/ReduxToolKit/Reducers/Investigate/Rendering"
+import { changePhase } from "@/state/Reducers/Investigate/Rendering"
 
 export default function EndInvestigateButton() {
     const dispatch = useDispatch()

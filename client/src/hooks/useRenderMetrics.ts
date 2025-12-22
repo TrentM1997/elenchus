@@ -1,6 +1,6 @@
 import { act, useEffect, useRef, useState } from "react";
 import { useSelector, shallowEqual } from "react-redux";
-import type { RootState } from "@/ReduxToolKit/store";
+import type { RootState } from "@/state/store";
 
 export type Priority = 'complete' | 'pending' | 'failed';
 

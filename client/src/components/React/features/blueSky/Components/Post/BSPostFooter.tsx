@@ -1,4 +1,4 @@
-import type { BlueSkyPost } from "@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice";
+import type { BlueSkyPost } from "@/state/Reducers/BlueSky/BlueSkySlice";
 
 interface BSPostFooterProps {
     text: BlueSkyPost["record"]["text"],

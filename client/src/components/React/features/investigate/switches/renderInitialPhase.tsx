@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react";
 import InputOptions from "../phase1/components/paths/InputOptions";
 import BlueSkySkeleton from "../../blueSky/skeletons/BlueSkySkeleton";
-import type { PathSelected } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import type { PathSelected } from "@/state/Reducers/Investigate/Rendering";
 const BlueSkyPosts = lazy(() => import('@/components/React/features/blueSky/Containers/BlueSky'));
 import DelayedFallback from "@/components/React/global/fallbacks/DelayedFallback";
 

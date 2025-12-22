@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
-import { AppDispatch } from "@/ReduxToolKit/store";
-import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
-import { populateTooltip } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
-import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
+import { RootState } from "@/state/store";
+import { AppDispatch } from "@/state/store";
+import { InvestigateState } from "@/state/Reducers/Root/InvestigateReducer";
+import { populateTooltip } from "@/state/Reducers/Investigate/Rendering";
+import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 
 export default function RetrieveChosenArticles() {
     const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);

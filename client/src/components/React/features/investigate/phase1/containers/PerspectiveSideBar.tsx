@@ -1,4 +1,4 @@
-import { RootState } from "@/ReduxToolKit/store"
+import { RootState } from "@/state/store"
 import { shallowEqual, useSelector } from "react-redux"
 import SidebarItem from "../components/inputs/tracking/SidebarItem";
 import { SidebarItemData } from "@/env";

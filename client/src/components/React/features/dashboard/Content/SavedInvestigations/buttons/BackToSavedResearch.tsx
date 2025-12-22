@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { presentResearch } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
-import { reviewThisResearch } from "@/ReduxToolKit/Reducers/UserContent/UserInvestigations";
+import { presentResearch } from "@/state/Reducers/UserContent/ProfileNavigationSlice";
+import { reviewThisResearch } from "@/state/Reducers/UserContent/UserInvestigations";
 export default function BackToSavedResearch() {
     const dispatch = useDispatch()
     const navigate = useNavigate()

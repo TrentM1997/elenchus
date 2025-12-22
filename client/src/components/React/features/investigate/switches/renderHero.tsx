@@ -5,7 +5,7 @@ import CompletionHero from "@/components/React/features/investigate/heros/Comple
 import FinalResults from "@/components/React/features/investigate/phase5/FinalResults"
 import ScrolltoTop from "@/helpers/ScrollToTop"
 import ArticlePagination from "../phase3/containers/PaginationWrapper";
-import { Phase } from "@/ReduxToolKit/Reducers/Investigate/Rendering"
+import { Phase } from "@/state/Reducers/Investigate/Rendering"
 import HeroWrapper from "../shared/wrappers/HeroWrapper"
 
 

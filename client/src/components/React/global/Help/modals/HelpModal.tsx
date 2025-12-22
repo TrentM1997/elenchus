@@ -1,10 +1,10 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Help } from "@/env";
-import { getHelp } from "@/ReduxToolKit/Reducers/Investigate/HelpModal";
+import { getHelp } from "@/state/Reducers/Investigate/HelpModal";
 import { useDispatch, useSelector } from "react-redux";
 import { createPortal } from "react-dom";
 import { useEffect } from "react";
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import { variants } from "@/motion/variants";
 
 export default function HelpModal({ info, handleExpand, isOpen, setActiveTab, activeTab }: HelpModal) {

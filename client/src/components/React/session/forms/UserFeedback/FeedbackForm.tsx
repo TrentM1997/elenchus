@@ -1,14 +1,14 @@
 import { AnimatePresence, motion } from "framer-motion"
 import { useDispatch, useSelector } from "react-redux"
-import { getAuthorEmail, getFeedBackMessage, stopAskingForFeedBack } from "@/ReduxToolKit/Reducers/Feedback/FeedbackSlice"
+import { getAuthorEmail, getFeedBackMessage, stopAskingForFeedBack } from "@/state/Reducers/Feedback/FeedbackSlice"
 import React, { useEffect, useState } from "react"
-import { RootState } from "@/ReduxToolKit/store"
+import { RootState } from "@/state/store"
 import { submitFeedback } from "@/services/supabase/SupabaseData"
 import AuthNotification from "@/components/React/session/notifications/AuthNotification";
 import type { SigninStatus } from "@/hooks/useSignIn"
 import { wait } from "@/helpers/Presentation"
-import { populateModal } from "@/ReduxToolKit/Reducers/Investigate/Rendering"
-import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice"
+import { populateModal } from "@/state/Reducers/Investigate/Rendering"
+import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice"
 
 export default function FeedBackForm() {
   const activeSession = useSelector((state: RootState) => state.auth.activeSession);

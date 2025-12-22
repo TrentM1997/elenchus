@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
-import type { RootState, AppDispatch } from "@/ReduxToolKit/store";
+import type { RootState, AppDispatch } from "@/state/store";
 import { useEffect } from "react";
-import { getStoredPosts, searchBlueSky } from "@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice";
+import { getStoredPosts, searchBlueSky } from "@/state/Reducers/BlueSky/BlueSkySlice";
 
 const useCachePosts = (): void => {
     const posts = useSelector((state: RootState) => state.bluesky.posts);

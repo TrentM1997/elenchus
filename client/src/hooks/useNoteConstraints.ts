@@ -1,8 +1,8 @@
 import { useLayoutEffect, useState, useRef, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import type { RootState, AppDispatch } from "@/ReduxToolKit/store";
-import { getDragConstraints } from "@/ReduxToolKit/Reducers/Investigate/NoteTaking";
-import type { CanMeasureStatus } from "@/ReduxToolKit/Reducers/Investigate/NoteTaking";
+import type { RootState, AppDispatch } from "@/state/store";
+import { getDragConstraints } from "@/state/Reducers/Investigate/NoteTaking";
+import type { CanMeasureStatus } from "@/state/Reducers/Investigate/NoteTaking";
 
 type NotePosition = {
     x: number,

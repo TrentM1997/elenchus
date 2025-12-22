@@ -1,10 +1,10 @@
 import { useEffect } from "react"
 import { motion } from "framer-motion"
 import { useDispatch, useSelector } from "react-redux"
-import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer"
-import { RootState } from "@/ReduxToolKit/store"
+import { InvestigateState } from "@/state/Reducers/Root/InvestigateReducer"
+import { RootState } from "@/state/store"
 import { createPortal } from "react-dom"
-import { populateTooltip } from "@/ReduxToolKit/Reducers/Investigate/Rendering"
+import { populateTooltip } from "@/state/Reducers/Investigate/Rendering"
 
 export default function SelectionRequired() {
     const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);

@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import type { AppDispatch, RootState } from "@/ReduxToolKit/store";
+import type { AppDispatch, RootState } from "@/state/store";
 import { motion } from "framer-motion";
 import { variants } from "@/motion/variants";
 import DelayedFallback from "@/components/React/global/fallbacks/DelayedFallback";
@@ -8,8 +8,8 @@ import DetailView from "../../../ProfileNavigation/mobile/DetailView";
 import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary";
 const Article = lazy(() => import('@/components/React/global/Articles/SuccessFull/containers/Article'));
 import ArticleSkeleton from "@/components/React/global/Articles/skeletons/ArticleSkeleton";
-import { grabAssociatedArticle } from "@/ReduxToolKit/Reducers/UserContent/UserContentReducer";
-import { chooseTab } from "@/ReduxToolKit/Reducers/UserContent/DashboardTabs";
+import { grabAssociatedArticle } from "@/state/Reducers/UserContent/UserContentReducer";
+import { chooseTab } from "@/state/Reducers/UserContent/DashboardTabs";
 
 export default function OpenAssociatedArticle(): JSX.Element | null {
     const dispatch = useDispatch<AppDispatch>();

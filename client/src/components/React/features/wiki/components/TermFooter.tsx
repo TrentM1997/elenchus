@@ -1,11 +1,11 @@
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
-import { getExtract } from "@/ReduxToolKit/Reducers/Investigate/Review";
-import { useAppSelector } from "@/ReduxToolKit/hooks/useAppSelector";
-import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
+import { RootState } from "@/state/store";
+import { getExtract } from "@/state/Reducers/Investigate/Review";
+import { useAppSelector } from "@/state/hooks/useAppSelector";
+import { InvestigateState } from "@/state/Reducers/Root/InvestigateReducer";
 import type { WikiDisambigResponse, WikiSummaryResponse } from "@/services/wiki/wiki";
-import { selectWikiSummary, selectWikiDisambig } from "@/ReduxToolKit/Reducers/Investigate/WikipediaSlice";
+import { selectWikiSummary, selectWikiDisambig } from "@/state/Reducers/Investigate/WikipediaSlice";
 import SaveExtractTooltip from "../tooltips/SaveExtractTooltip";
 import ExtractBookmark from "./buttons/ExtractBookmark";
 import TimeStamp from "./timestamp/TimeStamp";

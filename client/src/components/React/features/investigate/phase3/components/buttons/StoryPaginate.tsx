@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from "react-redux"
-import { RootState } from "@/ReduxToolKit/store"
-import { incrementStory, decrementStory, incrementStoryBy } from "@/ReduxToolKit/Reducers/Investigate/Reading"
-import type { ModalStages } from "@/ReduxToolKit/Reducers/Investigate/WikipediaSlice"
-import { modalStages } from "@/ReduxToolKit/Reducers/Investigate/WikipediaSlice"
+import { RootState } from "@/state/store"
+import { incrementStory, decrementStory, incrementStoryBy } from "@/state/Reducers/Investigate/Reading"
+import type { ModalStages } from "@/state/Reducers/Investigate/WikipediaSlice"
+import { modalStages } from "@/state/Reducers/Investigate/WikipediaSlice"
 import { wait } from "@/helpers/Presentation"
 
 

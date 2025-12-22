@@ -1,6 +1,6 @@
-import { getBiases } from "@/ReduxToolKit/Reducers/Investigate/UserPOV"
+import { getBiases } from "@/state/Reducers/Investigate/UserPOV"
 import { useDispatch, useSelector } from "react-redux"
-import { RootState } from "@/ReduxToolKit/store"
+import { RootState } from "@/state/store"
 import Biases from "../inputs/interactive/Biases"
 import { motion } from "framer-motion"
 import { stepVariants } from "@/motion/variants"

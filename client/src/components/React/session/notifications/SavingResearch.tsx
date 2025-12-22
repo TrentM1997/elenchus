@@ -1,14 +1,14 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import { useDispatch } from "react-redux";
-import { removeNotification } from "@/ReduxToolKit/Reducers/UserContent/SaveInvestigationSlice";
+import { removeNotification } from "@/state/Reducers/UserContent/SaveInvestigationSlice";
 import Failed from "./Failed";
 import Pending from "./Pending";
 import Success from "./Success";
-import { stopAskingForFeedBack } from "@/ReduxToolKit/Reducers/Feedback/FeedbackSlice";
-import { populateModal } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import { stopAskingForFeedBack } from "@/state/Reducers/Feedback/FeedbackSlice";
+import { populateModal } from "@/state/Reducers/Investigate/Rendering";
 
 export default function SavingResearch({ }) {
     const saveStatus = useSelector((state: RootState) => state.saveResearch.status)

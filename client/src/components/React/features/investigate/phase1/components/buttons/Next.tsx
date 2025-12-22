@@ -1,8 +1,8 @@
-import type { RootState } from '@/ReduxToolKit/store'
+import type { RootState } from '@/state/store'
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
-import { increment, denyIncrement, acceptedInput } from "@/ReduxToolKit/Reducers/Investigate/Steps";
+import { increment, denyIncrement, acceptedInput } from "@/state/Reducers/Investigate/Steps";
 import { motion } from "framer-motion";
-import { selectPost } from '@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice';
+import { selectPost } from '@/state/Reducers/BlueSky/BlueSkySlice';
 import { useEffect, useMemo } from 'react';
 import React from 'react';
 

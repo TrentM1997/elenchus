@@ -1,6 +1,6 @@
 import { AnimatePresence } from "framer-motion";
 import { useSelector } from "react-redux";
-import type { RootState } from "@/ReduxToolKit/store";
+import type { RootState } from "@/state/store";
 import type { DragConstraints, NotePosition } from "@/hooks/useNoteConstraints";
 import Notes from "../../notes/Notes";
 import React, { SetStateAction } from "react";

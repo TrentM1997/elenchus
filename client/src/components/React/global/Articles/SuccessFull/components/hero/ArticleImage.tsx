@@ -1,5 +1,5 @@
 import React from "react";
-import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
+import type { Article } from "@/state/Reducers/Investigate/Reading";
 import ArticleTitle from "./ArticleTitle";
 import PublishedBy from "./PublishedBy";
 import type { ImgProps } from "@/components/React/features/investigate/phase2/results/components/links/LinkThumbnail";

@@ -1,15 +1,15 @@
 import FailedLoading from "../Failed/FailedLoading";
 import { shallowEqual, useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import { useEffect, useMemo, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { recordSources } from "@/ReduxToolKit/Reducers/UserContent/SaveInvestigationSlice";
+import { recordSources } from "@/state/Reducers/UserContent/SaveInvestigationSlice";
 import RenderArticles from "@/components/React/features/investigate/phase3/containers/RenderArticles";
 import { getSourcesToRecord, canUpdateSources } from "@/services/RecordSources";
-import { clearChosenArticles } from "@/ReduxToolKit/Reducers/Investigate/ChosenArticles";
-import { resetResults } from "@/ReduxToolKit/Reducers/Investigate/SearchResults";
-import { resetReadingSlice } from "@/ReduxToolKit/Reducers/Investigate/Reading";
-import type { ReadingSliceState } from "@/ReduxToolKit/Reducers/Investigate/Reading";
+import { clearChosenArticles } from "@/state/Reducers/Investigate/ChosenArticles";
+import { resetResults } from "@/state/Reducers/Investigate/SearchResults";
+import { resetReadingSlice } from "@/state/Reducers/Investigate/Reading";
+import type { ReadingSliceState } from "@/state/Reducers/Investigate/Reading";
 
 export default function ArticleContainer({ }) {
   const sources = useSelector((state: RootState) => state.userWork.sourcesToReview);

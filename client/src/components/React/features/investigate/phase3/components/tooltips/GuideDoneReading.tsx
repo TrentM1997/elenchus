@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { motion } from "framer-motion"
 import { useDispatch } from "react-redux"
-import { populateTooltip } from "@/ReduxToolKit/Reducers/Investigate/Rendering"
+import { populateTooltip } from "@/state/Reducers/Investigate/Rendering"
 import { useTooltipFlags } from "@/hooks/useTooltipFlags"
 
 const variants = {

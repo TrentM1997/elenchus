@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import ArticleHeader from "../components/hero/containers/ArticleHeader";
 import ArticleContent from "../components/text/ArticleContent";
-import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
+import type { Article } from "@/state/Reducers/Investigate/Reading";
 import { softEase } from "@/motion/variants";
 
 type ArticleProps = {

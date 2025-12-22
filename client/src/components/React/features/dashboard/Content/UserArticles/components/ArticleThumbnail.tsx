@@ -1,6 +1,6 @@
 import Trash from "@/components/React/global/IconComponents/Trash";
 import React from "react"
-import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
+import type { Article } from "@/state/Reducers/Investigate/Reading";
 import SavedArticleThumbnail from "./SavedArticleThumbnail";
 import ThumbnailSwap from "./ThumbnailSwap";
 

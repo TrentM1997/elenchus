@@ -2,7 +2,7 @@ import ArticleReview from "../UserArticles/containers/ArticleReview";
 import ResearchReview from "../SavedInvestigations/containers/ResearchReview";
 import React from "react";
 import { shallowEqual, useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import { motion } from "framer-motion";
 import { variants } from "@/motion/variants";
 import OpenAssociatedArticle from "../SavedInvestigations/containers/OpenAssociatedArticle";

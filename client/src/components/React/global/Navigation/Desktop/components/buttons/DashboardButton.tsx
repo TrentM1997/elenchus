@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { shallowEqual, useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import SignOutModal from "@/components/React/session/forms/AuthForms/SignOutModal";
 
 

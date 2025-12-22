@@ -1,4 +1,4 @@
-import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
+import type { Article } from "@/state/Reducers/Investigate/Reading";
 import { useEffect, useCallback, useState } from "react";
 
 

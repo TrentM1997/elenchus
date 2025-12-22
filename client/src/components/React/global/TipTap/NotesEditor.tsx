@@ -1,9 +1,9 @@
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useDispatch } from "react-redux";
-import { saveNote } from "@/ReduxToolKit/Reducers/Investigate/NoteTaking";
+import { saveNote } from "@/state/Reducers/Investigate/NoteTaking";
 import { useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 
 
 export default function StepsEditor({ setterFunction, context }) {

@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { resetBlueSkyState } from "@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice";
+import { resetBlueSkyState } from "@/state/Reducers/BlueSky/BlueSkySlice";
 import { motion } from "framer-motion";
-import { AppDispatch, RootState } from "@/ReduxToolKit/store";
+import { AppDispatch, RootState } from "@/state/store";
 import Scroller from "../../Containers/Scroller";
 import { splitPosts } from "@/helpers/Presentation";
 import { variants } from "@/motion/variants";

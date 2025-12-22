@@ -1,11 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import GuideDoneReading from "../tooltips/GuideDoneReading";
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import { useEffect, useRef } from "react";
 import { useTooltipFlags } from "@/hooks/useTooltipFlags";
 import PanelLabel from "./PanelLabel";
-import { changePhase, populateTooltip, TooltipDisplayed } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
-import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
+import { changePhase, populateTooltip, TooltipDisplayed } from "@/state/Reducers/Investigate/Rendering";
+import type { Article } from "@/state/Reducers/Investigate/Reading";
 import { AnimatePresence } from "framer-motion";
 import { smoothScrollUp } from "@/helpers/ScrollToTop";
 import { wait } from "@/helpers/Presentation";

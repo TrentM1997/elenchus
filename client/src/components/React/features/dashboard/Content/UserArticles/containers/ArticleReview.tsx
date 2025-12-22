@@ -1,4 +1,4 @@
-import { AppDispatch, RootState } from "@/ReduxToolKit/store"
+import { AppDispatch, RootState } from "@/state/store"
 import { lazy, Suspense, useMemo } from "react"
 import { useDispatch, useSelector } from "react-redux"
 const Article = lazy(() => import('@/components/React/global/Articles/SuccessFull/containers/Article'));
@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import { variants } from "@/motion/variants";
 import DetailView from "../../../ProfileNavigation/mobile/DetailView"
 import DelayedFallback from "@/components/React/global/fallbacks/DelayedFallback";
-import { chooseTab } from "@/ReduxToolKit/Reducers/UserContent/DashboardTabs";
+import { chooseTab } from "@/state/Reducers/UserContent/DashboardTabs";
 
 export default function ArticleReview() {
     const savedArticle = useSelector((state: RootState) => state.userdata.ArticleToReview);

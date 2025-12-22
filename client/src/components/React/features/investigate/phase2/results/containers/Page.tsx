@@ -3,7 +3,7 @@ const ArticleLink = lazy(() => import('../../results/components/links/ArticleLin
 import { Suspense } from "react";
 import LinkPlaceholder from "../../search/components/loaders/LinkPlaceholder";
 import DelayedFallback from "@/components/React/global/fallbacks/DelayedFallback";
-import type { RootState } from "@/ReduxToolKit/store";
+import type { RootState } from "@/state/store";
 import { useSelector } from "react-redux";
 import type { ArticleType, SelectedArticle } from "@/env";
 

@@ -1,4 +1,4 @@
-import { clearAuthSlice } from "@/ReduxToolKit/Reducers/Athentication/Authentication";
+import { clearAuthSlice } from "@/state/Reducers/Athentication/Authentication";
 import { useDispatch } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState, useRef } from "react";
@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { SigninStatus } from "@/hooks/useSignIn";
 import { useClearUser } from "@/hooks/useClearUser";
 import { wait } from "@/helpers/Presentation";
-import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
+import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 
 export default function SignOutModal(): JSX.Element {
     const [status, setStatus] = useState<SigninStatus>('idle');

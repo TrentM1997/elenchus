@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import LearnMore from "../buttons/LearnMore";
 import GetStarted from "../buttons/GetStarted";
 import React from "react";

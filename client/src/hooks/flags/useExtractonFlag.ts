@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import type { ExtractionToast } from '@/components/React/app/App';
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/ReduxToolKit/store";
-import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
+import { AppDispatch } from "@/state/store";
+import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 import { wait } from "@/helpers/Presentation";
 
 

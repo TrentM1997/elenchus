@@ -3,13 +3,13 @@ import { useEffect, useState } from "react";
 import Lottie from "lottie-react";
 import blueCheck from '@/lotties/blueCheck.json'
 import Loader from "../../global/Loaders/Loader";
-import { presentDeleteModal } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
+import { presentDeleteModal } from "@/state/Reducers/UserContent/ProfileNavigationSlice";
 import { useNavigate } from "react-router-dom";
-import { clearAuthSlice } from "@/ReduxToolKit/Reducers/Athentication/Authentication";
+import { clearAuthSlice } from "@/state/Reducers/Athentication/Authentication";
 import { confirmFirstPassword, emailValidation } from "@/helpers/validation";
 import { deleteAccount, DeleteAccountRes } from "@/services/supabase/SupabaseData";
 import { SigninStatus } from "@/hooks/useSignIn";
-import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
+import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 
 export default function DeleteUserAccount({ }) {
     const [password, setPassword] = useState<string>(null)

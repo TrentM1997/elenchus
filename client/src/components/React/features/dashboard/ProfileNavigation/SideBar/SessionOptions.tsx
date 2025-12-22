@@ -1,13 +1,13 @@
 import { useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import DashboardOption from "./DashboardOption";
 import SignoutIcon from "@/components/React/global/IconComponents/SignoutIcon";
 import SettingsIcon from "@/components/React/global/IconComponents/SettingsIcon";
 import React from "react";
-import { chooseTab, type ActiveTab } from "@/ReduxToolKit/Reducers/UserContent/DashboardTabs";
+import { chooseTab, type ActiveTab } from "@/state/Reducers/UserContent/DashboardTabs";
 import { useDispatch } from "react-redux";
-import type { AppDispatch } from "@/ReduxToolKit/store";
-import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
+import type { AppDispatch } from "@/state/store";
+import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 
 
 

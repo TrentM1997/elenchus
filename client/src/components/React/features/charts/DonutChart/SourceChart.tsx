@@ -3,7 +3,7 @@ import { Doughnut } from "react-chartjs-2";
 import { motion } from "framer-motion";
 import { variants } from "@/motion/variants";
 import { useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import { ChartData } from "chart.js";
 import ErrorBoundary from "../../../global/ErrorBoundaries/ErrorBoundary";
 import { ratings, tableColors } from "./keyData/donutKeys";

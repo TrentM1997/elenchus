@@ -1,7 +1,7 @@
 import { motion } from "framer-motion"
 import { useSelector, useDispatch } from "react-redux"
-import { RootState } from "@/ReduxToolKit/store"
-import { closeNotification } from "@/ReduxToolKit/Reducers/Investigate/Reading"
+import { RootState } from "@/state/store"
+import { closeNotification } from "@/state/Reducers/Investigate/Reading"
 
 
 

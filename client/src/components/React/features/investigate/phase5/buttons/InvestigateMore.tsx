@@ -1,10 +1,10 @@
-import { RootState } from "@/ReduxToolKit/store"
+import { RootState } from "@/state/store"
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { PreviousWork } from "../modals/PreviousWork";
 import { clearCachedPlayStates, PLAYSTATE_KEYS } from "@/hooks/flags/useClearInvestigation";
-import { CLEAR_INVESTIGATION } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
-import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
+import { CLEAR_INVESTIGATION } from "@/state/Reducers/Root/InvestigateReducer";
+import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 
 export default function InvestigateMore() {
     const [open, setOpen] = useState<boolean>(false)

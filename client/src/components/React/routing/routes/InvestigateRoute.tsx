@@ -1,8 +1,8 @@
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import { useSelector } from "react-redux";
 import InvestigationWorkSpace from "@/components/React/features/investigate/shared/containers/InvestigationWorkSpace";
 import { useBodyLock } from "@/hooks/useBodyLock";
-import type { TooltipDisplayed } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import type { TooltipDisplayed } from "@/state/Reducers/Investigate/Rendering";
 import { useClearInvestigation } from "@/hooks/flags/useClearInvestigation";
 
 

@@ -1,4 +1,4 @@
-import type { Extracts } from "@/ReduxToolKit/Reducers/Investigate/Review"
+import type { Extracts } from "@/state/Reducers/Investigate/Review"
 import type { WikiDisambigCandidate } from "@/services/wiki/wiki";
 import { useState, useMemo } from "react"
 import { SavedWikiDescription } from "../descriptions/SavedWikiDescription";

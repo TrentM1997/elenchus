@@ -1,12 +1,12 @@
-import { runFirecrawlExtraction } from "@/ReduxToolKit/Reducers/Investigate/Reading"
+import { runFirecrawlExtraction } from "@/state/Reducers/Investigate/Reading"
 import { useAppdispatch } from "@/hooks/appDispatch"
 import { useSelector, useDispatch } from "react-redux"
-import { RootState } from "@/ReduxToolKit/store"
+import { RootState } from "@/state/store"
 import DisplayThese from "./DisplayThese"
-import { ChosenArticleSlice } from "@/ReduxToolKit/Reducers/Investigate/ChosenArticles";
+import { ChosenArticleSlice } from "@/state/Reducers/Investigate/ChosenArticles";
 import { wait } from "@/helpers/Presentation"
-import { changePhase } from "@/ReduxToolKit/Reducers/Investigate/Rendering"
-import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice"
+import { changePhase } from "@/state/Reducers/Investigate/Rendering"
+import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice"
 
 export function GetTheseArticles(): JSX.Element {
     const { chosenArticles }: ChosenArticleSlice = useSelector((state: RootState) => state.investigation.getArticle);

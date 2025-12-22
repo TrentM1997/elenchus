@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux"
-import { RootState } from "@/ReduxToolKit/store"
+import { RootState } from "@/state/store"
 
 export default function ReviewPOV() {
     const investigateState = useSelector((state: RootState) => state.investigation)

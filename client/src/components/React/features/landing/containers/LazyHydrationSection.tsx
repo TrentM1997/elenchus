@@ -3,7 +3,7 @@ import { useState, useRef } from 'react';
 import BlueSkySkeleton from '../../blueSky/skeletons/BlueSkySkeleton';
 import WikiAndNotes from '../components/WikiAndNotes';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/ReduxToolKit/store';
+import { RootState } from '@/state/store';
 const BlueSkyPosts = lazy(() => import('@/components/React/features/blueSky/Containers/BlueSky'));
 import { startTransition } from 'react';
 import DelayedFallback from '@/components/React/global/fallbacks/DelayedFallback';

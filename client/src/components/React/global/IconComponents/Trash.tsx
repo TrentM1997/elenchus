@@ -1,6 +1,6 @@
 import React from "react";
 import TrashTooltip from "../../features/dashboard/Content/UserArticles/tooltips/TrashTooltip";
-import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
+import type { Article } from "@/state/Reducers/Investigate/Reading";
 
 interface Trash {
     deleteHandler?: (article: Article) => () => Promise<void>,
