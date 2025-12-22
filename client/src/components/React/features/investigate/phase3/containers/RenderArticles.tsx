@@ -1,16 +1,16 @@
 import { useMemo, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import Article from "@/components/React/global/Articles/SuccessFull/containers/Article";
 import ArticleLoader from "@/components/React/global/Articles/loaders/ArticleLoader";
 import NoContent from "@/components/React/global/Articles/Failed/NoContent";
 import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary";
-import { ReadingSliceState } from "@/ReduxToolKit/Reducers/Investigate/Reading";
+import { ReadingSliceState } from "@/state/Reducers/Investigate/Reading";
 import PendingExtractions from "../components/notification/PendingExtractions";
 import { useEffect } from "react";
 import ControlPanel from "../components/controls/ControlPanel";
-import type { TooltipDisplayed } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import type { TooltipDisplayed } from "@/state/Reducers/Investigate/Rendering";
 import { usePreload } from "@/hooks/content/usePreload";
 
 

@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import type { ActiveTab } from "@/ReduxToolKit/Reducers/UserContent/DashboardTabs";
+import type { ActiveTab } from "@/state/Reducers/UserContent/DashboardTabs";
 import Metrics from "@/components/React/features/dashboard/Content/containers/Metrics";
 import Pageskeleton from "@/components/React/routing/skeletons/PageSkeleton";
 const SavedArticles = lazy(() => import('@/components/React/features/dashboard/Content/UserArticles/containers/SavedArticles'));

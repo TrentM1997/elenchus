@@ -1,7 +1,7 @@
 import { SidebarItemData } from "@/env";
 import { useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
-import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
+import { RootState } from "@/state/store";
+import { InvestigateState } from "@/state/Reducers/Root/InvestigateReducer";
 import React, { useEffect, useMemo, useState } from "react";
 import HasInput from "./HasInput";
 import ItemText from "./ItemText";

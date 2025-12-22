@@ -1,5 +1,5 @@
-import { clearScrollPosition, storeResearchScrollPosition, storeScrollPosition, VirtuosoScrollPos } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
-import { AppDispatch } from "@/ReduxToolKit/store";
+import { clearScrollPosition, storeResearchScrollPosition, storeScrollPosition, VirtuosoScrollPos } from "@/state/Reducers/UserContent/ProfileNavigationSlice";
+import { AppDispatch } from "@/state/store";
 import React, { useState, useCallback, useRef, useEffect, useMemo, useLayoutEffect } from "react";
 import { useDispatch } from "react-redux";
 import type { VirtuosoHandle } from "react-virtuoso";

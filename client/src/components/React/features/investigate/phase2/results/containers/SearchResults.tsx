@@ -1,8 +1,8 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import { useEffect, useMemo } from "react";
-import { getPages } from "@/ReduxToolKit/Reducers/Investigate/SearchResults";
+import { getPages } from "@/state/Reducers/Investigate/SearchResults";
 import { formPages } from "@/helpers/Presentation";
 import Pages from "./Pages";
 import SearchFailed from "../errors/SearchFailed";

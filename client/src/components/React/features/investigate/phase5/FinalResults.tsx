@@ -1,7 +1,7 @@
 import SaveInvestigation from "./buttons/SaveInvestigation"
 import InvestigateMore from "./buttons/InvestigateMore"
 import { useSelector } from "react-redux"
-import { RootState } from "@/ReduxToolKit/store"
+import { RootState } from "@/state/store"
 import DataTable from "./DataTable"
 import { AnimatePresence } from "framer-motion"
 import SavingResearch from "@/components/React/session/notifications/SavingResearch"

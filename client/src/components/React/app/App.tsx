@@ -1,4 +1,4 @@
-import { store } from '@/ReduxToolKit/store';
+import { store } from '@/state/store';
 import { Provider } from 'react-redux';
 import { RouterProvider } from 'react-router-dom';
 import { router } from '@/components/React/routing/router/Router'

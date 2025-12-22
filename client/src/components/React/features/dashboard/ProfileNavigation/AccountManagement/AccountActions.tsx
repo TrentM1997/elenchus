@@ -1,8 +1,8 @@
 import { useDispatch } from "react-redux";
-import { presentDeleteModal } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
+import { presentDeleteModal } from "@/state/Reducers/UserContent/ProfileNavigationSlice";
 import { useNavigate } from "react-router-dom";
 import ScrolltoTop from "@/helpers/ScrollToTop";
-import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
+import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 
 export default function AccountActions() {
   const dispatch = useDispatch()

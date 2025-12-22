@@ -1,8 +1,8 @@
 import { useState, useRef, useMemo } from "react";
 import { useScrollTrap } from "@/hooks/useOverScrollTrap";
 import { AnimatePresence, motion } from "framer-motion";
-import { useAppSelector } from "@/ReduxToolKit/hooks/useAppSelector";
-import { selectWikiDisambig } from "@/ReduxToolKit/Reducers/Investigate/WikipediaSlice";
+import { useAppSelector } from "@/state/hooks/useAppSelector";
+import { selectWikiDisambig } from "@/state/Reducers/Investigate/WikipediaSlice";
 import { WikiDisambigCandidate, WikiDisambigResponse, } from "@/services/wiki/wiki";
 import NavCandidates from "./buttons/NavDisambig";
 import Candidate from "./term/Candidate";

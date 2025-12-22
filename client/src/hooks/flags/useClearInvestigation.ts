@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import type { TooltipDisplayed } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
-import { populateTooltip } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import type { TooltipDisplayed } from "@/state/Reducers/Investigate/Rendering";
+import { populateTooltip } from "@/state/Reducers/Investigate/Rendering";
 import { useDispatch } from "react-redux";
-import type { AppDispatch } from "@/ReduxToolKit/store";
+import type { AppDispatch } from "@/state/store";
 import { useTooltipFlags } from "../useTooltipFlags";
-import { CLEAR_INVESTIGATION } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
+import { CLEAR_INVESTIGATION } from "@/state/Reducers/Root/InvestigateReducer";
 
 export const PLAYSTATE_KEYS = [
     'previous-biases',

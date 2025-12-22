@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import BSPost from "../Components/Post/BSPost";
 
 export default function SelectedPost(): JSX.Element {

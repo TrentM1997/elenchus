@@ -2,7 +2,7 @@ import { motion } from "framer-motion"
 import AccountActions from "./AccountActions"
 import { variants } from "@/motion/variants"
 import { useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 
 export default function AccManagement() {
     const showDeleteModal = useSelector((state: RootState) => state.profileNav.displayDeleteModal);

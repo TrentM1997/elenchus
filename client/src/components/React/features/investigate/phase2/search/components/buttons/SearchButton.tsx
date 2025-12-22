@@ -1,8 +1,8 @@
 import { useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import Loader from "@/components/React/global/Loaders/Loader";
 import { useMinTimeVisible } from "@/hooks/useMinTimeVisible";
-import type { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
+import type { InvestigateState } from "@/state/Reducers/Root/InvestigateReducer";
 
 export default function SearchButton() {
     const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);

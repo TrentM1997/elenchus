@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "@/ReduxToolKit/store";
-import { populateTooltip } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
-import type { TooltipDisplayed } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import type { AppDispatch, RootState } from "@/state/store";
+import { populateTooltip } from "@/state/Reducers/Investigate/Rendering";
+import type { TooltipDisplayed } from "@/state/Reducers/Investigate/Rendering";
 
 type UseMaxSelectedToast = { count: number, limit?: number, timeout?: number };
 

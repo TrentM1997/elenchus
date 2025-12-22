@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import type { RootState } from "@/ReduxToolKit/store";
+import type { RootState } from "@/state/store";
 
 export interface VirtuosoScrollPos {
     topKey: string | number | null,

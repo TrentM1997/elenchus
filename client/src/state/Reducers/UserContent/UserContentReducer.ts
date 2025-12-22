@@ -1,4 +1,4 @@
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import { createSlice, createAsyncThunk, createSelector, PayloadAction } from "@reduxjs/toolkit";
 import type { Article } from "../Investigate/Reading";
 import { User } from "@supabase/supabase-js";

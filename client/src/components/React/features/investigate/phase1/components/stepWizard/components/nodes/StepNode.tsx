@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import { useMemo } from "react";
 import NodeIcon from "../icons/containers/NodeIcon";
 import WizardTrack from "../tracks/WizardTrack";

@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
-import type { RootState } from '@/ReduxToolKit/store'
+import type { RootState } from '@/state/store'
 import { useSelector, useDispatch } from 'react-redux'
-import { decrement } from "@/ReduxToolKit/Reducers/Investigate/Steps";
+import { decrement } from "@/state/Reducers/Investigate/Steps";
 import React from "react";
 
 function BackButton({ }): JSX.Element | null {

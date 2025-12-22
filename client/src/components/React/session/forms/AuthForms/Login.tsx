@@ -7,7 +7,7 @@ import LoginOperations from "@/components/React/session/forms/containers/LoginOp
 import { useCheckCredentials } from "@/hooks/useCheckCredentials";
 import { useSignIn } from "@/hooks/useSignIn";
 import { useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import InvalidCredentials from "../fallbacks/InvalidCredentials";
 
 export default function Login(): JSX.Element {

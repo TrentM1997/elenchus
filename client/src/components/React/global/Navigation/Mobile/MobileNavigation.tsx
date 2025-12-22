@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
 import MenuItem, { DashboardLink } from "./MenuItems";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
-import { showSignOut } from "@/ReduxToolKit/Reducers/Athentication/Authentication";
+import { RootState } from "@/state/store";
+import { showSignOut } from "@/state/Reducers/Athentication/Authentication";
 import { useNavigate } from "react-router-dom";
-import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
+import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 import { wait } from "@/helpers/Presentation";
 
 const variants = {

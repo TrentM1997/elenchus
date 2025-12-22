@@ -1,8 +1,8 @@
 import { startTransition, useEffect, useLayoutEffect, useRef } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import ErrorBoundary from "../../../global/ErrorBoundaries/ErrorBoundary";
-import { selectPost } from "@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice";
+import { selectPost } from "@/state/Reducers/BlueSky/BlueSkySlice";
 import SearchBlueSky from "../Components/input/SearchBlueSky";
 import BlueSkyHeader from "../Components/BlueSkyHeader";
 import CloseBlueSky from "../Components/buttons/CloseBlueSky";

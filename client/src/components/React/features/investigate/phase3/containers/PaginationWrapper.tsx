@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import StoryPaginate from "../components/buttons/StoryPaginate";
-import type { Phase } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
-import type { RootState } from "@/ReduxToolKit/store";
-import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
+import type { Phase } from "@/state/Reducers/Investigate/Rendering";
+import type { RootState } from "@/state/store";
+import type { Article } from "@/state/Reducers/Investigate/Reading";
 import { useSelector } from "react-redux";
 
 export default function ArticlePagination(): JSX.Element | null {

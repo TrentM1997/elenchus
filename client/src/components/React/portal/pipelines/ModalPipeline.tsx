@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
-import type { ActiveModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
+import { RootState } from "@/state/store";
+import type { ActiveModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 import { AnimatePresence } from "framer-motion";
 import renderModal from "../switches/renderModal";
 

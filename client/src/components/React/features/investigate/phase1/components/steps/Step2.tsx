@@ -1,6 +1,6 @@
-import { getPerspective, getExpertise } from "@/ReduxToolKit/Reducers/Investigate/UserPOV"
+import { getPerspective, getExpertise } from "@/state/Reducers/Investigate/UserPOV"
 import { useDispatch, useSelector } from "react-redux"
-import { RootState } from "@/ReduxToolKit/store"
+import { RootState } from "@/state/store"
 import Perspective from "../inputs/interactive/Perspective"
 import Expertise from "../inputs/interactive/Expertise"
 import { motion } from "framer-motion";

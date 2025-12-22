@@ -1,11 +1,11 @@
 import StepsEditor from "../../../global/TipTap/StepsEditor"
 import EndInvestigateButton from "./buttons/FinishInvestigation"
-import { getTakeAways } from "@/ReduxToolKit/Reducers/Investigate/Review"
+import { getTakeAways } from "@/state/Reducers/Investigate/Review"
 import { useSelector, useDispatch } from "react-redux"
-import { RootState } from "@/ReduxToolKit/store"
+import { RootState } from "@/state/store"
 import { SetStateAction, useEffect, useState } from "react";
-import type { AppDispatch } from "@/ReduxToolKit/store"
-import { changePhase } from "@/ReduxToolKit/Reducers/Investigate/Rendering"
+import type { AppDispatch } from "@/state/store"
+import { changePhase } from "@/state/Reducers/Investigate/Rendering"
 
 type Opt = 'initial' | 'Opt-in' | 'Opt-out';
 

@@ -1,7 +1,7 @@
 import FailedNotification from "./FailedNotification"
 import { motion, AnimatePresence } from "framer-motion"
 import { useSelector } from "react-redux"
-import { RootState } from "@/ReduxToolKit/store"
+import { RootState } from "@/state/store"
 
 export default function FailedLoading({ }): JSX.Element | null {
     const investigateState = useSelector((state: RootState) => state.investigation)

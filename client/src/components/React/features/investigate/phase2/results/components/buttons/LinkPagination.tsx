@@ -1,6 +1,6 @@
-import { decrementPage, incrementPageBy } from "@/ReduxToolKit/Reducers/Investigate/SearchResults"
+import { decrementPage, incrementPageBy } from "@/state/Reducers/Investigate/SearchResults"
 import { useDispatch, useSelector } from "react-redux"
-import { RootState } from "@/ReduxToolKit/store"
+import { RootState } from "@/state/store"
 import PageButton from "./PageButton"
 import DecrementPage from "./DecrementPage"
 import IncrementPage from "./IncrementPage"

@@ -1,7 +1,7 @@
 import SelectedPost from "./SelectedPost";
 import UseThisPost from "./UseThisPost";
 import { useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import { useLocation } from "react-router-dom";
 
 

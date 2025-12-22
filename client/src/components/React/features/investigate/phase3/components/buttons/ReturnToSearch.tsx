@@ -1,13 +1,13 @@
 import { useDispatch } from "react-redux"
 import { useSelector } from "react-redux"
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import BackToSearchTooltip from "../../tooltips/BackToSearchTooltip";
 import PanelLabel from "./PanelLabel";
 import ButtonHoverTooltip from "../../tooltips/ButtonHoverTooltip";
-import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
-import { TooltipDisplayed } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+import { TooltipDisplayed } from "@/state/Reducers/Investigate/Rendering";
 import Back from "../../../phase1/components/buttons/Back";
 
 interface ReturnToSearchProps {

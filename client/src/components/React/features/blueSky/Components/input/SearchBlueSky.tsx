@@ -1,10 +1,10 @@
 import Loader from "@/components/React/global/Loaders/Loader";
 import SearchIcon from "@/components/React/global/IconComponents/SearchIcon";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
-import { AppDispatch } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
+import { AppDispatch } from "@/state/store";
 import { useRef } from "react";
-import { searchBlueSky } from "@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice";
+import { searchBlueSky } from "@/state/Reducers/BlueSky/BlueSkySlice";
 
 export default function SearchBlueSky() {
     const status = useSelector((state: RootState) => state.bluesky.status);

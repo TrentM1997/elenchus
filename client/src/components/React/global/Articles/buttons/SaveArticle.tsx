@@ -3,8 +3,8 @@ import SaveArticleTooltip from "../tooltips/SaveArticleTooltip";
 import { useSaveArticle } from "@/hooks/useSaveArticle";
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { useAppSelector } from "@/ReduxToolKit/hooks/useAppSelector";
-import { selectSavedUrlSet } from "@/ReduxToolKit/Reducers/UserContent/UserContentReducer";
+import { useAppSelector } from "@/state/hooks/useAppSelector";
+import { selectSavedUrlSet } from "@/state/Reducers/UserContent/UserContentReducer";
 
 export default function Bookmark({ article, open }: SaveArticleButton) {
     const savedSet = useAppSelector(selectSavedUrlSet);

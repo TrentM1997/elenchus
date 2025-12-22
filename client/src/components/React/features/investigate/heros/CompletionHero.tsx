@@ -1,7 +1,7 @@
 import Completed from "../phase5/Completed"
 import { useDispatch } from "react-redux"
-import type { AppDispatch } from "@/ReduxToolKit/store"
-import { changePhase } from "@/ReduxToolKit/Reducers/Investigate/Rendering"
+import type { AppDispatch } from "@/state/store"
+import { changePhase } from "@/state/Reducers/Investigate/Rendering"
 import { useEffect } from "react";
 
 export default function CompletionHero() {

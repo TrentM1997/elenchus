@@ -1,5 +1,5 @@
 import type { TermsTypes } from "./WikipediaTerms";
-import type { Extracts } from "@/ReduxToolKit/Reducers/Investigate/Review";
+import type { Extracts } from "@/state/Reducers/Investigate/Review";
 import { useState } from "react";
 import PaginateTerms from "../components/buttons/PaginateTerms";
 import TermListItem from "../components/extract/items/TermListItem";

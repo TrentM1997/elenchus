@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import ArticleLink from "../results/components/links/ArticleLink";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";

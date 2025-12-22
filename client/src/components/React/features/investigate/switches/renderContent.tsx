@@ -1,4 +1,4 @@
-import type { Phase } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import type { Phase } from "@/state/Reducers/Investigate/Rendering";
 import { motion } from "framer-motion";
 import SearchResults from "../phase2/results/containers/SearchResults";
 import ArticleContainer from "@/components/React/global/Articles/containers/ArticleContainer";

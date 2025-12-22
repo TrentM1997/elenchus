@@ -1,4 +1,4 @@
-import { RootState } from "@/ReduxToolKit/store"
+import { RootState } from "@/state/store"
 import { useSelector } from "react-redux"
 import { motion } from "framer-motion"
 import InvestigationsFallback from "../fallbacks/InvestigationsFallback"

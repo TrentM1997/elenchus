@@ -5,7 +5,7 @@ import Step2 from "./Step2";
 import Step3 from "./Step3";
 import Step4 from "./Step4";
 import Step5 from "./Step5";
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 
 export default function Stepper(): JSX.Element | null {
     const step: number = useSelector((state: RootState) => state.investigation.stepper.step);

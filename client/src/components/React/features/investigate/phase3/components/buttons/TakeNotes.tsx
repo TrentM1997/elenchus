@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux"
-import { writingNote } from "@/ReduxToolKit/Reducers/Investigate/NoteTaking"
+import { writingNote } from "@/state/Reducers/Investigate/NoteTaking"
 import PanelLabel from "./PanelLabel"
-import { RootState } from "@/ReduxToolKit/store"
+import { RootState } from "@/state/store"
 import ButtonHoverTooltip from "../../tooltips/ButtonHoverTooltip";
 
 export default function TakeNotes({ failedExtraction }) {

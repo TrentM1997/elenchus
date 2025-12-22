@@ -2,8 +2,8 @@ import { motion } from "framer-motion";
 import { extractionToastVariants } from "@/motion/variants";
 import { SetStateAction, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
-import type { Prog } from "@/ReduxToolKit/Reducers/Investigate/Reading";
+import { RootState } from "@/state/store";
+import type { Prog } from "@/state/Reducers/Investigate/Reading";
 import { createPortal } from "react-dom";
 
 interface PendingExtracts {

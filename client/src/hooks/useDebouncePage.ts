@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import type { RootState } from "@/ReduxToolKit/store";
-import type { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
+import type { RootState } from "@/state/store";
+import type { InvestigateState } from "@/state/Reducers/Root/InvestigateReducer";
 
 
 interface useDebouncedPage {

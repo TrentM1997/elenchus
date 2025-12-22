@@ -1,8 +1,8 @@
 import { AnimatePresence } from "framer-motion"
 import { useSelector } from "react-redux"
-import { RootState } from "@/ReduxToolKit/store"
-import type { Phase } from "@/ReduxToolKit/Reducers/Investigate/Rendering"
-import { ActiveModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice"
+import { RootState } from "@/state/store"
+import type { Phase } from "@/state/Reducers/Investigate/Rendering"
+import { ActiveModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice"
 import renderHero from "../../switches/renderHero"
 
 

@@ -1,4 +1,4 @@
-import { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
+import { Article } from "@/state/Reducers/Investigate/Reading";
 import React from "react";
 
 interface SourceInfoProps {

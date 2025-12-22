@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { headerTransitions } from "@/motion/variants";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import React from "react";
 
 interface StepHeader {

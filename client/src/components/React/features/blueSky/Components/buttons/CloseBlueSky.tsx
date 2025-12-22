@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/ReduxToolKit/store";
-import { changePhase, choosePath } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import { AppDispatch } from "@/state/store";
+import { changePhase, choosePath } from "@/state/Reducers/Investigate/Rendering";
 import { wait } from "@/helpers/Presentation";
 
 export default function CloseBlueSky() {

@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux"
-import { presentThisInvestigation } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
-import { AppDispatch } from "@/ReduxToolKit/store";
+import { presentThisInvestigation } from "@/state/Reducers/UserContent/ProfileNavigationSlice";
+import { AppDispatch } from "@/state/store";
 
 
 export default function BackFromSourceReview() {

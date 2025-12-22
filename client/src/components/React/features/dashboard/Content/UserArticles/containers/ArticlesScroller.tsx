@@ -4,7 +4,7 @@ import ArticleSaved from "../components/ArticleSaved";
 import SkeletonMap from "../skeletons/SkeletonMap";
 import { useVirtuoso } from "@/hooks/useVirtuoso";
 import { useCallback, useMemo, useRef, useState } from "react";
-import { VirtuosoScrollPos } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
+import { VirtuosoScrollPos } from "@/state/Reducers/UserContent/ProfileNavigationSlice";
 import { saveArticle } from "@/services/supabase/SupabaseData";
 import { AnimatePresence } from "framer-motion";
 import AuthNotification from "@/components/React/session/notifications/AuthNotification";
@@ -14,11 +14,11 @@ import { useSkeletons } from "@/hooks/useSkeletons";
 import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";
 import type { CSSProperties } from "react";
 import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary";
-import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
+import type { Article } from "@/state/Reducers/Investigate/Reading";
 import { SigninStatus } from "@/hooks/useSignIn";
-import type { AppDispatch } from "@/ReduxToolKit/store";
-import { readSavedArticle } from "@/ReduxToolKit/Reducers/UserContent/UserContentReducer";
-import { chooseTab } from "@/ReduxToolKit/Reducers/UserContent/DashboardTabs";
+import type { AppDispatch } from "@/state/store";
+import { readSavedArticle } from "@/state/Reducers/UserContent/UserContentReducer";
+import { chooseTab } from "@/state/Reducers/UserContent/DashboardTabs";
 import { wait } from "@/helpers/Presentation";
 
 export interface RenderingValues {

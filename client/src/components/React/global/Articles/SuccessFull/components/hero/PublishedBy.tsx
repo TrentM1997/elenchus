@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
+import type { Article } from "@/state/Reducers/Investigate/Reading";
 import fallback from '../../../../../../../../public/images/logos/fallback.svg';
 import { LOGOS } from "@/helpers/lookup/logos";
 

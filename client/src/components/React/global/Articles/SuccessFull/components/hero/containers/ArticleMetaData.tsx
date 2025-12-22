@@ -1,6 +1,6 @@
 import React from "react";
 import SourceInfo from "../SourceInfo";
-import type { Article } from "@/ReduxToolKit/Reducers/Investigate/Reading";
+import type { Article } from "@/state/Reducers/Investigate/Reading";
 
 interface MetaData {
     article: Article

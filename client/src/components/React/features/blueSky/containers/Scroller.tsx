@@ -1,12 +1,12 @@
 import { motion, AnimatePresence } from "framer-motion";
 import BSPost from "../Components/Post/BSPost";
-import { getPopoverPost, selectPost } from "@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice";
+import { getPopoverPost, selectPost } from "@/state/Reducers/BlueSky/BlueSkySlice";
 import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "@/ReduxToolKit/store";
+import type { AppDispatch, RootState } from "@/state/store";
 import { useCallback } from "react";
-import type { BlueSkyPost } from "@/ReduxToolKit/Reducers/BlueSky/BlueSkySlice";
+import type { BlueSkyPost } from "@/state/Reducers/BlueSky/BlueSkySlice";
 import { softEase, variants } from "@/motion/variants";
-import { renderModal } from "@/ReduxToolKit/Reducers/RenderingPipelines/PipelineSlice";
+import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 import { wait } from "@/helpers/Presentation";
 
 export default function Scroller({ posts }) {

@@ -1,11 +1,11 @@
-import { RootState } from "@/ReduxToolKit/store"
+import { RootState } from "@/state/store"
 import { useSelector } from "react-redux"
-import { fetchSavedInvestigations } from "@/ReduxToolKit/Reducers/UserContent/UserInvestigations"
+import { fetchSavedInvestigations } from "@/state/Reducers/UserContent/UserInvestigations"
 import { useDispatch } from "react-redux"
-import { AppDispatch } from "@/ReduxToolKit/store"
-import { saveUserInvestigation } from "@/ReduxToolKit/Reducers/UserContent/SaveInvestigationSlice"
+import { AppDispatch } from "@/state/store"
+import { saveUserInvestigation } from "@/state/Reducers/UserContent/SaveInvestigationSlice"
 import { useEffect, useState } from "react"
-import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer"
+import { InvestigateState } from "@/state/Reducers/Root/InvestigateReducer"
 import GoToDashboard from "./GoToDashboard"
 
 export default function SaveInvestigation({ }) {

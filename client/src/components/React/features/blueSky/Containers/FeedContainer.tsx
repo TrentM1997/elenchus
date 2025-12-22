@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { AnimatePresence, motion } from "framer-motion";
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import BlueSkyLoader from "../Loaders/BlueSkyLoader";
 import { variants } from "@/motion/variants";
 import { PostsProps } from "@/env";

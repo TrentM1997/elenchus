@@ -3,10 +3,10 @@ import BookmarkIcon from "@/components/React/global/IconComponents/BookmarkIcon"
 import MetricsIcon from "@/components/React/global/IconComponents/MetricsIcon";
 import InvestigationsIcon from "@/components/React/global/IconComponents/InvestigateIcon";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/ReduxToolKit/store";
+import { AppDispatch, RootState } from "@/state/store";
 import React from "react";
-import type { ActiveTab } from "@/ReduxToolKit/Reducers/UserContent/DashboardTabs";
-import { chooseTab } from "@/ReduxToolKit/Reducers/UserContent/DashboardTabs";
+import type { ActiveTab } from "@/state/Reducers/UserContent/DashboardTabs";
+import { chooseTab } from "@/state/Reducers/UserContent/DashboardTabs";
 import { isArticlesTab, isInvestigationsTab } from "@/helpers/lookup/isActiveTab";
 
 

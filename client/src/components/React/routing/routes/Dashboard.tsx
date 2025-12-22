@@ -1,12 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { lazy, Suspense, useEffect } from "react";
-import { AppDispatch, RootState } from "@/ReduxToolKit/store";
+import { AppDispatch, RootState } from "@/state/store";
 import Display from "../../features/dashboard/Content/containers/Display";
 import FooterBarLoader from "../../features/dashboard/ProfileNavigation/skeletons/FooterBarSkeleton";
 import SidebarLoader from "../../features/dashboard/ProfileNavigation/skeletons/SidebarSkeleton";
 import DelayedFallback from "../../global/fallbacks/DelayedFallback";
-import { clearResearchScrollPos, clearScrollPosition, presentMetrics } from "@/ReduxToolKit/Reducers/UserContent/ProfileNavigationSlice";
+import { clearResearchScrollPos, clearScrollPosition, presentMetrics } from "@/state/Reducers/UserContent/ProfileNavigationSlice";
 const MobileProfileNav = lazy(() => import('../../features/dashboard/ProfileNavigation/mobile/ProfileMenu'));
 const SideBar = lazy(() => import('../../features/dashboard/ProfileNavigation/SideBar/Sidebar'));
 

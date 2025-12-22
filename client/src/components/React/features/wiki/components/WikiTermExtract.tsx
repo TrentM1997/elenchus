@@ -1,20 +1,20 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { createPortal } from "react-dom";
-import { AppDispatch, RootState } from "@/ReduxToolKit/store";
+import { AppDispatch, RootState } from "@/state/store";
 import { useEffect, useMemo, useState } from "react";
 import WikiExtractLoader from "../loaders/WikiExtractLoader";
 import ExtractNotification from "../notifications/ExtractNotification";
-import { clearWikiSlice, modalStages, selectWikiDisambig, selectWikiSummary } from "@/ReduxToolKit/Reducers/Investigate/WikipediaSlice";
+import { clearWikiSlice, modalStages, selectWikiDisambig, selectWikiSummary } from "@/state/Reducers/Investigate/WikipediaSlice";
 import Description from "./WikiDescription";
 import TermFooter from "./TermFooter";
 import { variants } from "@/motion/variants";
 import { WikiTerm } from "@/env";
 import HighlightTextTip from "../tooltips/HighlightTextTip";
-import { InvestigateState } from "@/ReduxToolKit/Reducers/Root/InvestigateReducer";
-import { useAppSelector } from "@/ReduxToolKit/hooks/useAppSelector";
+import { InvestigateState } from "@/state/Reducers/Root/InvestigateReducer";
+import { useAppSelector } from "@/state/hooks/useAppSelector";
 import { WikiDisambigResponse, WikiResponse, WikiSummaryResponse } from "@/services/wiki/wiki";
-import type { Extracts } from "@/ReduxToolKit/Reducers/Investigate/Review";
+import type { Extracts } from "@/state/Reducers/Investigate/Review";
 
 export default function WikiTermExtract({ article_url, data }: WikiTerm) {
     const summary: WikiSummaryResponse = useAppSelector(selectWikiSummary);

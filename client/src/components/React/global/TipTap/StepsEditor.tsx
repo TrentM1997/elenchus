@@ -1,7 +1,7 @@
 import { Editor, EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/ReduxToolKit/store";
+import { AppDispatch, RootState } from "@/state/store";
 import Placeholder from "@tiptap/extension-placeholder";
 import { TipTapProps } from "@/env";
 import EditorControls from "./EditorControls";

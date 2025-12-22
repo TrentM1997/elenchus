@@ -1,4 +1,4 @@
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import React from "react";
 import { useSelector } from "react-redux";
 import { limitString } from "@/helpers/Presentation";

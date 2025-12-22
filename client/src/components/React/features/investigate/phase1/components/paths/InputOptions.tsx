@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import React from "react";
-import { changePhase, choosePath } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import { changePhase, choosePath } from "@/state/Reducers/Investigate/Rendering";
 
 
 const actions = [

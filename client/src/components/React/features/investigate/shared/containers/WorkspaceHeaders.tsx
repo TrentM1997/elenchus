@@ -1,7 +1,7 @@
-import type { Phase } from "@/ReduxToolKit/Reducers/Investigate/Rendering";
+import type { Phase } from "@/state/Reducers/Investigate/Rendering";
 import { renderWorkSpaceHeader } from "../../switches/renderWorkspaceHeader";
 import { useSelector } from "react-redux";
-import type { RootState } from "@/ReduxToolKit/store";
+import type { RootState } from "@/state/store";
 
 
 export default function WorkspaceHeaders() {

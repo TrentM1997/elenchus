@@ -1,8 +1,8 @@
 import { useDispatch } from "react-redux";
-import type { AppDispatch } from "@/ReduxToolKit/store";
-import { populateArticles } from "@/ReduxToolKit/Reducers/UserContent/UserContentReducer";
-import { populateResearch } from "@/ReduxToolKit/Reducers/UserContent/UserInvestigations";
-import { authenticate } from "@/ReduxToolKit/Reducers/Athentication/Authentication";
+import type { AppDispatch } from "@/state/store";
+import { populateArticles } from "@/state/Reducers/UserContent/UserContentReducer";
+import { populateResearch } from "@/state/Reducers/UserContent/UserInvestigations";
+import { authenticate } from "@/state/Reducers/Athentication/Authentication";
 import type { RootPayload } from "@/components/React/routing/loaderFunctions/rootLoader";
 import { useLoaderData } from "react-router-dom";
 import { useEffect } from "react";

@@ -3,7 +3,7 @@ import { motion } from "framer-motion"
 import { useDispatch } from "react-redux"
 import { variants } from "@/motion/variants"
 import React from "react"
-import { populateTooltip } from "@/ReduxToolKit/Reducers/Investigate/Rendering"
+import { populateTooltip } from "@/state/Reducers/Investigate/Rendering"
 import { useTooltipFlags } from "@/hooks/useTooltipFlags"
 
 

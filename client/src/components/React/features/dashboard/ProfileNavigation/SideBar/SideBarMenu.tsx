@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { AnimatePresence } from "framer-motion";
 import DeleteUserAccount from "@/components/React/session/modals/DeleteUser";
-import { RootState } from "@/ReduxToolKit/store";
+import { RootState } from "@/state/store";
 import DisplayOptions from "./DisplayOptions";
 import SessionOptions from "./SessionOptions";
 import React from "react";

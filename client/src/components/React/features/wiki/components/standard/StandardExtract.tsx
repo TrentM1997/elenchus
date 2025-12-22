@@ -1,8 +1,8 @@
 import { useState, useRef } from "react";
 import { useScrollTrap } from "@/hooks/useOverScrollTrap";
 import { AnimatePresence, motion } from "framer-motion";
-import { useAppSelector } from "@/ReduxToolKit/hooks/useAppSelector";
-import { selectWikiSummary } from "@/ReduxToolKit/Reducers/Investigate/WikipediaSlice";
+import { useAppSelector } from "@/state/hooks/useAppSelector";
+import { selectWikiSummary } from "@/state/Reducers/Investigate/WikipediaSlice";
 import { WikiSummaryResponse } from "@/services/wiki/wiki";
 
 
