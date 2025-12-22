@@ -1,6 +1,6 @@
-import type { ArticleSchemaType } from "../../../schemas/api/types/ArticlesSchema";
-import type { ArticleEndpointConfig, SaveArticleResult } from "@/transport/types/types";
-import { adaptSaveArticleResponse } from "@/transport/response/apiResponses";
+import type { ArticleSchemaType } from "../../../../schemas/api/types/ArticlesSchema";
+import type { ArticleEndpointConfig, SaveArticleResult } from "@/infra/transport/types/types";
+import { adaptSaveArticleResponse } from "@/infra/transport/response/apiResponses";
 
 function executeSaveArticleRequest(config: ArticleEndpointConfig) {
     return async (article: ArticleSchemaType, exists: boolean): Promise<SaveArticleResult> => {

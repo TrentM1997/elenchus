@@ -4,9 +4,9 @@ import { validateSchema } from "../../../../schemas/api/validation/validateSchem
 import { ArticleSchema } from "../../../../schemas/api/types/ArticlesSchema";
 import { CredentialsSchema } from "../../../../schemas/api/types/LoginSchema";
 import { logValidationError } from "@/helpers/errors/logValidationError";
-import { createArticleRequest, createSigninRequest, createUserRequest } from "@/transport/request/apiClient"
-import type { CreateUserResult } from "@/api/createNewUser"
-import { SaveArticleResult } from "@/transport/types/types";
+import { createArticleRequest, createSigninRequest, createUserRequest } from "@/infra/transport/request/apiClient"
+import type { CreateUserResult } from "@/infra/api/createNewUser"
+import { SaveArticleResult } from "@/infra/transport/types/types";
 
 export const supabaseSignIn = async (
     email: string,

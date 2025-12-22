@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "@/ReduxToolKit/store"
 import { Link, useNavigate } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
-import { NewEmail, NewPassword, ConfirmNewPassword, OAuthLogins } from "@/components/React/session/forms/InputFields"
+import { NewEmail, NewPassword, OAuthLogins, ConfirmSignupPassword } from "@/components/React/session/forms/InputFields"
 import NewPasswordGuide from "../InputGuides/NewPasswordGuide"
 import AuthNotification from "@/components/React/session/notifications/AuthNotification"
 import type { SigninStatus } from "@/hooks/useSignIn"
@@ -72,7 +72,7 @@ export default function Signup() {
                         <div className="space-y-4">
                             <NewEmail emailStatus={fieldStatus.e} setFieldValue={setFieldValue} />
                             <NewPassword setFieldValue={setFieldValue} passwordStatus={fieldStatus.p} />
-                            <ConfirmNewPassword confirmStatus={fieldStatus.c} setFieldValue={setFieldValue} />
+                            <ConfirmSignupPassword confirmStatus={fieldStatus.c} setFieldValue={setFieldValue} />
                             <div className="col-span-full">
                                 <button
                                     onClick={(e) => submitNewUserRequest(e)}
