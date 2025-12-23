@@ -1,9 +1,9 @@
 import { useSelector } from "react-redux";
 import type { RootState } from '@/state/store'
 import StepHeader from "../components/steps/StepHeader";
-import { stepsHelp } from "@/helpInfo/help";
 import Stepper from "../components/steps/Stepper";
 import { titles } from "../components/tokens/titles";
+import { help } from "@/components/React/global/Help/tokens/helptokens";
 
 export default function Steps({ }): JSX.Element | null {
   const step = useSelector((state: RootState) => state.investigation.stepper.step);
@@ -20,7 +20,7 @@ export default function Steps({ }): JSX.Element | null {
         className="flex flex-col items-start
         justify-start relative w-full h-full p-2">
 
-        <StepHeader info={stepsHelp[step]} title={titles[step].title} subheader={titles[step].subheader} />
+        <StepHeader info={help[step]} title={titles[step].title} subheader={titles[step].subheader} />
 
         <Stepper />
       </div>

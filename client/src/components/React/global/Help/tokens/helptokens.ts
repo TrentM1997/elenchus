@@ -54,8 +54,6 @@ const Step4Help: Help[] = [{
 }
 ]
 
-
-
 const Step5Help: Help[] = [{
     heading: "What exaclty am I looking for?",
     explanation: `While we're searching for evidence, intentionally seeking an answer for the premises — what must be true to support the idea —   is the 
@@ -73,7 +71,7 @@ const ResearchHelp: Help[] = [{
     explanation: "Select whether you felt the Idea or premises you investigated were supported by the evidence you could find"
 }]
 
-export const stepsHelp = [Step1Help, Step2Help, Step3Help, Step4Help, Step5Help];
+export const help = [Step1Help, Step2Help, Step3Help, Step4Help, Step5Help];
 
 
 
