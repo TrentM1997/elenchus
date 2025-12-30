@@ -2,7 +2,7 @@ import { useSelector } from "react-redux"
 import type { RootState } from "@/state/store"
 import { motion } from "framer-motion"
 import { delays } from "@/motion/variants"
-import ScrolltoTop from "@/helpers/scroll/ScrollToTop"
+import ScrolltoTop from "@/lib/helpers/scroll/ScrollToTop"
 import NoSavedArticles from "../fallbacks/NoSavedArticles"
 import ArticlesScroller from "./ArticlesScroller";
 import { useEffect, useMemo, useRef, useState } from "react"

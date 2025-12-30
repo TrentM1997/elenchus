@@ -1,6 +1,6 @@
 import Search from "../phase2/search/containers/Search";
 import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary";
-import ScrolltoTop from "@/helpers/scroll/ScrollToTop";
+import ScrolltoTop from "@/lib/helpers/scroll/ScrollToTop";
 
 export default function SearchHero(): JSX.Element {
 

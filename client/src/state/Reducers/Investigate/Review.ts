@@ -1,4 +1,4 @@
-import { WikiDisambigCandidate, WikiSummaryResponse } from "@/services/wiki/wiki";
+import { WikiDisambigCandidate, WikiSummaryResponse } from "@/lib/services/wiki/wiki";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { act } from "react";
 

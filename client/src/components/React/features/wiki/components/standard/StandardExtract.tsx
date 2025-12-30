@@ -3,7 +3,7 @@ import { useScrollTrap } from "@/hooks/useOverScrollTrap";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAppSelector } from "@/state/hooks/useAppSelector";
 import { selectWikiSummary } from "@/state/Reducers/Investigate/WikipediaSlice";
-import { WikiSummaryResponse } from "@/services/wiki/wiki";
+import { WikiSummaryResponse } from "@/lib/services/wiki/wiki";
 
 
 export default function StandardExtract(): JSX.Element | null {

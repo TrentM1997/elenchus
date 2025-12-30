@@ -2,7 +2,7 @@ import { useState } from "react"
 import ReviewPagination from "../buttons/ReviewPagination"
 import ReviewPOV from "../ReviewPOV"
 import ReviewQuestions from "../ReviewQuestions"
-import ScrolltoTop from "@/helpers/scroll/ScrollToTop"
+import ScrolltoTop from "@/lib/helpers/scroll/ScrollToTop"
 import DelayedFallback from "@/components/React/global/fallbacks/DelayedFallback"
 
 export default function ReviewContainer() {

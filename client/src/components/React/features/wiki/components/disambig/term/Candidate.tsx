@@ -1,4 +1,4 @@
-import { WikiDisambigCandidate } from "@/services/wiki/wiki";
+import { WikiDisambigCandidate } from "@/lib/services/wiki/wiki";
 
 interface CandidateProps {
     candidate: WikiDisambigCandidate | null

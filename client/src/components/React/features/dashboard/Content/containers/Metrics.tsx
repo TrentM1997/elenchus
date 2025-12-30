@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { lazy, Suspense, useRef } from "react";
-import ScrolltoTop from "@/helpers/scroll/ScrollToTop";
+import ScrolltoTop from "@/lib/helpers/scroll/ScrollToTop";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { RootState, AppDispatch } from "@/state/store";
 import { variants } from "@/motion/variants";
@@ -10,7 +10,7 @@ import type { StatBreakdownTypes } from "@/env";
 import ChartJsWrapper from "../UserCharts/ChartJsWrapper";
 import StatsSkeleton from "@/components/React/features/charts/skeletons/StatsSkeleton";
 import NoSavedContentFallback from "../../fallbacks/NoSavedContentFallback";
-import StatsWorker from '@/services/workers/statsWorker.js?worker';
+import StatsWorker from '@/lib/services/workers/statsWorker.js?worker';
 import StatsFallback from "../../../charts/ChartFallbacks/StatsFallback";
 import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";
 import DelayedFallback from "@/components/React/global/fallbacks/DelayedFallback";

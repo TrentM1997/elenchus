@@ -3,7 +3,7 @@ import { useScrollTrap } from "@/hooks/useOverScrollTrap";
 import { AnimatePresence } from "framer-motion";
 import { useAppSelector } from "@/state/hooks/useAppSelector";
 import { selectWikiSummary, selectWikiDisambig } from "@/state/Reducers/Investigate/WikipediaSlice";
-import { WikiSummaryResponse, WikiDisambigResponse } from "@/services/wiki/wiki";
+import { WikiSummaryResponse, WikiDisambigResponse } from "@/lib/services/wiki/wiki";
 import StandardExtract from "./standard/StandardExtract";
 import DisambigExtract from "./disambig/DisambigExtract";
 import { InvestigateState } from "@/state/Reducers/Root/InvestigateReducer";

@@ -1,5 +1,5 @@
 import type { SetStateAction } from "react"
-import type { WikiDisambigCandidate } from "@/services/wiki/wiki"
+import type { WikiDisambigCandidate } from "@/lib/services/wiki/wiki"
 
 interface NavCandidateButtons {
     setPage: React.Dispatch<SetStateAction<number>>,

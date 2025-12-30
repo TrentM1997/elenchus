@@ -1,5 +1,5 @@
 import type { Extracts } from "@/state/Reducers/Investigate/Review"
-import type { WikiDisambigCandidate } from "@/services/wiki/wiki"
+import type { WikiDisambigCandidate } from "@/lib/services/wiki/wiki"
 import DisambigSaved from "../disambig/DisambigSaved"
 
 interface SavedWikiDescription {

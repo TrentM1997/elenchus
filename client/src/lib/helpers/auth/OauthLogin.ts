@@ -1,4 +1,4 @@
-import { supabase } from "@/services/supabase/supabaseClient";
+import { supabase } from "@/lib/services/supabase/supabaseClient";
 
 export const googleAuth = async () => {
 

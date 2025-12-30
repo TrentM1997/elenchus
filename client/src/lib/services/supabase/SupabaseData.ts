@@ -1,9 +1,9 @@
 import { SupabaseUser } from "@/env";
 import type { Article } from "@/state/Reducers/Investigate/Reading";
-import { validateSchema } from "../../../../schemas/api/validation/validateSchema";
-import { ArticleSchema } from "../../../../schemas/api/types/ArticlesSchema";
-import { CredentialsSchema } from "../../../../schemas/api/types/LoginSchema";
-import { logValidationError } from "@/helpers/errors/logValidationError";
+import { validateSchema } from "../../../../../schemas/api/validation/validateSchema";
+import { ArticleSchema } from "../../../../../schemas/api/types/ArticlesSchema";
+import { CredentialsSchema } from "../../../../../schemas/api/types/LoginSchema";
+import { logValidationError } from "@/lib/helpers/errors/logValidationError";
 import { createArticleRequest, createSigninRequest, createUserRequest } from "@/infra/transport/request/apiClient"
 import type { CreateUserResult } from "@/infra/api/createNewUser"
 import { SaveArticleResult } from "@/infra/transport/types/types";

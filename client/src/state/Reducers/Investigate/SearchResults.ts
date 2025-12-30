@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ArticleType } from "@/env";
-import { getArticles, type ArticleOptionsFetch } from "@/services/news/getArticles";
+import { getArticles, type ArticleOptionsFetch } from "@/lib/services/news/getArticles";
 
 export const RetrieveArticles = createAsyncThunk<ArticleOptionsFetch, { query: string, timeout?: number }>(
     'investigate/fetchArticles',

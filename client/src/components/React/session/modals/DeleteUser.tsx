@@ -6,8 +6,8 @@ import Loader from "../../global/Loaders/Loader";
 import { presentDeleteModal } from "@/state/Reducers/UserContent/ProfileNavigationSlice";
 import { useNavigate } from "react-router-dom";
 import { clearAuthSlice } from "@/state/Reducers/Athentication/Authentication";
-import { confirmFirstPassword, emailValidation } from "@/helpers/formatting/validation";
-import { deleteAccount, DeleteAccountRes } from "@/services/supabase/SupabaseData";
+import { confirmFirstPassword, emailValidation } from "@/lib/helpers/formatting/validation";
+import { deleteAccount, DeleteAccountRes } from "@/lib/services/supabase/SupabaseData";
 import { SigninStatus } from "@/hooks/useSignIn";
 import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 

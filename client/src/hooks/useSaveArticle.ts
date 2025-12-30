@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { saveArticle } from "@/services/supabase/SupabaseData";
+import { saveArticle } from "@/lib/services/supabase/SupabaseData";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/state/store";
 import { fetchSavedArticles } from "@/state/Reducers/UserContent/UserContentReducer";

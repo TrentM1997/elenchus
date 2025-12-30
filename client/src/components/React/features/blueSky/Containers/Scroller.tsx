@@ -7,7 +7,7 @@ import { useCallback } from "react";
 import type { BlueSkyPost } from "@/state/Reducers/BlueSky/BlueSkySlice";
 import { softEase, variants } from "@/motion/variants";
 import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
-import { wait } from "@/helpers/formatting/Presentation";
+import { wait } from "@/lib/helpers/formatting/Presentation";
 
 export default function Scroller({ posts }) {
     const postForPopover = useSelector((s: RootState) => s.bluesky.popoverPost);

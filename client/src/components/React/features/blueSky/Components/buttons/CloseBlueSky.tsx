@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/state/store";
 import { changePhase, choosePath } from "@/state/Reducers/Investigate/Rendering";
-import { wait } from "@/helpers/formatting/Presentation";
+import { wait } from "@/lib/helpers/formatting/Presentation";
 
 export default function CloseBlueSky() {
     const dispatch = useDispatch<AppDispatch>();

@@ -1,7 +1,7 @@
 import { RootState } from "@/state/store";
 import React from "react";
 import { useSelector } from "react-redux";
-import { limitString } from "@/helpers/formatting/Presentation";
+import { limitString } from "@/lib/helpers/formatting/Presentation";
 
 function ItemText({ title, data, itemStep }): JSX.Element | null {
     const step = useSelector((state: RootState) => state.investigation.stepper.step);

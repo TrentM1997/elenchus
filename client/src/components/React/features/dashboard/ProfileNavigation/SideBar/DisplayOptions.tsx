@@ -7,7 +7,7 @@ import { AppDispatch, RootState } from "@/state/store";
 import React from "react";
 import type { ActiveTab } from "@/state/Reducers/UserContent/DashboardTabs";
 import { chooseTab } from "@/state/Reducers/UserContent/DashboardTabs";
-import { isArticlesTab, isInvestigationsTab } from "@/helpers/lookup/isActiveTab";
+import { isArticlesTab, isInvestigationsTab } from "@/lib/helpers/lookup/isActiveTab";
 
 
 function DisplayOptions() {
