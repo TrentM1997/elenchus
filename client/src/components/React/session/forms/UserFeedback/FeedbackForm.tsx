@@ -6,7 +6,7 @@ import { RootState } from "@/state/store"
 import { submitFeedback } from "@/services/supabase/SupabaseData"
 import AuthNotification from "@/components/React/session/notifications/AuthNotification";
 import type { SigninStatus } from "@/hooks/useSignIn"
-import { wait } from "@/helpers/Presentation"
+import { wait } from "@/helpers/formatting/Presentation"
 import { populateModal } from "@/state/Reducers/Investigate/Rendering"
 import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice"
 

@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { confirmFirstPassword, confirmPassword, emailValidation } from "@/helpers/validation";
+import { confirmFirstPassword, confirmPassword, emailValidation } from "@/helpers/formatting/validation";
 import type { ValidationStatus, SignupFields, FieldStatus, SignupValidationHook } from "@/env";
 
 function canSubmitFromStatus(status: FieldStatus): boolean {

@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { confirmFirstPassword, confirmPassword } from "@/helpers/validation";
+import { confirmFirstPassword, confirmPassword } from "@/helpers/formatting/validation";
 import type { ValidationStatus } from "@/env";
 
 function canSubmitFromStatus(status: NewPasswordStatus): boolean {

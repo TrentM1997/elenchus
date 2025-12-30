@@ -1,6 +1,6 @@
 import { RootState } from "@/state/store"
 import { useSelector } from "react-redux"
-import { limitName } from "@/helpers/Presentation";
+import { limitName } from "@/helpers/formatting/Presentation";
 
 
 export default function Author({ post }): React.ReactNode {

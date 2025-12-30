@@ -13,6 +13,7 @@ import { wrapAsync } from '../../core/async/wrapAsync.js';
 const jobs = {};
 export const firecrawl_extractions = wrapAsync(async (req, res) => {
     const { articles } = validateOrThrow(ScrapeRequestSchema, req.body);
+    console.log(articles);
     const id = crypto.randomUUID();
     jobs[id] = {
         status: 'pending',

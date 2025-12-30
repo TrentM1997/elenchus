@@ -10,7 +10,7 @@ import { reviewThisResearch } from "@/state/Reducers/UserContent/UserInvestigati
 import { useSkeletons } from "@/hooks/useSkeletons";
 import type { SavedInvestigation } from "./SavedResearchLayout";
 import { chooseTab } from "@/state/Reducers/UserContent/DashboardTabs";
-import { wait } from "@/helpers/Presentation";
+import { wait } from "@/helpers/formatting/Presentation";
 
 interface ResearchScroller {
     timeline: SavedInvestigation[]

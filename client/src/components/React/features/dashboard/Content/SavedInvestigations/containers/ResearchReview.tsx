@@ -8,7 +8,7 @@ import DetailsTable from "../Details/DetailsTable"
 import { Terms } from "../Details/wiki/containers/WikipediaTerms"
 import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary"
 import DetailView from "../../../ProfileNavigation/mobile/DetailView"
-import { ScrollUp } from "@/helpers/ScrollToTop"
+import { ScrollUp } from "@/helpers/scroll/ScrollToTop"
 import { chooseTab } from "@/state/Reducers/UserContent/DashboardTabs"
 
 export default function ResearchReview() {

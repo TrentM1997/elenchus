@@ -3,7 +3,7 @@ import SearchHero from "@/components/React/features/investigate/heros/SearchHero
 import ReviewContainer from "@/components/React/features/investigate/phase4/containers/ReviewContainer"
 import CompletionHero from "@/components/React/features/investigate/heros/CompletionHero"
 import FinalResults from "@/components/React/features/investigate/phase5/FinalResults"
-import ScrolltoTop from "@/helpers/ScrollToTop"
+import ScrolltoTop from "@/helpers/scroll/ScrollToTop"
 import ArticlePagination from "../phase3/containers/PaginationWrapper";
 import { Phase } from "@/state/Reducers/Investigate/Rendering"
 import HeroWrapper from "../shared/wrappers/HeroWrapper"

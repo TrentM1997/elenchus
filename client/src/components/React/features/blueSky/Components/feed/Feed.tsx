@@ -4,7 +4,7 @@ import { resetBlueSkyState } from "@/state/Reducers/BlueSky/BlueSkySlice";
 import { motion } from "framer-motion";
 import { AppDispatch, RootState } from "@/state/store";
 import Scroller from "../../Containers/Scroller";
-import { splitPosts } from "@/helpers/Presentation";
+import { splitPosts } from "@/helpers/formatting/Presentation";
 import { variants } from "@/motion/variants";
 
 

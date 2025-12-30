@@ -1,13 +1,13 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ArticleType } from "@/env";
-import { ArticleOptionsFetch, fetchArticles } from "@/helpers/FetchRequests";
+import { getArticles, type ArticleOptionsFetch } from "@/services/news/getArticles";
 
 export const RetrieveArticles = createAsyncThunk<ArticleOptionsFetch, { query: string, timeout?: number }>(
     'investigate/fetchArticles',
     async ({ query, timeout }, thunkAPI) => {
 
         try {
-            const response = await fetchArticles(query, timeout, thunkAPI.signal);
+            const response = await getArticles(query, timeout, thunkAPI.signal);
 
             if (!response) {
                 throw new Error(`Unable to query endpoint for article links`);

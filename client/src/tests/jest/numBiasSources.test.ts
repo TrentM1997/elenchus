@@ -1,4 +1,4 @@
-import { numBiasSources } from "../../helpers/Ratings";
+import { numBiasSources } from "../../helpers/calc/Ratings";
 import { mockArticles } from "../mockData/mockArticles";
 
 describe('numBiasSources()', () => {

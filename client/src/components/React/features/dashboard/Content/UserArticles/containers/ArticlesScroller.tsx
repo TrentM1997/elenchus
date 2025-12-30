@@ -19,7 +19,7 @@ import { SigninStatus } from "@/hooks/useSignIn";
 import type { AppDispatch } from "@/state/store";
 import { readSavedArticle } from "@/state/Reducers/UserContent/UserContentReducer";
 import { chooseTab } from "@/state/Reducers/UserContent/DashboardTabs";
-import { wait } from "@/helpers/Presentation";
+import { wait } from "@/helpers/formatting/Presentation";
 
 export interface RenderingValues {
     fullyLoaded: boolean | null,

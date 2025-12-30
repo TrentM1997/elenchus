@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { emailValidation, requiredInput, confirmPassword } from "@/helpers/validation";
+import { emailValidation, requiredInput, confirmPassword } from "@/helpers/formatting/validation";
 
 type CheckStatusType = 'confirmation' | 'n/a';
 

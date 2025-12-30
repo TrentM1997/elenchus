@@ -2,7 +2,7 @@ import MoreButton from "../../../../buttons/MoreButton";
 import SaveArticle from '../../../../buttons/SaveArticle';
 import { useState } from "react";
 import { motion } from "framer-motion";
-import ScrolltoTop from "@/helpers/ScrollToTop";
+import ScrolltoTop from "@/helpers/scroll/ScrollToTop";
 import ArticleMetaData from "./ArticleMetaData";
 import ArticleImage from "../ArticleImage";
 

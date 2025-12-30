@@ -10,7 +10,7 @@ import type { AppDispatch } from "@/state/store";
 import MaxChosen from "./MaxChosen";
 import { useMaxSelectedToast } from "@/hooks/useAutoDismiss";
 import { populateTooltip, TooltipDisplayed } from "@/state/Reducers/Investigate/Rendering";
-import { wait } from "@/helpers/Presentation";
+import { wait } from "@/helpers/formatting/Presentation";
 
 interface TooltipWrapper {
     canAnimate: boolean

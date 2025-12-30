@@ -5,7 +5,7 @@ import { RetrieveArticles, resetArticles } from "@/state/Reducers/Investigate/Se
 import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary";
 import SearchBar from "../components/input/SearchBar";
 import { clearChosenArticles } from "@/state/Reducers/Investigate/ChosenArticles";
-import { normalize } from "@/helpers/Normailize";
+import { normalize } from "@/helpers/formatting/Normailize";
 import React from "react";
 
 export default function Search({ }): JSX.Element | null {

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { lazy, Suspense, useRef } from "react";
-import ScrolltoTop from "@/helpers/ScrollToTop";
+import ScrolltoTop from "@/helpers/scroll/ScrollToTop";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { RootState, AppDispatch } from "@/state/store";
 import { variants } from "@/motion/variants";

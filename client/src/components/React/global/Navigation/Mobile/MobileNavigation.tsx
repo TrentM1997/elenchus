@@ -5,7 +5,7 @@ import { RootState } from "@/state/store";
 import { showSignOut } from "@/state/Reducers/Athentication/Authentication";
 import { useNavigate } from "react-router-dom";
 import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
-import { wait } from "@/helpers/Presentation";
+import { wait } from "@/helpers/formatting/Presentation";
 
 const variants = {
     open: {

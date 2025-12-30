@@ -2,7 +2,7 @@ import type { Phase } from "@/state/Reducers/Investigate/Rendering";
 import { motion } from "framer-motion";
 import SearchResults from "../phase2/results/containers/SearchResults";
 import ArticleContainer from "@/components/React/global/Articles/containers/ArticleContainer";
-import ScrolltoTop from "@/helpers/ScrollToTop";
+import ScrolltoTop from "@/helpers/scroll/ScrollToTop";
 import { articleContent } from "@/motion/variants";
 
 export const renderContent = (phase: Phase): JSX.Element | null => {

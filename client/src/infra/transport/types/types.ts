@@ -20,6 +20,14 @@ export type ApiEndpoint =
     | "/searchBlueSky"
     | "/sendFeedback";
 
+export type FirecrawlEndpoint = Extract<ApiEndpoint, "/firecrawl_extractions">;
+
+export type FirecrawlPollingEndpoint = `${FirecrawlEndpoint}/${string}`
+
+export type ExtractArticleEndpoints = {
+    kickoff: Extract<ApiEndpoint, "/firecrawl_extractions">,
+    polling: (jobId: string) => FirecrawlPollingEndpoint
+};
 
 export type ArticleEndpointConfig = {
     endpoint: ApiEndpoint,
@@ -29,6 +37,14 @@ export type ArticleEndpointConfig = {
 export type AuthRequestConfig = {
     endpoint: AuthEndpoint,
     credentials: RequestCredentials
+};
+
+export type SearchEndpoint = Extract<ApiEndpoint, "/newsArticles">
+
+export type EndpointAndQuery = `${SearchEndpoint}?q=${string}`
+
+export type SearchNewsConfig = {
+    endpoint: (query: string) => SearchEndpoint
 };
 
 

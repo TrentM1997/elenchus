@@ -1,7 +1,7 @@
 import GatherPOV from "./GatherPOV";
 import StepControl from "../components/buttons/StepControl";
 import { useEffect } from "react";
-import { ScrollUp } from "@/helpers/ScrollToTop";
+import { ScrollUp } from "@/helpers/scroll/ScrollToTop";
 
 export default function InvestigateHero(): JSX.Element | null {
 

@@ -2,10 +2,10 @@ import { useDispatch, useSelector } from "react-redux"
 import { getPopoverPost, landingPageFadeOut, selectPost } from "@/state/Reducers/BlueSky/BlueSkySlice"
 import { getIdea, preselected } from "@/state/Reducers/Investigate/UserPOV"
 import { useEffect } from "react";
-import { emitFadeFooter } from "@/helpers/customEvents";
+import { emitFadeFooter } from "@/helpers/events/customEvents";
 import { changePhase, choosePath } from "@/state/Reducers/Investigate/Rendering";
-import { smoothScrollUp } from "@/helpers/ScrollToTop";
-import { wait } from "@/helpers/Presentation";
+import { smoothScrollUp } from "@/helpers/scroll/ScrollToTop";
+import { wait } from "@/helpers/formatting/Presentation";
 import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 import { RootState } from "@/state/store";
 

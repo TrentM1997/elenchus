@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit';
+import { firecrawlEndpoints } from '@/infra/transport/thunkEndpoints/thunkEndpoints';
 
 export interface Article {
     title: string,
@@ -64,7 +65,7 @@ export const runFirecrawlExtraction = createAsyncThunk<
 
         let jobId: string;
         try {
-            const kickoffRes = await fetch('/firecrawl_extractions', {
+            const kickoffRes = await fetch(firecrawlEndpoints.kickoff, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ articles: articles }),
@@ -84,7 +85,7 @@ export const runFirecrawlExtraction = createAsyncThunk<
             return rejectWithValue(`Network error starting job: ${err.message}`);
         }
 
-        const pollEndpoint = `/firecrawl_extractions/${jobId}`;
+        const pollEndpoint = firecrawlEndpoints.polling(jobId);
 
         const pollDelay = (ms: number) =>
             new Promise((resolve) => setTimeout(resolve, ms));

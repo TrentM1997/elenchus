@@ -16,7 +16,6 @@ const checkSpecialChars = (arr: string[]) => {
 
 
 export const requiredInput = (emailString: string, passwordString: string, setterFunction: Function) => {
-    console.log(emailString, passwordString);
 
     const validateEmail = /[A-Za-z0-9\._%+\-]+@[A-Za-z0-9\.\-]+\.[A-Za-z]{2,}/gm
 
