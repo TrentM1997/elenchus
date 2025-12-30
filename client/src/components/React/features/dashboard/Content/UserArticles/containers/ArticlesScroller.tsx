@@ -5,7 +5,7 @@ import SkeletonMap from "../skeletons/SkeletonMap";
 import { useVirtuoso } from "@/hooks/useVirtuoso";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { VirtuosoScrollPos } from "@/state/Reducers/UserContent/ProfileNavigationSlice";
-import { saveArticle } from "@/services/supabase/SupabaseData";
+import { saveArticle } from "@/lib/services/supabase/SupabaseData";
 import { AnimatePresence } from "framer-motion";
 import AuthNotification from "@/components/React/session/notifications/AuthNotification";
 import Title from "../components/Title";
@@ -19,7 +19,7 @@ import { SigninStatus } from "@/hooks/useSignIn";
 import type { AppDispatch } from "@/state/store";
 import { readSavedArticle } from "@/state/Reducers/UserContent/UserContentReducer";
 import { chooseTab } from "@/state/Reducers/UserContent/DashboardTabs";
-import { wait } from "@/helpers/formatting/Presentation";
+import { wait } from "@/lib/helpers/formatting/Presentation";
 
 export interface RenderingValues {
     fullyLoaded: boolean | null,

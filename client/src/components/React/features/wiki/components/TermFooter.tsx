@@ -4,7 +4,7 @@ import { RootState } from "@/state/store";
 import { getExtract } from "@/state/Reducers/Investigate/Review";
 import { useAppSelector } from "@/state/hooks/useAppSelector";
 import { InvestigateState } from "@/state/Reducers/Root/InvestigateReducer";
-import type { WikiDisambigResponse, WikiSummaryResponse } from "@/services/wiki/wiki";
+import type { WikiDisambigResponse, WikiSummaryResponse } from "@/lib/services/wiki/wiki";
 import { selectWikiSummary, selectWikiDisambig } from "@/state/Reducers/Investigate/WikipediaSlice";
 import SaveExtractTooltip from "../tooltips/SaveExtractTooltip";
 import ExtractBookmark from "./buttons/ExtractBookmark";

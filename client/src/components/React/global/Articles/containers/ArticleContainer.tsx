@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { recordSources } from "@/state/Reducers/UserContent/SaveInvestigationSlice";
 import RenderArticles from "@/components/React/features/investigate/phase3/containers/RenderArticles";
-import { getSourcesToRecord, canUpdateSources } from "@/services/RecordSources";
+import { getSourcesToRecord, canUpdateSources } from "@/lib/services/RecordSources";
 import { clearChosenArticles } from "@/state/Reducers/Investigate/ChosenArticles";
 import { resetResults } from "@/state/Reducers/Investigate/SearchResults";
 import { resetReadingSlice } from "@/state/Reducers/Investigate/Reading";

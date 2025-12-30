@@ -7,8 +7,8 @@ import PanelLabel from "./PanelLabel";
 import { changePhase, populateTooltip, TooltipDisplayed } from "@/state/Reducers/Investigate/Rendering";
 import type { Article } from "@/state/Reducers/Investigate/Reading";
 import { AnimatePresence } from "framer-motion";
-import { smoothScrollUp } from "@/helpers/scroll/ScrollToTop";
-import { wait } from "@/helpers/formatting/Presentation";
+import { smoothScrollUp } from "@/lib/helpers/scroll/ScrollToTop";
+import { wait } from "@/lib/helpers/formatting/Presentation";
 import ButtonHoverTooltip from "../../tooltips/ButtonHoverTooltip";
 
 export function FinishedReading({ failedExtraction }) {

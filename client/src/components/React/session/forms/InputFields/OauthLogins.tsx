@@ -1,4 +1,4 @@
-import { googleAuth } from "@/helpers/auth/OauthLogin"
+import { googleAuth } from "@/lib/helpers/auth/OauthLogin"
 
 
 export function OAuthLogins() {

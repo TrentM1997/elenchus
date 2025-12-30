@@ -4,7 +4,7 @@ import { createPortal } from "react-dom";
 import React from "react";
 import { chooseTab } from "@/state/Reducers/UserContent/DashboardTabs";
 import type { ActiveTab } from "@/state/Reducers/UserContent/DashboardTabs";
-import { isArticlesTab, isInvestigationsTab } from "@/helpers/lookup/isActiveTab";
+import { isArticlesTab, isInvestigationsTab } from "@/lib/helpers/lookup/isActiveTab";
 
 function MobileProfileNav() {
   const tab: ActiveTab = useSelector((s: RootState) => s.dashboard.tab);

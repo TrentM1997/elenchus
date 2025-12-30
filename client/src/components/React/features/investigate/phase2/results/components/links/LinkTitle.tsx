@@ -1,5 +1,5 @@
 import React from "react";
-import { limitString } from "@/helpers/formatting/Presentation";
+import { limitString } from "@/lib/helpers/formatting/Presentation";
 
 
 interface LinkTitle {

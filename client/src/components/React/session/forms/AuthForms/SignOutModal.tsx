@@ -7,7 +7,7 @@ import AuthNotification from "@/components/React/session/notifications/AuthNotif
 import { useNavigate } from "react-router-dom";
 import { SigninStatus } from "@/hooks/useSignIn";
 import { useClearUser } from "@/hooks/useClearUser";
-import { wait } from "@/helpers/formatting/Presentation";
+import { wait } from "@/lib/helpers/formatting/Presentation";
 import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 
 export default function SignOutModal(): JSX.Element {

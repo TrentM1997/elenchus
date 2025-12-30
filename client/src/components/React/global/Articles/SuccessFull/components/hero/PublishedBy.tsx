@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import type { Article } from "@/state/Reducers/Investigate/Reading";
 import fallback from '../../../../../../../../public/images/logos/fallback.svg';
-import { LOGOS } from "@/helpers/lookup/logos";
+import { LOGOS } from "@/lib/helpers/lookup/logos";
 
 export const slugLogo = (s: string) => {
     const item = s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "").replace(/(^-|-$)/g, "");

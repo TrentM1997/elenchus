@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import AuthNotification from "@/components/React/session/notifications/AuthNotification";
-import ScrolltoTop from "@/helpers/scroll/ScrollToTop";
+import ScrolltoTop from "@/lib/helpers/scroll/ScrollToTop";
 import LoginOperations from "@/components/React/session/forms/containers/LoginOperations";
 import { useCheckCredentials } from "@/hooks/useCheckCredentials";
 import { useSignIn } from "@/hooks/useSignIn";

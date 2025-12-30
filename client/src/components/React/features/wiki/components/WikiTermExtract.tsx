@@ -13,7 +13,7 @@ import { WikiTerm } from "@/env";
 import HighlightTextTip from "../tooltips/HighlightTextTip";
 import { InvestigateState } from "@/state/Reducers/Root/InvestigateReducer";
 import { useAppSelector } from "@/state/hooks/useAppSelector";
-import { WikiDisambigResponse, WikiResponse, WikiSummaryResponse } from "@/services/wiki/wiki";
+import { WikiDisambigResponse, WikiResponse, WikiSummaryResponse } from "@/lib/services/wiki/wiki";
 import type { Extracts } from "@/state/Reducers/Investigate/Review";
 
 export default function WikiTermExtract({ article_url, data }: WikiTerm) {

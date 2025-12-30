@@ -3,7 +3,7 @@ import type { ExtractionToast } from '@/components/React/app/App';
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/state/store";
 import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
-import { wait } from "@/helpers/formatting/Presentation";
+import { wait } from "@/lib/helpers/formatting/Presentation";
 
 
 const useExtractionFlag = (): void => {

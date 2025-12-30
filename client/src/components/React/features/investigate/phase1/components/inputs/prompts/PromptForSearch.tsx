@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/state/store";
 import { useIsMobile } from "@/hooks/useIsMobile";
-import { limitString } from "@/helpers/formatting/Presentation";
+import { limitString } from "@/lib/helpers/formatting/Presentation";
 
 
 function PromptForSearch(): JSX.Element | null {

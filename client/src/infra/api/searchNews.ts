@@ -1,5 +1,5 @@
 import type { SearchEndpoint } from "../transport/types/types";
-import { options } from "@/helpers/tokens/fetchOptions";
+import { options } from "@/lib/helpers/tokens/fetchOptions";
 
 export interface ArticleOptionsFetch {
     message: string,

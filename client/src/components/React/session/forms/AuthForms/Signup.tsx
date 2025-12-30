@@ -8,7 +8,7 @@ import NewPasswordGuide from "../InputGuides/NewPasswordGuide"
 import AuthNotification from "@/components/React/session/notifications/AuthNotification"
 import type { SigninStatus } from "@/hooks/useSignIn"
 import { useSignupValidation } from "@/hooks/auth/useSignupValidation"
-import { newUser } from "@/services/supabase/SupabaseData"
+import { newUser } from "@/lib/services/supabase/SupabaseData"
 import { authenticate } from "@/state/Reducers/Athentication/Authentication"
 
 

@@ -1,4 +1,4 @@
-import { ScrollUp } from "@/helpers/scroll/ScrollToTop"
+import { ScrollUp } from "@/lib/helpers/scroll/ScrollToTop"
 import { useEffect } from "react"
 
 type DisplayProps = {

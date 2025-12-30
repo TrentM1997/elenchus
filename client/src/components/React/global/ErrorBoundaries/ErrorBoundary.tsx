@@ -1,6 +1,6 @@
 import React, { Component, ErrorInfo } from 'react';
 import ErrMessage from './messages/ErrMessage';
-import { AppError, normalizeError } from '@/helpers/errors/normalizeError';
+import { AppError, normalizeError } from '@/lib/helpers/errors/normalizeError';
 
 interface Props {
     children: React.ReactNode,

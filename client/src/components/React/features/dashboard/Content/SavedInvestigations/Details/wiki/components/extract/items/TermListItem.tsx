@@ -1,5 +1,5 @@
 import type { Extracts } from "@/state/Reducers/Investigate/Review"
-import type { WikiDisambigCandidate } from "@/services/wiki/wiki";
+import type { WikiDisambigCandidate } from "@/lib/services/wiki/wiki";
 import { useState, useMemo } from "react"
 import { SavedWikiDescription } from "../descriptions/SavedWikiDescription";
 import NavCandidates from "@/components/React/features/wiki/components/disambig/buttons/NavDisambig";

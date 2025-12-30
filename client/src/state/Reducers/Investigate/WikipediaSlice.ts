@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction, createSelector } from "@reduxjs/toolkit";
-import { extractFromWiki, WikiResponse } from "@/services/wiki/wiki";
+import { extractFromWiki, WikiResponse } from "@/lib/services/wiki/wiki";
 import { RootState } from "@/state/store";
 
 type WikiReject = string;

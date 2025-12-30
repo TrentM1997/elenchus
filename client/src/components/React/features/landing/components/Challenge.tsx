@@ -1,9 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
 import React from "react";
 import Circuitry from "./Circuitry";
-import { emitFadeFooter } from "@/helpers/events/customEvents";
-import { smoothScrollUp } from "@/helpers/scroll/ScrollToTop";
-import { wait } from "@/helpers/formatting/Presentation";
+import { emitFadeFooter } from "@/lib/helpers/events/customEvents";
+import { smoothScrollUp } from "@/lib/helpers/scroll/ScrollToTop";
+import { wait } from "@/lib/helpers/formatting/Presentation";
 
 function Challenge(): JSX.Element {
     const navigate = useNavigate();

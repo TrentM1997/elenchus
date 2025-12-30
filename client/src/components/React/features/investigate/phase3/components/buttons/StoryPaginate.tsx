@@ -3,7 +3,7 @@ import { RootState } from "@/state/store"
 import { incrementStory, decrementStory, incrementStoryBy } from "@/state/Reducers/Investigate/Reading"
 import type { ModalStages } from "@/state/Reducers/Investigate/WikipediaSlice"
 import { modalStages } from "@/state/Reducers/Investigate/WikipediaSlice"
-import { wait } from "@/helpers/formatting/Presentation"
+import { wait } from "@/lib/helpers/formatting/Presentation"
 
 
 

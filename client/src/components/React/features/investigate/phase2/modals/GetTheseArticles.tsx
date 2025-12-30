@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { RootState } from "@/state/store"
 import DisplayThese from "./DisplayThese"
 import { ChosenArticleSlice } from "@/state/Reducers/Investigate/ChosenArticles";
-import { wait } from "@/helpers/formatting/Presentation"
+import { wait } from "@/lib/helpers/formatting/Presentation"
 import { changePhase } from "@/state/Reducers/Investigate/Rendering"
 import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice"
 

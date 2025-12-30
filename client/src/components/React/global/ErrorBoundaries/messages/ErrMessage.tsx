@@ -1,4 +1,4 @@
-import { AppError } from "@/helpers/errors/normalizeError"
+import { AppError } from "@/lib/helpers/errors/normalizeError"
 
 interface ErrMessageInterface {
     message: AppError,
