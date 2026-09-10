@@ -1,23 +1,21 @@
 {
-    "extends": "./tsconfig.json",
-    "compilerOptions": {
-        "outDir": "./dist",
-        "noEmit": false,
-        "allowImportingTsExtensions": false,
-        "moduleResolution": "node",
-        "declaration": true,
-        "declarationMap": true,
-        "removeComments": true,
-        "sourceMap": true
-    },
-    "include": [
-        "src/**/*",
-        "endpoints/**/*",
-        "envConfig/**/*",
-        "scripts/**/*"
-    ],
-    "exclude": [
-        "node_modules",
-        "dist"
-    ]
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "noEmit": false,
+    "allowImportingTsExtensions": false,
+    "moduleResolution": "node",
+    "declaration": true,
+    "declarationMap": true,
+    "removeComments": true,
+    "sourceMap": true
+  },
+  "include": [
+    "src/**/*",
+    "endpoints/**/*",
+    "envConfig/**/*",
+    "scripts/**/*",
+    "integrations/**/*"
+  ],
+  "exclude": ["node_modules", "dist"]
 }
