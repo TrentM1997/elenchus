@@ -1,9 +1,6 @@
 {
   "compilerOptions": {
-    "types": [
-      "astro/client",
-      "jest"
-    ],
+    "types": ["astro/client", "jest"],
     "plugins": [
       {
         "name": "@astrojs/ts-plugin"
@@ -11,6 +8,7 @@
     ],
     "target": "ESNext",
     "module": "ESNext",
+    "ignoreDeprecations": "6.0",
     "moduleResolution": "node10",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -21,19 +19,11 @@
     "checkJs": false,
     "allowJs": true,
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "@/*": ["src/*"]
     },
     "jsx": "react-jsx",
     "jsxImportSource": "react"
   },
-  "include": [
-    "src/**/*",
-    "astro.config.mjs",
-    "public/scripts/AppLoader.js",
-  ],
-  "exclude": [
-    "node_modules",
-  ]
+  "include": ["src/**/*", "astro.config.mjs", "public/scripts/AppLoader.js"],
+  "exclude": ["node_modules"]
 }

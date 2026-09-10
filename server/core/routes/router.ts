@@ -1,5 +1,8 @@
 import { Router } from "express";
-import { firecrawl_extractions, get_firecrawl_job } from "../../endpoints/articles/firecrawl_extractions.js";
+import {
+  firecrawl_extractions,
+  get_firecrawl_job,
+} from "../../endpoints/articles/firecrawl_extractions.js";
 import { newsApi } from "../../endpoints/articles/newsApi.js";
 import { saveResearch } from "../../endpoints/supabase/users/transactions/saveResearch.js";
 import { handleArticleSave } from "../../endpoints/supabase/users/transactions/handleArticleSave.js";
@@ -12,7 +15,10 @@ import { resetUserPassword } from "../../endpoints/supabase/users/account/resetP
 import { getCurrentUser } from "../../endpoints/supabase/recovery/getCurrentUser.js";
 import { deleteUser } from "../../endpoints/supabase/users/account/deleteUser.js";
 import { sendFeedback } from "../../endpoints/supabase/feedback/sendFeedback.js";
-import { searchBlueSkyPosts, getBlueSkyFeed } from "../../endpoints/bluesky/blueskyApi.js";
+import {
+  searchBlueSkyPosts,
+  getBlueSkyFeed,
+} from "../../endpoints/bluesky/blueskyApi.js";
 
 const router = Router();
 

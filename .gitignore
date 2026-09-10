@@ -1,5 +1,10 @@
 .env
 *.env*
+!server/.env.example
+!client/.env.example
 .idea
 .DS_Store
 node_modules
+server/dist/
+*.tsbuildinfo
+*.timestamp-*.mjs

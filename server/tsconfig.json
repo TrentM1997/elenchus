@@ -1,34 +1,33 @@
 {
-	"compilerOptions": {
-		"module": "ES2022",
-		"esModuleInterop": true,
-		"target": "ES2022",
-		"moduleResolution": "node10",
-		"sourceMap": true,
-		"rootDir": "./",
-		"outDir": "./dist",
-		"strict": true,
-		"skipLibCheck": true,
-		"types": [
-			"./core/types/express"
-		]
-	},
-	"lib": [
-		"es2022",
-		"DOM"
-	],
-	"include": [
-		"schemas/",
-		"src/",
-		"helpers/",
-		"endpoints/",
-		"services/",
-		"scripts/generateLogoMap.ts",
-		"src/Config.ts",
-		"types/",
-		"core/"
-	],
-	"exclude": [
-		"node_modules"
-	]
+  "compilerOptions": {
+    "ignoreDeprecations": "6.0",
+    "module": "ES2022",
+    "esModuleInterop": true,
+    "target": "ES2022",
+    "moduleResolution": "node10",
+    "sourceMap": true,
+    "rootDir": "./",
+    "outDir": "./dist",
+    "strict": true,
+    "skipLibCheck": true,
+    "types": ["./core/types/express"],
+    "rewriteRelativeImportExtensions": true
+  },
+  "lib": ["es2022", "DOM"],
+  "include": [
+    "schemas/",
+    "src/",
+    "helpers/",
+    "endpoints/",
+    "services/",
+    "scripts/generateLogoMap.ts",
+    "src/Config.ts",
+    "types/",
+    "core/",
+    "integrations/**/*",
+    "db/db.ts",
+    "db/access/client/dbClient.ts",
+    "db/access/repositories/user/userRepository.ts"
+  ],
+  "exclude": ["node_modules"]
 }
