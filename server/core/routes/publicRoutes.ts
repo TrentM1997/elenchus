@@ -9,6 +9,15 @@ import { ScrapeRequestSchema } from "../../schemas/ScrapeRequestSchema.js";
 
 export function publicRoutes(app: IAppServices, router: Router) {
   router.post(
+    "/auth/recover",
+    wrapAsync(async (req, res) => {
+      const result = await req.auth.recoverSession(req, res);
+
+      res.success("Session checked", result.status, 200);
+    }),
+  );
+
+  router.post(
     "/auth/login",
     wrapAsync(async (req, res) => {
       const { data, error } = await req.auth.login(req, res);
@@ -17,12 +26,25 @@ export function publicRoutes(app: IAppServices, router: Router) {
         throw new ServerError("Failed to authenticate user", 401, error.cause);
       }
 
-      res.success("Login successful", data);
+      res.success("Login successful", data, 200);
     }),
   );
 
   router.post(
-    "/createNewUser",
+    "/auth/logOut",
+    wrapAsync(async (req, res) => {
+      const result = await req.auth.logOut(req, res);
+
+      if (!result.ok) {
+        throw new ServerError("Failed to sign out user", 500, result.message);
+      }
+
+      res.success("signed out successfully", null, 200);
+    }),
+  );
+
+  router.post(
+    "/auth/signup",
     wrapAsync(async (req, res) => {
       const body = validateOrThrow(LoginSchema, req.body);
 
@@ -34,7 +56,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
 
       req.auth.establishSession(result.data.session, res);
 
-      res.success("signup completed successfully", result);
+      res.success("signup completed successfully", result, 200);
     }),
   );
 
@@ -66,27 +88,32 @@ export function publicRoutes(app: IAppServices, router: Router) {
   );
 
   router.get(
-    "/articles/search",
+    "/blueSky/feed",
     wrapAsync(async (req, res) => {
-      const query = validateOrThrow(SearchQuerySchema, req.query.q);
+      const result = await app.integrations.blueSky.feed();
 
-      const results = await app.services.api.articles.search(query);
-
-      res.success("successful search", results);
+      res.success("Blue Sky feed retrieved successfully", result, 200);
     }),
   );
 
   router.get(
-    "/user/saved-articles",
+    "/blueSky/search",
     wrapAsync(async (req, res) => {
-      const user_id = req.user?.userId;
-      const results = await app.services.api.user.savedArticles(user_id);
+      const query = validateOrThrow(SearchQuerySchema, req.query.q);
+      const result = await app.integrations.blueSky.search(query);
 
-      if (!results) {
-        throw new ServerError("Failed to retrieve users saved articles", 404);
-      }
+      res.success("Blue Sky posts searched successfully", result, 200);
+    }),
+  );
 
-      res.success("users saved articles retrieved successfully", results, 200);
+  router.get(
+    "/articles/search",
+    wrapAsync(async (req, res) => {
+      const query = validateOrThrow(SearchQuerySchema, req.query.q);
+
+      const results = await app.integrations.newsApi.search(query);
+
+      res.success("successful search", results, 200);
     }),
   );
 

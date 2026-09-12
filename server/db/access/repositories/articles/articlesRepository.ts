@@ -1,21 +1,23 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "../../../../types/databaseInterfaces";
 import { ArticleSchemaType } from "../../../../schemas/ArticleSchema";
-import type { AuthenticatedUserId } from "../../../../services/auth/authorization";
 import { ServerError } from "../../../../core/errors/ServerError";
-import { BookmarkSchemaType } from "../../../../schemas/BookmarkSchema";
 import {
   IArticlesDbParser,
   ArticlesDbParser,
   type InsertableArticleType,
 } from "./articlesParser";
+import { BookmarkSchemaType } from "../../../../schemas/BookmarkSchema";
+
+type ArticlesFromBookmarks =
+  | { ok: true; data: ArticleSchemaType[] }
+  | { ok: false; message: string; details: string };
 
 export interface IArticlesRepository {
   saveArticle(article: unknown): Promise<ArticleSchemaType>;
-  bookmarkArticle(
-    user_id: AuthenticatedUserId,
-    article_id: number,
-  ): Promise<BookmarkSchemaType>;
+  fromBookmarkIds(
+    ids: BookmarkSchemaType["article_id"][],
+  ): Promise<ArticlesFromBookmarks>;
 }
 
 export class ArticlesRepository implements IArticlesRepository {
@@ -28,24 +30,32 @@ export class ArticlesRepository implements IArticlesRepository {
     return await this.executeSaveArticle(article);
   }
 
-  public async bookmarkArticle(
-    user_id: AuthenticatedUserId,
-    article_id: number,
-  ): Promise<BookmarkSchemaType> {
-    return await this.executeBookmarkArticle(user_id, article_id);
+  public async fromBookmarkIds(
+    ids: BookmarkSchemaType["article_id"][],
+  ): Promise<ArticlesFromBookmarks> {
+    return await this.executeFromBookmarkIds(ids);
   }
 
-  private async executeBookmarkArticle(
-    user_id: AuthenticatedUserId,
-    article_id: number,
-  ) {
-    const insertable = this.parser.toInsertableBookmark(user_id, article_id);
-    const result = await this.db
-      .from("bookmarks")
-      .insert(insertable)
+  private async executeFromBookmarkIds(
+    ids: BookmarkSchemaType["article_id"][],
+  ): Promise<ArticlesFromBookmarks> {
+    const { data, error } = await this.db
+      .from("articles")
       .select()
-      .single();
-    return this.parser.validateBookMark(result);
+      .in("id", ids);
+
+    if (error) {
+      return {
+        ok: false,
+        message: error.message,
+        details: error.details,
+      };
+    }
+
+    return {
+      ok: true,
+      data: this.parser.validateArticles(data),
+    };
   }
 
   private async executeSaveArticle(article: unknown) {

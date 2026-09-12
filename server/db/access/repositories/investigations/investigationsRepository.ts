@@ -11,6 +11,17 @@ import {
 import type { AuthenticatedUserId } from "../../../../services/auth/authorization";
 import { ServerError } from "../../../../core/errors/ServerError";
 
+type InvestigationDbOperation<T> =
+  | { ok: true; data: T }
+  | { ok: false; message: string; details: string };
+
+export type InvestigationSaveResult =
+  InvestigationDbOperation<InvestigationSchemaType>;
+
+export type SavedInvestigationsResult = InvestigationDbOperation<
+  InvestigationSchemaType[]
+>;
+
 export type InsertableInvestigation =
   Database["public"]["Tables"]["investigations"]["Insert"];
 
@@ -18,31 +29,63 @@ export interface IInvestigationsRepository {
   save(
     investigation: unknown,
     user_id: AuthenticatedUserId,
-  ): Promise<InvestigationSchemaType>;
+  ): Promise<InvestigationSaveResult>;
+  getSavedInvestigations(
+    user_id: AuthenticatedUserId,
+  ): Promise<SavedInvestigationsResult>;
 }
 
 export class InvestigationsRepository implements IInvestigationsRepository {
   constructor(private readonly db: SupabaseClient<Database>) {}
 
+  public async getSavedInvestigations(
+    user_id: AuthenticatedUserId,
+  ): Promise<SavedInvestigationsResult> {
+    return await this.executeGetSavedInvestigations(user_id);
+  }
+
   public async save(
     investigation: unknown,
     user_id: AuthenticatedUserId,
-  ): Promise<InvestigationSchemaType> {
+  ): Promise<InvestigationSaveResult> {
     return await this.executeSave(investigation, user_id);
+  }
+
+  private async executeGetSavedInvestigations(
+    user_id: AuthenticatedUserId,
+  ): Promise<SavedInvestigationsResult> {
+    const { data, error } = await this.db
+      .from("investigations")
+      .select()
+      .eq("user_id", user_id)
+      .order("created_at");
+
+    if (error) {
+      return {
+        ok: false,
+        message: error.message,
+        details: error.details,
+      };
+    }
+
+    return {
+      ok: true,
+      data: this.validateInvestigations(data),
+    };
   }
 
   private async executeSave(
     investigation: unknown,
     user_id: AuthenticatedUserId,
-  ): Promise<InvestigationSchemaType> {
+  ): Promise<InvestigationSaveResult> {
     const validatedInput = this.validateInvestigationInput(investigation);
     const insertable = this.toInsertableInvestigation(validatedInput, user_id);
     return this.insertInvestigation(insertable);
   }
 
   private async insertInvestigation(
-    investigation: unknown,
-  ): Promise<InvestigationSchemaType> {
+    investigation: InsertableInvestigation,
+  ): Promise<InvestigationSaveResult> {
     const { data, error } = await this.db
       .from("investigations")
       .upsert([investigation])
@@ -50,10 +93,14 @@ export class InvestigationsRepository implements IInvestigationsRepository {
       .single();
 
     if (error) {
-      throw new ServerError("Failed to save investigation", 500, error.details);
+      return {
+        ok: false,
+        message: error.message,
+        details: error.details,
+      };
     }
 
-    return this.validateInvestigation(data);
+    return { ok: true, data: this.validateInvestigation(data) };
   }
 
   private toInsertableInvestigation(
@@ -88,6 +135,18 @@ export class InvestigationsRepository implements IInvestigationsRepository {
       sources: sources,
       wikipedia_extracts: wikipedia_extracts,
     };
+  }
+
+  private validateInvestigations(
+    results: unknown[],
+  ): InvestigationSchemaType[] {
+    const investigations = [];
+
+    for (const result of results) {
+      const investigation = validateServerOrThrow(InvestigationSchema, result);
+      investigations.push(investigation);
+    }
+    return investigations;
   }
 
   private validateInvestigation(raw: unknown): InvestigationSchemaType {

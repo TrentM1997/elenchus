@@ -1,14 +1,12 @@
 import { Request } from "express";
-import {
-  CookieSchema,
-  type CookieSchemaType,
-} from "../../../schemas/cookieSchema";
 import { validateOrThrow } from "../../../core/validation/validateOrThrow";
 import { LoginSchema } from "../../../schemas/LoginSchema";
+import { TokenSchema, TokenSchemaType } from "../../../schemas/SessionSchema";
 
 export interface IAuthenticationParser {
   parseRequestForToken(req: Request): string;
   parseCredentials(req: Request): LoginSchema;
+  validateToken(token: unknown): TokenSchemaType;
 }
 
 export class AuthenticationParser implements IAuthenticationParser {
@@ -21,10 +19,10 @@ export class AuthenticationParser implements IAuthenticationParser {
     const { cookies } = req;
     const cookie = cookies["sb-access-token"];
     const validated = this.validateToken(cookie);
-    return validated["sb-access-token"];
+    return validated;
   }
 
-  private validateToken(token: unknown): CookieSchemaType {
-    return validateOrThrow(CookieSchema, token);
+  public validateToken(token: unknown): TokenSchemaType {
+    return validateOrThrow(TokenSchema, token);
   }
 }

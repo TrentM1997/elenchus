@@ -8,10 +8,6 @@ import {
   ArticleSchema,
 } from "../../../../schemas/ArticleSchema";
 import type { AuthenticatedUserId } from "../../../../services/auth/authorization";
-import {
-  BookmarkSchema,
-  BookmarkSchemaType,
-} from "../../../../schemas/BookmarkSchema";
 
 export type InsertableArticleType =
   Database["public"]["Tables"]["articles"]["Insert"];
@@ -23,10 +19,10 @@ export interface IArticlesDbParser {
     user_id: AuthenticatedUserId,
     article_id: number,
   ): InsertableBookmark;
-  validateBookMark(bookmark: unknown): BookmarkSchemaType;
   validateArticleInput(article: unknown): ArticleSchemaType;
   validateArticleSelected(article: unknown): ArticleSchemaType;
   toInsertableArticle(article: ArticleSchemaType): InsertableArticleType;
+  validateArticles(results: unknown[]): ArticleSchemaType[];
 }
 
 export class ArticlesDbParser implements IArticlesDbParser {
@@ -40,8 +36,14 @@ export class ArticlesDbParser implements IArticlesDbParser {
     };
   }
 
-  validateBookMark(bookmark: unknown): BookmarkSchemaType {
-    return validateServerOrThrow(BookmarkSchema, bookmark);
+  validateArticles(results: unknown[]): ArticleSchemaType[] {
+    const articles = [];
+
+    for (const result of results) {
+      const article = validateServerOrThrow(ArticleSchema, result);
+      articles.push(article);
+    }
+    return articles;
   }
 
   validateArticleInput(article: unknown): ArticleSchemaType {

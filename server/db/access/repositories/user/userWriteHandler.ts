@@ -1,8 +1,9 @@
-import { AuthError, SupabaseClient } from "@supabase/supabase-js";
+import { AuthError, createClient } from "@supabase/supabase-js";
 import { Database } from "../../../../types/databaseInterfaces";
 import { CreatedUserSchemaType } from "../../../../schemas/Users";
 import { SupabaseSessionSchemaType } from "../../../../schemas/SessionSchema";
 import { UserDataValidator } from "./userDataValidator";
+import { SUPABASE_PUBLIC_KEY, SUPABASE_URL } from "../../../../src/Config";
 
 export type CreateUserResult = Promise<
   | {
@@ -23,10 +24,7 @@ export interface IUserWriteHandler {
 }
 
 export class UserWriteHandler implements IUserWriteHandler {
-  constructor(
-    private readonly db: SupabaseClient<Database>,
-    private readonly validator: UserDataValidator,
-  ) {}
+  constructor(private readonly validator: UserDataValidator) {}
 
   public async createUser(credentials: {
     email: string;
@@ -39,7 +37,20 @@ export class UserWriteHandler implements IUserWriteHandler {
     email: string;
     password: string;
   }): CreateUserResult {
-    const { data, error } = await this.db.auth.signUp(credentials);
+    const signupClient = createClient<Database>(
+      SUPABASE_URL,
+      SUPABASE_PUBLIC_KEY,
+      {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false,
+        },
+      },
+    );
+
+    const { data, error } = await signupClient.auth.signUp(credentials);
+
     if (error) {
       return { ok: false, error };
     }

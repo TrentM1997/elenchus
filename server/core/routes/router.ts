@@ -22,25 +22,22 @@ import {
 
 const router = Router();
 
-router.get("/newsArticles", newsApi);
-router.post("/firecrawl_extractions", firecrawl_extractions);
-router.get("/firecrawl_extractions/:jobId", get_firecrawl_job);
+router.get("/newsArticles", newsApi); // done
+router.post("/firecrawl_extractions", firecrawl_extractions); // done
+router.get("/firecrawl_extractions/:jobId", get_firecrawl_job); // done
+router.get("/searchBlueSky", searchBlueSkyPosts); // done
+router.get("/getBlueSkyFeed", getBlueSkyFeed); // done
+router.post("/supabaseLogIn", supabaseLogin); // done
+router.post("/createNewUser", createNewUser); // done
+router.post("/signUserOut", signUserOut); // done
+router.get("/getUserArticles", getUserArticles); // done
+router.post("/getUserResearch", getUserResearch); // done
+router.post("/saveResearch", saveResearch); // done
+router.post("/articleOperation", handleArticleSave); // done
 
-router.get("/searchBlueSky", searchBlueSkyPosts);
-router.get("/getBlueSkyFeed", getBlueSkyFeed);
-
-router.post("/supabaseLogIn", supabaseLogin);
-router.post("/createNewUser", createNewUser);
-router.post("/deleteUser", deleteUser);
-router.post("/signUserOut", signUserOut);
 router.post("/resetUserPassword", resetUserPassword);
-
-router.get("/getUserArticles", getUserArticles);
-router.post("/getUserResearch", getUserResearch);
-router.post("/articleOperation", handleArticleSave);
-router.post("/saveResearch", saveResearch);
+router.post("/deleteUser", deleteUser);
 router.post("/getCurrentUser", getCurrentUser);
-
 router.post("/sendFeedback", sendFeedback);
 
 export { router };

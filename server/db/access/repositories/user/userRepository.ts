@@ -16,6 +16,6 @@ export class UserRepository implements IUserRepository {
   constructor(private readonly db: SupabaseClient<Database>) {
     this.validator = new UserDataValidator();
     this.select = new UserSelectHandler(this.db, this.validator);
-    this.write = new UserWriteHandler(this.db, this.validator);
+    this.write = new UserWriteHandler(this.validator);
   }
 }
