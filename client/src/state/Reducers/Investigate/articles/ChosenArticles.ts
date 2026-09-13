@@ -22,16 +22,6 @@ const initialState: InitialState = {
   showMaxToast: false,
 };
 
-function getStatusFromRemove(
-  currentLength: number,
-): SelectedArticles["status"] {
-  if (currentLength - 1 === 0) {
-    return "empty";
-  } else {
-    return "partial";
-  }
-}
-
 export const ArticlesSlice = createSlice({
   name: "chosenArticles",
   initialState: initialState,

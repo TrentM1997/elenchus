@@ -1,6 +1,6 @@
 import { BLUESKY_EMAIL, BLUESKY_PASSWORD, getEnvVar } from "../src/Config";
-import { BlueSkyService, IBlueSkyService } from "./blueSkyService";
-import { INewsAPIService, NewsAPIService } from "./newsApiHandler";
+import { BlueSkyService, IBlueSkyService } from "./blueSky/blueSkyService";
+import { INewsAPIService, NewsAPIService } from "./newsApi/newsApiHandler";
 import { AtpAgent } from "@atproto/api";
 const NEWS_API_KEY = getEnvVar("NEWS_API_KEY");
 

@@ -1,11 +1,10 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ArticleType } from "@/env";
 import { AsyncState } from "@/state/types";
-import { ArticleOptionsFetch } from "@/infra/api/searchNews";
 import { QueryNewsApiParams } from "./thunks";
 import { getArticles } from "@/lib/services/news/getArticles";
 
-export type SearchResultsState = AsyncState<ArticleType>;
+export type SearchResultsState = AsyncState<ArticleType[]>;
 
 export type SearchResultsPages = AsyncState<Page>;
 
@@ -15,7 +14,6 @@ export type Page = Array<ArticleType>;
 
 interface SearchResults {
   articleOptions: SearchResultsState;
-  optionsMap: Map<string, ArticleType> | null;
   status: Status;
   pages: SearchResultsPages;
   currentPage: number;
@@ -25,7 +23,6 @@ interface SearchResults {
 
 const initialState: SearchResults = {
   articleOptions: { status: "initial" },
-  optionsMap: null,
   status: "idle",
   pages: { status: "initial" },
   currentPage: 0,
@@ -65,7 +62,6 @@ export const SearchResultsSlice = createSlice({
   reducers: {
     searchResults: (state, action) => {
       state.articleOptions = action.payload.data;
-      state.optionsMap = action.payload.optionsLookup;
     },
     getPages: (state, action) => {
       state.pages = action.payload;
@@ -88,34 +84,8 @@ export const SearchResultsSlice = createSlice({
     resetResults: () => initialState,
     resetArticles: (state) => {
       state.articleOptions = { status: "initial" };
-      state.optionsMap = null;
       state.currentPage = 0;
     },
-  },
-  extraReducers: (builder) => {
-    (builder.addCase(RetrieveArticles.pending, (state, action) => {
-      state.activeRequestId = action.meta.requestId;
-      state.status = "pending";
-      state.articleOptions = { status: "pending" };
-      state.optionsMap = null;
-      state.currentPage = 0;
-    }),
-      builder.addCase(RetrieveArticles.fulfilled, (state, action) => {
-        const payload = action.payload?.data;
-        if (state.activeRequestId !== action.meta.requestId) return;
-
-        state.status = "fulfilled";
-        state.articleOptions = {
-          status: "ready",
-          data: action.payload?.data ?? [],
-        };
-        state.activeRequestId = null;
-      }),
-      builder.addCase(RetrieveArticles.rejected, (state, action) => {
-        if (state.activeRequestId !== action.meta.requestId) return;
-        state.status = "rejected";
-        state.activeRequestId = null;
-      }));
   },
 });
 

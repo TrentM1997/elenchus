@@ -8,10 +8,10 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 const app = express();
-import { responseBinder } from "../core/middleware/responseBinder.js";
-import { globalErrorHandler } from "../core/middleware/globalErrorHandler.js";
-import { spaFallback } from "../core/routes/spaFallback.js";
-import { createRouter } from "../core/routes/createRouter.js";
+import { responseBinder } from "../core/middleware/responseBinder";
+import { globalErrorHandler } from "../core/middleware/globalErrorHandler";
+import { spaFallback } from "../core/routes/spaFallback";
+import { createRouter } from "../core/routes/createRouter";
 import { AppServices } from "../services/appServices.js";
 
 const corsOptions: object = {

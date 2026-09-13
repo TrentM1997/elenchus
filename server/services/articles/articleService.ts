@@ -1,11 +1,11 @@
 import { IDbClient } from "../../db/access/client/dbClient";
-import { JobResult } from "../../endpoints/articles/firecrawl_extractions";
 import { ArticleSchemaType } from "../../schemas/ArticleSchema";
 import { Article, FcParam } from "../../types/types";
 import { IFirecrawlService } from "../firecrawl/firecrawlService";
+import { JobResult } from "../firecrawl/types";
 
 export interface IArticleService {
-  startExtraction(articles: FcParam[]): { jobId: string };
+  extract(articles: FcParam[]): { jobId: string };
   getExtractionJob(jobId: string): JobResult | undefined;
 }
 
@@ -16,7 +16,11 @@ export class ArticleService implements IArticleService {
     private readonly firecrawl: IFirecrawlService,
   ) {}
 
-  public startExtraction(articles: FcParam[]): { jobId: string } {
+  public extract(articles: FcParam[]): { jobId: string } {
+    return this.startExtraction(articles);
+  }
+
+  private startExtraction(articles: FcParam[]): { jobId: string } {
     const jobId = crypto.randomUUID();
 
     this.jobs[jobId] = {
@@ -45,19 +49,17 @@ export class ArticleService implements IArticleService {
     jobId: string,
     articles: FcParam[],
   ): Promise<void> {
+    let scraped: Article[];
+
     try {
       const biases = await this.db.sources.getBiases(articles);
 
-      const scraped = await this.firecrawl.firecrawlJobRunner(
+      scraped = await this.firecrawl.runFirecrawlJob(
         jobId,
         articles,
         biases,
         this.jobs,
       );
-
-      const saved = await this.persistExtractions(scraped);
-
-      this.completeJob(jobId, articles.length, saved);
     } catch (error) {
       this.jobs[jobId] = {
         ...this.jobs[jobId],
@@ -65,37 +67,23 @@ export class ArticleService implements IArticleService {
         error:
           error instanceof Error ? error.message : "Article extraction failed",
       };
+      return;
+    }
+
+    try {
+      await this.persistExtractions(scraped);
+    } catch (error) {
+      console.error("Failed to persist extracted articles", {
+        jobId,
+        error,
+      });
     }
   }
 
-  private completeJob(
-    jobId: string,
-    total: number,
-    saved: ArticleSchemaType[],
-  ): void {
-    const current = this.jobs[jobId];
-
-    this.jobs[jobId] = {
-      ...current,
-      status: "fulfilled",
-      result: {
-        progress: `${total}/${total}`,
-        retrieved: saved,
-        rejected: current.result?.rejected ?? [],
-      },
-      error: null,
-    };
-  }
-
-  private async persistExtractions(
-    scraped: Article[],
-  ): Promise<ArticleSchemaType[]> {
-    const success: ArticleSchemaType[] = [];
+  private async persistExtractions(scraped: Article[]): Promise<void> {
     for (const article of scraped) {
-      const saved = await this.save(article);
-      success.push(saved);
+      await this.save(article);
     }
-    return success;
   }
 
   private async save(article: unknown): Promise<ArticleSchemaType> {

@@ -1,11 +1,17 @@
 import Firecrawl from "@mendable/firecrawl-js";
 import { Article, FailedAttempt, FcParam } from "../../types/types";
-import { JobResult } from "../../endpoints/articles/firecrawl_extractions";
-import { firecrawlExtract } from "./scrape/firecrawl";
-import { FirecrawlJobParser, IFirecrawlJobParser } from "../firecrawlJobParser";
+import {
+  FirecrawlJobParser,
+  IFirecrawlJobParser,
+} from "./scrape/firecrawlJobParser";
+import {
+  FirecrawlScrapeHandler,
+  IFirecrawlScrapeHandler,
+} from "./scrape/firecrawlScrapeHandler";
+import { JobResult, RunFirecrawlJobParameters } from "./types";
 
 export interface IFirecrawlService {
-  firecrawlJobRunner(
+  runFirecrawlJob(
     id: string,
     articles: FcParam[],
     MBFC_DATA: any,
@@ -15,94 +21,150 @@ export interface IFirecrawlService {
 
 export class FirecrawlService implements IFirecrawlService {
   private readonly parser: IFirecrawlJobParser;
+  private readonly scraper: IFirecrawlScrapeHandler;
   constructor(private readonly firecrawl: Firecrawl) {
     this.parser = new FirecrawlJobParser();
+    this.scraper = new FirecrawlScrapeHandler(this.firecrawl, this.parser);
   }
 
-  public async firecrawlJobRunner(
+  public async runFirecrawlJob(
     id: string,
     articles: FcParam[],
     MBFC_DATA: any,
     jobs: Record<string, JobResult>,
   ): Promise<Article[]> {
+    return await this.executeFirecrawlJob({ id, articles, MBFC_DATA, jobs });
+  }
+
+  private async executeFirecrawlJob(params: RunFirecrawlJobParameters) {
+    const { jobs, id } = params;
+
     const failed: FailedAttempt[] = [];
     const retrieved: Article[] = [];
 
     try {
-      const TIMEOUT_MS = 15000;
-      const inFlight: Promise<void>[] = [];
-
-      const updateJobSnapshot = () => {
-        const prog = retrieved.length + failed.length;
-        jobs[id] = {
-          ...jobs[id],
-          result: {
-            retrieved: [...retrieved],
-            rejected: [...failed],
-            progress: `${prog}/${articles.length}`,
-          },
-        };
-      };
-
-      const pushRetrieved = (a: Article) => {
-        retrieved.push(a);
-        updateJobSnapshot();
-      };
-
-      const pushFailed = (f: FailedAttempt) => {
-        failed.push(f);
-        updateJobSnapshot();
-      };
-
-      for (const article of articles) {
-        const scrapeJob = firecrawlExtract(
-          article,
-          this.firecrawl,
-          MBFC_DATA,
-          pushRetrieved,
-          pushFailed,
-        );
-
-        const result = await Promise.race([
-          scrapeJob.then(() => ({ timedOut: false as const })),
-          new Promise<{ timedOut: true }>((resolve) =>
-            setTimeout(() => resolve({ timedOut: true as const }), TIMEOUT_MS),
-          ),
-        ]);
-
-        if (result.timedOut) inFlight.push(scrapeJob);
-      }
-
-      await Promise.allSettled(inFlight);
-
-      this.parser.reconcileFailed(retrieved, failed);
-
-      jobs[id] = {
-        status: "fulfilled",
-        result: {
-          progress: `${articles.length}/${articles.length}`,
-          retrieved: [...retrieved],
-          rejected: [...failed],
-        },
-        error: null,
-        createdAt: jobs[id]?.createdAt ?? Date.now(),
-      };
+      await this.runScrapeAttempts({ ...params, retrieved, failed });
 
       return retrieved;
     } catch (err: any) {
       console.error("firecrawl_extractions job failed:", err);
-      const partial_success = retrieved.length > 0;
-      jobs[id] = {
-        status: partial_success ? "fulfilled" : "rejected",
-        result: {
-          progress: "Unexpected error: extraction failed",
-          rejected: failed,
-          retrieved,
-        },
-        error: err?.message ?? "Internal server error",
-        createdAt: jobs[id]?.createdAt ?? Date.now(),
-      };
-      return [];
+      this.jobFailed({ retrieved: retrieved, jobs, id, failed, err });
+      return retrieved;
     }
+  }
+
+  private async runScrapeAttempts({
+    articles,
+    MBFC_DATA,
+    retrieved,
+    jobs,
+    id,
+    failed,
+  }: RunFirecrawlJobParameters & {
+    retrieved: Article[];
+    failed: FailedAttempt[];
+  }) {
+    const updateJobSnapshot = () => {
+      const prog = retrieved.length + failed.length;
+      jobs[id] = {
+        ...jobs[id],
+        result: {
+          retrieved: [...retrieved],
+          rejected: [...failed],
+          progress: `${prog}/${articles.length}`,
+        },
+      };
+    };
+
+    const pushFailed = (f: FailedAttempt) => {
+      failed.push(f);
+      updateJobSnapshot();
+    };
+
+    const pushRetrieved = (a: Article) => {
+      retrieved.push(a);
+      updateJobSnapshot();
+    };
+
+    const NEXT_SCRAPE_WAIT_MS = 15000;
+    const inFlight: Promise<void>[] = [];
+
+    for (const article of articles) {
+      const scrapeJob = this.scraper.scrape({
+        article,
+        MBFC_DATA,
+        pushRetrieved,
+        pushFailed,
+      });
+
+      const result = await Promise.race([
+        scrapeJob.then(() => ({ timedOut: false as const })),
+        new Promise<{ timedOut: true }>((resolve) =>
+          setTimeout(
+            () => resolve({ timedOut: true as const }),
+            NEXT_SCRAPE_WAIT_MS,
+          ),
+        ),
+      ]);
+
+      if (result.timedOut) inFlight.push(scrapeJob);
+    }
+
+    await Promise.allSettled(inFlight);
+
+    this.parser.reconcileFailed(retrieved, failed);
+
+    this.jobFulfilled({ jobs, id, articles, retrieved, failed });
+  }
+
+  private jobFailed({
+    retrieved,
+    jobs,
+    id,
+    failed,
+    err,
+  }: {
+    jobs: RunFirecrawlJobParameters["jobs"];
+    id: RunFirecrawlJobParameters["id"];
+    failed: FailedAttempt[];
+    retrieved: Article[];
+    err: any;
+  }) {
+    const partial_success = retrieved.length > 0;
+    jobs[id] = {
+      status: partial_success ? "fulfilled" : "rejected",
+      result: {
+        progress: "Unexpected error: extraction failed",
+        rejected: failed,
+        retrieved,
+      },
+      error: err?.message ?? "Internal server error",
+      createdAt: jobs[id]?.createdAt ?? Date.now(),
+    };
+  }
+
+  private jobFulfilled({
+    jobs,
+    id,
+    articles,
+    retrieved,
+    failed,
+  }: {
+    jobs: RunFirecrawlJobParameters["jobs"];
+    id: RunFirecrawlJobParameters["id"];
+    failed: FailedAttempt[];
+    retrieved: Article[];
+    articles: FcParam[];
+  }) {
+    jobs[id] = {
+      status: "fulfilled",
+      result: {
+        progress: `${articles.length}/${articles.length}`,
+        retrieved: [...retrieved],
+        rejected: [...failed],
+      },
+      error: null,
+      createdAt: jobs[id]?.createdAt ?? Date.now(),
+    };
   }
 }
