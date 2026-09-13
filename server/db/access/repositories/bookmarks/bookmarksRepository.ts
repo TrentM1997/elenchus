@@ -1,0 +1,156 @@
+import { SupabaseClient } from "@supabase/supabase-js";
+import { Database } from "../../../../types/databaseInterfaces";
+import type { AuthenticatedUserId } from "../../../../services/auth/authorization";
+import {
+  BookmarkSchema,
+  BookmarkSchemaType,
+} from "../../../../schemas/BookmarkSchema";
+import { validateServerOrThrow } from "../../../../core/validation/validateOrThrow";
+import { ServerError } from "../../../../core/errors/ServerError";
+import { ok } from "assert";
+
+export type BookmarkResponse =
+  | { ok: true; data: BookmarkSchemaType }
+  | { ok: false; message: string; details: string };
+
+export type BookmarkDeleteResponse =
+  | { ok: false; message: string; cause?: unknown }
+  | { ok: true; data: Database["public"]["Tables"]["bookmarks"]["Row"][] };
+
+export type BookmarkedArticlesResponse =
+  | {
+      ok: true;
+      data: BookmarkSchemaType[];
+    }
+  | {
+      ok: false;
+      message: string;
+      details: string;
+    };
+
+export interface IBookmarksRepository {
+  bookmarkArticle(
+    user_id: AuthenticatedUserId,
+    article_id: number,
+  ): Promise<BookmarkResponse>;
+  deleteBookmark(
+    user_id: AuthenticatedUserId,
+    article_id: number,
+  ): Promise<BookmarkDeleteResponse>;
+  getBookmarks(
+    user_id: AuthenticatedUserId,
+  ): Promise<BookmarkedArticlesResponse>;
+}
+
+export class BookmarksRepository implements IBookmarksRepository {
+  constructor(private readonly db: SupabaseClient<Database>) {}
+
+  public async getBookmarks(
+    user_id: AuthenticatedUserId,
+  ): Promise<BookmarkedArticlesResponse> {
+    return await this.executeGetBookmarks(user_id);
+  }
+
+  private async executeGetBookmarks(
+    user_id: AuthenticatedUserId,
+  ): Promise<BookmarkedArticlesResponse> {
+    const { data, error } = await this.db
+      .from("bookmarks")
+      .select()
+      .eq("user_id", user_id)
+      .order("created_at");
+
+    if (error) {
+      return {
+        ok: false,
+        message: error.message,
+        details: error.details,
+      };
+    }
+
+    const bookmarks = this.validateSavedBookMarks(data);
+
+    return {
+      ok: true,
+      data: bookmarks,
+    };
+  }
+
+  public async bookmarkArticle(
+    user_id: AuthenticatedUserId,
+    article_id: number,
+  ): Promise<BookmarkResponse> {
+    return await this.executeBookmarkArticle(user_id, article_id);
+  }
+
+  public async deleteBookmark(
+    user_id: AuthenticatedUserId,
+    article_id: number,
+  ): Promise<BookmarkDeleteResponse> {
+    return await this.executeDeleteBookmark(user_id, article_id);
+  }
+
+  private async executeDeleteBookmark(
+    user_id: AuthenticatedUserId,
+    article_id: number,
+  ): Promise<BookmarkDeleteResponse> {
+    const { data, error } = await this.db
+      .from("bookmarks")
+      .delete()
+      .eq("article_id", article_id)
+      .eq("user_id", user_id)
+      .select();
+
+    if (error) {
+      return {
+        ok: false,
+        message: error.message,
+        cause: error.cause,
+      };
+    }
+
+    return {
+      ok: true,
+      data,
+    };
+  }
+
+  private async executeBookmarkArticle(
+    user_id: AuthenticatedUserId,
+    article_id: number,
+  ): Promise<BookmarkResponse> {
+    const insertable = { article_id, user_id };
+    const { data, error } = await this.db
+      .from("bookmarks")
+      .insert(insertable)
+      .select()
+      .single();
+
+    if (error) {
+      return {
+        ok: false,
+        message: error.message,
+        details: error.details,
+      };
+    }
+
+    const bookmark = this.validateBookmark(data);
+    return {
+      ok: true,
+      data: bookmark,
+    };
+  }
+
+  private validateSavedBookMarks(results: unknown[]) {
+    const bookmarks = [];
+    for (const result of results) {
+      const bookmark = validateServerOrThrow(BookmarkSchema, result);
+      bookmarks.push(bookmark);
+    }
+    return bookmarks;
+  }
+
+  private validateBookmark(bookmark: unknown): BookmarkSchemaType {
+    return validateServerOrThrow(BookmarkSchema, bookmark);
+  }
+}

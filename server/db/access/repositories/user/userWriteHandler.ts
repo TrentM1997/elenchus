@@ -1,8 +1,15 @@
-import { AuthError, SupabaseClient } from "@supabase/supabase-js";
+import { AuthError, createClient } from "@supabase/supabase-js";
 import { Database } from "../../../../types/databaseInterfaces";
 import { CreatedUserSchemaType } from "../../../../schemas/Users";
 import { SupabaseSessionSchemaType } from "../../../../schemas/SessionSchema";
 import { UserDataValidator } from "./userDataValidator";
+import {
+  SUPABASE_KEY,
+  SUPABASE_PUBLIC_KEY,
+  SUPABASE_URL,
+} from "../../../../src/Config";
+import type { LoginSchema } from "../../../../schemas/LoginSchema";
+import type { AuthenticatedUserId } from "../../../../services/auth/authorization";
 
 export type CreateUserResult = Promise<
   | {
@@ -15,7 +22,20 @@ export type CreateUserResult = Promise<
     }
 >;
 
+export type PasswordResetResult =
+  | { ok: true; data: Record<string, never> }
+  | { ok: false; error: AuthError };
+
+export type AccountDeletionResult =
+  | { ok: true }
+  | { ok: false; message: string; statusCode: number; details?: unknown };
+
 export interface IUserWriteHandler {
+  deleteAccount(
+    user_id: AuthenticatedUserId,
+    credentials: LoginSchema,
+  ): Promise<AccountDeletionResult>;
+  requestPasswordReset(email: string): Promise<PasswordResetResult>;
   createUser(credentials: {
     email: string;
     password: string;
@@ -23,10 +43,105 @@ export interface IUserWriteHandler {
 }
 
 export class UserWriteHandler implements IUserWriteHandler {
-  constructor(
-    private readonly db: SupabaseClient<Database>,
-    private readonly validator: UserDataValidator,
-  ) {}
+  constructor(private readonly validator: UserDataValidator) {}
+
+  public async deleteAccount(
+    user_id: AuthenticatedUserId,
+    credentials: LoginSchema,
+  ): Promise<AccountDeletionResult> {
+    return await this.executeDeleteAccount(user_id, credentials);
+  }
+
+  private async executeDeleteAccount(
+    user_id: AuthenticatedUserId,
+    credentials: LoginSchema,
+  ): Promise<AccountDeletionResult> {
+    const verificationClient = createClient<Database>(
+      SUPABASE_URL,
+      SUPABASE_PUBLIC_KEY,
+      {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false,
+        },
+      },
+    );
+
+    const { data, error } =
+      await verificationClient.auth.signInWithPassword(credentials);
+
+    if (error) {
+      return {
+        ok: false,
+        message: "Unable to verify credentials for account deletion",
+        statusCode:
+          error.code === "invalid_credentials" ? 401 : (error.status ?? 503),
+        details: error.message,
+      };
+    }
+
+    if (!data.user || data.user.id !== user_id) {
+      return {
+        ok: false,
+        message: "Credentials do not match the authenticated account",
+        statusCode: 403,
+      };
+    }
+
+    // Never sign in on this client: deletion must retain the server credentials.
+    const adminClient = createClient<Database>(SUPABASE_URL, SUPABASE_KEY, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false,
+      },
+    });
+
+    const { error: deletionError } =
+      await adminClient.auth.admin.deleteUser(user_id);
+
+    if (deletionError) {
+      return {
+        ok: false,
+        message: "Failed to delete user account",
+        statusCode: deletionError.status ?? 500,
+        details: deletionError.message,
+      };
+    }
+
+    return { ok: true };
+  }
+
+  public async requestPasswordReset(email: string): Promise<PasswordResetResult> {
+    return await this.executeRequestPasswordReset(email);
+  }
+
+  private async executeRequestPasswordReset(
+    email: string,
+  ): Promise<PasswordResetResult> {
+    const resetClient = createClient<Database>(
+      SUPABASE_URL,
+      SUPABASE_PUBLIC_KEY,
+      {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false,
+        },
+      },
+    );
+
+    const { data, error } = await resetClient.auth.resetPasswordForEmail(email, {
+      redirectTo: "https://elenchusapp.io/reset-password",
+    });
+
+    if (error) {
+      return { ok: false, error };
+    }
+
+    return { ok: true, data };
+  }
 
   public async createUser(credentials: {
     email: string;
@@ -39,7 +154,20 @@ export class UserWriteHandler implements IUserWriteHandler {
     email: string;
     password: string;
   }): CreateUserResult {
-    const { data, error } = await this.db.auth.signUp(credentials);
+    const signupClient = createClient<Database>(
+      SUPABASE_URL,
+      SUPABASE_PUBLIC_KEY,
+      {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false,
+        },
+      },
+    );
+
+    const { data, error } = await signupClient.auth.signUp(credentials);
+
     if (error) {
       return { ok: false, error };
     }

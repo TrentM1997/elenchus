@@ -1,21 +1,23 @@
-import { BLUESKY_EMAIL, BLUESKY_PASSWORD } from '../../src/Config.js';
-import { Request, Response as ExpRes } from 'express'
-import decodeItem from '../../helpers/decodeItem.js';
-import { AtpAgent } from '@atproto/api';
-import { unwrapObjects } from '../../helpers/unwrapObjects.js';
+import { BLUESKY_EMAIL, BLUESKY_PASSWORD } from "../../src/Config.js";
+import { Request, Response as ExpRes } from "express";
+import decodeItem from "../../helpers/decodeItem.js";
+import { AtpAgent } from "@atproto/api";
+import { unwrapObjects } from "../../helpers/unwrapObjects.js";
 
-const agent = new AtpAgent({ service: 'https://bsky.social' })
+const agent = new AtpAgent({ service: "https://bsky.social" });
 
-export const searchBlueSkyPosts = async (req: Request, res: ExpRes): Promise<void> => {
-  const query = req.query.q as string
+export const searchBlueSkyPosts = async (
+  req: Request,
+  res: ExpRes,
+): Promise<void> => {
+  const query = req.query.q as string;
 
   try {
     const { data: session } = await agent.login({
       identifier: BLUESKY_EMAIL,
       password: BLUESKY_PASSWORD,
-
-    })
-    const jwt = session.accessJwt
+    });
+    const jwt = session.accessJwt;
 
     const result = await agent.api.app.bsky.feed.searchPosts(
       { q: query },
@@ -23,42 +25,42 @@ export const searchBlueSkyPosts = async (req: Request, res: ExpRes): Promise<voi
         headers: {
           Authorization: `Bearer ${jwt}`,
         },
-      }
-    )
+      },
+    );
 
-    const cleansed = decodeItem(result.data)
+    const cleansed = decodeItem(result.data);
 
     res.json(cleansed);
     return;
-
   } catch (err: any) {
-    console.error('Bluesky error:', err)
+    console.error("Bluesky error:", err);
 
-    const status = err.status || err.statusCode || 500
-    const message = err.message || 'Unexpected error'
-    res.status(status).send(message)
+    const status = err.status || err.statusCode || 500;
+    const message = err.message || "Unexpected error";
+    res.status(status).send(message);
     return;
   }
-}
+};
 
-
-export const getBlueSkyFeed = async (req: Request, res: ExpRes): Promise<void> => {
-
+export const getBlueSkyFeed = async (
+  req: Request,
+  res: ExpRes,
+): Promise<void> => {
   try {
-    console.log('try suggested feeds')
+    console.log("try suggested feeds");
     await agent.login({
       identifier: BLUESKY_EMAIL,
       password: BLUESKY_PASSWORD,
-    })
+    });
 
-    const suggested = await agent.api.app.bsky.feed.getSuggestedFeeds({})
+    const suggested = await agent.api.app.bsky.feed.getSuggestedFeeds({});
     //console.log('suggested feeds: ' + suggested.data.feeds)
-    const gens = suggested.data.feeds
-    const feedUri = gens.find(g => g.uri.includes('verified-news'))?.uri
+    const gens = suggested.data.feeds;
+    const feedUri = gens.find((g) => g.uri.includes("verified-news"))?.uri;
     if (!feedUri) {
-      res.status(404).send('Couldn’t find verified-news generator');
+      res.status(404).send("Couldn’t find verified-news generator");
       return;
-    };
+    }
     const feed = await agent.api.app.bsky.feed.getFeed({
       feed: feedUri,
       limit: 20,
@@ -67,10 +69,11 @@ export const getBlueSkyFeed = async (req: Request, res: ExpRes): Promise<void> =
     const feedData = decodeItem(feed.data.feed);
     const unwrappedPosts = unwrapObjects(feedData);
     res.json(unwrappedPosts);
-
   } catch (err: any) {
-    console.error('BlueSky error:', err)
-    res.status(err.status || err.statusCode || 500).send(err.message || 'Unexpected Error');
+    console.error("BlueSky error:", err);
+    res
+      .status(err.status || err.statusCode || 500)
+      .send(err.message || "Unexpected Error");
     return;
-  };
+  }
 };

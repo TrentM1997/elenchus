@@ -1,53 +1,59 @@
-export type AuthEndpoint =
-    | "/supabaseLogIn"
-    | "/createNewUser"
-    | "/deleteUser"
-    | "/signUserOut"
-    | "/resetUserPassword"
-    | "/getCurrentUser";
+export type AuthEndpointOption = "/login" | "/logOut" | "/recover";
 
-export type ArticleEndpoint =
-    | "/articleOperation"
-    | "/saveResearch"
-    | "/getUserArticles"
-    | "/getUserResearch";
+export type AuthEndpoint = `/auth${AuthEndpointOption}`;
+
+export type ArticleEndpointOption = "/search" | "/extract/:jobId" | "/extract";
+
+export type ArticleEndpoint = `/articles${ArticleEndpointOption}`;
+
+export type UserEndpointOption =
+  | "/bookmarks"
+  | "/bookmarks/:articleId"
+  | "/investigations"
+  | "/feedback";
+
+export type UserEndpoint = `/user${UserEndpointOption}`;
+
+export type BlueSkyEndpointOption = "/feed" | "search";
+
+export type BlueSkyEndpoint = `/blueSky${BlueSkyEndpointOption}`;
 
 export type ApiEndpoint =
-    | AuthEndpoint
-    | ArticleEndpoint
-    | "/newsArticles"
-    | "/firecrawl_extractions"
-    | "/searchBlueSky"
-    | "/sendFeedback";
+  | AuthEndpoint
+  | ArticleEndpoint
+  | UserEndpoint
+  | BlueSkyEndpoint;
 
 export type FirecrawlEndpoint = Extract<ApiEndpoint, "/firecrawl_extractions">;
 
-export type FirecrawlPollingEndpoint = `${FirecrawlEndpoint}/${string}`
+export type FirecrawlPollingEndpoint = `${FirecrawlEndpoint}/${string}`;
 
 export type ExtractArticleEndpoints = {
-    kickoff: Extract<ApiEndpoint, "/firecrawl_extractions">,
-    polling: (jobId: string) => FirecrawlPollingEndpoint
+  kickoff: Extract<ApiEndpoint, "/firecrawl_extractions">;
+  polling: (jobId: string) => FirecrawlPollingEndpoint;
 };
 
 export type ArticleEndpointConfig = {
-    endpoint: ApiEndpoint,
-    credentials: RequestCredentials
-}
+  endpoint: ApiEndpoint;
+  credentials: RequestCredentials;
+};
 
 export type AuthRequestConfig = {
-    endpoint: AuthEndpoint,
-    credentials: RequestCredentials
+  endpoint: AuthEndpoint;
+  credentials: RequestCredentials;
 };
 
-export type SearchEndpoint = Extract<ApiEndpoint, "/newsArticles">
+export type SearchEndpoint = Extract<ArticleEndpoint, "/articles/search">;
 
-export type EndpointAndQuery = `${SearchEndpoint}?q=${string}`
+export type EndpointAndQuery = `${SearchEndpoint}?q=${string}`;
 
 export type SearchNewsConfig = {
-    endpoint: (query: string) => SearchEndpoint
+  endpoint: (query: string) => SearchEndpoint;
 };
 
-
 export type SaveArticleResult =
-    | { ok: true; id: string }
-    | { ok: false; reason: "unauthorized" | "validation" | "unknown" | "network" };
+  | { ok: true; id: string }
+  | {
+      ok: false;
+      reason: "unauthorized" | "validation" | "unknown" | "network";
+    };

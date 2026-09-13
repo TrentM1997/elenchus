@@ -10,8 +10,9 @@ import cookieParser from "cookie-parser";
 const app = express();
 import { responseBinder } from "../core/middleware/responseBinder.js";
 import { globalErrorHandler } from "../core/middleware/globalErrorHandler.js";
-import { router } from "../core/routes/router.js";
 import { spaFallback } from "../core/routes/spaFallback.js";
+import { createRouter } from "../core/routes/createRouter.js";
+import { AppServices } from "../services/appServices.js";
 
 const corsOptions: object = {
   origin: ["https://elenchusapp.io", "http://localhost:5173"],
@@ -65,7 +66,7 @@ app.options("*", (req, res) => {
 
 app.use(responseBinder);
 
-app.use(router);
+app.use(createRouter(new AppServices()));
 
 app.use(globalErrorHandler);
 

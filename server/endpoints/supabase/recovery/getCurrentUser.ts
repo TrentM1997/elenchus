@@ -6,8 +6,9 @@ import { UserSchema } from "../../../schemas/Users.js";
 import { getUserContent } from "../../../services/supabase/getUserContent.js";
 import type { UserContent } from "../../../types/types";
 
-
-export const getCurrentUser = wrapAsync(async (req: Request, res: Response): Promise<void> => {
+// → old, unsure if this is necessary anymore
+export const getCurrentUser = wrapAsync(
+  async (req: Request, res: Response): Promise<void> => {
     const session = await getUserAndSupabase(req, res);
     if (!session) return;
     const { user, supabase } = session;
@@ -16,11 +17,12 @@ export const getCurrentUser = wrapAsync(async (req: Request, res: Response): Pro
     const { id } = user;
     const content: UserContent = await getUserContent(supabase, id);
     const results = {
-        user: user,
-        userArticles: content?.userArticles ?? null,
-        userResearch: content?.userResearch ?? null
+      user: user,
+      userArticles: content?.userArticles ?? null,
+      userResearch: content?.userResearch ?? null,
     };
     console.log(results);
     res.success("user recovered", results, 200);
     return;
-});
+  },
+);

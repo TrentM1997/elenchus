@@ -17,6 +17,7 @@ export function getEnvVar(name: string): string {
 export const FIRECRAWL_KEY = getEnvVar("FIRECRAWL_KEY");
 export const SUPABASE_URL = getEnvVar("SUPABASE_URL");
 export const SUPABASE_KEY = getEnvVar("SUPABASE_SERVICE_KEY");
+export const SUPABASE_PUBLIC_KEY = getEnvVar("SUPABASE_PUBLIC_KEY");
 export const BLUESKY_PASSWORD = getEnvVar("BLUESKY_PASSWORD");
 export const BLUESKY_EMAIL = getEnvVar("BLUESKY_EMAIL");
 export const PORT = process.env.PORT || "5001";

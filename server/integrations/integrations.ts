@@ -1,22 +1,23 @@
-import { firecrawlClient } from "../services/firecrawl/client/firecrawlClient";
-import {
-  FirecrawlService,
-  IFirecrawlService,
-} from "../services/firecrawl/firecrawlService";
-import { getEnvVar } from "../src/Config";
+import { BLUESKY_EMAIL, BLUESKY_PASSWORD, getEnvVar } from "../src/Config";
+import { BlueSkyService, IBlueSkyService } from "./blueSkyService";
 import { INewsAPIService, NewsAPIService } from "./newsApiHandler";
+import { AtpAgent } from "@atproto/api";
 const NEWS_API_KEY = getEnvVar("NEWS_API_KEY");
 
 export interface IIntegrations {
-  readonly firecrawl: IFirecrawlService;
   readonly newsApi: INewsAPIService;
+  readonly blueSky: IBlueSkyService;
 }
 
 export class Integrations implements IIntegrations {
-  public readonly firecrawl: IFirecrawlService;
   public readonly newsApi: INewsAPIService;
+  public readonly blueSky: IBlueSkyService;
   constructor() {
-    this.firecrawl = new FirecrawlService(firecrawlClient);
     this.newsApi = new NewsAPIService(NEWS_API_KEY);
+    this.blueSky = new BlueSkyService(
+      BLUESKY_EMAIL,
+      BLUESKY_PASSWORD,
+      new AtpAgent({ service: "https://bsky.social" }),
+    );
   }
 }

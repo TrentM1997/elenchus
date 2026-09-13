@@ -12,7 +12,6 @@ import { getUserResearch } from "../../endpoints/supabase/users/transactions/get
 import { createNewUser } from "../../endpoints/supabase/users/account/createNewUser.js";
 import { signUserOut } from "../../endpoints/supabase/users/account/signout.js";
 import { resetUserPassword } from "../../endpoints/supabase/users/account/resetPassword.js";
-import { getCurrentUser } from "../../endpoints/supabase/recovery/getCurrentUser.js";
 import { deleteUser } from "../../endpoints/supabase/users/account/deleteUser.js";
 import { sendFeedback } from "../../endpoints/supabase/feedback/sendFeedback.js";
 import {
@@ -22,25 +21,20 @@ import {
 
 const router = Router();
 
-router.get("/newsArticles", newsApi);
-router.post("/firecrawl_extractions", firecrawl_extractions);
-router.get("/firecrawl_extractions/:jobId", get_firecrawl_job);
-
-router.get("/searchBlueSky", searchBlueSkyPosts);
-router.get("/getBlueSkyFeed", getBlueSkyFeed);
-
-router.post("/supabaseLogIn", supabaseLogin);
-router.post("/createNewUser", createNewUser);
-router.post("/deleteUser", deleteUser);
-router.post("/signUserOut", signUserOut);
-router.post("/resetUserPassword", resetUserPassword);
-
-router.get("/getUserArticles", getUserArticles);
-router.post("/getUserResearch", getUserResearch);
-router.post("/articleOperation", handleArticleSave);
-router.post("/saveResearch", saveResearch);
-router.post("/getCurrentUser", getCurrentUser);
-
-router.post("/sendFeedback", sendFeedback);
+router.get("/newsArticles", newsApi); // done
+router.post("/firecrawl_extractions", firecrawl_extractions); // done
+router.get("/firecrawl_extractions/:jobId", get_firecrawl_job); // done
+router.get("/searchBlueSky", searchBlueSkyPosts); // done
+router.get("/getBlueSkyFeed", getBlueSkyFeed); // done
+router.post("/supabaseLogIn", supabaseLogin); // done
+router.post("/createNewUser", createNewUser); // done
+router.post("/signUserOut", signUserOut); // done
+router.get("/getUserArticles", getUserArticles); // done
+router.post("/getUserResearch", getUserResearch); // done
+router.post("/saveResearch", saveResearch); // done
+router.post("/articleOperation", handleArticleSave); // done
+router.post("/resetUserPassword", resetUserPassword); // done
+router.post("/deleteUser", deleteUser); // done
+router.post("/sendFeedback", sendFeedback); // done
 
 export { router };

@@ -1,44 +1,20 @@
 import { IDbClient } from "../../db/access/client/dbClient";
 import { JobResult } from "../../endpoints/articles/firecrawl_extractions";
-import { INewsAPIService } from "../../integrations/newsApiHandler";
 import { ArticleSchemaType } from "../../schemas/ArticleSchema";
-import { BookmarkSchemaType } from "../../schemas/BookmarkSchema";
-import { Article, BrowsingOption, FcParam } from "../../types/types";
-import { IAuthorization } from "../auth/authorization";
+import { Article, FcParam } from "../../types/types";
 import { IFirecrawlService } from "../firecrawl/firecrawlService";
 
 export interface IArticleService {
-  bookmark(
-    user_id: string | undefined | null,
-    article_id: number,
-  ): Promise<BookmarkSchemaType>;
-
-  search(query: string): Promise<BrowsingOption[]>;
-
   startExtraction(articles: FcParam[]): { jobId: string };
-
   getExtractionJob(jobId: string): JobResult | undefined;
 }
 
 export class ArticleService implements IArticleService {
   private readonly jobs: Record<string, JobResult> = {};
   constructor(
-    private readonly db: IDbClient,
-    private readonly policy: IAuthorization,
+    private readonly db: Pick<IDbClient, "articles" | "sources">,
     private readonly firecrawl: IFirecrawlService,
-    private readonly newsApi: INewsAPIService,
   ) {}
-
-  public async search(query: string): Promise<BrowsingOption[]> {
-    return await this.newsApi.search(query);
-  }
-
-  public async bookmark(
-    user_id: string | undefined | null,
-    article_id: number,
-  ): Promise<BookmarkSchemaType> {
-    return await this.executeBookmark(article_id, user_id);
-  }
 
   public startExtraction(articles: FcParam[]): { jobId: string } {
     const jobId = crypto.randomUUID();
@@ -124,13 +100,5 @@ export class ArticleService implements IArticleService {
 
   private async save(article: unknown): Promise<ArticleSchemaType> {
     return await this.db.articles.saveArticle(article);
-  }
-
-  private async executeBookmark(
-    article_id: number,
-    user_id: string | undefined | null,
-  ) {
-    const userId = this.policy.requireAuthenticated(user_id);
-    return await this.db.articles.bookmarkArticle(userId, article_id);
   }
 }
