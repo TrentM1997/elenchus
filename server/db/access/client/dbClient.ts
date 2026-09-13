@@ -17,6 +17,10 @@ import {
   IBookmarksRepository,
   BookmarksRepository,
 } from "../repositories/bookmarks/bookmarksRepository";
+import {
+  IFeedbackRespository,
+  FeedbackRepository,
+} from "../repositories/feedback/feedbackRespository";
 
 export interface IDbClient {
   readonly user: IUserRepository;
@@ -24,15 +28,18 @@ export interface IDbClient {
   readonly investigations: IInvestigationsRepository;
   readonly sources: SourcesRepository;
   readonly bookmarks: IBookmarksRepository;
+  readonly feedback: IFeedbackRespository;
 }
 
 export class DbClient implements IDbClient {
+  public readonly feedback: IFeedbackRespository;
   public readonly user: IUserRepository;
   public readonly articles: IArticlesRepository;
   public readonly investigations: IInvestigationsRepository;
   public readonly sources: SourcesRepository;
   public readonly bookmarks: IBookmarksRepository;
   constructor(private readonly db: SupabaseClient<Database>) {
+    this.feedback = new FeedbackRepository(this.db);
     this.user = new UserRepository(this.db);
     this.articles = new ArticlesRepository(this.db);
     this.investigations = new InvestigationsRepository(this.db);

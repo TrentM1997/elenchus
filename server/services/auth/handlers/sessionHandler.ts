@@ -30,6 +30,7 @@ export interface ISessionHandler {
     res: Response,
   ): void;
   logOut(req: Request, res: Response): Promise<LogOutResult>;
+  clearSessionCookies(res: Response): void;
   authenticateRequest(req: Request): Promise<AuthenticateUserResult>;
 }
 
@@ -171,6 +172,11 @@ export class SessionHandler implements ISessionHandler {
     res: Response,
   ): void {
     this.tokens.setAuthCookies(session, res);
+  }
+
+  public clearSessionCookies(res: Response): void {
+    this.tokens.removeAuthCookie(res, "sb-access-token");
+    this.tokens.removeAuthCookie(res, "sb-refresh-token");
   }
 
   private async executeLogin(req: Request, res: Response) {

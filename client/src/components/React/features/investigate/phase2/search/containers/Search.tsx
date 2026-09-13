@@ -1,14 +1,17 @@
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/state/store";
 import { useEffect, useRef } from "react";
-import { RetrieveArticles, resetArticles } from "@/state/Reducers/Investigate/SearchResults";
+import {
+  RetrieveArticles,
+  resetArticles,
+} from "@/state/Reducers/Investigate/articles/SearchResults";
 import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary";
 import SearchBar from "../components/input/SearchBar";
-import { clearChosenArticles } from "@/state/Reducers/Investigate/ChosenArticles";
+import { clearChosenArticles } from "@/state/Reducers/Investigate/articles/ChosenArticles";
 import { normalize } from "@/lib/helpers/formatting/Normailize";
 import React from "react";
 
-export default function Search({ }): JSX.Element | null {
+export default function Search({}): JSX.Element | null {
   const dispatch = useDispatch<AppDispatch>();
   const lastCommitedInput = useRef<string | null>(null);
   const draftRef = useRef<string | null>(null);
@@ -27,7 +30,6 @@ export default function Search({ }): JSX.Element | null {
     }
   };
 
-
   const getSearchInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (timerRef.current !== null) clearTimeout(timerRef.current);
 
@@ -39,13 +41,11 @@ export default function Search({ }): JSX.Element | null {
     }, 300);
   };
 
-
-
   const flush = (val: string) => {
     if (timerRef.current !== null) {
       clearTimeout(timerRef.current);
       timerRef.current = null;
-    };
+    }
     recordQuery(val);
   };
 
@@ -56,8 +56,10 @@ export default function Search({ }): JSX.Element | null {
     if (!q) return;
     dispatch(clearChosenArticles());
     dispatch(resetArticles());
-    const thunkPromise = dispatch(RetrieveArticles({ query: q, timeout: 5000 }));
-    inFlightRef.current = thunkPromise as unknown as { abort: () => void }
+    const thunkPromise = dispatch(
+      RetrieveArticles({ query: q, timeout: 5000 }),
+    );
+    inFlightRef.current = thunkPromise as unknown as { abort: () => void };
     lastCommitedInput.current = q;
   };
 
@@ -65,48 +67,38 @@ export default function Search({ }): JSX.Element | null {
     e.preventDefault();
 
     const form = e.currentTarget,
-      input = form.elements.namedItem('q') as HTMLInputElement | null,
-      raw = input
-        ? input.value
-        : null;
+      input = form.elements.namedItem("q") as HTMLInputElement | null,
+      raw = input ? input.value : null;
 
     if (timerRef.current !== null) {
       clearTimeout(timerRef.current);
       timerRef.current = null;
-    };
+    }
 
     if (recordQuery(raw)) send();
   };
 
-
   useEffect(() => {
-
     return () => {
       if (inFlightRef.current !== null) {
         inFlightRef.current.abort();
       }
       if (timerRef.current !== null) {
         clearTimeout(timerRef.current);
-      };
-    }
+      }
+    };
   }, []);
-
 
   return (
     <div
       className="opacity-0 animate-fade-skew animation-delay-300ms transition-opacity relative
-      ease-soft min-w-full max-w-full mx-auto md:px-2 2xl:h-full no-scrollbar">
-      <div
-        className="text-center w-full md:mx-auto">
-        <div
-          className="inline-flex flex-wrap items-center w-full">
-          <div
-            className="w-full">
-            <ErrorBoundary
-            >
-              <div
-                className="relative lg:mb-2 mx-auto flex justify-center items-center">
-
+      ease-soft min-w-full max-w-full mx-auto md:px-2 2xl:h-full no-scrollbar"
+    >
+      <div className="text-center w-full md:mx-auto">
+        <div className="inline-flex flex-wrap items-center w-full">
+          <div className="w-full">
+            <ErrorBoundary>
+              <div className="relative lg:mb-2 mx-auto flex justify-center items-center">
                 <SearchBar
                   getSearchInput={getSearchInput}
                   handleSubmit={handleSubmit}
@@ -114,10 +106,9 @@ export default function Search({ }): JSX.Element | null {
                 />
               </div>
             </ErrorBoundary>
-
           </div>
         </div>
       </div>
     </div>
-  )
-};
+  );
+}

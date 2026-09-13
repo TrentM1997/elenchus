@@ -67,6 +67,13 @@ code. Keep the service-role key reserved for trusted server database operations.
 
 ## Notes for future changes
 
+Account deletion follows the same isolation rule. `executeDeleteAccount()` first
+verifies the supplied credentials on a fresh public-key client and checks that
+the verified user ID matches the authenticated request's user ID. It then creates
+a separate service-key client for `auth.admin.deleteUser()`. Never sign in on that
+admin client or reuse the verification client for the administrative deletion.
+The route clears browser auth cookies only after deletion succeeds.
+
 - If client creation is moved into an injected factory for testing, the factory
   must return a fresh client for each signup operation.
 - Do not try to clean up the shared client by signing out after signup. Other

@@ -5,10 +5,29 @@ import { validateOrThrow } from "../validation/validateOrThrow.js";
 import { BookmarkArticleIdSchema } from "../../schemas/BookmarkSchema.js";
 import { ServerError } from "../errors/ServerError.js";
 import { InvestigationSchema } from "../../schemas/InvestigationSchema.js";
+import { LoginSchema } from "../../schemas/LoginSchema.js";
 
 export function protectedRoutes(app: IAppServices, router: Router) {
+  router.post(
+    "/deleteUser",
+    wrapAsync(async (req, res) => {
+      const credentials = validateOrThrow(LoginSchema, req.body);
+      const result = await app.services.api.user.deleteAccount(
+        req.user?.userId,
+        credentials,
+      );
+
+      if (!result.ok) {
+        throw new ServerError(result.message, result.statusCode, result.details);
+      }
+
+      req.auth.clearSessionCookies(res);
+      res.success("User deleted successfully.", null, 200);
+    }),
+  );
+
   router.get(
-    "/user/saved-articles",
+    "/user/bookmarks",
     wrapAsync(async (req, res) => {
       const results = await app.services.api.user.articlesBookmarked(
         req.user?.userId,
@@ -18,7 +37,7 @@ export function protectedRoutes(app: IAppServices, router: Router) {
   );
 
   router.post(
-    "/articles/bookmark/add",
+    "/user/bookmarks",
     wrapAsync(async (req, res) => {
       const userId = req.user.userId;
       const article_id = validateOrThrow(
@@ -41,13 +60,13 @@ export function protectedRoutes(app: IAppServices, router: Router) {
     }),
   );
 
-  router.post(
-    "/articles/bookmark/delete",
+  router.delete(
+    "/user/bookmarks/:articleId",
     wrapAsync(async (req, res) => {
       const userId = req.user.userId;
       const article_id = validateOrThrow(
         BookmarkArticleIdSchema,
-        req.body?.article_id,
+        Number(req.params.articleId),
       );
 
       const result = await app.services.api.user.removeBookmark({
@@ -64,7 +83,7 @@ export function protectedRoutes(app: IAppServices, router: Router) {
   );
 
   router.post(
-    "/investigation/save",
+    "/user/investigations",
     wrapAsync(async (req, res) => {
       const userId = req.user.userId;
       const investigation = validateOrThrow(
@@ -90,7 +109,7 @@ export function protectedRoutes(app: IAppServices, router: Router) {
   );
 
   router.get(
-    "/user/my-research",
+    "/user/investigations",
     wrapAsync(async (req, res) => {
       const userId = req.user.userId;
       const result =

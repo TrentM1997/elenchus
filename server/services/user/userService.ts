@@ -2,13 +2,19 @@ import { IDbClient } from "../../db/access/client/dbClient";
 import { IAuthorization } from "../auth/authorization";
 import { ArticleSchemaType } from "../../schemas/ArticleSchema";
 import { LoginSchema } from "../../schemas/LoginSchema";
-import { CreateUserResult } from "../../db/access/repositories/user/userWriteHandler";
+import {
+  CreateUserResult,
+  PasswordResetResult,
+  AccountDeletionResult,
+} from "../../db/access/repositories/user/userWriteHandler";
 import {
   BookmarkDeleteResponse,
   BookmarkResponse,
 } from "../../db/access/repositories/bookmarks/bookmarksRepository";
 import { ServerError } from "../../core/errors/ServerError";
 import { BookmarkSchemaType } from "../../schemas/BookmarkSchema";
+import { FeedbackReqSchemaType } from "../../schemas/FeedbackReqSchema";
+import { FeedbackSubmitResult } from "../../db/access/repositories/feedback/feedbackRespository";
 
 type BookmarkOperation = {
   user_id: string | null | undefined;
@@ -16,22 +22,60 @@ type BookmarkOperation = {
 };
 
 export interface IUserService {
+  deleteAccount(
+    user_id: string | null | undefined,
+    credentials: LoginSchema,
+  ): Promise<AccountDeletionResult>;
   signUp(credentials: LoginSchema): CreateUserResult;
+  requestPasswordReset(email: string): Promise<PasswordResetResult>;
   bookmark(params: BookmarkOperation): Promise<BookmarkResponse>;
   removeBookmark(params: BookmarkOperation): Promise<BookmarkDeleteResponse>;
   articlesBookmarked(
     user_id: string | undefined | null,
   ): Promise<ArticleSchemaType[]>;
+  submitFeedback(
+    feedback: FeedbackReqSchemaType,
+  ): Promise<FeedbackSubmitResult>;
 }
 
 export class UserService implements IUserService {
   constructor(
-    private readonly db: Pick<IDbClient, "articles" | "bookmarks" | "user">,
+    private readonly db: Pick<
+      IDbClient,
+      "articles" | "bookmarks" | "user" | "feedback"
+    >,
     private readonly policy: IAuthorization,
   ) {}
 
+  public async submitFeedback(
+    feedback: FeedbackReqSchemaType,
+  ): Promise<FeedbackSubmitResult> {
+    return await this.db.feedback.submit(feedback);
+  }
+
   public async signUp(credentials: LoginSchema): CreateUserResult {
     return await this.db.user.write.createUser(credentials);
+  }
+
+  public async deleteAccount(
+    user_id: string | null | undefined,
+    credentials: LoginSchema,
+  ): Promise<AccountDeletionResult> {
+    return await this.executeDeleteAccount(user_id, credentials);
+  }
+
+  private async executeDeleteAccount(
+    user_id: string | null | undefined,
+    credentials: LoginSchema,
+  ): Promise<AccountDeletionResult> {
+    const userId = this.policy.requireAuthenticated(user_id);
+    return await this.db.user.write.deleteAccount(userId, credentials);
+  }
+
+  public async requestPasswordReset(
+    email: string,
+  ): Promise<PasswordResetResult> {
+    return await this.db.user.write.requestPasswordReset(email);
   }
 
   public async articlesBookmarked(

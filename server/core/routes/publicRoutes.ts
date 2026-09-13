@@ -6,8 +6,43 @@ import { validateOrThrow } from "../validation/validateOrThrow.js";
 import { SearchQuerySchema } from "../../schemas/SearchQuerySchema.js";
 import { LoginSchema } from "../../schemas/LoginSchema.js";
 import { ScrapeRequestSchema } from "../../schemas/ScrapeRequestSchema.js";
+import { PasswordResetRequestSchema } from "../../schemas/PasswordResetRequestSchema.js";
+import { FeedbackReqSchema } from "../../schemas/FeedbackReqSchema.js";
 
 export function publicRoutes(app: IAppServices, router: Router) {
+  router.post(
+    "/user/feedback",
+    wrapAsync(async (req, res) => {
+      const feedback = validateOrThrow(FeedbackReqSchema, req.body.feedback);
+
+      const result = await app.services.api.user.submitFeedback(feedback);
+
+      if (!result.ok) {
+        throw new ServerError("Failed to submit feedback", 500, result.details);
+      }
+
+      res.success("Feedback submitted successfully", null, 200);
+    }),
+  );
+
+  router.post(
+    "/resetUserPassword",
+    wrapAsync(async (req, res) => {
+      const { email } = validateOrThrow(PasswordResetRequestSchema, req.body);
+      const result = await app.services.api.user.requestPasswordReset(email);
+
+      if (!result.ok) {
+        throw new ServerError(
+          "Failed to send password reset email",
+          result.error.status ?? 400,
+          result.error.message,
+        );
+      }
+
+      res.success("Reset email sent.", result.data, 200);
+    }),
+  );
+
   router.post(
     "/auth/recover",
     wrapAsync(async (req, res) => {

@@ -12,7 +12,6 @@ import { getUserResearch } from "../../endpoints/supabase/users/transactions/get
 import { createNewUser } from "../../endpoints/supabase/users/account/createNewUser.js";
 import { signUserOut } from "../../endpoints/supabase/users/account/signout.js";
 import { resetUserPassword } from "../../endpoints/supabase/users/account/resetPassword.js";
-import { getCurrentUser } from "../../endpoints/supabase/recovery/getCurrentUser.js";
 import { deleteUser } from "../../endpoints/supabase/users/account/deleteUser.js";
 import { sendFeedback } from "../../endpoints/supabase/feedback/sendFeedback.js";
 import {
@@ -34,10 +33,8 @@ router.get("/getUserArticles", getUserArticles); // done
 router.post("/getUserResearch", getUserResearch); // done
 router.post("/saveResearch", saveResearch); // done
 router.post("/articleOperation", handleArticleSave); // done
-
-router.post("/resetUserPassword", resetUserPassword);
-router.post("/deleteUser", deleteUser);
-router.post("/getCurrentUser", getCurrentUser);
-router.post("/sendFeedback", sendFeedback);
+router.post("/resetUserPassword", resetUserPassword); // done
+router.post("/deleteUser", deleteUser); // done
+router.post("/sendFeedback", sendFeedback); // done
 
 export { router };

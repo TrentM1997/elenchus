@@ -3,20 +3,18 @@ import { executeSaveArticleRequest } from "@/infra/api/executeSaveArticle";
 import { executeSignIn } from "@/infra/api/executeSignin";
 
 const createUserRequest = createNewUser({
-    endpoint: "/createNewUser",
-    credentials: "include"
+  endpoint: "/createNewUser",
+  credentials: "include",
 });
 
 const createArticleRequest = executeSaveArticleRequest({
-    endpoint: "/articleOperation",
-    credentials: "include"
+  endpoint: "/user/bookmarks",
+  credentials: "include",
 });
 
 const createSigninRequest = executeSignIn({
-    endpoint: '/supabaseLogIn',
-    credentials: 'include'
+  endpoint: "/supabaseLogIn",
+  credentials: "include",
 });
-
-
 
 export { createUserRequest, createArticleRequest, createSigninRequest };
