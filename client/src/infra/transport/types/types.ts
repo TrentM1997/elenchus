@@ -26,11 +26,9 @@ export type ApiEndpoint =
 
 export type FirecrawlEndpoint = Extract<ApiEndpoint, "/firecrawl_extractions">;
 
-export type FirecrawlPollingEndpoint = `${FirecrawlEndpoint}/${string}`;
-
 export type ExtractArticleEndpoints = {
-  kickoff: Extract<ApiEndpoint, "/firecrawl_extractions">;
-  polling: (jobId: string) => FirecrawlPollingEndpoint;
+  kickoff: Extract<ApiEndpoint, ArticleEndpoint>;
+  polling: (jobId: string) => Extract<ArticleEndpoint, `"/extract/${string}`>;
 };
 
 export type ArticleEndpointConfig = {
