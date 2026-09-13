@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { ExtractionService } from "@/lib/services/extractionService";
+import type { FailedAttempt, FirecrawlSuccessPayload } from "@/lib/services/types";
 
 export interface Article {
   title: string;
@@ -18,137 +20,43 @@ export interface Article {
   country?: string | null;
 }
 
-interface FailedAttempt {
-  title: string;
-  summary: {
-    denied: string;
-    failedArticle: string;
-  }[];
-  logo: string;
-  source: string;
-  date: string;
-  article_url: string;
-}
-
 export type JobStatus = "pending" | "fulfilled" | "rejected";
 
 export type Prog = "extraction complete" | string;
 
-interface FirecrawlJobStatus {
-  status: JobStatus;
-  result: {
-    progress: Prog;
-    retrieved: Article[];
-    rejected: FailedAttempt[];
-  } | null;
-  error: string | null;
-  createdAt: number | null;
-}
-
-interface FirecrawlSuccessPayload {
-  retrieved: Article[];
-  rejected: FailedAttempt[];
-  progress: Prog;
-}
+const extractionService = new ExtractionService();
 
 export const runFirecrawlExtraction = createAsyncThunk<
   FirecrawlSuccessPayload,
   { articles: SelectedArticle[] },
   { rejectValue: string }
->("investigate/runFirecrawlExtraction", async (payload, thunkApi) => {
-  const { signal, rejectWithValue } = thunkApi;
-  const { articles } = payload;
+>("investigate/runFirecrawlExtraction", async ({ articles }, thunkApi) => {
+  const { signal, dispatch, rejectWithValue } = thunkApi;
 
-  let jobId: string;
   try {
-    const kickoffRes = await fetch("/articles/extract", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ articles: articles }),
+    return await extractionService.extractArticles({
+      articles,
       signal,
+      onProgress: (snapshot) => {
+        if (signal.aborted) return;
+
+        dispatch(updateStatus(snapshot.status));
+
+        if (snapshot.result) {
+          dispatch(updateProgress(snapshot.result.progress));
+          dispatch(appendArticles(snapshot.result.retrieved));
+          dispatch(appendFailures(snapshot.result.rejected));
+        }
+      },
     });
-
-    if (!kickoffRes.ok) {
-      const errText = await kickoffRes.text();
-      return rejectWithValue(
-        `Failed to start extraction job (${kickoffRes.status}): ${errText}`,
-      );
-    }
-
-    const kickoffJson: { jobId: string } = await kickoffRes.json();
-    jobId = kickoffJson.jobId;
-  } catch (err: any) {
-    return rejectWithValue(`Network error starting job: ${err.message}`);
-  }
-
-  const pollEndpoint = `/articles/extract/${jobId}`;
-
-  const pollDelay = (ms: number) =>
-    new Promise((resolve) => setTimeout(resolve, ms));
-
-  while (true) {
-    if (signal.aborted) {
-      return rejectWithValue("Extraction canceled by user/navigation");
-    }
-
-    let statusJson: FirecrawlJobStatus;
-
-    try {
-      const statusRes = await fetch(pollEndpoint, {
-        signal,
-        method: "GET",
-        cache: "no-store",
-        headers: { "Cache-Control": "no-cache" },
-      });
-
-      if (statusRes.status === 404) {
-        return rejectWithValue("Job not found or expired.");
-      }
-
-      if (!statusRes.ok) {
-        const errText = await statusRes.text();
-        return rejectWithValue(
-          `Bad status fetch (${statusRes.status}): ${errText}`,
-        );
-      }
-
-      statusJson = (await statusRes.json()) as FirecrawlJobStatus;
-      if (statusJson.status) {
-        thunkApi.dispatch(updateStatus(statusJson.status));
-      }
-
-      if (statusJson.result !== null) {
-        thunkApi.dispatch(updateProgress(statusJson.result.progress));
-        thunkApi.dispatch(appendArticles(statusJson.result.retrieved));
-        thunkApi.dispatch(appendFailures(statusJson.result.rejected));
-      }
-    } catch (err: any) {
-      return rejectWithValue(`Network error polling job: ${err.message}`);
-    }
-
-    if (statusJson.status === "fulfilled") {
-      const finalResult = statusJson.result;
-
-      if (!finalResult) {
-        return rejectWithValue("Job finished but no result payload.");
-      }
-
-      const payload: FirecrawlSuccessPayload = {
-        progress: finalResult.progress,
-        retrieved: finalResult.retrieved,
-        rejected: finalResult.rejected,
-      };
-
-      return payload;
-    }
-
-    if (statusJson.status === "rejected") {
-      return rejectWithValue(
-        statusJson.error || "Extraction failed on server.",
-      );
-    }
-
-    await pollDelay(1000);
+  } catch (error) {
+    return rejectWithValue(
+      signal.aborted
+        ? "Extraction canceled by user/navigation"
+        : error instanceof Error
+          ? error.message
+          : "Article extraction failed",
+    );
   }
 });
 

@@ -1,4 +1,4 @@
-import { Article, JobStatus, Prog } from "@/state/Reducers/Investigate/Reading";
+import type { Article, JobStatus, Prog } from "@/state/Reducers/Investigate/Reading";
 
 export interface FailedAttempt {
   title: string;
