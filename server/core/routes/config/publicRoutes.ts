@@ -1,0 +1,156 @@
+import { Router } from "express";
+import { IAppServices } from "../../../services/appServices.js";
+import { wrapAsync } from "../../async/wrapAsync.js";
+import { ServerError } from "../../errors/ServerError.js";
+import { validateOrThrow } from "../../validation/validateOrThrow.js";
+import { SearchQuerySchema } from "../../../schemas/SearchQuerySchema.js";
+import { LoginSchema } from "../../../schemas/LoginSchema.js";
+import { ScrapeRequestSchema } from "../../../schemas/ScrapeRequestSchema.js";
+import { PasswordResetRequestSchema } from "../../../schemas/PasswordResetRequestSchema.js";
+import { FeedbackReqSchema } from "../../../schemas/FeedbackReqSchema.js";
+
+export function publicRoutes(app: IAppServices, router: Router) {
+  router.post(
+    "/user/feedback",
+    wrapAsync(async (req, res) => {
+      const feedback = validateOrThrow(FeedbackReqSchema, req.body.feedback);
+
+      const result = await app.services.api.user.submitFeedback(feedback);
+
+      if (!result.ok) {
+        throw new ServerError("Failed to submit feedback", 500, result.details);
+      }
+
+      res.success("Feedback submitted successfully", null, 200);
+    }),
+  );
+
+  router.post(
+    "/resetUserPassword",
+    wrapAsync(async (req, res) => {
+      const { email } = validateOrThrow(PasswordResetRequestSchema, req.body);
+      const result = await app.services.api.user.requestPasswordReset(email);
+
+      if (!result.ok) {
+        throw new ServerError(
+          "Failed to send password reset email",
+          result.error.status ?? 400,
+          result.error.message,
+        );
+      }
+
+      res.success("Reset email sent.", result.data, 200);
+    }),
+  );
+
+  router.post(
+    "/auth/recover",
+    wrapAsync(async (req, res) => {
+      const result = await req.auth.recoverSession(req, res);
+
+      res.success("Session checked", result.status, 200);
+    }),
+  );
+
+  router.post(
+    "/auth/login",
+    wrapAsync(async (req, res) => {
+      const { data, error } = await req.auth.login(req, res);
+
+      if (error) {
+        throw new ServerError("Failed to authenticate user", 401, error.cause);
+      }
+
+      res.success("Login successful", data, 200);
+    }),
+  );
+
+  router.post(
+    "/auth/logOut",
+    wrapAsync(async (req, res) => {
+      const result = await req.auth.logOut(req, res);
+
+      if (!result.ok) {
+        throw new ServerError("Failed to sign out user", 500, result.message);
+      }
+
+      res.success("signed out successfully", null, 200);
+    }),
+  );
+
+  router.post(
+    "/auth/signup",
+    wrapAsync(async (req, res) => {
+      const body = validateOrThrow(LoginSchema, req.body);
+
+      const result = await app.services.api.user.signUp(body);
+
+      if (!result.ok || !result.data.session) {
+        throw new ServerError("Failed to create new user", 400);
+      }
+
+      req.auth.establishSession(result.data.session, res);
+
+      res.success("signup completed successfully", result, 200);
+    }),
+  );
+
+  router.get(
+    "/articles/extract/:jobId",
+    wrapAsync(async (req, res) => {
+      const { jobId } = req.params;
+      const job = app.services.api.articles.getExtractionJob(jobId);
+      if (!job) {
+        res.status(404).json({ status: "unknown", error: "Job not found" });
+        return;
+      }
+      res.setHeader(
+        "Cache-Control",
+        "no-store, no-cache, must-revalidate, max-age=0",
+      );
+      res.status(200).json(job);
+    }),
+  );
+
+  router.post(
+    "/articles/extract",
+    wrapAsync(async (req, res) => {
+      const { articles } = validateOrThrow(ScrapeRequestSchema, req.body);
+      const result = app.services.api.articles.extract(articles);
+
+      res.status(202).json(result);
+    }),
+  );
+
+  router.get(
+    "/blueSky/feed",
+    wrapAsync(async (req, res) => {
+      const result = await app.integrations.blueSky.feed();
+
+      res.success("Blue Sky feed retrieved successfully", result, 200);
+    }),
+  );
+
+  router.get(
+    "/blueSky/search",
+    wrapAsync(async (req, res) => {
+      const query = validateOrThrow(SearchQuerySchema, req.query.q);
+      const result = await app.integrations.blueSky.search(query);
+
+      res.success("Blue Sky posts searched successfully", result, 200);
+    }),
+  );
+
+  router.get(
+    "/articles/search",
+    wrapAsync(async (req, res) => {
+      const query = validateOrThrow(SearchQuerySchema, req.query.q);
+
+      const results = await app.integrations.newsApi.search(query);
+
+      res.success("successful search", results, 200);
+    }),
+  );
+
+  return router;
+}

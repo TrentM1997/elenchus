@@ -39,8 +39,8 @@ export class DbClient implements IDbClient {
   public readonly sources: SourcesRepository;
   public readonly bookmarks: IBookmarksRepository;
   constructor(private readonly db: SupabaseClient<Database>) {
+    this.user = new UserRepository();
     this.feedback = new FeedbackRepository(this.db);
-    this.user = new UserRepository(this.db);
     this.articles = new ArticlesRepository(this.db);
     this.investigations = new InvestigationsRepository(this.db);
     this.sources = new SourcesRepository(this.db);

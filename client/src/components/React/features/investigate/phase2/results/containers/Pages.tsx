@@ -47,25 +47,16 @@ export default function Pages(): JSX.Element | null {
   }, [selected]);
 
   const select = useCallback(
-    (article: ArticleType) => {
-      const selectedArticle: SelectedArticle = {
-        url: article.url,
-        source: article.provider,
-        date: article.date_published,
-        logo: article.logo,
-        title: article.name,
-        image: article.image,
-      };
-
+    (article: SelectedArticle) => {
       return () => {
         if (selected.status !== "empty" && urlHash.has(article.url)) {
           const clicked = selected.data.find((art) => art.url === article.url);
 
           if (!clicked) {
-            dispatch(choose(selectedArticle));
+            dispatch(choose(article));
           }
         } else {
-          dispatch(choose(selectedArticle));
+          dispatch(choose(article));
         }
       };
     },

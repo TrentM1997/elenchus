@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { IAppServices } from "../../services/appServices.js";
-import { configureMiddleware } from "./configureMiddleware.js";
+import { configureMiddleware } from "./config/configureMiddleware.js";
 import { configSessionHandler } from "../middleware/configSessionHandler.js";
 
 export function createRouter(app: IAppServices) {

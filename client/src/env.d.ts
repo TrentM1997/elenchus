@@ -77,6 +77,7 @@ declare global {
     logo: string;
     title: string;
     image: string;
+    description: string;
   }
 
   interface Help {
@@ -275,11 +276,11 @@ declare global {
   }
 
   interface LinkProps {
+    chooseArticle: (article: SelectedArticle) => () => void;
     highlight?: boolean;
-    article: ArticleType;
+    article: SelectedArticle;
     index?: number;
     isPriority?: boolean;
-    chooseArticle?: (article: ArticleType) => () => void;
     showGetArticlesModal?: boolean;
     mute?: boolean;
     chosenArticles?: Array<SelectedArticle>;
