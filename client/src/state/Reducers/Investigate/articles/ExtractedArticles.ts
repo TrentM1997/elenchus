@@ -1,69 +1,14 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { ExtractionService } from "@/lib/services/extractionService";
-import type { FailedAttempt, FirecrawlSuccessPayload } from "@/lib/services/types";
+import type { FailedAttempt } from "@/lib/services/types";
+import { extractArticles } from "./thunks";
+import type { ArticleSchemaType } from "../../../../../../schemas/api/types/ArticlesSchema";
+import { Prog } from "./types";
 
-export interface Article {
-  title: string;
-  provider: string;
-  authors: string[] | string;
-  article_url: string;
-  image_url: string;
-  date_published: string;
-  fallbackDate: string | null;
-  summary: any;
-  full_text: string;
-  logo?: string;
-  id: number | null;
-  factual_reporting?: string | null;
-  bias?: Bias;
-  country?: string | null;
-}
-
-export type JobStatus = "pending" | "fulfilled" | "rejected";
-
-export type Prog = "extraction complete" | string;
-
-const extractionService = new ExtractionService();
-
-export const runFirecrawlExtraction = createAsyncThunk<
-  FirecrawlSuccessPayload,
-  { articles: SelectedArticle[] },
-  { rejectValue: string }
->("investigate/runFirecrawlExtraction", async ({ articles }, thunkApi) => {
-  const { signal, dispatch, rejectWithValue } = thunkApi;
-
-  try {
-    return await extractionService.extractArticles({
-      articles,
-      signal,
-      onProgress: (snapshot) => {
-        if (signal.aborted) return;
-
-        dispatch(updateStatus(snapshot.status));
-
-        if (snapshot.result) {
-          dispatch(updateProgress(snapshot.result.progress));
-          dispatch(appendArticles(snapshot.result.retrieved));
-          dispatch(appendFailures(snapshot.result.rejected));
-        }
-      },
-    });
-  } catch (error) {
-    return rejectWithValue(
-      signal.aborted
-        ? "Extraction canceled by user/navigation"
-        : error instanceof Error
-          ? error.message
-          : "Article extraction failed",
-    );
-  }
-});
-
-interface ReadingState {
+interface InitialState {
   status: "idle" | "pending" | "fulfilled" | "rejected";
   getContent: boolean;
-  articles: Array<Article>;
+  articles: Array<ArticleSchemaType>;
   failedNotifications: Array<FailedAttempt>;
   currentStory: number;
   reading: boolean;
@@ -72,7 +17,7 @@ interface ReadingState {
   progress: Prog;
 }
 
-const initialState: ReadingState = {
+const initialState: InitialState = {
   status: "idle",
   getContent: false,
   articles: [],
@@ -84,7 +29,7 @@ const initialState: ReadingState = {
   progress: "0",
 };
 
-export const ReadingSlice = createSlice({
+export const ExtractedArticleSlice = createSlice({
   name: "readingReducer",
   initialState: initialState,
   reducers: {
@@ -98,7 +43,7 @@ export const ReadingSlice = createSlice({
         state.progress = next;
       }
     },
-    appendArticles: (state, action: PayloadAction<Article[]>) => {
+    appendArticles: (state, action: PayloadAction<ArticleSchemaType[]>) => {
       const nextBatch = action.payload;
       for (const batchItem of nextBatch) {
         const url = batchItem.article_url;
@@ -159,14 +104,14 @@ export const ReadingSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(runFirecrawlExtraction.pending, (state) => {
+      .addCase(extractArticles.pending, (state) => {
         state.status = "pending";
       })
-      .addCase(runFirecrawlExtraction.fulfilled, (state, action) => {
+      .addCase(extractArticles.fulfilled, (state, action) => {
         state.status = "fulfilled";
         state.progress = action.payload.progress;
       })
-      .addCase(runFirecrawlExtraction.rejected, (state, action) => {
+      .addCase(extractArticles.rejected, (state, action) => {
         state.status = "rejected";
         state.error =
           (action.payload as string) || action.error.message || "Unknown error";
@@ -174,7 +119,9 @@ export const ReadingSlice = createSlice({
   },
 });
 
-export type ReadingSliceState = ReturnType<typeof ReadingSlice.reducer>;
+export type ExtractedArticleSliceState = ReturnType<
+  typeof ExtractedArticleSlice.reducer
+>;
 
 export const {
   articleData,
@@ -190,6 +137,6 @@ export const {
   limitPagination,
   appendArticles,
   appendFailures,
-} = ReadingSlice.actions;
+} = ExtractedArticleSlice.actions;
 
-export default ReadingSlice.reducer;
+export default ExtractedArticleSlice.reducer;

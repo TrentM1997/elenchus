@@ -1,4 +1,5 @@
-import type { Article, JobStatus, Prog } from "@/state/Reducers/Investigate/Reading";
+import { JobStatus, Prog } from "@/state/Reducers/Investigate/articles/types";
+import { ArticleSchemaType } from "../../../../schemas/api/types/ArticlesSchema";
 
 export interface FailedAttempt {
   title: string;
@@ -16,7 +17,7 @@ export interface FirecrawlJobStatus {
   status: JobStatus;
   result: {
     progress: Prog;
-    retrieved: Article[];
+    retrieved: ArticleSchemaType[];
     rejected: FailedAttempt[];
   } | null;
   error: string | null;
@@ -24,7 +25,7 @@ export interface FirecrawlJobStatus {
 }
 
 export interface FirecrawlSuccessPayload {
-  retrieved: Article[];
+  retrieved: ArticleSchemaType[];
   rejected: FailedAttempt[];
   progress: Prog;
 }

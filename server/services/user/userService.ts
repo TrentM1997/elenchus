@@ -47,6 +47,19 @@ export class UserService implements IUserService {
     private readonly policy: IAuthorization,
   ) {}
 
+  public async bookmark(params: {
+    user_id: string | null | undefined;
+    article_id: number;
+  }): Promise<BookmarkResponse> {
+    return await this.executeBookmark(params.user_id, params.article_id);
+  }
+
+  public async removeBookmark(
+    params: BookmarkOperation,
+  ): Promise<BookmarkDeleteResponse> {
+    return await this.executeRemoveBookmark(params.user_id, params.article_id);
+  }
+
   public async submitFeedback(
     feedback: FeedbackReqSchemaType,
   ): Promise<FeedbackSubmitResult> {
@@ -135,19 +148,6 @@ export class UserService implements IUserService {
       const article = articlesById.get(id);
       return article ? [article] : [];
     });
-  }
-
-  public async bookmark(params: {
-    user_id: string | null | undefined;
-    article_id: number;
-  }): Promise<BookmarkResponse> {
-    return await this.executeBookmark(params.user_id, params.article_id);
-  }
-
-  public async removeBookmark(
-    params: BookmarkOperation,
-  ): Promise<BookmarkDeleteResponse> {
-    return await this.executeRemoveBookmark(params.user_id, params.article_id);
   }
 
   private async executeRemoveBookmark(

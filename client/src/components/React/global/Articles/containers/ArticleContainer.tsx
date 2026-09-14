@@ -11,8 +11,8 @@ import {
 } from "@/lib/services/RecordSources";
 import { clearChosenArticles } from "@/state/Reducers/Investigate/articles/ChosenArticles";
 import { resetResults } from "@/state/Reducers/Investigate/articles/SearchResults";
-import { resetReadingSlice } from "@/state/Reducers/Investigate/Reading";
-import type { ReadingSliceState } from "@/state/Reducers/Investigate/Reading";
+import { resetReadingSlice } from "@/state/Reducers/Investigate/articles/ExtractedArticles";
+import type { ReadingSliceState } from "@/state/Reducers/Investigate/articles/ExtractedArticles";
 
 export default function ArticleContainer({}) {
   const sources = useSelector(

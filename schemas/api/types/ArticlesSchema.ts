@@ -15,7 +15,7 @@ export const ArticleSchema = Type.Object({
   summary: Type.Optional(Type.Any()),
   full_text: Type.String(),
   logo: Type.Optional(Type.String()),
-  id: Type.Optional(Type.Union([Type.String(), Type.Number(), Type.Null()])),
+  id: Type.Number(),
   factual_reporting: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   bias: Type.Optional(BiasSchema),
   country: Type.Optional(Type.Union([Type.String(), Type.Null()])),

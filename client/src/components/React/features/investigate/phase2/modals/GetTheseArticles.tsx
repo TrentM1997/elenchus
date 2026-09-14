@@ -1,4 +1,4 @@
-import { runFirecrawlExtraction } from "@/state/Reducers/Investigate/Reading";
+import { runFirecrawlExtraction } from "@/state/Reducers/Investigate/articles/ExtractedArticles";
 import { useAppdispatch } from "@/hooks/appDispatch";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/state/store";

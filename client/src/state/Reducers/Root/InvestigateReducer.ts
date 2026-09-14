@@ -3,7 +3,7 @@ import type { UnknownAction } from "@reduxjs/toolkit";
 import StepsReducer from "../Investigate/Steps";
 import UserPOVReducer from "../Investigate/UserPOV";
 import NoteReducer from "../Investigate/NoteTaking";
-import ReadingReducer from "../Investigate/Reading";
+import ReadingReducer from "../Investigate/articles/ExtractedArticles";
 import SelectingArticles from "../Investigate/articles/ChosenArticles";
 import SearchResults from "../Investigate/articles/SearchResults";
 import ReviewReducer from "../Investigate/Review";

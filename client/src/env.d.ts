@@ -6,7 +6,7 @@ import type { Extracts } from "./state/Reducers/Investigate/Review";
 import React, { ReactEventHandler, ReactNode, SetStateAction } from "react";
 import { User } from "@supabase/supabase-js";
 import { SigninStatus } from "./hooks/useSignIn";
-import type { Article } from "./state/Reducers/Investigate/Reading";
+import type { Article } from "./state/Reducers/Investigate/articles/ExtractedArticles";
 import type { ActiveTab } from "./state/Reducers/UserContent/DashboardTabs";
 import type { BlueSkyPost } from "./state/Reducers/BlueSky/BlueSkySlice";
 
