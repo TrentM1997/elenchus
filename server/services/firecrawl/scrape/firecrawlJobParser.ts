@@ -1,4 +1,12 @@
+import { validateServerOrThrow } from "../../../core/validation/validateOrThrow";
+import {
+  ArticleSchema,
+  ArticleSchemaType,
+  FactualReportingRatingSchema,
+  FactualReportingRatingSchemaType,
+} from "../../../schemas/ArticleSchema";
 import { BiasSchemaType } from "../../../schemas/BiasSchema";
+import { validateSchema } from "../../../schemas/ValidateSchema";
 import {
   Article,
   BiasInfo,
@@ -10,7 +18,10 @@ import {
 import { dropParams } from "./scrapeConfig";
 
 export interface IFirecrawlJobParser {
-  reconcileFailed(retrieved: Article[], failed: FailedAttempt[]): void;
+  reconcileFailed(
+    retrieved: ArticleSchemaType[],
+    failed: FailedAttempt[],
+  ): void;
   toFailedAttempt(a: FcParam, reason: string): FailedAttempt;
   cleanUrl(url: string): string;
   toArticleDto(
@@ -18,7 +29,7 @@ export interface IFirecrawlJobParser {
     a: FcParam,
     mb: MBFC,
     urlClean: string,
-  ): Article;
+  ): ArticleSchemaType;
   isInvalidContent(c: FirecrawlContent | null | undefined): boolean;
 }
 
@@ -33,7 +44,10 @@ export class FirecrawlJobParser implements IFirecrawlJobParser {
     );
   }
 
-  public reconcileFailed(retrieved: Article[], failed: FailedAttempt[]): void {
+  public reconcileFailed(
+    retrieved: ArticleSchemaType[],
+    failed: FailedAttempt[],
+  ): void {
     const success = new Set(retrieved.map((r) => this.cleanUrl(r.article_url)));
     for (let i = failed.length - 1; i >= 0; i--) {
       if (success.has(this.cleanUrl(failed[i].article_url)))
@@ -58,7 +72,7 @@ export class FirecrawlJobParser implements IFirecrawlJobParser {
     a: FcParam,
     mb: MBFC,
     urlClean: string,
-  ): Article {
+  ): ArticleSchemaType {
     const rating: BiasInfo | null | undefined = mb.has(a.source)
       ? mb.get(a.source)
       : null;
@@ -66,7 +80,9 @@ export class FirecrawlJobParser implements IFirecrawlJobParser {
     const { source, image, date, logo, title } = a;
     const { content_markdown } = c;
 
-    const article_extracted: Article = {
+    const validatedFactRating = this.validateFactualRating(factual_reporting);
+
+    const article_extracted = {
       title: title,
       provider: source,
       authors: "N/A",
@@ -78,23 +94,34 @@ export class FirecrawlJobParser implements IFirecrawlJobParser {
       full_text: content_markdown,
       logo: logo,
       id: null,
-      factual_reporting: factual_reporting ?? null,
+      factual_reporting: validatedFactRating,
       bias: bias as BiasSchemaType,
       country: country,
-    };
+    } satisfies ArticleSchemaType;
 
-    return article_extracted;
+    return this.validateArticle(article_extracted);
+  }
+
+  private validateFactualRating(
+    rating: unknown,
+  ): FactualReportingRatingSchemaType {
+    const { ok, data } = validateSchema(FactualReportingRatingSchema, rating);
+    if (ok) return data;
+    return "Unknown";
+  }
+
+  private validateArticle(article: unknown): ArticleSchemaType {
+    return validateServerOrThrow(ArticleSchema, article);
   }
 
   public cleanUrl(url: string): string {
     try {
       const u = new URL(url);
-      // Remove *only* known tracking params — keep important ones.
 
       for (const key of dropParams) {
         u.searchParams.delete(key);
       }
-      u.hash = ""; // strip anchors like #comments
+      u.hash = "";
       return u.toString();
     } catch {
       return url;

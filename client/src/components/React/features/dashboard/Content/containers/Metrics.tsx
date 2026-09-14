@@ -1,116 +1,45 @@
 import { motion } from "framer-motion";
-import { lazy, Suspense, useRef } from "react";
 import ScrolltoTop from "@/lib/helpers/scroll/ScrollToTop";
-import { useSelector, useDispatch, shallowEqual } from "react-redux";
-import { RootState, AppDispatch } from "@/state/store";
+import { useSelector } from "react-redux";
+import { RootState } from "@/state/store";
 import { variants } from "@/motion/variants";
-import { useEffect } from "react";
-import { getStatsBreakdown } from "@/state/Reducers/UserContent/UserInvestigations";
-import type { StatBreakdownTypes } from "@/env";
-import ChartJsWrapper from "../UserCharts/ChartJsWrapper";
-import StatsSkeleton from "@/components/React/features/charts/skeletons/StatsSkeleton";
-import NoSavedContentFallback from "../../fallbacks/NoSavedContentFallback";
-import StatsWorker from '@/lib/services/workers/statsWorker.js?worker';
-import StatsFallback from "../../../charts/ChartFallbacks/StatsFallback";
+import RenderMetricsCharts from "../UserCharts/ChartJsWrapper";
 import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";
-import DelayedFallback from "@/components/React/global/fallbacks/DelayedFallback";
 import { useRenderMetrics } from "@/hooks/useRenderMetrics";
-import ChartFallbackContainer from "../../../charts/ChartFallbacks/FbContainer";
-const StatsSection = lazy(() => import('../../../charts/ResearchStats/StatsSection'));
-
+import { useCalculateMetrics } from "@/lib/hooks/useCalculateMetrics";
 
 export default function Metrics(): JSX.Element | null {
-    const { userResearch } = useSelector((state: RootState) => state.userWork, shallowEqual);
-    const { priority1, priority2, priority3, renderFallback, ratingData, biasRatings, hasInvestigations } = useRenderMetrics();
-    const dispatch = useDispatch<AppDispatch>();
-    const calcRef = useRef<boolean | null>(null);
-    const { boxShadow, onScrollHandler } = useScrollWithShadow();
+  useCalculateMetrics();
+  const metrics = useSelector((s: RootState) => s.dash.metrics);
+  const { priority1, priority2, priority3 } = useRenderMetrics();
+  const { boxShadow, onScrollHandler } = useScrollWithShadow();
 
-
-    useEffect(() => {
-        if (!hasInvestigations || (priority3 === 'complete')) return;
-
-        const worker = new StatsWorker();
-        let raf: any = 0;
-
-        try {
-
-            worker.onmessage = (e: MessageEvent) => {
-                const payload: StatBreakdownTypes = e.data.chartData;
-
-                cancelAnimationFrame(raf);
-
-                raf = requestAnimationFrame(() => {
-                    dispatch(getStatsBreakdown(payload));
-                    calcRef.current = true;
-                });
-            };
-
-            worker.postMessage(userResearch);
-
-        } catch (error) {
-            calcRef.current = false;
-            console.error(error);
-        }
-
-        return () => {
-            worker.terminate();
-            if (calcRef.current !== null) calcRef.current = null;
-        };
-
-    }, [userResearch]);
-
-
-    return (
-        <motion.section
-            variants={variants}
-            initial='closed'
-            animate='open'
-            exit='closed'
-            transition={{ type: 'tween', duration: 0.2 }}
-            className="w-auto mx-auto h-[94.5%] relative mt-6
+  return (
+    <motion.section
+      variants={variants}
+      initial="closed"
+      animate="open"
+      exit="closed"
+      transition={{ type: "tween", duration: 0.2 }}
+      className="w-auto mx-auto h-[94.5%] relative mt-6
              2xl:mx-52 grow p-4 md:p-0"
-        >
-            <ScrolltoTop
-            />
+    >
+      <ScrolltoTop />
 
-
-            <article onScroll={onScrollHandler} style={{ boxShadow: boxShadow }} className="h-full w-full flex flex-col justify-start items-center gap-y-24 
+      <article
+        onScroll={onScrollHandler}
+        style={{ boxShadow: boxShadow }}
+        className="h-full w-full flex flex-col justify-start items-center gap-y-24 
             
-            overflow-y-auto no-scrollbar scrollbar-gutter-stable-both scroll-smooth overscroll-contain">
-
-
-
-                <ChartJsWrapper
-                    key={'chartjs-wrapper'}
-                    priority1={priority1}
-                    priority2={priority2}
-                    ratingData={ratingData}
-                    biasRatings={biasRatings}
-                />
-
-                <Suspense key={'stats-suspense'}
-                    fallback={
-                        <DelayedFallback
-                            key={'delay-stats-fallback'}>
-                            <StatsSkeleton
-                                key={'stats-skeleton'}
-                            />
-                        </DelayedFallback>}
-                >
-                    {(priority1 === 'complete') && (priority2 === 'complete') && (priority3 === 'complete') && <StatsSection key={'investigation-stats'} />}
-                </Suspense>
-                {((priority1 === 'failed') && (priority2 === 'failed')) && <ChartFallbackContainer />}
-
-
-                {renderFallback && <NoSavedContentFallback key={'fallback'} />}
-
-
-                {(priority3 === 'failed') && <StatsFallback key={'stats-fallback'} />}
-            </article>
-
-
-
-        </motion.section>
-    );
-};
+            overflow-y-auto no-scrollbar scrollbar-gutter-stable-both scroll-smooth overscroll-contain"
+      >
+        <RenderMetricsCharts
+          metrics={metrics}
+          priority1={priority1}
+          priority2={priority2}
+          priority3={priority3}
+        />
+      </article>
+    </motion.section>
+  );
+}

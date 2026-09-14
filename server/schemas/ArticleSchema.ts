@@ -3,6 +3,21 @@ import { TypeCompiler } from "@sinclair/typebox/compiler";
 import type { Static } from "@sinclair/typebox";
 import { BiasSchema } from "./BiasSchema.js";
 
+export const FactualReportingRatingSchema = Type.Union([
+  Type.Literal("Very High"),
+  Type.Literal("High"),
+  Type.Literal("Mostly Factual"),
+  Type.Literal("Mixed"),
+  Type.Literal("Low"),
+  Type.Literal("Very Low"),
+  Type.Literal("Conspiracy-Pseudoscience"),
+  Type.Literal("Questionable Source"),
+  Type.Literal("Pro-Science"),
+  Type.Literal("Satire"),
+  Type.Literal("Unknown"),
+  Type.Null(),
+]);
+
 export const ArticleSchema = Type.Object({
   title: Type.String(),
   provider: Type.String(),
@@ -17,12 +32,20 @@ export const ArticleSchema = Type.Object({
   full_text: Type.String(),
   logo: Type.Optional(Type.String()),
   id: Type.Union([Type.String(), Type.Number(), Type.Null()]),
-  factual_reporting: Type.Optional(Type.Union([Type.String(), Type.Null()])),
+  factual_reporting: FactualReportingRatingSchema,
   bias: Type.Optional(BiasSchema),
   country: Type.Optional(Type.Union([Type.String(), Type.Null()])),
 });
 
 export type ArticleSchemaType = Static<typeof ArticleSchema>;
+
+export const FactualReportingValidator = TypeCompiler.Compile(
+  FactualReportingRatingSchema,
+);
+
+export type FactualReportingRatingSchemaType = Static<
+  typeof FactualReportingRatingSchema
+>;
 
 const validator = TypeCompiler.Compile(ArticleSchema);
 

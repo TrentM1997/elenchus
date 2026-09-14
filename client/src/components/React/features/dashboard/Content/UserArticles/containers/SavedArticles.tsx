@@ -6,6 +6,7 @@ import ScrolltoTop from "@/lib/helpers/scroll/ScrollToTop";
 import NoSavedArticles from "../fallbacks/NoSavedArticles";
 import ArticlesScroller from "./ArticlesScroller";
 import { useEffect, useRef } from "react";
+import AsyncStateRenderer from "@/components/React/pipelines/AsyncStateRenderer";
 
 export default function SavedArticles({}) {
   const articles = useSelector((s: RootState) => s.userdata.articles);
@@ -20,6 +21,8 @@ export default function SavedArticles({}) {
     };
   }, []);
 
+  if (restorePosition.status === "initial") return;
+
   return (
     <motion.section
       variants={delays}
@@ -31,14 +34,14 @@ export default function SavedArticles({}) {
       <ScrolltoTop />
 
       <div className="w-full md:px-0 2xl:px-2 gap-3 h-full md:mt-12 xl:mt-4 flex justify-center md:justify-end">
-        {articles.status === "ready" && restorePosition.status === "ready" && (
-          <ArticlesScroller
-            articles={articles.data}
-            restorePosition={restorePosition.position}
-          />
-        )}
-
-        {articles.status === "empty" && <NoSavedArticles />}
+        <AsyncStateRenderer state={articles} empty={() => <NoSavedArticles />}>
+          {(state) => (
+            <ArticlesScroller
+              articles={state}
+              restorePosition={restorePosition.position}
+            />
+          )}
+        </AsyncStateRenderer>
       </div>
     </motion.section>
   );

@@ -1,6 +1,6 @@
 import { IDbClient } from "../../db/access/client/dbClient";
 import { ArticleSchemaType } from "../../schemas/ArticleSchema";
-import { Article, FcParam } from "../../types/types";
+import { FcParam } from "../../types/types";
 import { IFirecrawlService } from "../firecrawl/firecrawlService";
 import { JobResult } from "../firecrawl/types";
 
@@ -49,7 +49,7 @@ export class ArticleService implements IArticleService {
     jobId: string,
     articles: FcParam[],
   ): Promise<void> {
-    let scraped: Article[];
+    let scraped: ArticleSchemaType[];
 
     try {
       const biases = await this.db.sources.getBiases(articles);
@@ -80,7 +80,9 @@ export class ArticleService implements IArticleService {
     }
   }
 
-  private async persistExtractions(scraped: Article[]): Promise<void> {
+  private async persistExtractions(
+    scraped: ArticleSchemaType[],
+  ): Promise<void> {
     for (const article of scraped) {
       await this.save(article);
     }

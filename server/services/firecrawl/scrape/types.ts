@@ -1,3 +1,4 @@
+import { ArticleSchemaType } from "../../../schemas/ArticleSchema";
 import {
   Article,
   Bias,
@@ -24,7 +25,7 @@ interface BiasInfo {
 export type ScrapeParameters = {
   article: FcParam;
   MBFC_DATA: MBFC;
-  pushRetrieved: (a: Article) => void;
+  pushRetrieved: (a: ArticleSchemaType) => void;
   pushFailed: (f: FailedAttempt) => void;
 };
 

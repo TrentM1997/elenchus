@@ -9,6 +9,7 @@ import {
   IFirecrawlScrapeHandler,
 } from "./scrape/firecrawlScrapeHandler";
 import { JobResult, RunFirecrawlJobParameters } from "./types";
+import { ArticleSchemaType } from "../../schemas/ArticleSchema";
 
 export interface IFirecrawlService {
   runFirecrawlJob(
@@ -16,7 +17,7 @@ export interface IFirecrawlService {
     articles: FcParam[],
     MBFC_DATA: any,
     jobs: Record<string, JobResult>,
-  ): Promise<Article[]>;
+  ): Promise<ArticleSchemaType[]>;
 }
 
 export class FirecrawlService implements IFirecrawlService {
@@ -32,7 +33,7 @@ export class FirecrawlService implements IFirecrawlService {
     articles: FcParam[],
     MBFC_DATA: any,
     jobs: Record<string, JobResult>,
-  ): Promise<Article[]> {
+  ): Promise<ArticleSchemaType[]> {
     return await this.executeFirecrawlJob({ id, articles, MBFC_DATA, jobs });
   }
 
@@ -40,7 +41,7 @@ export class FirecrawlService implements IFirecrawlService {
     const { jobs, id } = params;
 
     const failed: FailedAttempt[] = [];
-    const retrieved: Article[] = [];
+    const retrieved: ArticleSchemaType[] = [];
 
     try {
       await this.runScrapeAttempts({ ...params, retrieved, failed });
@@ -61,7 +62,7 @@ export class FirecrawlService implements IFirecrawlService {
     id,
     failed,
   }: RunFirecrawlJobParameters & {
-    retrieved: Article[];
+    retrieved: ArticleSchemaType[];
     failed: FailedAttempt[];
   }) {
     const updateJobSnapshot = () => {
@@ -81,7 +82,7 @@ export class FirecrawlService implements IFirecrawlService {
       updateJobSnapshot();
     };
 
-    const pushRetrieved = (a: Article) => {
+    const pushRetrieved = (a: ArticleSchemaType) => {
       retrieved.push(a);
       updateJobSnapshot();
     };
@@ -127,7 +128,7 @@ export class FirecrawlService implements IFirecrawlService {
     jobs: RunFirecrawlJobParameters["jobs"];
     id: RunFirecrawlJobParameters["id"];
     failed: FailedAttempt[];
-    retrieved: Article[];
+    retrieved: ArticleSchemaType[];
     err: any;
   }) {
     const partial_success = retrieved.length > 0;
@@ -153,7 +154,7 @@ export class FirecrawlService implements IFirecrawlService {
     jobs: RunFirecrawlJobParameters["jobs"];
     id: RunFirecrawlJobParameters["id"];
     failed: FailedAttempt[];
-    retrieved: Article[];
+    retrieved: ArticleSchemaType[];
     articles: FcParam[];
   }) {
     jobs[id] = {

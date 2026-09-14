@@ -1,9 +1,9 @@
 import { useCallback, useState } from "react";
 import type { ArticleSchemaType } from "../../../../schemas/api/types/ArticlesSchema";
-import { UserContentService } from "@/lib/services/UserContentService";
+import { BookmarkService } from "@/lib/services/bookmarkService";
 import { wait } from "@/lib/helpers/formatting/Presentation";
 import { createInitialBookmarkStates } from "@/lib/helpers/createInitialBookmarkStates";
-const service = new UserContentService();
+const service = new BookmarkService();
 
 export type BookmarkStatus =
   | "bookmarked"

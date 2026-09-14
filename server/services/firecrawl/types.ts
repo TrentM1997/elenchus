@@ -5,7 +5,7 @@ export interface JobResult {
   status: "pending" | "fulfilled" | "rejected";
   result?: {
     progress: string;
-    retrieved: ArticleSchemaType[] | null;
+    retrieved: ArticleSchemaType[];
     rejected: FailedAttempt[];
   };
   error?: string | null;

@@ -5,7 +5,7 @@ import {
 } from "../../../../schemas/api/types/BookmarkSchema";
 import { validateSchema } from "../../../../schemas/api/validation/validateSchema";
 
-export interface IUserContentService {
+export interface IBookmarkService {
   removeBookmark(
     article_id: ArticleSchemaType["id"],
   ): Promise<BookmarkResponseSchemaType>;
@@ -14,7 +14,7 @@ export interface IUserContentService {
   ): Promise<BookmarkResponseSchemaType>;
 }
 
-export class UserContentService implements IUserContentService {
+export class BookmarkService implements IBookmarkService {
   constructor() {}
 
   public async bookmark(

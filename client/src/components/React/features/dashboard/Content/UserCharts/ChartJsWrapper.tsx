@@ -1,106 +1,83 @@
-import { lazy, Suspense, useEffect, useMemo } from "react";
+import { Fragment, lazy, Suspense, useEffect } from "react";
 import PieSkeleton from "@/components/React/features/charts/skeletons/PieSkeleton";
 import { DonutSkeletonChart } from "@/components/React/features/charts/skeletons/ChartJsSkeleton";
-import { useSelector, useDispatch } from "react-redux";
-import { AppDispatch } from "@/state/store";
-import { RootState } from "@/state/store";
-import { getBiasSnapshot, getReportingRatings } from "@/state/Reducers/UserContent/ChartSlice";
-import BiasWebWorker from '@/lib/services/workers/biasSnapshot.js?worker';
-import IntegrityWebWorker from '@/lib/services/workers/integrityWorker.js?worker';
 import ChartJsSkeleton from "@/components/React/features/charts/skeletons/ChartJsSkeleton";
 import DelayedFallback from "@/components/React/global/fallbacks/DelayedFallback";
 import { Priority } from "@/hooks/useRenderMetrics";
-const BiasChart = lazy(() => import('@/components/React/features/charts/DonutChart/BiasChart'))
-const IntegrityChart = lazy(() => import('@/components/React/features/charts/PieChart/IntegrityChart'));
+import AsyncStateRenderer from "@/components/React/pipelines/AsyncStateRenderer";
+import { ResearchMetrics } from "@/state/Reducers/Dashboard/DashboardSlice";
+import StatsSkeleton from "../../../charts/skeletons/StatsSkeleton";
+import StatsSection from "../../../charts/ResearchStats/StatsSection";
+const BiasChart = lazy(
+  () => import("@/components/React/features/charts/DonutChart/BiasChart"),
+);
+const IntegrityChart = lazy(
+  () => import("@/components/React/features/charts/PieChart/IntegrityChart"),
+);
 
+interface RenderMetricsCharts {
+  priority1: Priority;
+  priority2: Priority;
+  priority3: Priority;
+  metrics: ResearchMetrics;
+}
 
-interface ChartJsWrapper {
-    priority1: Priority,
-    priority2: Priority,
-    biasRatings: number[],
-    ratingData: number[]
-};
-
-
-export default function ChartJsWrapper({ priority1, priority2, biasRatings, ratingData }: ChartJsWrapper): JSX.Element | null {
-    const userArticles = useSelector((state: RootState) => state.userdata.userArticles);
-    const dispatch = useDispatch<AppDispatch>();
-
-
-    useEffect(() => {
-        if (!Array.isArray(userArticles) || (userArticles.length === 0)) return;
-        if (Array.isArray(ratingData) && (ratingData.length > 0)) return;
-
-        const worker = new IntegrityWebWorker();
-        let raf: any = 0;
-
-        worker.onmessage = (e: MessageEvent) => {
-            const payload: number[] = e.data;
-            cancelAnimationFrame(raf);
-
-            raf = requestAnimationFrame(() => {
-                dispatch(getReportingRatings(payload));
-            });
-        };
-
-        worker.postMessage(userArticles);
-
-        return () => {
-            worker.terminate();
-        }
-    }, [userArticles, ratingData]);
-
-
-    useEffect(() => {
-        if (!userArticles || userArticles.length === 0) return;
-        if (Array.isArray(biasRatings) && (biasRatings.length > 0)) return;
-
-        const biasWorker = new BiasWebWorker();
-        let raf: any = 0;
-
-        biasWorker.onmessage = (e: MessageEvent) => {
-            const payload: number[] = e.data.chartData;
-            cancelAnimationFrame(raf);
-
-            raf = requestAnimationFrame(() => {
-                dispatch(getBiasSnapshot(payload));
-            });
-        };
-
-        biasWorker.postMessage(userArticles);
-
-        return () => {
-            biasWorker.terminate();
-        }
-
-    }, [userArticles])
-
-    return (
-        <>
-            <Suspense fallback={
-                <DelayedFallback key={'delay-skeleton'}>
-                    <ChartJsSkeleton key={'skeleton-wrapper'}>
-                        <DonutSkeletonChart key={'skeleton-donut'} />
-                    </ChartJsSkeleton>
-                </DelayedFallback>
+export default function RenderMetricsCharts({
+  priority1,
+  priority2,
+  metrics,
+}: RenderMetricsCharts): JSX.Element | null {
+  return (
+    <Fragment>
+      <AsyncStateRenderer state={metrics.bias}>
+        {(state) => (
+          <Suspense
+            fallback={
+              <DelayedFallback key={"delay-skeleton"}>
+                <ChartJsSkeleton key={"skeleton-wrapper"}>
+                  <DonutSkeletonChart key={"skeleton-donut"} />
+                </ChartJsSkeleton>
+              </DelayedFallback>
             }
-            >
-                {priority1 === 'complete' && <BiasChart key={'bias-chart'} />}
+          >
+            {priority1 === "complete" && (
+              <BiasChart biasRatings={state} key={"bias-chart"} />
+            )}
+          </Suspense>
+        )}
+      </AsyncStateRenderer>
 
-            </Suspense>
+      <AsyncStateRenderer state={metrics.integrity}>
+        {(state) => (
+          <Suspense
+            fallback={
+              <DelayedFallback key={"delay-pie-skeleton"}>
+                <ChartJsSkeleton key={"wrapper-skeleton"}>
+                  <PieSkeleton key={"pie-skeleton"} />
+                </ChartJsSkeleton>
+              </DelayedFallback>
+            }
+          >
+            (
+            <IntegrityChart integrityRatings={state} key={"integrity-chart"} />)
+          </Suspense>
+        )}
+      </AsyncStateRenderer>
 
-
-            <Suspense fallback={
-                <DelayedFallback key={'delay-pie-skeleton'}>
-                    <ChartJsSkeleton key={'wrapper-skeleton'}>
-                        <PieSkeleton key={'pie-skeleton'} />
-                    </ChartJsSkeleton>
-                </DelayedFallback>
-
-            }>
-                {(priority2 === 'complete') && (priority1 === 'complete') &&
-                    <IntegrityChart key={'integrity-chart'} />}
-            </Suspense>
-        </>
-    );
-};
+      <AsyncStateRenderer state={metrics.outcomes}>
+        {(state) => (
+          <Suspense
+            key={"stats-suspense"}
+            fallback={
+              <DelayedFallback key={"delay-stats-fallback"}>
+                <StatsSkeleton key={"stats-skeleton"} />
+              </DelayedFallback>
+            }
+          >
+            (<StatsSection outcomes={state} key={"investigation-stats"} />)
+          </Suspense>
+        )}
+      </AsyncStateRenderer>
+    </Fragment>
+  );
+}
