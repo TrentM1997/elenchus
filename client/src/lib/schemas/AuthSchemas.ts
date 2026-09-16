@@ -112,6 +112,21 @@ export const CreateUserResponseSchema = Type.Union([
   }),
 ]);
 
+export const ResetPasswordResponseSchema = Type.Union([
+  Type.Object({
+    ok: Type.Literal(true),
+    data: Type.Record(Type.String(), Type.Never()),
+  }),
+  Type.Object({
+    ok: Type.Literal(false),
+    error: AuthErrorResponseSchema,
+  }),
+]);
+
+export type ResetPasswordResponseSchemaType = Static<
+  typeof ResetPasswordResponseSchema
+>;
+
 export type CreateUserResponseSchemaType = Static<
   typeof CreateUserResponseSchema
 >;
