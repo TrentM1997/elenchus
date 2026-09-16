@@ -12,15 +12,15 @@ export type AuthRoutes = {
 };
 
 export type ArticleRoutes = {
-  poll: `/articles/extract/:${string}`;
+  poll: `/articles/extract?q=${string}`;
   extract: "/articles/extract";
 };
 
 export type IntegrationsRoutes = {
-  newsApi: "/articles/search";
+  newsApi: `/articles/search?q=${string}`;
   blueSky: {
     feed: "/blueSky/feed";
-    search: "/blueSky/search";
+    search: `/blueSky/search?q=${string}`;
   };
 };
 
@@ -64,7 +64,7 @@ type RouteStrings<T> = T extends string
 export type ValidServerRoute = RouteStrings<ServerClientRoutes>;
 
 // TODO: finish implementing ServerClient facade handlers for all routes
-// CURRENT FINISHED: public: [ "auth", "user" ] private: []
+// CURRENT FINISHED: public: done ✅ private: [ "account"]
 
 export const serverClientRoutes = {
   public: {
@@ -79,14 +79,14 @@ export const serverClientRoutes = {
       passwordReset: "/resetUserPassword",
     },
     integrations: {
-      newsApi: "/articles/search",
+      newsApi: "/articles/search?q=",
       blueSky: {
         feed: "/blueSky/feed",
-        search: "/blueSky/search",
+        search: "/blueSky/search?q=",
       },
     },
     articles: {
-      poll: "/articles/extract/:id",
+      poll: `/articles/extract?q=`,
       extract: "/articles/extract",
     },
   },

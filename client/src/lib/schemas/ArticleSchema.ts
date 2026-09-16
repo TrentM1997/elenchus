@@ -1,42 +1,7 @@
 import { Type } from "@sinclair/typebox";
 import { TypeCompiler } from "@sinclair/typebox/compiler";
 import type { Static } from "@sinclair/typebox";
-import { BiasSchema } from "./BiasSchema.js";
-
-export const JobResultStatusSchema = Type.Union([
-  Type.Literal("rejected"),
-  Type.Literal("fulfilled"),
-  Type.Literal("rejected"),
-]);
-
-export const FailedJobSummarySchema = Type.Union([
-  Type.Object({
-    denied: Type.String(),
-    failedArticle: Type.Array(Type.String()),
-  }),
-  Type.Null(),
-]);
-
-export const FailedExtractJobSchema = Type.Object({
-  title: Type.String({ minLength: 1 }),
-  summary: FailedJobSummarySchema,
-  logo: Type.String(),
-  source: Type.String(),
-  date: Type.String(),
-  article_url: Type.String({ minLength: 1 }),
-});
-
-export type FailedExtractJobSchemaType = Static<typeof FailedExtractJobSchema>;
-
-export const ExtractionJobSchema = Type.Object({});
-
-export const ExecuteExtractResponseSchema = Type.Object({
-  jobId: Type.String({ minLength: 1 }),
-});
-
-export type ExecuteExtractResponseSchemaType = Static<
-  typeof ExecuteExtractResponseSchema
->;
+import { BiasSchema } from "./BiasSchema";
 
 export const FactualReportingRatingSchema = Type.Union([
   Type.Literal("Very High"),
@@ -96,7 +61,40 @@ export const AritclesArraySchema = Type.Array(ArticleSchema);
 
 export type AritclesArraySchemaType = Static<typeof AritclesArraySchema>;
 
-export const ExtractionJobResultSchema = Type.Object({
+export const JobResultStatusSchema = Type.Union([
+  Type.Literal("rejected"),
+  Type.Literal("fulfilled"),
+  Type.Literal("rejected"),
+]);
+
+export const FailedJobSummarySchema = Type.Union([
+  Type.Object({
+    denied: Type.String(),
+    failedArticle: Type.Array(Type.String()),
+  }),
+  Type.Null(),
+]);
+
+export const FailedExtractJobSchema = Type.Object({
+  title: Type.String({ minLength: 1 }),
+  summary: FailedJobSummarySchema,
+  logo: Type.String(),
+  source: Type.String(),
+  date: Type.String(),
+  article_url: Type.String({ minLength: 1 }),
+});
+
+export type FailedExtractJobSchemaType = Static<typeof FailedExtractJobSchema>;
+
+export const ExecuteExtractResponseSchema = Type.Object({
+  jobId: Type.String({ minLength: 1 }),
+});
+
+export type ExecuteExtractResponseSchemaType = Static<
+  typeof ExecuteExtractResponseSchema
+>;
+
+export const ExtractionJobSchema = Type.Object({
   status: JobResultStatusSchema,
   result: Type.Object({
     progress: Type.String(),
@@ -106,6 +104,13 @@ export const ExtractionJobResultSchema = Type.Object({
   error: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   createdAt: Type.Number(),
 });
+
+export type ExtractionJobSchemaType = Static<typeof ExtractionJobSchema>;
+
+export const ExtractionJobResultSchema = Type.Union([
+  ExtractionJobSchema,
+  Type.Undefined(),
+]);
 
 export type ExtractionJobResultSchemaType = Static<
   typeof ExtractionJobResultSchema

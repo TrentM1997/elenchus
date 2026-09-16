@@ -8,6 +8,7 @@ import {
   PublicServerClient,
 } from "./public/publicServerClient";
 import { HttpClient } from "./httpClient";
+import { serverClientRoutes } from "@/infra/transport/types/routeDefinitions";
 
 export interface IServerClient {
   readonly privileged: IPrivateServerClient;
@@ -15,9 +16,11 @@ export interface IServerClient {
 }
 
 export class ServerClient implements IServerClient {
+  private readonly routes: ServerClientRoutes;
   public readonly privileged: IPrivateServerClient;
   public readonly general: IPublicServerClient;
-  constructor(private readonly routes: ServerClientRoutes) {
+  constructor() {
+    this.routes = serverClientRoutes;
     this.privileged = new PrivateServerClient(
       this.routes.private,
       new HttpClient(),
