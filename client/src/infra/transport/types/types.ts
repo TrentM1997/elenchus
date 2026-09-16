@@ -1,19 +1,3 @@
-export type AuthEndpointOption = "/login" | "/logOut" | "/recover";
-
-export type AuthEndpoint = `/auth${AuthEndpointOption}`;
-
-export type ArticleEndpointOption = "/search" | "/extract/:jobId" | "/extract";
-
-export type ArticleEndpoint = `/articles${ArticleEndpointOption}`;
-
-export type UserEndpointOption =
-  | "/bookmarks"
-  | "/bookmarks/:articleId"
-  | "/investigations"
-  | "/feedback";
-
-export type UserEndpoint = `/user${UserEndpointOption}`;
-
 export type BlueSkyEndpointOption = "/feed" | "search";
 
 export type BlueSkyEndpoint = `/blueSky${BlueSkyEndpointOption}`;
@@ -55,3 +39,38 @@ export type SaveArticleResult =
       ok: false;
       reason: "unauthorized" | "validation" | "unknown" | "network";
     };
+
+export type BlueSkyBaseUrl = "/blueSky";
+
+export type ArticlesBaseUrl = "/articles";
+
+export type AuthEndpointOption = "/login" | "/logOut" | "/recover";
+
+export type AuthEndpointBaseUrl = "/auth";
+
+export type LoginUrl =
+  `${AuthEndpointBaseUrl}${Extract<AuthEndpointOption, "/login">}`;
+
+export type AuthEndpoint = `/auth${AuthEndpointOption}`;
+
+export type ArticleEndpointOption = "/search" | "/extract/:jobId" | "/extract";
+
+export type ArticleEndpoint = `/articles${ArticleEndpointOption}`;
+
+export type UserEndpoint = `${UserBaseUrl}${UserEndpointOption}`;
+
+export type BookmarksUrls = "/bookmarks" | `/bookmarks/:${string}`;
+
+export type InvestigationsUrl = "/investigations";
+
+export type FeedbackUrl = "/feedback";
+
+export type UserEndpointOption =
+  | BookmarksUrls
+  | InvestigationsUrl
+  | FeedbackUrl;
+
+export type UserBaseUrl = "/user";
+
+export type DeleteBookmarkEndpint =
+  `${UserBaseUrl}/${Extract<BookmarksUrls, `/bookmarks/:${string}`>}`;
