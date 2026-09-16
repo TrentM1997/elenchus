@@ -2,10 +2,12 @@ import type { ServerClientRoutes } from "@/infra/transport/types/routeDefinition
 import {
   IPrivateServerClient,
   PrivateServerClient,
-} from "./privateServerClient";
-import { IPublicServerClient, PublicServerClient } from "./publicServerClient";
-
-// TODO: finish first pass on encapsulating HTTP requests into this ServerClient facade module
+} from "./private/privateServerClient";
+import {
+  IPublicServerClient,
+  PublicServerClient,
+} from "./public/publicServerClient";
+import { HttpClient } from "./httpClient";
 
 export interface IServerClient {
   readonly privileged: IPrivateServerClient;
@@ -15,10 +17,11 @@ export interface IServerClient {
 export class ServerClient implements IServerClient {
   public readonly privileged: IPrivateServerClient;
   public readonly general: IPublicServerClient;
-  private readonly request: HttpClient;
   constructor(private readonly routes: ServerClientRoutes) {
-    this.request = new HttpClient();
-    this.privileged = new PrivateServerClient(this.routes.private);
-    this.general = new PublicServerClient(this.routes.public);
+    this.privileged = new PrivateServerClient(
+      this.routes.private,
+      new HttpClient(),
+    );
+    this.general = new PublicServerClient(this.routes.public, new HttpClient());
   }
 }

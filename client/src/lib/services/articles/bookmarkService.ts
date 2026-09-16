@@ -1,9 +1,9 @@
-import { ArticleSchemaType } from "../../../../schemas/api/types/ArticlesSchema";
+import { ArticleSchemaType } from "../../../../../schemas/api/types/ArticlesSchema";
 import {
   BookmarkResponseSchema,
   BookmarkResponseSchemaType,
-} from "../../../../schemas/api/types/BookmarkSchema";
-import { validateSchema } from "../../../../schemas/api/validation/validateSchema";
+} from "../../../../../schemas/api/types/BookmarkSchema";
+import { validateSchema } from "../../../../../schemas/api/validation/validateSchema";
 
 export interface IBookmarkService {
   removeBookmark(
