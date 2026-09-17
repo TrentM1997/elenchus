@@ -1,14 +1,21 @@
 import { PublicServerClientRoutes } from "@/infra/transport/types/routeDefinitions";
-import { IHttpClient } from "../../httpClient";
 import {
   ExecuteExtractResponseSchema,
   ExecuteExtractResponseSchemaType,
   ExtractionJobResultSchema,
   ExtractionJobResultSchemaType,
 } from "@/lib/schemas/ArticleSchema";
+import { IHttpClient } from "../../http/types";
 
 export interface IExtractArticlesRouteHandler {
   extract(body: SelectedArticle[]): Promise<ExecuteExtractResponseSchemaType>;
+  poll({
+    jobId,
+    signal,
+  }: {
+    jobId: string;
+    signal?: AbortSignal;
+  }): Promise<ExtractionJobResultSchemaType>;
 }
 
 export class ExtractArticlesRouteHandler implements IExtractArticlesRouteHandler {
@@ -27,6 +34,7 @@ export class ExtractArticlesRouteHandler implements IExtractArticlesRouteHandler
     return await this.http.get(
       `${this.routes.articles.poll}${jobId}`,
       ExtractionJobResultSchema,
+      signal,
     );
   }
 
@@ -35,8 +43,8 @@ export class ExtractArticlesRouteHandler implements IExtractArticlesRouteHandler
   ): Promise<ExecuteExtractResponseSchemaType> {
     return await this.http.post(
       this.routes.articles.extract,
-      body,
       ExecuteExtractResponseSchema,
+      body,
     );
   }
 }

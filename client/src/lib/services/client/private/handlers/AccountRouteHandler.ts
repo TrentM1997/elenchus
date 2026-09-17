@@ -1,5 +1,5 @@
 import { PrivateServerClientRoutes } from "@/infra/transport/types/routeDefinitions";
-import { IHttpClient } from "../../httpClient";
+import { IHttpClient } from "@/lib/services/client/http/httpClient";
 import { LoginCredentials } from "@/lib/services/auth/clientAuthService";
 import {
   DeleteAccountResponseSchema,
@@ -23,8 +23,8 @@ export class AccountRouteHandler implements IAccountRouteHandler {
   ): Promise<DeleteAccountResponseSchemaType> {
     return await this.http.post(
       this.routes.account.delete,
-      credentials,
       DeleteAccountResponseSchema,
+      credentials,
     );
   }
 }

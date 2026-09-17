@@ -1,5 +1,5 @@
 import { PublicServerClientRoutes } from "@/infra/transport/types/routeDefinitions";
-import { IHttpClient } from "../../httpClient";
+import { IHttpClient } from "@/lib/services/client/http/httpClient";
 import { LoginCredentials } from "@/lib/services/auth/clientAuthService";
 import {
   AuthTokenResponsePasswordSchema,
@@ -30,17 +30,17 @@ export class AuthRouteHandler implements IAuthRouteHandler {
   ): Promise<AuthTokenResponsePasswordType> {
     return await this.http.post(
       this.routes.auth.login,
-      credentials,
       AuthTokenResponsePasswordSchema,
+      credentials,
     );
   }
 
   public async logOut(): Promise<LogOutResultSchemaType> {
-    return await this.http.get(this.routes.auth.logOut, LogOutResultSchema);
+    return await this.http.post(this.routes.auth.logOut, LogOutResultSchema);
   }
 
   public async recover(): Promise<RecoverSessionResponseSchemaType> {
-    return await this.http.get(
+    return await this.http.post(
       this.routes.auth.recover,
       RecoverSessionResponseSchema,
     );
@@ -51,8 +51,8 @@ export class AuthRouteHandler implements IAuthRouteHandler {
   ): Promise<CreateUserResponseSchemaType> {
     return await this.http.post(
       this.routes.auth.signUp,
-      credentials,
       CreateUserResponseSchema,
+      credentials,
     );
   }
 }

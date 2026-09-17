@@ -1,5 +1,6 @@
 import { JobStatus, Prog } from "@/state/Reducers/Investigate/articles/types";
 import { ArticleSchemaType } from "../../../../schemas/api/types/ArticlesSchema";
+import { ExtractionJobResultSchemaType } from "../schemas/ArticleSchema";
 
 export interface FailedAttempt {
   title: string;
@@ -33,11 +34,11 @@ export interface FirecrawlSuccessPayload {
 export type PollExtractionsParams = {
   jobId: string;
   signal: AbortSignal;
-  onProgress: (snapshot: FirecrawlJobStatus) => void;
+  onProgress: (snapshot: ExtractionJobResultSchemaType) => void;
 };
 
 export type ExtractSelectedParams = {
   articles: SelectedArticle[];
   signal: AbortSignal;
-  onProgress: (snapshot: FirecrawlJobStatus) => void;
+  onProgress: (snapshot: ExtractionJobResultSchemaType) => void;
 };

@@ -12,7 +12,7 @@ export type BookmarkResponse =
   | { ok: false; message: string; details: string };
 
 export type BookmarkDeleteResponse =
-  | { ok: false; message: string; cause?: unknown }
+  | { ok: false; message: string; details: string }
   | { ok: true; data: Database["public"]["Tables"]["bookmarks"]["Row"][] };
 
 export type BookmarkedArticlesResponse =
@@ -139,7 +139,7 @@ export class BookmarksRepository implements IBookmarksRepository {
       return {
         ok: false,
         message: error.message,
-        cause: error.cause,
+        details: error.details,
       };
     }
 

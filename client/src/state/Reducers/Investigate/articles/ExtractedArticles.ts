@@ -3,72 +3,66 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import type { FailedAttempt } from "@/lib/services/types";
 import { extractArticles } from "./thunks";
 import type { ArticleSchemaType } from "../../../../../../schemas/api/types/ArticlesSchema";
-import { Prog } from "./types";
+import { ArticleExtractionState } from "@/state/types";
 
 interface InitialState {
-  status: "idle" | "pending" | "fulfilled" | "rejected";
-  getContent: boolean;
-  articles: Array<ArticleSchemaType>;
+  articles: ArticleExtractionState;
   failedNotifications: Array<FailedAttempt>;
   currentStory: number;
   reading: boolean;
   paginateLimit: boolean;
   error: string | null;
-  progress: Prog;
 }
 
 const initialState: InitialState = {
-  status: "idle",
-  getContent: false,
-  articles: [],
+  articles: { status: "initial" },
   failedNotifications: [],
   currentStory: 0,
   reading: false,
   paginateLimit: false,
   error: null,
-  progress: "0",
 };
 
 export const ExtractedArticleSlice = createSlice({
   name: "readingReducer",
   initialState: initialState,
   reducers: {
-    getStories: (state, action) => {
-      state.getContent = action.payload;
-    },
-    updateProgress: (state, action) => {
-      const prev = state.progress;
-      const next = action.payload;
-      if (next !== prev) {
-        state.progress = next;
-      }
-    },
     appendArticles: (state, action: PayloadAction<ArticleSchemaType[]>) => {
-      const nextBatch = action.payload;
-      for (const batchItem of nextBatch) {
-        const url = batchItem.article_url;
-        const already = state.articles.find(
-          (a) => a.article_url === batchItem.article_url,
-        );
-        if (!already) {
-          state.articles.push(batchItem);
-        }
+      if (
+        state.articles.status === "ready" ||
+        state.articles.status === "partial"
+      ) {
+        const nextBatch = action.payload;
+        for (const batchItem of nextBatch) {
+          const url = batchItem.article_url;
+          const already = state.articles.data.find(
+            (a) => a.article_url === batchItem.article_url,
+          );
+          if (!already) {
+            state.articles.data.push(batchItem);
+          }
 
-        const index = state.failedNotifications.findIndex(
-          (f) => f.article_url === url,
-        );
-        if (index !== -1) {
-          state.failedNotifications.splice(index, 1);
+          const index = state.failedNotifications.findIndex(
+            (f) => f.article_url === url,
+          );
+          if (index !== -1) {
+            state.failedNotifications.splice(index, 1);
+          }
         }
       }
     },
     appendFailures: (state, action: PayloadAction<FailedAttempt[]>) => {
-      const nextBatch = action.payload;
-      for (const f of nextBatch) {
-        const url = f.article_url;
-        if (state.articles.some((a) => a.article_url === url)) continue;
-        if (!state.failedNotifications.some((x) => x.article_url === url)) {
-          state.failedNotifications.push(f);
+      if (
+        state.articles.status === "ready" ||
+        state.articles.status === "partial"
+      ) {
+        const nextBatch = action.payload;
+        for (const f of nextBatch) {
+          const url = f.article_url;
+          if (state.articles.data.some((a) => a.article_url === url)) continue;
+          if (!state.failedNotifications.some((x) => x.article_url === url)) {
+            state.failedNotifications.push(f);
+          }
         }
       }
     },
@@ -97,25 +91,16 @@ export const ExtractedArticleSlice = createSlice({
     limitPagination: (state, action) => {
       state.paginateLimit = action.payload;
     },
-
-    updateStatus: (state, action) => {
-      state.status = action.payload;
-    },
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(extractArticles.pending, (state) => {
-        state.status = "pending";
-      })
-      .addCase(extractArticles.fulfilled, (state, action) => {
-        state.status = "fulfilled";
-        state.progress = action.payload.progress;
-      })
-      .addCase(extractArticles.rejected, (state, action) => {
-        state.status = "rejected";
-        state.error =
-          (action.payload as string) || action.error.message || "Unknown error";
-      });
+    builder.addCase(extractArticles.rejected, (state, action) => {
+      state.articles = {
+        status: "failed",
+        details: "Article extraction failed in flight",
+      };
+      state.error =
+        (action.payload as string) || action.error.message || "Unknown error";
+    });
   },
 });
 
@@ -125,8 +110,6 @@ export type ExtractedArticleSliceState = ReturnType<
 
 export const {
   articleData,
-  updateStatus,
-  updateProgress,
   rejected,
   incrementStory,
   decrementStory,

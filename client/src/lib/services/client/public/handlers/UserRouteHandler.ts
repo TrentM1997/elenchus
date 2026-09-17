@@ -2,7 +2,7 @@ import {
   PublicServerClientRoutes,
   ServerClientRoutes,
 } from "@/infra/transport/types/routeDefinitions";
-import { IHttpClient } from "../../httpClient";
+import { IHttpClient } from "@/lib/services/client/http/httpClient";
 import {
   FeedbackResponseSchema,
   FeedbackResponseSchemaType,
@@ -35,18 +35,18 @@ export class UserRouteHandler implements IUserRouteHandler {
   ): Promise<ResetPasswordResponseSchemaType> {
     return await this.http.post(
       this.routes.user.passwordReset,
-      email,
       ResetPasswordResponseSchema,
+      email,
     );
   }
 
   public async submitFeedback(
-    payload: FeedbackInputType,
+    feedback: FeedbackInputType,
   ): Promise<FeedbackResponseSchemaType> {
     return await this.http.post(
       this.routes.user.feedback,
-      payload,
       FeedbackResponseSchema,
+      feedback,
     );
   }
 }

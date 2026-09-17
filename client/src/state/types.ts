@@ -1,3 +1,5 @@
+import { ArticleSchemaType } from "@/lib/schemas/ArticleSchema";
+
 export type AsyncState<T, TEmptyMessage extends string = "No data found"> =
   | {
       status: "initial";
@@ -16,6 +18,30 @@ export type AsyncState<T, TEmptyMessage extends string = "No data found"> =
   | {
       status: "ready";
       data: T;
+    };
+
+export type ArticleExtractionState =
+  | {
+      status: "initial";
+    }
+  | {
+      status: "pending";
+    }
+  | {
+      status: "empty";
+      message: "Failed to retreive the selected articles";
+    }
+  | {
+      status: "failed";
+      details: string;
+    }
+  | {
+      status: "ready";
+      data: ArticleSchemaType[];
+    }
+  | {
+      status: "partial";
+      data: ArticleSchemaType[];
     };
 
 export type LocalAsyncState<

@@ -7,7 +7,12 @@ import {
   BlueSkyPostSchemaArrayType,
 } from "@/lib/schemas/BlueSkySchemas";
 import { PublicServerClientRoutes } from "@/infra/transport/types/routeDefinitions";
-import { IHttpClient } from "../../httpClient";
+import { IHttpClient } from "../../http/types";
+
+export type NewsApiSearchParams = {
+  query: string;
+  signal?: AbortSignal;
+};
 
 export interface IThirdPartyRouteHandler {
   readonly search: IThirdPartyRouteSearchHandler;
@@ -33,7 +38,7 @@ export class ThirdPartyRouteHandler implements IThirdPartyRouteHandler {
 
 export interface IThirdPartyRouteSearchHandler {
   blueSky(query: string): Promise<BlueSkyPostSchemaArrayType>;
-  articles(query: string): Promise<BrowsingOptionSchemaArrayType>;
+  articles(params: NewsApiSearchParams): Promise<BrowsingOptionSchemaArrayType>;
 }
 
 class ThirdPartyRouteSearchHandler implements IThirdPartyRouteSearchHandler {
@@ -49,10 +54,15 @@ class ThirdPartyRouteSearchHandler implements IThirdPartyRouteSearchHandler {
     );
   }
 
-  public async articles(query: string): Promise<BrowsingOptionSchemaArrayType> {
+  public async articles(
+    params: NewsApiSearchParams,
+  ): Promise<BrowsingOptionSchemaArrayType> {
+    const { query, signal } = params;
+
     return await this.http.get(
       `${this.routes.integrations.newsApi}${query}`,
       BrowsingOptionSchemaArray,
+      signal,
     );
   }
 }

@@ -1,4 +1,7 @@
-import type { ServerClientRoutes } from "@/infra/transport/types/routeDefinitions";
+import {
+  serverClientRoutes,
+  type ServerClientRoutes,
+} from "@/infra/transport/types/routeDefinitions";
 import {
   IPrivateServerClient,
   PrivateServerClient,
@@ -7,8 +10,9 @@ import {
   IPublicServerClient,
   PublicServerClient,
 } from "./public/publicServerClient";
-import { HttpClient } from "./httpClient";
-import { serverClientRoutes } from "@/infra/transport/types/routeDefinitions";
+import { HttpClient, IHttpClient } from "@/lib/services/client/http/httpClient";
+import { RequestParser } from "./http/RequestParser";
+import { ConfigRequestHandler } from "./http/ConfigRequestHandler";
 
 export interface IServerClient {
   readonly privileged: IPrivateServerClient;
@@ -16,15 +20,18 @@ export interface IServerClient {
 }
 
 export class ServerClient implements IServerClient {
-  private readonly routes: ServerClientRoutes;
   public readonly privileged: IPrivateServerClient;
   public readonly general: IPublicServerClient;
-  constructor() {
-    this.routes = serverClientRoutes;
-    this.privileged = new PrivateServerClient(
-      this.routes.private,
-      new HttpClient(),
-    );
-    this.general = new PublicServerClient(this.routes.public, new HttpClient());
+  constructor(
+    private readonly routes: ServerClientRoutes,
+    private readonly http: IHttpClient,
+  ) {
+    this.privileged = new PrivateServerClient(this.routes.private, this.http);
+    this.general = new PublicServerClient(this.routes.public, this.http);
   }
 }
+
+export const serverClient = new ServerClient(
+  serverClientRoutes,
+  new HttpClient(new RequestParser(), new ConfigRequestHandler()),
+);

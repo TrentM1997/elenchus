@@ -64,7 +64,7 @@ type RouteStrings<T> = T extends string
 export type ValidServerRoute = RouteStrings<ServerClientRoutes>;
 
 // TODO: finish implementing ServerClient facade handlers for all routes
-// CURRENT FINISHED: public: done ✅ private: [ "account"]
+// CURRENT FINISHED: public: done ✅ private: done ✅
 
 export const serverClientRoutes = {
   public: {
