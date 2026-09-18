@@ -1,35 +1,41 @@
 import { AnimatePresence } from "framer-motion";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/state/store";
-import type { DragConstraints, NotePosition } from "@/hooks/useNoteConstraints";
-import Notes from "../../notes/Notes";
+import type { NotePosition } from "@/hooks/useNoteConstraints";
 import React, { SetStateAction } from "react";
+import Notes from "../../noteTaking/Notes";
 
-interface NotesWrapperProps {
-    notePosition: NotePosition,
-    setNotePosition: React.Dispatch<SetStateAction<NotePosition>>,
-    notesRef: React.RefObject<HTMLDivElement | null>
-};
+export interface NotesWrapperProps {
+  notePosition: NotePosition;
+  setNotePosition: React.Dispatch<SetStateAction<NotePosition>>;
+  notesRef: React.RefObject<HTMLDivElement>;
+}
 
-function NotesWrapper({ notesRef, notePosition, setNotePosition }: NotesWrapperProps): JSX.Element | null {
-    const constraints: DragConstraints = useSelector((s: RootState) => s.investigation.notes.constraints);
-    const takingNotes = useSelector((s: RootState) => s.investigation.notes.takingNotes);
+function NotesWrapper({
+  notesRef,
+  notePosition,
+  setNotePosition,
+}: NotesWrapperProps): JSX.Element | null {
+  const constraints = useSelector(
+    (s: RootState) => s.investigation.notes.constraints,
+  );
+  const takingNotes = useSelector(
+    (s: RootState) => s.investigation.notes.takingNotes,
+  );
 
-
-    return (
-        <AnimatePresence>
-            {(takingNotes && constraints) &&
-                <Notes
-                    key={'notepad'}
-                    notesRef={notesRef}
-                    constraints={constraints}
-                    notePosition={notePosition}
-                    setNotePosition={setNotePosition}
-                />
-            }
-        </AnimatePresence>
-    )
-};
-
+  return (
+    <AnimatePresence>
+      {takingNotes && constraints && (
+        <Notes
+          key={"notepad"}
+          notesRef={notesRef}
+          constraints={constraints}
+          notePosition={notePosition}
+          setNotePosition={setNotePosition}
+        />
+      )}
+    </AnimatePresence>
+  );
+}
 
 export default NotesWrapper;

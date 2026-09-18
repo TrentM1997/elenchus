@@ -7,13 +7,15 @@ import {
 
 type CheckStatusType = "confirmation" | "n/a";
 
+export type ValidStatus = "initial" | "invalid" | "valid";
+
 const useCheckCredentials = (
   userEmail: string | null,
   userPassword: string | null,
   secondPW?: string | null,
 ) => {
-  const [validEmail, setValidEmail] = useState<boolean | null>(null);
-  const [acceptedInput, setAcceptedInput] = useState<boolean | null>(null);
+  const [validEmail, setValidEmail] = useState<ValidStatus>("initial");
+  const [acceptedInput, setAcceptedInput] = useState<ValidStatus>("initial");
   const [checkStatus, setCheckStatus] = useState<CheckStatusType>("n/a");
 
   useEffect(() => {
@@ -34,7 +36,7 @@ const useCheckCredentials = (
 
     if (checkStatus === "confirmation") {
       const valid = confirmPassword(userPassword, secondPW);
-      setAcceptedInput(valid);
+      setAcceptedInput(valid ? "valid" : "invalid");
     }
   }, [secondPW]);
 

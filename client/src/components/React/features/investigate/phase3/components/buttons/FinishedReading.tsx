@@ -9,16 +9,13 @@ import {
   populateTooltip,
   TooltipDisplayed,
 } from "@/state/Reducers/Investigate/Rendering";
-import type { Article } from "@/state/Reducers/Investigate/articles/ExtractedArticles";
 import { AnimatePresence } from "framer-motion";
 import { smoothScrollUp } from "@/lib/helpers/scroll/ScrollToTop";
 import { wait } from "@/lib/helpers/formatting/Presentation";
 import ButtonHoverTooltip from "../../tooltips/ButtonHoverTooltip";
 
-export function FinishedReading({ failedExtraction }) {
-  const articles: Article[] = useSelector(
-    (s: RootState) => s.investigation.read.articles,
-  );
+export function FinishedReading() {
+  const articles = useSelector((s: RootState) => s.investigation.read.articles);
   const tooltip: TooltipDisplayed = useSelector(
     (s: RootState) => s.investigation.rendering.tooltip,
   );
@@ -54,7 +51,7 @@ export function FinishedReading({ failedExtraction }) {
 
   return (
     <div
-      className={`${failedExtraction ? "pointer-events-none opacity-30" : "pointer-events-auto opacity-100 lg:hover:bg-border_gray/40"}
+      className={`${articles.status === "error" ? "pointer-events-none opacity-30" : "pointer-events-auto opacity-100 lg:hover:bg-border_gray/40"}
             shrink-0 w-fit h-10 lg:h-auto px-2 md:py-1.5 xl:px-2 2xl:px-2.5 relative
               transition-all ease-soft duration-300 flex justify-center lg:border-r group cursor-pointer
               border-border_gray`}

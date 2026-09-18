@@ -2,7 +2,10 @@ import { Router } from "express";
 import { IAppServices } from "../../../services/appServices.js";
 import { wrapAsync } from "../../async/wrapAsync.js";
 import { ServerError } from "../../errors/ServerError.js";
-import { validateOrThrow } from "../../validation/validateOrThrow.js";
+import {
+  validateOrThrow,
+  validateServerOrThrow,
+} from "../../validation/validateOrThrow.js";
 import { SearchQuerySchema } from "../../../schemas/SearchQuerySchema.js";
 import { LoginSchema } from "../../../schemas/LoginSchema.js";
 import { ScrapeRequestSchema } from "../../../schemas/ScrapeRequestSchema.js";
@@ -93,6 +96,24 @@ export function publicRoutes(app: IAppServices, router: Router) {
       req.auth.establishSession(result.data.session, res);
 
       res.success("signup completed successfully", result, 200);
+    }),
+  );
+
+  router.get(
+    PUBLIC_API_ROUTES.integrations.wiki,
+    wrapAsync(async (req, res) => {
+      const query = req.query.q;
+      const term = validateOrThrow(SearchQuerySchema, query);
+      const result = await app.integrations.wiki.extract(term);
+
+      if (result.kind === "error") {
+        res
+          .status(404)
+          .json({ status: "failed", error: "failed to query wikipedia" });
+        return;
+      }
+
+      res.success("extracted term from wikipedia successfully", result, 200);
     }),
   );
 

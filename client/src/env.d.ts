@@ -13,6 +13,7 @@ import {
 } from "../../schemas/api/types/ArticlesSchema";
 import { BlueSkyPosts } from "./state/Reducers/BlueSky/types";
 import { BlueSkyPostSchemaType } from "../../schemas/api/types/BlueSkyPostSchema";
+import { ActiveToast } from "./state/Reducers/RenderingPipelines/PipelineSlice";
 
 declare global {
   interface ImportMetaEnv {
@@ -254,15 +255,7 @@ declare global {
   }
 
   interface AuthNotificationProps {
-    id?: "login" | "signout";
-    complete?: boolean | null;
-    setterFunction?: any;
-    authStatus?: SigninStatus;
-    status?: SigninStatus;
-    redirect?: Function;
-    loginStatus?: SigninStatus;
-    setStatus?: React.Dispatch<SetStateAction<SigninStatus>>;
-    action?: string;
+    toast: Exclude<ActiveToast, { status: "idle" }>;
   }
 
   interface SaveArticleButton {

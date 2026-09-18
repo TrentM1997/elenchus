@@ -3,6 +3,7 @@ import { shallowEqual, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import ExtractionRenderer from "@/components/React/features/investigate/phase3/containers/ExtractionRenderer";
 import FailedExtractionsRenderer from "@/components/React/features/investigate/phase3/containers/FailedExtractionsRenderer";
+import { RenderControlPanel } from "@/components/React/features/investigate/phase3/components/render/RenderControlPanel";
 
 export default function ArticleContainer(): JSX.Element {
   const { articles, currentStory } = useSelector(
@@ -17,6 +18,7 @@ export default function ArticleContainer(): JSX.Element {
     >
       <ExtractionRenderer state={articles} page={currentStory} />
       <FailedExtractionsRenderer state={articles} />
+      <RenderControlPanel state={articles} />
     </div>
   );
 }

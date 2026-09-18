@@ -1,4 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { TypeCompiler } from "@sinclair/typebox/compiler";
 import { ExtractionJobSchema } from "../../lib/schemas/ArticleSchema";
 import type { ArticleSchemaType, ExtractionResult } from "../../lib/schemas/ArticleSchema";
@@ -33,7 +33,9 @@ const result: ExtractionResult = { progress: "2/2", retrieved: [article], reject
 const snapshot = (status: "pending" | "fulfilled" | "rejected", data = result) => ({
   status, result: data, error: null, createdAt: 1,
 });
-const makeStore = () => configureStore({ reducer });
+const makeStore = () => configureStore({
+  reducer: { investigation: combineReducers({ read: reducer }) },
+});
 
 beforeEach(() => {
   jest.useFakeTimers();
@@ -43,6 +45,43 @@ beforeEach(() => {
 });
 afterEach(() => { jest.useRealTimers(); jest.restoreAllMocks(); });
 
+test("back-to-back starts and starts during progress cannot launch duplicate jobs", async () => {
+  const store = makeStore();
+  client.poll.mockResolvedValueOnce(snapshot("pending")).mockResolvedValueOnce(snapshot("fulfilled"));
+  const first = store.dispatch(extractArticles(selected));
+  const second = await store.dispatch(extractArticles(selected));
+  expect(extractArticles.rejected.match(second) && second.meta.condition).toBe(true);
+  expect(store.getState().investigation.read.activeRequestId).toBe(first.requestId);
+  await jest.advanceTimersByTimeAsync(0);
+  expect(store.getState().investigation.read.articles.status).toBe("partial");
+  const third = await store.dispatch(extractArticles(selected));
+  expect(extractArticles.rejected.match(third) && third.meta.condition).toBe(true);
+  expect(client.extract).toHaveBeenCalledTimes(1);
+  await jest.advanceTimersByTimeAsync(1000);
+  await first;
+  expect(store.getState().investigation.read.articles.status).toBe("ready");
+});
+
+test.each(["ready", "failed", "error", "aborted"])("a new extraction can start after %s", async (outcome) => {
+  const store = makeStore();
+  if (outcome === "ready") client.poll.mockResolvedValueOnce(snapshot("fulfilled"));
+  if (outcome === "failed") client.poll.mockResolvedValueOnce(snapshot("fulfilled", { ...result, retrieved: [] }));
+  if (outcome === "error") client.poll.mockRejectedValueOnce(new Error("Job failed"));
+  if (outcome === "aborted") client.poll.mockResolvedValueOnce(snapshot("pending"));
+  const first = store.dispatch(extractArticles(selected));
+  if (outcome === "aborted") {
+    await jest.advanceTimersByTimeAsync(0);
+    first.abort();
+  }
+  await first;
+  expect(store.getState().investigation.read.activeRequestId).toBeNull();
+  client.poll.mockResolvedValueOnce(snapshot("fulfilled"));
+  const next = await store.dispatch(extractArticles(selected));
+  expect(extractArticles.fulfilled.match(next)).toBe(true);
+  expect(client.extract).toHaveBeenCalledTimes(2);
+  expect(store.getState().investigation.read.articles.status).toBe("ready");
+});
+
 test("polling moves pending → partial → ready, including mixed completion", async () => {
   const store = makeStore();
   client.poll
@@ -50,17 +89,17 @@ test("polling moves pending → partial → ready, including mixed completion", 
     .mockResolvedValueOnce(snapshot("pending", { progress: "1/2", retrieved: [], rejected: [failure] }))
     .mockResolvedValueOnce(snapshot("fulfilled"));
   const task = store.dispatch(extractArticles(selected));
-  expect(store.getState().articles.status).toBe("pending");
+  expect(store.getState().investigation.read.articles.status).toBe("pending");
   await jest.advanceTimersByTimeAsync(0);
-  expect(store.getState().articles.status).toBe("pending");
+  expect(store.getState().investigation.read.articles.status).toBe("pending");
   await jest.advanceTimersByTimeAsync(1000);
-  expect(store.getState().articles).toEqual({ status: "partial", data: { retrieved: [], failed: [failure] } });
+  expect(store.getState().investigation.read.articles).toEqual({ status: "partial", data: { retrieved: [], failed: [failure] } });
   store.dispatch(closeNotification(failure.article_url));
   await jest.advanceTimersByTimeAsync(1000);
   await task;
-  expect(store.getState().articles).toEqual({ status: "ready", data: { retrieved: [article], failed: [failure] } });
-  expect(store.getState().dismissedFailureUrls).toEqual([failure.article_url]);
-  expect(store.getState().progress).toBe("2/2");
+  expect(store.getState().investigation.read.articles).toEqual({ status: "ready", data: { retrieved: [article], failed: [failure] } });
+  expect(store.getState().investigation.read.dismissedFailureUrls).toEqual([failure.article_url]);
+  expect(store.getState().investigation.read.progress).toBe("2/2");
   expect(client.poll).toHaveBeenCalledTimes(3);
 });
 
@@ -69,14 +108,14 @@ test("all per-article failures complete as failed, not a rejected thunk", async 
   client.poll.mockResolvedValue(snapshot("fulfilled", { ...result, retrieved: [] }));
   const action = await store.dispatch(extractArticles(selected));
   expect(extractArticles.fulfilled.match(action)).toBe(true);
-  expect(store.getState().articles).toMatchObject({ status: "failed", data: { retrieved: [], failed: [failure] } });
+  expect(store.getState().investigation.read.articles).toMatchObject({ status: "failed", data: { retrieved: [], failed: [failure] } });
 });
 
 test("all-success completion is ready even without a progress callback", async () => {
   const store = makeStore();
   client.poll.mockResolvedValue(snapshot("fulfilled", { ...result, rejected: [] }));
   await store.dispatch(extractArticles(selected));
-  expect(store.getState().articles).toEqual({ status: "ready", data: { retrieved: [article], failed: [] } });
+  expect(store.getState().investigation.read.articles).toEqual({ status: "ready", data: { retrieved: [article], failed: [] } });
 });
 
 test.each(["network", "job", "missing snapshot", "missing result"])("%s failure becomes a request error", async (kind) => {
@@ -87,9 +126,9 @@ test.each(["network", "job", "missing snapshot", "missing result"])("%s failure 
   if (kind === "missing result") client.poll.mockResolvedValue({ status: "fulfilled", createdAt: 1 });
   const action = await store.dispatch(extractArticles(selected));
   expect(extractArticles.rejected.match(action)).toBe(true);
-  expect(store.getState().articles.status).toBe("error");
-  expect(store.getState().articles).toMatchObject({ data: { retrieved: [], failed: [] } });
-  expect(store.getState().activeRequestId).toBeNull();
+  expect(store.getState().investigation.read.articles.status).toBe("error");
+  expect(store.getState().investigation.read.articles).toMatchObject({ data: { retrieved: [], failed: [] } });
+  expect(store.getState().investigation.read.activeRequestId).toBeNull();
 });
 
 test("aborting while waiting stops subsequent polls", async () => {
@@ -101,7 +140,7 @@ test("aborting while waiting stops subsequent polls", async () => {
   await task;
   await jest.advanceTimersByTimeAsync(3000);
   expect(client.poll).toHaveBeenCalledTimes(1);
-  expect(store.getState().articles).toEqual({
+  expect(store.getState().investigation.read.articles).toEqual({
     status: "error", details: "Extraction canceled by user/navigation",
     data: { retrieved: result.retrieved, failed: result.rejected },
   });
@@ -115,11 +154,11 @@ test("late progress, success, and rejection cannot overwrite a newer attempt", (
   store.dispatch(extractionProgressReceived({ requestId: "old", result }));
   store.dispatch(extractArticles.fulfilled(result, "old", selected));
   store.dispatch(extractArticles.rejected(new Error("Old failure"), "old", selected));
-  expect(store.getState().articles.status).toBe("pending");
-  expect(store.getState().activeRequestId).toBe("new");
+  expect(store.getState().investigation.read.articles.status).toBe("pending");
+  expect(store.getState().investigation.read.activeRequestId).toBe("new");
   store.dispatch(extractArticles.fulfilled(result, "new", selected));
   store.dispatch(extractionProgressReceived({ requestId: "new", result: { ...result, retrieved: [] } }));
-  expect(store.getState().articles.status).toBe("ready");
+  expect(store.getState().investigation.read.articles.status).toBe("ready");
 });
 
 test("repeated cumulative snapshots do not duplicate results or restore dismissed notices", () => {
@@ -128,19 +167,19 @@ test("repeated cumulative snapshots do not duplicate results or restore dismisse
   store.dispatch(extractionProgressReceived({ requestId: "id", result }));
   store.dispatch(closeNotification(failure.article_url));
   store.dispatch(extractionProgressReceived({ requestId: "id", result }));
-  expect(store.getState().articles).toMatchObject({ data: { retrieved: [article], failed: [failure] } });
-  expect(store.getState().dismissedFailureUrls).toEqual([failure.article_url]);
+  expect(store.getState().investigation.read.articles).toMatchObject({ data: { retrieved: [article], failed: [failure] } });
+  expect(store.getState().investigation.read.dismissedFailureUrls).toEqual([failure.article_url]);
   store.dispatch(resetReadingSlice());
   store.dispatch(extractionProgressReceived({ requestId: "id", result }));
-  expect(store.getState().articles.status).toBe("initial");
-  expect(store.getState().dismissedFailureUrls).toEqual([]);
+  expect(store.getState().investigation.read.articles.status).toBe("initial");
+  expect(store.getState().investigation.read.dismissedFailureUrls).toEqual([]);
 });
 
 test("empty selections do not start a job", async () => {
   const store = makeStore();
   await store.dispatch(extractArticles([]));
   expect(client.extract).not.toHaveBeenCalled();
-  expect(store.getState().articles.status).toBe("initial");
+  expect(store.getState().investigation.read.articles.status).toBe("initial");
 });
 
 test("the response schema accepts actual server snapshots and rejects malformed arrays", () => {
@@ -172,7 +211,7 @@ test("completion without any article outcomes is an error, not all-extractions-f
   const store = makeStore();
   client.poll.mockResolvedValue(snapshot("fulfilled", { progress: "0/0", retrieved: [], rejected: [] }));
   await store.dispatch(extractArticles(selected));
-  expect(store.getState().articles.status).toBe("error");
+  expect(store.getState().investigation.read.articles.status).toBe("error");
 });
 
 test.each(["network", "job", "empty completion"])("%s interruption preserves received articles, failures, and reading position", async (kind) => {
@@ -189,16 +228,16 @@ test.each(["network", "job", "empty completion"])("%s interruption preserves rec
   store.dispatch(closeNotification(failure.article_url));
   await jest.advanceTimersByTimeAsync(1000);
   await task;
-  expect(store.getState().articles).toMatchObject({
+  expect(store.getState().investigation.read.articles).toMatchObject({
     status: "error", data: { retrieved: [article, secondArticle], failed: [failure] },
   });
-  expect(store.getState().currentStory).toBe(1);
-  expect(store.getState().dismissedFailureUrls).toEqual([failure.article_url]);
-  expect(store.getState().activeRequestId).toBeNull();
+  expect(store.getState().investigation.read.currentStory).toBe(1);
+  expect(store.getState().investigation.read.dismissedFailureUrls).toEqual([failure.article_url]);
+  expect(store.getState().investigation.read.activeRequestId).toBeNull();
   store.dispatch(extractArticles.pending("retry", selected));
-  expect(store.getState().articles).toEqual({ status: "pending" });
-  expect(store.getState().currentStory).toBe(0);
-  expect(store.getState().dismissedFailureUrls).toEqual([]);
+  expect(store.getState().investigation.read.articles).toEqual({ status: "pending" });
+  expect(store.getState().investigation.read.currentStory).toBe(0);
+  expect(store.getState().investigation.read.dismissedFailureUrls).toEqual([]);
 });
 
 test("an interruption preserves failure-only progress without claiming all extractions failed", async () => {
@@ -209,7 +248,7 @@ test("an interruption preserves failure-only progress without claiming all extra
   const task = store.dispatch(extractArticles(selected));
   await jest.advanceTimersByTimeAsync(1000);
   await task;
-  expect(store.getState().articles).toEqual({
+  expect(store.getState().investigation.read.articles).toEqual({
     status: "error", details: "Connection lost", data: { retrieved: [], failed: [failure] },
   });
 });
@@ -234,7 +273,7 @@ test("transient polling failures back off for 1, 2, and 4 seconds before recover
     expect(client.poll).toHaveBeenCalledTimes(index + 2);
   }
   await task;
-  expect(store.getState().articles.status).toBe("ready");
+  expect(store.getState().investigation.read.articles.status).toBe("ready");
   expect(client.extract).toHaveBeenCalledTimes(1);
   expect(jest.getTimerCount()).toBe(0);
 });
@@ -246,7 +285,7 @@ test("exhausted retries preserve the results already received", async () => {
   await jest.advanceTimersByTimeAsync(8000);
   await task;
   expect(client.poll).toHaveBeenCalledTimes(5);
-  expect(store.getState().articles).toMatchObject({
+  expect(store.getState().investigation.read.articles).toMatchObject({
     status: "error", details: expect.stringContaining("after 3 retries"),
     data: { retrieved: [article], failed: [failure] },
   });
@@ -265,7 +304,7 @@ test("a successful pending snapshot resets the consecutive retry budget", async 
   await jest.advanceTimersByTimeAsync(9000);
   await task;
   expect(client.poll).toHaveBeenCalledTimes(6);
-  expect(store.getState().articles.status).toBe("ready");
+  expect(store.getState().investigation.read.articles.status).toBe("ready");
   expect(jest.getTimerCount()).toBe(0);
 });
 
@@ -278,7 +317,7 @@ test.each([408, 429, 500, 502, 503, 504])("HTTP %s is retryable", async (status)
   await jest.advanceTimersByTimeAsync(1000);
   await task;
   expect(client.poll).toHaveBeenCalledTimes(2);
-  expect(store.getState().articles.status).toBe("ready");
+  expect(store.getState().investigation.read.articles.status).toBe("ready");
 });
 
 test.each([401, 403, 404])("HTTP %s stops immediately", async (status) => {
@@ -288,7 +327,7 @@ test.each([401, 403, 404])("HTTP %s stops immediately", async (status) => {
   }));
   await store.dispatch(extractArticles(selected));
   expect(client.poll).toHaveBeenCalledTimes(1);
-  expect(store.getState().articles.status).toBe("error");
+  expect(store.getState().investigation.read.articles.status).toBe("error");
   expect(jest.getTimerCount()).toBe(0);
 });
 
@@ -299,7 +338,7 @@ test.each(["invalid-json", "invalid-response"] as const)("%s stops immediately",
   }));
   await store.dispatch(extractArticles(selected));
   expect(client.poll).toHaveBeenCalledTimes(1);
-  expect(store.getState().articles.status).toBe("error");
+  expect(store.getState().investigation.read.articles.status).toBe("error");
   expect(jest.getTimerCount()).toBe(0);
 });
 
@@ -309,7 +348,7 @@ test("the overall deadline ends permanently pending jobs while retaining results
   const task = store.dispatch(extractArticles(selected));
   await jest.advanceTimersByTimeAsync(EXTRACTION_POLLING_POLICY.deadlineMs);
   await task;
-  expect(store.getState().articles).toMatchObject({
+  expect(store.getState().investigation.read.articles).toMatchObject({
     status: "error", details: expect.stringContaining("5 minutes"),
     data: { retrieved: [article], failed: [failure] },
   });
@@ -327,7 +366,7 @@ test("hanging poll requests are aborted and retries are bounded", async () => {
   await task;
   expect(client.poll).toHaveBeenCalledTimes(4);
   expect(client.poll.mock.calls.every(([params]) => params.signal.aborted)).toBe(true);
-  expect(store.getState().articles.status).toBe("error");
+  expect(store.getState().investigation.read.articles.status).toBe("error");
   expect(jest.getTimerCount()).toBe(0);
 });
 
@@ -340,7 +379,7 @@ test("job creation times out without being retried", async () => {
   expect(client.extract).toHaveBeenCalledTimes(1);
   expect(client.extract.mock.calls[0][1].aborted).toBe(true);
   expect(client.poll).not.toHaveBeenCalled();
-  expect(store.getState().articles).toMatchObject({ status: "error", details: "Starting extraction timed out" });
+  expect(store.getState().investigation.read.articles).toMatchObject({ status: "error", details: "Starting extraction timed out" });
   expect(jest.getTimerCount()).toBe(0);
 });
 
@@ -353,7 +392,7 @@ test("cancellation interrupts retry backoff immediately", async () => {
   await task;
   await jest.advanceTimersByTimeAsync(10000);
   expect(client.poll).toHaveBeenCalledTimes(1);
-  expect(store.getState().articles).toMatchObject({ status: "error", details: "Extraction canceled by user/navigation" });
+  expect(store.getState().investigation.read.articles).toMatchObject({ status: "error", details: "Extraction canceled by user/navigation" });
   expect(jest.getTimerCount()).toBe(0);
 });
 
@@ -368,7 +407,7 @@ test("the overall deadline aborts an in-flight poll before its request timeout",
   await task;
   const calls = client.poll.mock.calls;
   expect(calls[calls.length - 1][0].signal.aborted).toBe(true);
-  expect(store.getState().articles).toMatchObject({
+  expect(store.getState().investigation.read.articles).toMatchObject({
     status: "error", details: expect.stringContaining("5 minutes"),
     data: { retrieved: [article], failed: [failure] },
   });
@@ -381,6 +420,6 @@ test("network failure during job creation is not retried", async () => {
   await store.dispatch(extractArticles(selected));
   expect(client.extract).toHaveBeenCalledTimes(1);
   expect(client.poll).not.toHaveBeenCalled();
-  expect(store.getState().articles.status).toBe("error");
+  expect(store.getState().investigation.read.articles.status).toBe("error");
   expect(jest.getTimerCount()).toBe(0);
 });

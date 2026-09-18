@@ -1,36 +1,19 @@
 import { motion } from "framer-motion";
 import { extractionToastVariants } from "@/motion/variants";
-import { SetStateAction, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import type { Prog } from "@/state/Reducers/Investigate/articles/types";
 import { createPortal } from "react-dom";
+import PulseDot from "./PulseDot";
+import ExtractionProgress from "./ExtractionProgress";
 
-interface PendingExtracts {
-  setShowPendingExtractions: React.Dispatch<SetStateAction<boolean>>;
-  status: string;
-}
+export default function PendingExtractions(): JSX.Element | null {
+  const root = document.getElementById("portal-root");
+  if (root === null) return null;
 
-export default function PendingExtractions({
-  setShowPendingExtractions,
-  status,
-}: PendingExtracts): JSX.Element | null {
   const progress: Prog = useSelector(
     (state: RootState) => state.investigation.read.progress,
   );
-  const remove = ["ready", "failed", "error", "fulfilled", "rejected"].includes(status);
-
-  useEffect(() => {
-    if (!remove) return;
-
-    const timer = window.setTimeout(() => {
-      setShowPendingExtractions(false);
-    }, 500);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [remove]);
 
   const toast: JSX.Element = (
     <motion.div
@@ -47,29 +30,11 @@ export default function PendingExtractions({
         key="title"
         className="flex w-full h-full items-center justify-between"
       >
-        <div key="titleContainer" className="w-auto h-fit">
-          <p className="text-white text-sm flex items-center gap-x-2.5">
-            <span className="text-white/70">extraction progress </span>{" "}
-            <span className="">{`[${progress}]`}</span>
-          </p>
-        </div>
-        <div className="w-auto h-fit relative">
-          <PulseDot key={"pending-status"} />
-        </div>
+        <ExtractionProgress progress={progress} />
+        <PulseDot key={"pending-status"} />
       </div>
     </motion.div>
   );
 
-  return createPortal(toast, document.getElementById("portal-root"));
-}
-
-function PulseDot() {
-  return (
-    <div className="flex justify-center">
-      <span className="relative flex h-4 w-4">
-        <span className="absolute inline-flex h-full w-full transform-gpu will-change-transform ease-soft animate-ping rounded-full bg-white/80 opacity-75"></span>
-        <span className="relative inline-flex h-4 w-4 rounded-full bg-white"></span>
-      </span>
-    </div>
-  );
+  return createPortal(toast, root);
 }

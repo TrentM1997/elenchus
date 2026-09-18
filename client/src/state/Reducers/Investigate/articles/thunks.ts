@@ -9,7 +9,10 @@ export type QueryNewsApiParams = { query: string; timeout: number };
 export const extractArticles = createAsyncThunk<
   ExtractionResult,
   SelectedArticle[],
-  { rejectValue: string }
+  {
+    rejectValue: string;
+    state: { investigation: { read: { activeRequestId: string | null } } };
+  }
 >(
   "investigate/runFirecrawlExtraction",
   async (articles, { signal, dispatch, rejectWithValue, requestId }) => {
@@ -32,5 +35,9 @@ export const extractArticles = createAsyncThunk<
       );
     }
   },
-  { condition: (articles) => articles.length > 0 },
+  {
+    condition: (articles, { getState }) =>
+      articles.length > 0 &&
+      getState().investigation.read.activeRequestId === null,
+  },
 );

@@ -22,6 +22,7 @@ export type IntegrationsRoutes = {
     feed: "/blueSky/feed";
     search: `/blueSky/search?q=${string}`;
   };
+  wiki: `/wiki?q=${string}`;
 };
 
 export type InvestigationsRoute = "/user/investigations";
@@ -84,6 +85,7 @@ export const serverClientRoutes = {
         feed: "/blueSky/feed",
         search: "/blueSky/search?q=",
       },
+      wiki: "/wiki?q=",
     },
     articles: {
       poll: `/articles/extract/`,

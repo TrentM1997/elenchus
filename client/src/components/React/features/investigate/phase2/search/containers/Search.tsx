@@ -18,9 +18,10 @@ export default function Search({}): JSX.Element | null {
   const timerRef = useRef<number | null>(null);
   const inFlightRef = useRef<{ abort: () => void } | null>(null);
 
-  const recordQuery = (raw: string): boolean => {
+  const recordQuery = (raw: string | null): boolean => {
+    if (!raw) return false;
     const q = normalize(raw);
-    if (q.length <= 2) return;
+    if (q.length <= 2) return false;
 
     if (q !== lastCommitedInput.current) {
       draftRef.current = q;

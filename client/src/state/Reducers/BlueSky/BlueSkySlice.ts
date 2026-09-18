@@ -10,7 +10,6 @@ import {
 
 interface InitialState {
   fadeOutHomePage: boolean;
-  status: string;
   posts: BlueSkyPosts;
   selected: SelectedPost;
   popoverPost: PopoverPost;
@@ -20,7 +19,6 @@ interface InitialState {
 
 const initialState: InitialState = {
   fadeOutHomePage: false,
-  status: "idle",
   posts: { status: "initial" },
   selected: { status: "initial" },
   popoverPost: { status: "initial" },

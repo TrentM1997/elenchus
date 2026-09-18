@@ -23,6 +23,7 @@ export type PublicAPIRoutes = {
   };
   integrations: {
     newsApi: "/articles/search";
+    wiki: "/wiki";
     blueSky: {
       feed: "/blueSky/feed";
       search: "/blueSky/search";
@@ -47,6 +48,7 @@ export const PUBLIC_API_ROUTES = {
   },
   integrations: {
     newsApi: "/articles/search",
+    wiki: "/wiki",
     blueSky: {
       feed: "/blueSky/feed",
       search: "/blueSky/search",

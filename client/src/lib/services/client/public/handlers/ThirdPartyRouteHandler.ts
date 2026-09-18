@@ -10,6 +10,10 @@ import {
 } from "@/lib/schemas/BlueSkySchemas";
 import { PublicServerClientRoutes } from "@/infra/transport/types/routeDefinitions";
 import { IHttpClient } from "../../http/types";
+import {
+  WikiResponse,
+  WikiResponseSchema,
+} from "@/lib/schemas/WikipediaExtractSchemas";
 
 export type NewsApiSearchParams = {
   query: string;
@@ -41,6 +45,7 @@ export class ThirdPartyRouteHandler implements IThirdPartyRouteHandler {
 export interface IThirdPartyRouteSearchHandler {
   blueSky(query: string): Promise<BlueSkyPostSchemaArrayType>;
   articles(params: NewsApiSearchParams): Promise<BrowsingOptionSchemaArrayType>;
+  wikipediaExtract(query: string): Promise<WikiResponse>;
 }
 
 class ThirdPartyRouteSearchHandler implements IThirdPartyRouteSearchHandler {
@@ -65,6 +70,15 @@ class ThirdPartyRouteSearchHandler implements IThirdPartyRouteSearchHandler {
       `${this.routes.integrations.newsApi}${query}`,
       BrowsingOptionSchemaArray,
       signal,
+    );
+  }
+
+  public async wikipediaExtract(query: string): Promise<WikiResponse> {
+    const encodedQuery = encodeURIComponent(query);
+
+    return await this.http.get(
+      `${this.routes.integrations.wiki}${encodedQuery}`,
+      WikiResponseSchema,
     );
   }
 }

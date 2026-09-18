@@ -1,6 +1,10 @@
 import { WikiDisambigCandidate } from "@/lib/services/wiki/wiki";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+type EndingPerspective =
+  | { status: "draft"; data: Partial<FinishedState> }
+  | { status: "finsihed"; data: FinishedState };
+
 export interface Extracts {
   title: string;
   extract?: string;
@@ -8,30 +12,23 @@ export interface Extracts {
   candidates?: WikiDisambigCandidate[];
 }
 
-//ending perspective should be changed to a boolean value
-
 interface FinishedState {
-  wrapUp: boolean | null;
-  endingPerspective: string | null;
-  newConcepts: boolean | null;
+  endingPerspective: string;
+  newConcepts: boolean;
   newPOV: string | null;
   wantedMore: boolean | null;
-  merit: boolean | null;
-  movedOnIdea: boolean | null;
+  merit: boolean;
+  movedOnIdea: boolean;
   takeAway: string | null;
   extracts: Extracts[];
 }
 
-const initialState: FinishedState = {
-  wrapUp: false,
-  endingPerspective: "",
-  newConcepts: null,
-  newPOV: null,
-  wantedMore: null,
-  merit: null,
-  movedOnIdea: null,
-  takeAway: "",
-  extracts: [],
+interface InitialState {
+  final: EndingPerspective;
+}
+
+const initialState: InitialState = {
+  final: { status: "draft", data: {} },
 };
 
 type UpdateExtractPayload = {
@@ -45,31 +42,15 @@ export const ReviewSlice = createSlice({
   name: "FinishLine",
   initialState: initialState,
   reducers: {
-    initiateFinalProcess: (state, action) => {
-      state.wrapUp = action.payload;
-    },
-    newKnowledge: (state, action) => {
-      state.newConcepts = action.payload;
-    },
-    changedStance: (state, action) => {
-      state.newPOV = action.payload;
-    },
-    finalPerspective: (state, action) => {
-      state.endingPerspective = action.payload;
-    },
-    wantsMoreContext: (state, action) => {
-      state.wantedMore = action.payload;
-    },
-    getMerit: (state, action) => {
-      state.merit = action.payload;
-    },
-    moved: (state, action) => {
-      state.movedOnIdea = action.payload;
-    },
-    getTakeAways: (state, action) => {
-      state.takeAway = action.payload;
+    updateFinalDraft: (
+      state: InitialState,
+      action: PayloadAction<EndingPerspective>,
+    ) => {
+      state.final = action.payload;
     },
     getExtract: (state, action: PayloadAction<UpdateExtractPayload>) => {
+      if (state.final.status !== "finsihed") return;
+
       const data = action.payload;
       const extractData = data?.candidates
         ? {
@@ -82,31 +63,21 @@ export const ReviewSlice = createSlice({
             associatedArticle: data.associatedArticle,
             extract: data.extract,
           };
-      const exists = state.extracts.some(
+      const exists = state.final.data.extracts.some(
         (obj: Extracts) => obj.title === extractData.title,
       );
 
       if (exists) {
-        state.extracts = state.extracts.filter(
+        state.final.data.extracts = state.final.data.extracts.filter(
           (obj) => obj.title !== extractData.title,
         );
       } else {
-        state.extracts.push(extractData);
+        state.final.data.extracts.push(extractData);
       }
     },
   },
 });
 
-export const {
-  initiateFinalProcess,
-  finalPerspective,
-  changedStance,
-  newKnowledge,
-  wantsMoreContext,
-  getMerit,
-  moved,
-  getTakeAways,
-  getExtract,
-} = ReviewSlice.actions;
+export const { updateFinalDraft, getExtract } = ReviewSlice.actions;
 
 export default ReviewSlice.reducer;
