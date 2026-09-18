@@ -8,7 +8,7 @@ import { stepVariants } from "@/motion/variants";
 import Requirements from "../inputs/interactive/Requirements";
 import { useCheckFirstStep } from "@/hooks/useCheckFirstStep";
 import React from "react";
-import type { PaginationStatus } from "@/state/Reducers/Investigate/Steps";
+import type { PaginationStatus } from "@/state/Reducers/Investigate/pov/Steps";
 
 function Step1() {
   const status: PaginationStatus = useSelector(
@@ -30,7 +30,11 @@ function Step1() {
         className={`w-full max-w-full overflow-hidden grow-0 max-h-full min-h-44
                         pb-8 sm:pb-7 box-border relative`}
       >
-        <StepsEditor id="step1" context={idea} setterFunction={(idea: string) => updatePOVDraft({ idea })} />
+        <StepsEditor
+          id="step1"
+          context={idea}
+          setterFunction={(idea: string) => updatePOVDraft({ idea })}
+        />
         <Requirements status={status} />
       </div>
     </motion.div>

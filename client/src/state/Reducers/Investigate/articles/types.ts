@@ -1,4 +1,4 @@
-import { ArticleSchemaType } from "@/lib/schemas/ArticleSchema";
+import { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
 import { FailedAttempt } from "@/lib/services/types";
 
 export type ExtractionData = {

@@ -12,6 +12,7 @@ import { ScrapeRequestSchema } from "../../../schemas/ScrapeRequestSchema.js";
 import { PasswordResetRequestSchema } from "../../../schemas/PasswordResetRequestSchema.js";
 import { FeedbackReqSchema } from "../../../schemas/FeedbackReqSchema.js";
 import { PUBLIC_API_ROUTES } from "./routeConfig.js";
+import { ClientError } from "../../errors/ClientError.js";
 
 export function publicRoutes(app: IAppServices, router: Router) {
   router.post(
@@ -106,13 +107,6 @@ export function publicRoutes(app: IAppServices, router: Router) {
       const term = validateOrThrow(SearchQuerySchema, query);
       const result = await app.integrations.wiki.extract(term);
 
-      if (result.kind === "error") {
-        res
-          .status(404)
-          .json({ status: "failed", error: "failed to query wikipedia" });
-        return;
-      }
-
       res.success("extracted term from wikipedia successfully", result, 200);
     }),
   );
@@ -122,15 +116,16 @@ export function publicRoutes(app: IAppServices, router: Router) {
     wrapAsync(async (req, res) => {
       const { jobId } = req.params;
       const job = app.services.api.articles.getExtractionJob(jobId);
+
       if (!job) {
-        res.status(404).json({ status: "unknown", error: "Job not found" });
-        return;
+        throw new ClientError("Job not found", null, 404);
       }
+
       res.setHeader(
         "Cache-Control",
         "no-store, no-cache, must-revalidate, max-age=0",
       );
-      res.status(200).json(job);
+      res.success("Extraction status retrieved", job, 200);
     }),
   );
 
@@ -140,7 +135,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
       const { articles } = validateOrThrow(ScrapeRequestSchema, req.body);
       const result = app.services.api.articles.extract(articles);
 
-      res.status(202).json(result);
+      res.success("Extraction started", result, 202);
     }),
   );
 

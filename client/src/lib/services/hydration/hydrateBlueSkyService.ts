@@ -1,4 +1,4 @@
-import { BlueSkyPostSchemaType } from "@/lib/schemas/BlueSkySchemas";
+import { BlueSkyPostSchemaType } from "@/lib/schemas/integrations/BlueSkySchemas";
 import { IServerClient } from "../client/serverClient";
 
 export type SplitBlueSkyFeed = {

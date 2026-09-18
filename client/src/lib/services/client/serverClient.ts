@@ -10,9 +10,10 @@ import {
   IPublicServerClient,
   PublicServerClient,
 } from "./public/publicServerClient";
-import { HttpClient, IHttpClient } from "@/lib/services/client/http/httpClient";
+import { HttpClient } from "@/lib/services/client/http/httpClient";
 import { RequestParser } from "./http/RequestParser";
 import { ConfigRequestHandler } from "./http/ConfigRequestHandler";
+import { IHttpClient } from "./http/types";
 
 export interface IServerClient {
   readonly privileged: IPrivateServerClient;

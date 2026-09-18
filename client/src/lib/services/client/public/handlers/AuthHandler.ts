@@ -10,7 +10,7 @@ import {
   LogOutResultSchemaType,
   RecoverSessionResponseSchema,
   RecoverSessionResponseSchemaType,
-} from "@/lib/schemas/AuthSchemas";
+} from "@/lib/schemas/auth/AuthSchemas";
 
 export interface IAuthRouteHandler {
   login(credentials: LoginCredentials): Promise<AuthTokenResponsePasswordType>;

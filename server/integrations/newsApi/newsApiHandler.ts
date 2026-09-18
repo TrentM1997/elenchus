@@ -3,7 +3,7 @@ import { BrowsingOption } from "../../types/types";
 import { INewsApiParser, NewsApiParser } from "./articleParser";
 
 export interface INewsAPIService {
-  search(query: string): Promise<BrowsingOption[]>;
+  search(query: string): Promise<BrowsingOption[][]>;
 }
 
 export class NewsAPIService implements INewsAPIService {
@@ -12,11 +12,11 @@ export class NewsAPIService implements INewsAPIService {
     this.parser = new NewsApiParser();
   }
 
-  public async search(query: string): Promise<BrowsingOption[]> {
+  public async search(query: string): Promise<BrowsingOption[][]> {
     return await this.executeSearch(query);
   }
 
-  private async executeSearch(query: string): Promise<BrowsingOption[]> {
+  private async executeSearch(query: string): Promise<BrowsingOption[][]> {
     const url = this.setUrl(query);
     const request = await fetch(url.toString(), {
       headers: { "X-Api-Key": this.apiKey },

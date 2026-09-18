@@ -149,4 +149,5 @@ export const WikiResponseSchema = Type.Union([
 ]);
 
 export type WikiResponse = Static<typeof WikiResponseSchema>;
+export type WikiResponseSchemaType = Static<typeof WikiResponseSchema>;
 export type WikiDisambigCandidate = Static<typeof WikiDisambigCandidateSchema>;

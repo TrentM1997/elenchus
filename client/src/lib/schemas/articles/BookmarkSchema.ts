@@ -1,5 +1,5 @@
 import { Type, Static } from "@sinclair/typebox";
-import { PersistenceFailedResponseSchema } from "./PersistenceFailedSchema";
+import { PersistenceFailedResponseSchema } from "../auth/PersistenceFailedSchema";
 import { ArticleSchema } from "./ArticleSchema";
 
 export const BookmarkArticleIdSchema = Type.Number();

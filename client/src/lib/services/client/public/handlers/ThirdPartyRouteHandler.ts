@@ -1,19 +1,21 @@
 import {
   BrowsingOptionSchemaArrayType,
   BrowsingOptionSchemaArray,
-} from "@/lib/schemas/BrowsingOptionSchema";
+  SearchResultsResponseSchemaType,
+  SearchResultsResponseSchema,
+} from "@/lib/schemas/articles/BrowsingOptionSchema";
 import {
   BlueSkyPostSchemaArray,
   BlueSkyPostSchemaArrayType,
   SplitBlueSkyFeedSchema,
   SplitBlueSkyFeedSchemaType,
-} from "@/lib/schemas/BlueSkySchemas";
+} from "@/lib/schemas/integrations/BlueSkySchemas";
 import { PublicServerClientRoutes } from "@/infra/transport/types/routeDefinitions";
 import { IHttpClient } from "../../http/types";
 import {
   WikiResponse,
   WikiResponseSchema,
-} from "@/lib/schemas/WikipediaExtractSchemas";
+} from "@/lib/schemas/integrations/WikipediaExtractSchemas";
 
 export type NewsApiSearchParams = {
   query: string;
@@ -44,7 +46,9 @@ export class ThirdPartyRouteHandler implements IThirdPartyRouteHandler {
 
 export interface IThirdPartyRouteSearchHandler {
   blueSky(query: string): Promise<BlueSkyPostSchemaArrayType>;
-  articles(params: NewsApiSearchParams): Promise<BrowsingOptionSchemaArrayType>;
+  articles(
+    params: NewsApiSearchParams,
+  ): Promise<SearchResultsResponseSchemaType>;
   wikipediaExtract(query: string): Promise<WikiResponse>;
 }
 
@@ -63,12 +67,12 @@ class ThirdPartyRouteSearchHandler implements IThirdPartyRouteSearchHandler {
 
   public async articles(
     params: NewsApiSearchParams,
-  ): Promise<BrowsingOptionSchemaArrayType> {
+  ): Promise<SearchResultsResponseSchemaType> {
     const { query, signal } = params;
 
     return await this.http.get(
       `${this.routes.integrations.newsApi}${query}`,
-      BrowsingOptionSchemaArray,
+      SearchResultsResponseSchema,
       signal,
     );
   }

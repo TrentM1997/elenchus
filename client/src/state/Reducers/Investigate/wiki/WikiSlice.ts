@@ -1,12 +1,15 @@
 import { createSlice, PayloadAction, createSelector } from "@reduxjs/toolkit";
-import { WikiResponse } from "@/lib/services/wiki/wiki";
 import { RootState } from "@/state/store";
 import { getWikiExtract } from "./thunks";
+import { AsyncState } from "@/state/types";
+import { WikiResponseSchemaType } from "@/lib/schemas/integrations/WikipediaExtractSchemas";
 
 interface modalXY {
   x: number;
   y: number;
 }
+
+export type WikipediaExtractState = AsyncState<WikiResponseSchemaType>;
 
 export interface ModalStages {
   display: boolean;
@@ -20,7 +23,7 @@ interface WikiTypes {
   displayWikiModal: boolean;
   gettingSelection: boolean;
   status: string;
-  extract: WikiResponse | null;
+  extract: WikipediaExtractState;
   modalPosition: modalXY | null;
   selectedText: string | null;
   errormessage: string | null;
@@ -36,7 +39,7 @@ const initialState: WikiTypes = {
   displayWikiModal: false,
   gettingSelection: false,
   status: "idle",
-  extract: null,
+  extract: { status: "initial" },
   modalPosition: null,
   selectedText: null,
   errormessage: null,
@@ -44,15 +47,33 @@ const initialState: WikiTypes = {
 
 export const selectWikiExtract = (s: RootState) => s.investigation.wiki.extract;
 
-export const selectWikiSummary = createSelector(selectWikiExtract, (x) =>
-  x?.kind === "summary" ? x : null,
+export const selectWikiSummary = createSelector(
+  selectWikiExtract,
+  (extract) => {
+    if (extract.status !== "ready") return null;
+
+    if (extract.data.kind === "summary") {
+      return extract.data;
+    } else {
+      return null;
+    }
+  },
 );
 
-export const selectWikiDisambig = createSelector(selectWikiExtract, (x) =>
-  x?.kind === "disambiguation" ? x : null,
+export const selectWikiDisambig = createSelector(
+  selectWikiExtract,
+  (extract) => {
+    if (extract.status !== "ready") return null;
+
+    if (extract.data.kind === "disambiguation") {
+      return extract.data;
+    } else {
+      return null;
+    }
+  },
 );
 
-export const WikipediaSlice = createSlice({
+export const WikipediaExtractSlice = createSlice({
   name: "investigate/wikiExtract",
   initialState: initialState,
   reducers: {
@@ -80,23 +101,37 @@ export const WikipediaSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getWikiExtract.pending, (state) => {
       state.status = "pending";
+      state.extract = { status: "pending" };
+      state.errormessage = null;
     });
-    builder.addCase(getWikiExtract.fulfilled, (state, action) => {
-      const payload = action.payload;
-      state.status = "fulfilled";
-      if (action.payload.kind !== "error") {
-        state.extract = action.payload;
-      } else {
-        state.errormessage = action.payload.message;
-      }
-    });
+    builder.addCase(
+      getWikiExtract.fulfilled,
+      (state, action: PayloadAction<WikiResponseSchemaType>) => {
+        const payload = action.payload;
+
+        if (payload.kind === "error") {
+          state.status = "rejected";
+          state.errormessage = payload.message;
+          state.extract = { status: "failed", details: payload.message };
+        } else {
+          state.status = "fulfilled";
+          state.errormessage = null;
+          state.extract = { status: "ready", data: payload };
+        }
+      },
+    );
     builder.addCase(getWikiExtract.rejected, (state, action) => {
+      const message = typeof action.payload === "string"
+        ? action.payload
+        : action.error.message ?? "Failed to extract Wikipedia term";
       state.status = "rejected";
+      state.errormessage = message;
+      state.extract = { status: "failed", details: message };
     });
   },
 });
 
-export type WikiSliceState = ReturnType<typeof WikipediaSlice.reducer>;
+export type WikiSliceState = ReturnType<typeof WikipediaExtractSlice.reducer>;
 
 export const {
   selectingText,
@@ -105,6 +140,6 @@ export const {
   getSelectedText,
   showWikiModal,
   modalStages,
-} = WikipediaSlice.actions;
+} = WikipediaExtractSlice.actions;
 
-export default WikipediaSlice.reducer;
+export default WikipediaExtractSlice.reducer;

@@ -13,6 +13,14 @@ export const BrowsingOptionSchema = Type.Object({
 
 export const BrowsingOptionSchemaArray = Type.Array(BrowsingOptionSchema);
 
+export const SearchResultsResponseSchema = Type.Array(
+  BrowsingOptionSchemaArray,
+);
+
+export type SearchResultsResponseSchemaType = Static<
+  typeof SearchResultsResponseSchema
+>;
+
 export type BrowsingOptionSchemaArrayType = Static<
   typeof BrowsingOptionSchemaArray
 >;

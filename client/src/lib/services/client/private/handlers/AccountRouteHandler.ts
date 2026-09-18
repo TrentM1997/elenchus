@@ -1,10 +1,11 @@
 import { PrivateServerClientRoutes } from "@/infra/transport/types/routeDefinitions";
-import { IHttpClient } from "@/lib/services/client/http/httpClient";
-import { LoginCredentials } from "@/lib/services/auth/clientAuthService";
 import {
   DeleteAccountResponseSchema,
   DeleteAccountResponseSchemaType,
-} from "@/lib/schemas/DeleteAccountResponseSchema";
+} from "@/lib/schemas/auth/DeleteAccountResponseSchema";
+import { IHttpClient } from "../../http/types";
+
+type LoginCredentials = { email: string; password: string };
 
 export interface IAccountRouteHandler {
   deleteAccount(

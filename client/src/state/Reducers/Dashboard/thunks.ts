@@ -1,12 +1,19 @@
-import { HydrateDashboardService } from "@/lib/services/hydration/hydrateDashboardService";
+import { serverClient } from "@/lib/services/client/serverClient";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-const service = new HydrateDashboardService();
 
 export const hydrateDashboard = createAsyncThunk(
   "DashboardSlice/hydrateDashboard",
   async (_, thunkAPI) => {
     try {
-      return await service.hydrate();
+      const [articles, investigations] = await Promise.all([
+        serverClient.privileged.user.select.bookmarks(),
+        serverClient.privileged.user.select.investigations(),
+      ]);
+
+      return {
+        articles,
+        investigations,
+      };
     } catch (err) {
       console.error(err);
       return thunkAPI.rejectWithValue(err);

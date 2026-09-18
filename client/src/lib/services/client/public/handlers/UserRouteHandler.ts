@@ -1,16 +1,13 @@
-import {
-  PublicServerClientRoutes,
-  ServerClientRoutes,
-} from "@/infra/transport/types/routeDefinitions";
-import { IHttpClient } from "@/lib/services/client/http/httpClient";
+import { PublicServerClientRoutes } from "@/infra/transport/types/routeDefinitions";
 import {
   FeedbackResponseSchema,
   FeedbackResponseSchemaType,
-} from "@/lib/schemas/FeedbackSchema";
+} from "@/lib/schemas/auth/FeedbackSchema";
 import {
   ResetPasswordResponseSchema,
   ResetPasswordResponseSchemaType,
-} from "@/lib/schemas/AuthSchemas";
+} from "@/lib/schemas/auth/AuthSchemas";
+import { IHttpClient } from "../../http/types";
 
 type FeedbackInputType = {
   email: string;

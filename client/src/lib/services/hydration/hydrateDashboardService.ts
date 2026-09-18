@@ -1,5 +1,5 @@
 import { IServerClient } from "../client/serverClient";
-import { BookmarkedArticlesResponseSchemaType } from "@/lib/schemas/BookmarkSchema";
+import { BookmarkedArticlesResponseSchemaType } from "@/lib/schemas/articles/BookmarkSchema";
 import { InvestigationsSavedReponseSchemaType } from "@/lib/schemas/InvestigationSchema";
 
 interface IHydrateDashboardService {

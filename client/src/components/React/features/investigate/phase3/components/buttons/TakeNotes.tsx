@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { draftNote } from "@/state/Reducers/Investigate/NoteTaking";
+import { draftNote } from "@/state/Reducers/Investigate/articles/NoteTaking";
 import PanelLabel from "./PanelLabel";
 import { RootState } from "@/state/store";
 import ButtonHoverTooltip from "../../tooltips/ButtonHoverTooltip";

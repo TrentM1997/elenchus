@@ -2,7 +2,7 @@
 /// <reference types="astro/client" />
 
 import { Session } from "@supabase/supabase-js";
-import type { Extracts } from "./state/Reducers/Investigate/Review";
+import type { Extracts } from "./state/Reducers/Investigate/pov/Review";
 import React, { ReactEventHandler, ReactNode, SetStateAction } from "react";
 import { User } from "@supabase/supabase-js";
 import { SigninStatus } from "./hooks/useSignIn";
@@ -296,7 +296,7 @@ declare global {
   }
 
   interface WikiTerm {
-    article_url?: string;
+    article_url: string;
     data?: Extracts;
   }
 

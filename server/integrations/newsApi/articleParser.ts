@@ -5,20 +5,21 @@ import { BrowsingOption, NewsArticle } from "../../types/types";
 const logoMapData = new Map(Object.entries(logoMap));
 
 export interface INewsApiParser {
-  parseSearchResults(results: unknown[]): BrowsingOption[];
+  parseSearchResults(results: unknown[]): BrowsingOption[][];
 }
 
 export class NewsApiParser implements INewsApiParser {
-  parseSearchResults(results: unknown[]): BrowsingOption[] {
+  parseSearchResults(results: unknown[]): BrowsingOption[][] {
     return this.executeParseResults(results);
   }
 
-  private executeParseResults(results: unknown[]): BrowsingOption[] {
+  private executeParseResults(results: unknown[]): BrowsingOption[][] {
     const validArticles = results.filter(
       (a: any): a is NewsArticle => validateSearchResult(a).isValid,
     );
 
-    return this.mapArticleDTOs(validArticles);
+    const articles = this.mapArticleDTOs(validArticles);
+    return this.chunkIntoPages(articles);
   }
 
   private mapArticleDTOs(articles: NewsArticle[]): BrowsingOption[] {
@@ -50,5 +51,15 @@ export class NewsApiParser implements INewsApiParser {
       value = logoMapData.get("fallback") ?? null;
     }
     return value;
+  }
+
+  private chunkIntoPages(results: BrowsingOption[]): BrowsingOption[][] {
+    const pages: BrowsingOption[][] = [];
+
+    for (let i = 0; i < results.length; i += 12) {
+      pages.push(results.slice(i, i + 12));
+    }
+
+    return pages;
   }
 }

@@ -2,6 +2,10 @@ import { validateOrThrow } from "@/infra/transport/validation/validateOrThrow";
 import { Static, TSchema } from "@sinclair/typebox";
 import { ServerRequestError } from "../errors/ServerRequestError";
 import { IRequestParser, ResponseContext } from "./types";
+import {
+  HttpSuccessSchema,
+  HttpSuccessSchemaType,
+} from "@/lib/schemas/api/HttpSuccessSchema";
 
 export class RequestParser implements IRequestParser {
   public async validateResponseOrThrow<TResponse extends TSchema>(
@@ -19,7 +23,7 @@ export class RequestParser implements IRequestParser {
   ): Promise<Static<TResponse>> {
     const result = await this.parseResponse(response, context);
 
-    return this.validateResult(schema, result, response.status, {
+    return this.validateResult(schema, result?.data, response.status, {
       method: context.method,
       url: context.url,
     });
@@ -28,11 +32,12 @@ export class RequestParser implements IRequestParser {
   private async parseResponse(
     response: Response,
     context: ResponseContext,
-  ): Promise<unknown> {
+  ): Promise<HttpSuccessSchemaType | undefined> {
     if (response.status === 204) {
       return undefined;
     } else {
-      return await this.parseJson(response, context);
+      const json = await this.parseJson(response, context);
+      return this.validateJsonPayload(json, response.status, context);
     }
   }
 
@@ -61,6 +66,18 @@ export class RequestParser implements IRequestParser {
         { cause: error },
       );
     }
+  }
+
+  private validateJsonPayload(
+    json: unknown,
+    status: number,
+    context: ResponseContext,
+  ): HttpSuccessSchemaType {
+    return validateOrThrow(HttpSuccessSchema, json, {
+      method: context.method,
+      url: context.url,
+      status: status,
+    });
   }
 
   private validateResult<TResponse extends TSchema>(

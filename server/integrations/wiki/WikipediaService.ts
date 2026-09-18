@@ -24,19 +24,11 @@ export class WikipediaService implements IWikipediaService {
   }
 
   public async extractQuery(query: string): Promise<WikiResponse> {
-    try {
-      const term = validateOrThrow(WikipediaTermSchema, query.trim());
-      const summary = await this.queryWiki(term);
-      const response = await this.buildResponse(summary);
+    const term = validateOrThrow(WikipediaTermSchema, query.trim());
+    const summary = await this.queryWiki(term);
+    const response = await this.buildResponse(summary);
 
-      return validateServerOrThrow(WikiResponseSchema, response);
-    } catch (err) {
-      return {
-        kind: "error",
-        message:
-          err instanceof Error ? err.message : "Wikipedia request failed",
-      };
-    }
+    return validateServerOrThrow(WikiResponseSchema, response);
   }
 
   private async queryWiki(query: string): Promise<WikipediaSummaryType> {

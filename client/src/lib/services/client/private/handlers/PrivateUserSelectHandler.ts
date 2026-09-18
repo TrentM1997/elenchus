@@ -2,7 +2,7 @@ import { PrivateServerClientRoutes } from "@/infra/transport/types/routeDefiniti
 import {
   BookmarkedArticlesResponseSchema,
   BookmarkedArticlesResponseSchemaType,
-} from "@/lib/schemas/BookmarkSchema";
+} from "@/lib/schemas/articles/BookmarkSchema";
 import { IHttpClient } from "@/lib/services/client/http/types";
 import {
   InvestigationsSavedReponseSchema,
