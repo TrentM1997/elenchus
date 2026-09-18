@@ -13,6 +13,7 @@ export interface IHttpClient {
     url: ValidServerRoute,
     schema: TResponse,
     body?: TBody,
+    signal?: AbortSignal,
   ): Promise<Static<TResponse>>;
 
   delete<TResponse extends TSchema>(

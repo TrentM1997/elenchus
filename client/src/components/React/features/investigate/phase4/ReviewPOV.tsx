@@ -1,9 +1,8 @@
+import { selectPOVData } from "@/state/Reducers/Investigate/pov/selectors";
 import { useSelector } from "react-redux"
-import { RootState } from "@/state/store"
 
 export default function ReviewPOV() {
-    const investigateState = useSelector((state: RootState) => state.investigation)
-    const { pov } = investigateState
+    const pov = useSelector(selectPOVData)
     const { idea, perspective } = pov
 
     return (

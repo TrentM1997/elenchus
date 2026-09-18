@@ -62,18 +62,17 @@ export const AritclesArraySchema = Type.Array(ArticleSchema);
 export type AritclesArraySchemaType = Static<typeof AritclesArraySchema>;
 
 export const JobResultStatusSchema = Type.Union([
-  Type.Literal("rejected"),
+  Type.Literal("pending"),
   Type.Literal("fulfilled"),
   Type.Literal("rejected"),
 ]);
 
-export const FailedJobSummarySchema = Type.Union([
+export const FailedJobSummarySchema = Type.Array(
   Type.Object({
     denied: Type.String(),
-    failedArticle: Type.Array(Type.String()),
+    failedArticle: Type.String(),
   }),
-  Type.Null(),
-]);
+);
 
 export const FailedExtractJobSchema = Type.Object({
   title: Type.String({ minLength: 1 }),
@@ -94,13 +93,17 @@ export type ExecuteExtractResponseSchemaType = Static<
   typeof ExecuteExtractResponseSchema
 >;
 
+export const ExtractionResultSchema = Type.Object({
+    progress: Type.String(),
+    retrieved: Type.Array(ArticleSchema),
+    rejected: Type.Array(FailedExtractJobSchema),
+});
+
+export type ExtractionResult = Static<typeof ExtractionResultSchema>;
+
 export const ExtractionJobSchema = Type.Object({
   status: JobResultStatusSchema,
-  result: Type.Object({
-    progress: Type.String(),
-    retrieved: ArticleSchema,
-    rejected: FailedExtractJobSchema,
-  }),
+  result: Type.Optional(ExtractionResultSchema),
   error: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   createdAt: Type.Number(),
 });

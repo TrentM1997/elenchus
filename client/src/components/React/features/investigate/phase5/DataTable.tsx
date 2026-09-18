@@ -1,3 +1,4 @@
+import { selectPOVData } from "@/state/Reducers/Investigate/pov/selectors";
 import { useSelector } from "react-redux"
 import { RootState } from "@/state/store"
 import TableRow from "./TableRow"
@@ -6,7 +7,8 @@ import TableRow from "./TableRow"
 
 export default function DataTable() {
     const investigateState = useSelector((state: RootState) => state.investigation)
-    const { pov, review } = investigateState
+    const { review } = investigateState
+    const pov = useSelector(selectPOVData);
     const { idea, perspective, expertise } = pov
     const { endingPerspective, merit, movedOnIdea } = review
     const changed = endingPerspective !== perspective

@@ -1,19 +1,18 @@
-export interface Article {
-  title: string;
-  provider: string;
-  authors: string[] | string;
-  article_url: string;
-  image_url: string;
-  date_published: string;
-  fallbackDate: string | null;
-  summary: any;
-  full_text: string;
-  logo?: string;
-  id: number | null;
-  factual_reporting?: string | null;
-  bias?: Bias;
-  country?: string | null;
-}
+import { ArticleSchemaType } from "@/lib/schemas/ArticleSchema";
+import { FailedAttempt } from "@/lib/services/types";
+
+export type ExtractionData = {
+  retrieved: ArticleSchemaType[];
+  failed: FailedAttempt[];
+};
+
+export type ArticleExtractionState =
+  | { status: "initial" }
+  | { status: "pending" }
+  | { status: "partial"; data: ExtractionData }
+  | { status: "ready"; data: ExtractionData }
+  | { status: "failed"; data: ExtractionData; details: string }
+  | { status: "error"; data: ExtractionData; details: string };
 
 export type JobStatus = "pending" | "fulfilled" | "rejected";
 

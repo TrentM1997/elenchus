@@ -1,3 +1,4 @@
+import { selectPOVData } from "@/state/Reducers/Investigate/pov/selectors";
 import { startTransition, useEffect, useLayoutEffect, useRef } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
@@ -22,9 +23,8 @@ export default function BlueSky({
     (state: RootState) => state.bluesky,
     shallowEqual,
   );
-  const researchState = useSelector((state: RootState) => state.investigation);
   const navigate = useNavigate();
-  const { idea } = researchState.pov;
+  const { idea } = useSelector(selectPOVData);
   const dispatch = useDispatch();
   const shouldRedirect: boolean = context === "home";
   const redirectTimer = useRef<number | null>(null);

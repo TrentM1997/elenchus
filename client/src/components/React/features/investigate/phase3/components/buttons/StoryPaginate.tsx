@@ -8,12 +8,16 @@ import {
 import type { ModalStages } from "@/state/Reducers/Investigate/WikipediaSlice";
 import { modalStages } from "@/state/Reducers/Investigate/WikipediaSlice";
 import { wait } from "@/lib/helpers/formatting/Presentation";
+import { ArticleSchemaType } from "@/lib/schemas/ArticleSchema";
 
-export default function StoryPaginate() {
+export default function StoryPaginate({
+  articles,
+}: {
+  articles: ArticleSchemaType[];
+}) {
   const currentStory = useSelector(
     (s: RootState) => s.investigation.read.currentStory,
   );
-  const articles = useSelector((s: RootState) => s.investigation.read.articles);
   const wikiModalState: ModalStages = useSelector(
     (s: RootState) => s.investigation.wiki.wikiModalStages,
   );
@@ -78,8 +82,8 @@ export default function StoryPaginate() {
           />
         </svg>
       </button>
-      {articles !== null || (articles && articles.length > 1) ? (
-        articles.map((page: any, index: number) => (
+      {articles.length > 1 ? (
+        articles.map((_, index: number) => (
           <button
             key={index}
             onClick={() => dispatch(incrementStoryBy(index))}

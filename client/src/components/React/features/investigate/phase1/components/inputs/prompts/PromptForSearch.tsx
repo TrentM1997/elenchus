@@ -1,3 +1,4 @@
+import { selectPOVData } from "@/state/Reducers/Investigate/pov/selectors";
 import React from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/state/store";
@@ -6,7 +7,7 @@ import { limitString } from "@/lib/helpers/formatting/Presentation";
 
 
 function PromptForSearch(): JSX.Element | null {
-    const idea: string | null = useSelector((state: RootState) => state.investigation.pov.idea);
+    const idea: string | null = useSelector((state: RootState) => selectPOVData(state).idea);
     const isMobile = useIsMobile();
     const shortened: string | null = limitString(idea);
 

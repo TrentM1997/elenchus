@@ -1,16 +1,16 @@
-import type { Article } from "@/state/Reducers/Investigate/articles/ExtractedArticles";
+import { ArticleSchemaType } from "@/lib/schemas/ArticleSchema";
 import { useEffect, useCallback, useState } from "react";
 
 interface UsePreloadReturn {
-  displayed: Article | null;
-  prev: Article | null;
+  displayed: ArticleSchemaType | null;
+  prev: ArticleSchemaType | null;
 }
 
-const usePreload = (articleData?: Article): UsePreloadReturn => {
-  const [prev, setPrev] = useState<Article | null>(null);
-  const [displayed, setDisplayed] = useState<Article | null>(null);
+const usePreload = (articleData?: ArticleSchemaType): UsePreloadReturn => {
+  const [prev, setPrev] = useState<ArticleSchemaType | null>(null);
+  const [displayed, setDisplayed] = useState<ArticleSchemaType | null>(null);
 
-  const preload = useCallback((src: string) => {
+  const preload = useCallback((src: string | undefined | null) => {
     if (!src) return Promise.resolve();
     return new Promise<void>((resolve, reject) => {
       const img = new Image();

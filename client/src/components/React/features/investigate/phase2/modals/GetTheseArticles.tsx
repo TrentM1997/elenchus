@@ -1,22 +1,21 @@
-import { runFirecrawlExtraction } from "@/state/Reducers/Investigate/articles/ExtractedArticles";
-import { useAppdispatch } from "@/hooks/appDispatch";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/state/store";
+import { AppDispatch, RootState } from "@/state/store";
 import DisplayThese from "./DisplayThese";
 import { ChosenArticleSlice } from "@/state/Reducers/Investigate/articles/ChosenArticles";
 import { wait } from "@/lib/helpers/formatting/Presentation";
 import { changePhase } from "@/state/Reducers/Investigate/Rendering";
 import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+import { extractArticles } from "@/state/Reducers/Investigate/articles/thunks";
 
 export function GetTheseArticles(): JSX.Element {
-  const { chosenArticles }: ChosenArticleSlice = useSelector(
+  const { selected }: ChosenArticleSlice = useSelector(
     (state: RootState) => state.investigation.getArticle,
   );
-  const appDispatch = useAppdispatch();
-  const dispatch = useDispatch();
-
+  const dispatch = useDispatch<AppDispatch>();
   const retrieveArticles = (): void => {
-    appDispatch(runFirecrawlExtraction({ articles: chosenArticles }));
+    if (selected.status !== "empty") {
+      dispatch(extractArticles(selected.data));
+    }
   };
 
   const executeExtraction = async () => {
@@ -45,9 +44,7 @@ export function GetTheseArticles(): JSX.Element {
             lg:gap-y-12 w-full items-end h-full"
       >
         <GetArticlesHeader />
-        {Array.isArray(chosenArticles) && chosenArticles.length > 0 && (
-          <DisplayThese />
-        )}
+        {selected.status !== "empty" && <DisplayThese />}
         <ExtractThese
           executeExtraction={executeExtraction}
           dontExecute={dontExecute}

@@ -1,5 +1,5 @@
 import { PrivateServerClientRoutes } from "@/infra/transport/types/routeDefinitions";
-import { IHttpClient } from "@/lib/services/client/http/httpClient";
+import { IHttpClient } from "@/lib/services/client/http/types";
 import {
   IPrivateUserWritesHandler,
   PrivateUserWritesHandler,
@@ -11,6 +11,7 @@ import {
 
 export interface IPrivateUserRouteHandler {
   readonly write: IPrivateUserWritesHandler;
+  readonly select: IPrivateUserSelectHandler;
 }
 
 export class PrivateUserRouteHandler implements IPrivateUserRouteHandler {

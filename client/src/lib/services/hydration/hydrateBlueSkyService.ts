@@ -1,5 +1,5 @@
 import { BlueSkyPostSchemaType } from "@/lib/schemas/BlueSkySchemas";
-import { ServerClient } from "../client/serverClient";
+import { IServerClient } from "../client/serverClient";
 
 export type SplitBlueSkyFeed = {
   firstHalf: BlueSkyPostSchemaType[];
@@ -11,7 +11,7 @@ export interface IHydrateBlueSkyService {
 }
 
 export class HydrateBlueSkyService implements IHydrateBlueSkyService {
-  constructor(private readonly server: ServerClient) {}
+  constructor(private readonly server: Pick<IServerClient, "general">) {}
 
   public async hydrateFeed(): Promise<SplitBlueSkyFeed> {
     return await this.getFeed();

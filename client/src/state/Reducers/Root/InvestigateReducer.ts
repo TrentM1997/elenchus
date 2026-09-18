@@ -1,7 +1,7 @@
 import { combineReducers } from "@reduxjs/toolkit";
 import type { UnknownAction } from "@reduxjs/toolkit";
 import StepsReducer from "../Investigate/Steps";
-import UserPOVReducer from "../Investigate/UserPOV";
+import UserPOVReducer from "../Investigate/pov/UserPOV";
 import NoteReducer from "../Investigate/NoteTaking";
 import ReadingReducer from "../Investigate/articles/ExtractedArticles";
 import SelectingArticles from "../Investigate/articles/ChosenArticles";

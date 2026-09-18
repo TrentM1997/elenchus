@@ -1,13 +1,12 @@
+import { selectPOVData } from "@/state/Reducers/Investigate/pov/selectors";
 import { useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import type { InvestigateState } from "@/state/Reducers/Root/InvestigateReducer";
-import { AppDispatch, type RootState } from "@/state/store";
+import { AppDispatch } from "@/state/store";
 import { PaginationStatus, updatePaginateStatus } from "@/state/Reducers/Investigate/Steps";
 
 export function useCheckFirstStep() {
-    const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
     const dispatch = useDispatch<AppDispatch>();
-    const { idea } = investigateState.pov;
+    const { idea } = useSelector(selectPOVData);
     const timeRef = useRef<number | null>(null);
     const min: number = 4;
 

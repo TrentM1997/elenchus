@@ -1,3 +1,4 @@
+import { selectPOVData } from "@/state/Reducers/Investigate/pov/selectors";
 import type { RootState } from '@/state/store'
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { increment, denyIncrement, acceptedInput } from "@/state/Reducers/Investigate/Steps";
@@ -8,7 +9,7 @@ import React from 'react';
 
 function NextButton({ }): JSX.Element | null {
   const { step, status } = useSelector((state: RootState) => state.investigation.stepper, shallowEqual);
-  const idea = useSelector((state: RootState) => state.investigation.pov.idea);
+  const idea = useSelector((state: RootState) => selectPOVData(state).idea);
   const gettingHelp = useSelector((state: RootState) => state.investigation.help.gettingHelp);
   const dispatch = useDispatch();
   const noInput = useMemo(() => {
@@ -21,7 +22,7 @@ function NextButton({ }): JSX.Element | null {
     window.dispatchEvent(new CustomEvent('nextStepClick'));
     if ((status === 'active') && (idea !== '')) {
       dispatch(increment())
-      dispatch(selectPost(null))
+      dispatch(selectPost({ status: "initial" }))
     } else if (noInput) {
       dispatch(acceptedInput(false))
       dispatch((denyIncrement('idle')))

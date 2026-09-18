@@ -1,5 +1,6 @@
 import { Type, Static } from "@sinclair/typebox";
 import { PersistenceFailedResponseSchema } from "./PersistenceFailedSchema";
+import { ArticleSchema } from "./ArticleSchema";
 
 export const BookmarkArticleIdSchema = Type.Number();
 
@@ -31,7 +32,10 @@ export const BookmarkResponseSchema = Type.Union([
 ]);
 
 export const BookmarkedArticlesResponseSchema = Type.Union([
-  BookmarkedArticlesSuccessSchema,
+  Type.Object({
+    data: Type.Array(ArticleSchema),
+    ok: Type.Literal(true),
+  }),
   PersistenceFailedResponseSchema,
 ]);
 

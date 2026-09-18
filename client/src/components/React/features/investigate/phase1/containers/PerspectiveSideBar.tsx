@@ -1,3 +1,4 @@
+import { selectPOVData } from "@/state/Reducers/Investigate/pov/selectors";
 import { RootState } from "@/state/store"
 import { shallowEqual, useSelector } from "react-redux"
 import SidebarItem from "../components/inputs/tracking/SidebarItem";
@@ -5,7 +6,7 @@ import { SidebarItemData } from "@/env";
 import React from "react";
 
 function PerspectiveSidebar() {
-    const { idea, perspective, expertise, biases, premises } = useSelector((state: RootState) => state.investigation.pov, shallowEqual);
+    const { idea, perspective, expertise, biases, premises } = useSelector((state: RootState) => selectPOVData(state), shallowEqual);
 
     const items: SidebarItemData[] = [
         { title: 'Idea', data: idea, step: 1 },

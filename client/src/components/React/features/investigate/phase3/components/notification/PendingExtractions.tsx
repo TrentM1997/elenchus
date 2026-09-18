@@ -3,7 +3,7 @@ import { extractionToastVariants } from "@/motion/variants";
 import { SetStateAction, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
-import type { Prog } from "@/state/Reducers/Investigate/articles/ExtractedArticles";
+import type { Prog } from "@/state/Reducers/Investigate/articles/types";
 import { createPortal } from "react-dom";
 
 interface PendingExtracts {
@@ -18,7 +18,7 @@ export default function PendingExtractions({
   const progress: Prog = useSelector(
     (state: RootState) => state.investigation.read.progress,
   );
-  const remove: boolean = status === "fulfilled" || status === "rejected";
+  const remove = ["ready", "failed", "error", "fulfilled", "rejected"].includes(status);
 
   useEffect(() => {
     if (!remove) return;

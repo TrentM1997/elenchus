@@ -1,5 +1,5 @@
 import type { ServerClientRoutes } from "@/infra/transport/types/routeDefinitions";
-import { IHttpClient } from "@/lib/services/client/http/httpClient";
+import { IHttpClient } from "@/lib/services/client/http/types";
 import {
   AccountRouteHandler,
   IAccountRouteHandler,

@@ -1,22 +1,13 @@
 import { motion } from "framer-motion";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/state/store";
+import { useDispatch } from "react-redux";
 import { closeNotification } from "@/state/Reducers/Investigate/articles/ExtractedArticles";
 
 export default function FailedNotification({ notification }) {
-  const investigateState = useSelector(
-    (state: RootState) => state.investigation,
-  );
-  const { read } = investigateState;
-  const { failedNotifications } = read;
   const dispatch = useDispatch();
 
   const close = () => {
     const articleLink: string = notification.article_url;
-    const thisNotification = failedNotifications.findIndex(
-      (notification) => notification.article_url === articleLink,
-    );
-    dispatch(closeNotification(thisNotification));
+    dispatch(closeNotification(articleLink));
   };
 
   const limitDescription = (string: string) => {

@@ -1,11 +1,14 @@
 import { AtpAgent } from "@atproto/api";
-import { BlueSkyPostSchemaType } from "../../schemas/BlueSkyPostSchema";
+import {
+  BlueSkyPostSchemaType,
+  SplitBlueSkyFeedSchemaType,
+} from "../../schemas/BlueSkyPostSchema";
 import { ServerError } from "../../core/errors/ServerError";
 import { BlueSkyParser, IBlueSkyParser } from "./blueSkyParser";
 
 export interface IBlueSkyService {
   search(query: string): Promise<BlueSkyPostSchemaType[]>;
-  feed(): Promise<BlueSkyPostSchemaType[]>;
+  feed(): Promise<SplitBlueSkyFeedSchemaType>;
 }
 
 export class BlueSkyService implements IBlueSkyService {
@@ -22,17 +25,18 @@ export class BlueSkyService implements IBlueSkyService {
     return await this.executeSearch(query);
   }
 
-  public async feed(): Promise<BlueSkyPostSchemaType[]> {
+  public async feed(): Promise<SplitBlueSkyFeedSchemaType> {
     return await this.getFeed();
   }
 
-  private async getFeed() {
+  private async getFeed(): Promise<SplitBlueSkyFeedSchemaType> {
     await this.agentLogin();
     const feedUri = await this.getFeedUri();
     if (!feedUri) {
       throw new ServerError("Couldn't find verified-news generator", 404);
     }
-    return await this.getNewsFeed(feedUri);
+    const feed = await this.getNewsFeed(feedUri);
+    return this.parser.splitFeed(feed);
   }
 
   private async getNewsFeed(feedUri: string): Promise<BlueSkyPostSchemaType[]> {

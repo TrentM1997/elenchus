@@ -3,7 +3,7 @@ import {
   BookmarkedArticlesResponseSchema,
   BookmarkedArticlesResponseSchemaType,
 } from "@/lib/schemas/BookmarkSchema";
-import { IHttpClient } from "@/lib/services/client/http/httpClient";
+import { IHttpClient } from "@/lib/services/client/http/types";
 import {
   InvestigationsSavedReponseSchema,
   InvestigationsSavedReponseSchemaType,

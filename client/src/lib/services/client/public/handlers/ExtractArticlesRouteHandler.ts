@@ -8,7 +8,7 @@ import {
 import { IHttpClient } from "../../http/types";
 
 export interface IExtractArticlesRouteHandler {
-  extract(body: SelectedArticle[]): Promise<ExecuteExtractResponseSchemaType>;
+  extract(body: SelectedArticle[], signal?: AbortSignal): Promise<ExecuteExtractResponseSchemaType>;
   poll({
     jobId,
     signal,
@@ -32,7 +32,7 @@ export class ExtractArticlesRouteHandler implements IExtractArticlesRouteHandler
     signal?: AbortSignal;
   }): Promise<ExtractionJobResultSchemaType> {
     return await this.http.get(
-      `${this.routes.articles.poll}${jobId}`,
+      `${this.routes.articles.poll}${encodeURIComponent(jobId)}`,
       ExtractionJobResultSchema,
       signal,
     );
@@ -40,11 +40,13 @@ export class ExtractArticlesRouteHandler implements IExtractArticlesRouteHandler
 
   public async extract(
     body: SelectedArticle[],
+    signal?: AbortSignal,
   ): Promise<ExecuteExtractResponseSchemaType> {
     return await this.http.post(
       this.routes.articles.extract,
       ExecuteExtractResponseSchema,
-      body,
+      { articles: body },
+      signal,
     );
   }
 }

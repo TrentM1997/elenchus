@@ -1,12 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { HydrateBlueSkyService } from "@/lib/services/hydrateBlueSkyService";
-const service = new HydrateBlueSkyService();
+import { serverClient } from "@/lib/services/client/serverClient";
 
 export const hydrateFeed = createAsyncThunk(
   "BlueSkySlice/hydrateFeed",
   async (_, thunkAPI) => {
     try {
-      return await service.hydrateFeed();
+      return await serverClient.general.integrations.blueSkyFeed();
     } catch (err) {
       console.error(err);
       return thunkAPI.rejectWithValue(err);

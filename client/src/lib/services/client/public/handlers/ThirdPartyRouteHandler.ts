@@ -5,6 +5,8 @@ import {
 import {
   BlueSkyPostSchemaArray,
   BlueSkyPostSchemaArrayType,
+  SplitBlueSkyFeedSchema,
+  SplitBlueSkyFeedSchemaType,
 } from "@/lib/schemas/BlueSkySchemas";
 import { PublicServerClientRoutes } from "@/infra/transport/types/routeDefinitions";
 import { IHttpClient } from "../../http/types";
@@ -16,7 +18,7 @@ export type NewsApiSearchParams = {
 
 export interface IThirdPartyRouteHandler {
   readonly search: IThirdPartyRouteSearchHandler;
-  blueSkyFeed(): Promise<BlueSkyPostSchemaArrayType>;
+  blueSkyFeed(): Promise<SplitBlueSkyFeedSchemaType>;
 }
 
 export class ThirdPartyRouteHandler implements IThirdPartyRouteHandler {
@@ -28,10 +30,10 @@ export class ThirdPartyRouteHandler implements IThirdPartyRouteHandler {
     this.search = new ThirdPartyRouteSearchHandler(this.routes, this.http);
   }
 
-  public async blueSkyFeed(): Promise<BlueSkyPostSchemaArrayType> {
+  public async blueSkyFeed(): Promise<SplitBlueSkyFeedSchemaType> {
     return await this.http.get(
       this.routes.integrations.blueSky.feed,
-      BlueSkyPostSchemaArray,
+      SplitBlueSkyFeedSchema,
     );
   }
 }

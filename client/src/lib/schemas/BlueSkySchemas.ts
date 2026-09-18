@@ -76,6 +76,13 @@ export const BlueSkyFeedItemSchema = Type.Object({
   reason: Type.Optional(Type.Any()),
 });
 
+export const SplitBlueSkyFeedSchema = Type.Object({
+  firstHalf: BlueSkyPostSchemaArray,
+  secondHalf: BlueSkyPostSchemaArray,
+});
+
+export type SplitBlueSkyFeedSchemaType = Static<typeof SplitBlueSkyFeedSchema>;
+
 export type BlueSkyPostSchemaArrayType = Static<typeof BlueSkyPostSchemaArray>;
 
 export type BlueSkyPostSchemaType = Static<typeof BlueSkyPostSchema>;

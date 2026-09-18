@@ -56,8 +56,9 @@ export class HttpClient implements IHttpClient {
     url: ValidServerRoute,
     schema: TResponse,
     body?: TBody,
+    signal?: AbortSignal,
   ): Promise<Static<TResponse>> {
-    const options = this.configure.optionsPOST(body);
+    const options = { ...this.configure.optionsPOST(body), signal };
 
     let response: Response;
 
@@ -68,6 +69,7 @@ export class HttpClient implements IHttpClient {
         method: "POST",
         url,
         error,
+        signal,
       });
     }
 
@@ -86,6 +88,7 @@ export class HttpClient implements IHttpClient {
     return await this.parser.validateResponseOrThrow(schema, response, {
       method: "POST",
       url,
+      signal,
     });
   }
 

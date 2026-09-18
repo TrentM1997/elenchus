@@ -1,6 +1,6 @@
 import { AsyncState } from "@/state/types";
 import { BlueSkyPostSchemaType } from "../../../../../schemas/api/types/BlueSkyPostSchema";
-import { SplitBlueSkyFeed } from "@/lib/services/hydrateBlueSkyService";
+import { SplitBlueSkyFeedSchemaType } from "@/lib/schemas/BlueSkySchemas";
 
 export type PopoverXY = {
   x: number | null;
@@ -20,4 +20,4 @@ export type PopoverPost =
   | { status: "initial" }
   | { status: "ready"; data: BlueSkyPostSchemaType["record"]["text"] };
 
-export type BlueSkyPosts = AsyncState<SplitBlueSkyFeed>;
+export type BlueSkyPosts = AsyncState<SplitBlueSkyFeedSchemaType>;

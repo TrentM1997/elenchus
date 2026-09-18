@@ -12,7 +12,7 @@ export type AuthRoutes = {
 };
 
 export type ArticleRoutes = {
-  poll: `/articles/extract?q=${string}`;
+  poll: `/articles/extract/${string}`;
   extract: "/articles/extract";
 };
 
@@ -86,7 +86,7 @@ export const serverClientRoutes = {
       },
     },
     articles: {
-      poll: `/articles/extract?q=`,
+      poll: `/articles/extract/`,
       extract: "/articles/extract",
     },
   },

@@ -1,3 +1,4 @@
+import { selectPOVData } from "@/state/Reducers/Investigate/pov/selectors";
 import { RootState } from "@/state/store"
 import { useSelector } from "react-redux"
 import { fetchSavedInvestigations } from "@/state/Reducers/UserContent/UserInvestigations"
@@ -13,7 +14,8 @@ export default function SaveInvestigation({ }) {
     const sources = useSelector((state: RootState) => state.saveResearch.sources)
     const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation)
     const [prevWork, setPrevWork] = useState<any>(null)
-    const { pov, review } = investigateState
+    const { review } = investigateState
+    const pov = useSelector(selectPOVData);
     const { idea, premises, perspective, biases } = pov
     const { endingPerspective, newConcepts, merit, movedOnIdea, extracts } = review
     const dispatch = useDispatch<AppDispatch>()
