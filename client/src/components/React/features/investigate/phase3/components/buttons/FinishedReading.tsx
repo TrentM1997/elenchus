@@ -4,90 +4,95 @@ import { RootState } from "@/state/store";
 import { useEffect, useRef } from "react";
 import { useTooltipFlags } from "@/hooks/useTooltipFlags";
 import PanelLabel from "./PanelLabel";
-import { changePhase, populateTooltip, TooltipDisplayed } from "@/state/Reducers/Investigate/Rendering";
-import type { Article } from "@/state/Reducers/Investigate/Reading";
+import {
+  changePhase,
+  populateTooltip,
+  TooltipDisplayed,
+} from "@/state/Reducers/Investigate/Rendering";
 import { AnimatePresence } from "framer-motion";
 import { smoothScrollUp } from "@/lib/helpers/scroll/ScrollToTop";
 import { wait } from "@/lib/helpers/formatting/Presentation";
 import ButtonHoverTooltip from "../../tooltips/ButtonHoverTooltip";
 
-export function FinishedReading({ failedExtraction }) {
-    const articles: Article[] = useSelector((s: RootState) => s.investigation.read.articles);
-    const tooltip: TooltipDisplayed = useSelector((s: RootState) => s.investigation.rendering.tooltip);
-    const { getFlags, setFlag } = useTooltipFlags();
-    const dispatch = useDispatch();
-    const animateTooltip: boolean = ((Array.isArray(articles) && (articles.length > 0)) && (tooltip === 'Finished Reading Button'));
-    const flagTimer = useRef<number | null>(null);
+export function FinishedReading() {
+  const articles = useSelector((s: RootState) => s.investigation.read.articles);
+  const tooltip: TooltipDisplayed = useSelector(
+    (s: RootState) => s.investigation.rendering.tooltip,
+  );
+  const { getFlags, setFlag } = useTooltipFlags();
+  const dispatch = useDispatch();
+  const animateTooltip: boolean =
+    Array.isArray(articles) &&
+    articles.length > 0 &&
+    tooltip === "Finished Reading Button";
+  const flagTimer = useRef<number | null>(null);
 
-    useEffect(() => {
+  useEffect(() => {
+    if (!Array.isArray(articles) || articles.length === 0) {
+      return;
+    }
 
-        if ((!Array.isArray(articles) || (articles.length === 0))) {
-            return;
-        };
+    const flags = getFlags();
 
-        const flags = getFlags();
+    if (flags.readingTooltip === false) {
+      flagTimer.current = window.setTimeout(() => {
+        dispatch(populateTooltip("Finished Reading Button"));
+        setFlag("readingTooltip", true);
+        flagTimer.current = null;
+      }, 2000);
+    }
+  }, [getFlags, setFlag, dispatch]);
 
-        if (flags.readingTooltip === false) {
-            flagTimer.current = window.setTimeout(() => {
-                dispatch(populateTooltip('Finished Reading Button'));
-                setFlag('readingTooltip', true);
-                flagTimer.current = null;
-            }, 2000);
-        };
+  const handleClick = async (): Promise<void> => {
+    smoothScrollUp();
+    await wait(500);
+    dispatch(changePhase("Phase 4"));
+  };
 
-    }, [getFlags, setFlag, dispatch]);
-
-
-    const handleClick = async (): Promise<void> => {
-        smoothScrollUp();
-        await wait(500);
-        dispatch(changePhase('Phase 4'));
-    };
-
-
-    return (
-        <div className={`${failedExtraction ? 'pointer-events-none opacity-30' : 'pointer-events-auto opacity-100 lg:hover:bg-border_gray/40'}
+  return (
+    <div
+      className={`${articles.status === "error" ? "pointer-events-none opacity-30" : "pointer-events-auto opacity-100 lg:hover:bg-border_gray/40"}
             shrink-0 w-fit h-10 lg:h-auto px-2 md:py-1.5 xl:px-2 2xl:px-2.5 relative
               transition-all ease-soft duration-300 flex justify-center lg:border-r group cursor-pointer
-              border-border_gray`}>
-            <AnimatePresence>
-                {animateTooltip && <GuideDoneReading />}
-            </AnimatePresence>
-            <button
-                onClick={handleClick}
-                className="my-auto mx-auto rounded-lg transition-all 
+              border-border_gray`}
+    >
+      <AnimatePresence>
+        {animateTooltip && <GuideDoneReading />}
+      </AnimatePresence>
+      <button
+        onClick={handleClick}
+        className="my-auto mx-auto rounded-lg transition-all 
         duration-300 max-w-8 max-h-8 xl:max-w-7 xl:max-h-7 2xl:max-w-8 group
-        2xl:max-h-8 ease-in-out group relative">
-
-
-                {(tooltip !== 'Finished Reading Button') && <ButtonHoverTooltip description="done reading" />
-                }
-                <div className="h-full w-full box-border">
-                    <ForwardArrow />
-                </div>
-            </button>
-            <PanelLabel description={"done"} />
+        2xl:max-h-8 ease-in-out group relative"
+      >
+        {tooltip !== "Finished Reading Button" && (
+          <ButtonHoverTooltip description="done reading" />
+        )}
+        <div className="h-full w-full box-border">
+          <ForwardArrow />
         </div>
-    );
+      </button>
+      <PanelLabel description={"done"} />
+    </div>
+  );
 }
-
-
-
-
 
 function ForwardArrow(): JSX.Element {
-
-    return (
-        <svg xmlns="http://www.w3.org/2000/svg" width={'100%'} height={'100%'} viewBox="0 0 24 24" fill="currentColor"
-            className="icon icon-tabler icons-tabler-filled icon-tabler-circle-arrow-right will-change-transform
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={"100%"}
+      height={"100%"}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className="icon icon-tabler icons-tabler-filled icon-tabler-circle-arrow-right will-change-transform
         text-button_blue/90 delay-150 lg:group-hover:scale-[1.35] lg:group-hover:text-button_blue transition-all ease-soft duration-300"
-        ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 2l.324 .005a10 10 0 1 1 -.648 0l.324 -.005zm.613 5.21a1 1 0 0 0 -1.32 1.497l2.291 2.293h-5.584l-.117 .007a1 1 0 0 0 .117 1.993h5.584l-2.291 2.293l-.083 .094a1 1 0 0 0 1.497 1.32l4 -4l.073 -.082l.064 -.089l.062 -.113l.044 -.11l.03 -.112l.017 -.126l.003 -.075l-.007 -.118l-.029 -.148l-.035 -.105l-.054 -.113l-.071 -.111a1.008 1.008 0 0 0 -.097 -.112l-4 -4z" /></svg>
-
-    )
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 2l.324 .005a10 10 0 1 1 -.648 0l.324 -.005zm.613 5.21a1 1 0 0 0 -1.32 1.497l2.291 2.293h-5.584l-.117 .007a1 1 0 0 0 .117 1.993h5.584l-2.291 2.293l-.083 .094a1 1 0 0 0 1.497 1.32l4 -4l.073 -.082l.064 -.089l.062 -.113l.044 -.11l.03 -.112l.017 -.126l.003 -.075l-.007 -.118l-.029 -.148l-.035 -.105l-.054 -.113l-.071 -.111a1.008 1.008 0 0 0 -.097 -.112l-4 -4z" />
+    </svg>
+  );
 }
-
-
-
 
 //function CheckMark(): JSX.Element {
 //

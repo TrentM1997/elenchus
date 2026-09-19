@@ -6,76 +6,74 @@ import Pending from "./Pending";
 import { hideTop } from "@/motion/variants";
 import { createPortal } from "react-dom";
 import { AuthNotificationProps } from "@/env";
+import { renderToast } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 
 interface DeleteActions {
-    pending: string,
-    success: string,
-    failed: string
-};
+  pending: string;
+  success: string;
+  failed: string;
+}
 
 const deleteMessages: DeleteActions = {
-    pending: 'Deleting article',
-    success: 'Deleted successfully',
-    failed: 'Failed to delete'
+  pending: "Deleting article",
+  success: "Deleted successfully",
+  failed: "Failed to delete",
 };
 
+export default function AuthNotification({ toast }: AuthNotificationProps) {
+  useEffect(() => {
+    if (toast.status === "success" || toast.status === "failed") {
+      const timer = window.setTimeout(() => {
+        renderToast({ status: "idle", kind: null });
+      }, 2000);
 
-export default function AuthNotification({ status, setStatus, action }: AuthNotificationProps) {
+      return () => clearTimeout(timer);
+    }
+  }, [toast.status]);
 
+  const deleteStatus: JSX.Element | null = (
+    <p key={`delete${toast.status}`} className="text-white font-light text-sm">
+      {toast.status === "pending" && deleteMessages.pending}
+      {toast.status === "success" && deleteMessages.success}
+      {toast.status === "failed" && deleteMessages.failed}
+    </p>
+  );
 
-    useEffect(() => {
-        if (status === 'success' || (status === 'failed')) {
-            const timer = window.setTimeout(() => {
-                setStatus('idle');
-            }, 2000);
+  const general: JSX.Element | null = (
+    <p className="text-white font-light text-sm">{`${toast.kind} ${toast.status}`}</p>
+  );
 
-            return () => clearTimeout(timer);
-        }
-    }, [status]);
+  const notification: JSX.Element | null = (
+    <motion.div
+      key="accountCreationNotification"
+      variants={hideTop}
+      initial="hide"
+      animate="show"
+      exit="hide"
+      transition={{ type: "tween", duration: 0.2 }}
+      className="fixed top-24 right-36 h-10 w-60 p-2 bg-mirage border border-zinc-700 rounded-xl px-2 z-[910]"
+    >
+      <div
+        key="title"
+        className="flex w-full h-full items-center justify-between"
+      >
+        <div key="titleContainer" className="w-auto h-fit">
+          {toast.status !== "idle" && toast.action === "deleting"
+            ? deleteStatus
+            : general}
+        </div>
+        <div className="w-auto h-fit relative">
+          {
+            <AnimatePresence mode="wait">
+              {status === "pending" && <Pending key={"pending-status"} />}
+              {status === "success" && <Success key={"success-status"} />}
+              {status === "failed" && <Failed key={"failed-status"} />}
+            </AnimatePresence>
+          }
+        </div>
+      </div>
+    </motion.div>
+  );
 
-
-    const deleteStatus: JSX.Element | null = (
-        <p
-            key={`delete${status}`}
-            className="text-white font-light text-sm">
-            {(status === 'pending') && deleteMessages.pending}
-            {(status === 'success') && deleteMessages.success}
-            {(status === 'failed') && deleteMessages.failed}
-        </p>
-    );
-
-    const general: JSX.Element | null = (
-        <p className="text-white font-light text-sm">
-
-            {`${action} ${status}`}
-        </p>
-    )
-
-
-    const notification: JSX.Element | null = (
-        <motion.div
-            key='accountCreationNotification'
-            variants={hideTop}
-            initial='hide'
-            animate='show'
-            exit='hide'
-            transition={{ type: 'tween', duration: 0.2 }}
-            className="fixed top-24 right-36 h-10 w-60 p-2 bg-mirage border border-zinc-700 rounded-xl px-2 z-[910]"
-        >
-            <div key='title' className="flex w-full h-full items-center justify-between">
-                <div key='titleContainer' className="w-auto h-fit">
-                    {(action && (action === 'Delete')) ? deleteStatus : general}
-                </div>
-                <div className="w-auto h-fit relative">
-                    {<AnimatePresence mode="wait">
-                        {status === "pending" && <Pending key={'pending-status'} />}
-                        {status === "success" && <Success key={'success-status'} />}
-                        {status === "failed" && <Failed key={'failed-status'} />}
-                    </AnimatePresence>}
-                </div>
-            </div>
-        </motion.div>
-    );
-
-    return createPortal(notification, document.body);
-};
+  return createPortal(notification, document.body);
+}

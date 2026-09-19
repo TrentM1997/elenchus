@@ -1,5 +1,5 @@
 import { Type, Static } from "@sinclair/typebox";
-import { UserSchema } from "./Users";
+import { UserSchema } from "./Users.js";
 
 export const TokenSchema = Type.String({ minLength: 1 });
 

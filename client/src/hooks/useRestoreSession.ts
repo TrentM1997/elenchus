@@ -1,14 +1,15 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/state/store";
-import { authenticate } from '@/state/Reducers/Athentication/Authentication';
-import { populateArticles } from '@/state/Reducers/UserContent/UserContentReducer';
-import { populateResearch } from '@/state/Reducers/UserContent/UserInvestigations';
+import { authenticated } from '@/state/Reducers/Athentication/Authentication';
+import { populateArticles } from '@/state/Reducers/Dashboard/UserContent/UserContentReducer';
+import { populateResearch } from '@/state/Reducers/Dashboard/UserContent/UserInvestigations';
+import type { RecoverUserResults } from "@/env";
 import { User } from '@supabase/supabase-js';
 
 
 export function useRestoreSession() {
-    const session = useSelector((state: RootState) => state.auth.activeSession);
+    const session = useSelector((state: RootState) => (state.auth.userKind === "authenticated"));
     const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
@@ -42,13 +43,13 @@ export function useRestoreSession() {
                     throw new Error(`Unexpected error: ${res.status}`)
                 }
 
-                const result: CurrentUser = await res.json();
-                const user: User = result?.user;
+                const result: RecoverUserResults = await res.json();
+                const user: User = result?.data?.user;
                 const data: UserContent = result?.data;
                 const { userArticles, userResearch } = data;
 
                 if (user && data) {
-                    dispatch(authenticate(true));
+                    dispatch(authenticated("authenticated"));
                     dispatch(populateArticles(userArticles));
                     dispatch(populateResearch(userResearch));
                 };

@@ -1,20 +1,18 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import { Database } from "../../../../types/databaseInterfaces";
-import type { AuthenticatedUserId } from "../../../../services/auth/authorization";
+import { Database } from "../../../../types/databaseInterfaces.js";
+import type { AuthenticatedUserId } from "../../../../services/auth/authorization.js";
 import {
   BookmarkSchema,
   BookmarkSchemaType,
-} from "../../../../schemas/BookmarkSchema";
-import { validateServerOrThrow } from "../../../../core/validation/validateOrThrow";
-import { ServerError } from "../../../../core/errors/ServerError";
-import { ok } from "assert";
+} from "../../../../schemas/BookmarkSchema.js";
+import { validateServerOrThrow } from "../../../../core/validation/validateOrThrow.js";
 
 export type BookmarkResponse =
   | { ok: true; data: BookmarkSchemaType }
   | { ok: false; message: string; details: string };
 
 export type BookmarkDeleteResponse =
-  | { ok: false; message: string; cause?: unknown }
+  | { ok: false; message: string; details: string }
   | { ok: true; data: Database["public"]["Tables"]["bookmarks"]["Row"][] };
 
 export type BookmarkedArticlesResponse =
@@ -40,6 +38,10 @@ export interface IBookmarksRepository {
   getBookmarks(
     user_id: AuthenticatedUserId,
   ): Promise<BookmarkedArticlesResponse>;
+  getById(
+    user_id: AuthenticatedUserId,
+    article_id: number,
+  ): Promise<BookmarkResponse>;
 }
 
 export class BookmarksRepository implements IBookmarksRepository {
@@ -49,6 +51,13 @@ export class BookmarksRepository implements IBookmarksRepository {
     user_id: AuthenticatedUserId,
   ): Promise<BookmarkedArticlesResponse> {
     return await this.executeGetBookmarks(user_id);
+  }
+
+  public async getById(
+    user_id: AuthenticatedUserId,
+    article_id: number,
+  ): Promise<BookmarkResponse> {
+    return await this.getBookmarkById(user_id, article_id);
   }
 
   private async executeGetBookmarks(
@@ -83,6 +92,31 @@ export class BookmarksRepository implements IBookmarksRepository {
     return await this.executeBookmarkArticle(user_id, article_id);
   }
 
+  public async getBookmarkById(
+    user_id: AuthenticatedUserId,
+    article_id: number,
+  ): Promise<BookmarkResponse> {
+    const { data, error } = await this.db
+      .from("bookmarks")
+      .select()
+      .eq("user_id", user_id)
+      .eq("article_id", article_id)
+      .single();
+
+    if (error) {
+      return {
+        ok: false,
+        message: error.message,
+        details: error.details,
+      };
+    }
+
+    return {
+      ok: true,
+      data: this.validateBookmark(data),
+    };
+  }
+
   public async deleteBookmark(
     user_id: AuthenticatedUserId,
     article_id: number,
@@ -105,7 +139,7 @@ export class BookmarksRepository implements IBookmarksRepository {
       return {
         ok: false,
         message: error.message,
-        cause: error.cause,
+        details: error.details,
       };
     }
 

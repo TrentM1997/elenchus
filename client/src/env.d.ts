@@ -2,18 +2,23 @@
 /// <reference types="astro/client" />
 
 import { Session } from "@supabase/supabase-js";
-import type { Extracts } from "./state/Reducers/Investigate/Review";
+import type { Extracts } from "./state/Reducers/Investigate/pov/Review";
 import React, { ReactEventHandler, ReactNode, SetStateAction } from "react";
 import { User } from "@supabase/supabase-js";
 import { SigninStatus } from "./hooks/useSignIn";
-import type { Article } from "./state/Reducers/Investigate/Reading";
-import type { ActiveTab } from "./state/Reducers/UserContent/DashboardTabs";
-import type { BlueSkyPost } from "./state/Reducers/BlueSky/BlueSkySlice";
+import {
+  ArticleSchemaType,
+  FactualReportingRatingSchemaType,
+} from "../../schemas/api/types/ArticlesSchema";
+import { BlueSkyPosts } from "./state/Reducers/BlueSky/types";
+import { BlueSkyPostSchemaType } from "../../schemas/api/types/BlueSkyPostSchema";
+import { ActiveToast } from "./state/Reducers/RenderingPipelines/PipelineSlice";
+import { BrowsingOptionSchemaType } from "./lib/schemas/articles/BrowsingOptionSchema";
+import { ActiveTab } from "./state/Reducers/Dashboard/UserContent/DashboardTabs";
 
 declare global {
   interface ImportMetaEnv {
     readonly PUBLIC_SERVER_PORT: string;
-    // Add other public environment variables here as needed
   }
 
   interface ImportMeta {
@@ -133,7 +138,7 @@ declare global {
   }
 
   interface PostsProps {
-    posts: any[] | null;
+    posts: BlueSkyPosts;
     context?: string;
     shouldRedirect: boolean;
     shouldAnimate?: boolean;
@@ -250,19 +255,11 @@ declare global {
   }
 
   interface AuthNotificationProps {
-    id?: "login" | "signout";
-    complete?: boolean | null;
-    setterFunction?: any;
-    authStatus?: SigninStatus;
-    status?: SigninStatus;
-    redirect?: Function;
-    loginStatus?: SigninStatus;
-    setStatus?: React.Dispatch<SetStateAction<SigninStatus>>;
-    action?: string;
+    toast: ActiveToast;
   }
 
   interface SaveArticleButton {
-    article: Article;
+    article: ArticleSchemaType;
     open: boolean;
     reviewing?: boolean;
   }
@@ -276,15 +273,15 @@ declare global {
   }
 
   interface LinkProps {
-    chooseArticle: (article: SelectedArticle) => () => void;
     highlight?: boolean;
-    article: SelectedArticle;
+    article: BrowsingOptionSchemaType;
     index?: number;
     isPriority?: boolean;
     showGetArticlesModal?: boolean;
     mute?: boolean;
     chosenArticles?: Array<SelectedArticle>;
     inModal?: boolean;
+    chooseArticle?: (article: BrowsingOptionSchemaType) => () => void;
   }
 
   interface ArticleOperationData {
@@ -299,7 +296,7 @@ declare global {
   }
 
   interface WikiTerm {
-    article_url?: string;
+    article_url: string;
     data?: Extracts;
   }
 
@@ -400,16 +397,7 @@ declare global {
     successful: boolean | null;
   }
 
-  interface IntegrityRatings {
-    veryHigh: number;
-    high: number;
-    mostlyFactual: number;
-    mixed: number;
-    low: number;
-    veryLow: number;
-    conspiracy: number;
-    unknown: number;
-  }
+  type IntegrityRatings = Record<FactualReportingRatingSchemaType, number>;
 
   interface WebWorkerResponse {
     type: string;
@@ -424,11 +412,11 @@ declare global {
     signature?: string;
   }
 
-  interface StatBreakdownTypes {
-    percentChanged: number | null;
-    validated: number | null;
-    neutral: number | null;
-    neededMore: number | null;
+  export interface StatBreakdownTypes {
+    percentChanged: number;
+    validated: number;
+    neutral: number;
+    neededMore: number;
   }
 
   type DeleteStatus = "deleted" | "saved" | "noop" | "error";
@@ -441,8 +429,8 @@ declare global {
   }
 
   interface BSPostProps {
-    post: BlueSkyPost;
-    choosePost?: (post: BlueSkyPost) => () => Promise<void>;
+    post: BlueSkyPostSchemaType;
+    choosePost?: (post: BlueSkyPostSchemaType) => () => Promise<void>;
     inPopover?: boolean;
   }
 

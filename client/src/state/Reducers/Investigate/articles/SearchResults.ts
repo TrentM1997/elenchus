@@ -1,68 +1,33 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ArticleType } from "@/env";
 import { AsyncState } from "@/state/types";
-import { QueryNewsApiParams } from "./thunks";
-import { getArticles } from "@/lib/services/news/getArticles";
+import { searchNewsApi } from "./thunks";
+import { SearchResultsResponseSchemaType } from "@/lib/schemas/articles/BrowsingOptionSchema";
 
-export type SearchResultsState = AsyncState<ArticleType[]>;
+export type SearchResultsState = AsyncState<SearchResultsResponseSchemaType>;
 
 export type SearchResultsPages = AsyncState<Page>;
-
-export type Status = "idle" | "pending" | "fulfilled" | "rejected";
 
 export type Page = Array<ArticleType>;
 
 interface SearchResults {
-  articleOptions: SearchResultsState;
-  status: Status;
-  pages: SearchResultsPages;
+  pages: SearchResultsState;
   currentPage: number;
   activeRequestId: string | null;
   mutePagination: boolean;
 }
 
 const initialState: SearchResults = {
-  articleOptions: { status: "initial" },
-  status: "idle",
   pages: { status: "initial" },
   currentPage: 0,
   activeRequestId: null,
   mutePagination: false,
 };
 
-export const RetrieveArticles = createAsyncThunk(
-  "investigate/fetchArticles",
-  async (params: QueryNewsApiParams, thunkAPI) => {
-    try {
-      const response = await getArticles(
-        params.query,
-        params.timeout,
-        thunkAPI.signal,
-      );
-
-      if (!response) {
-        throw new Error(`Unable to query endpoint for article links`);
-      }
-      if (response) {
-        return response;
-      } else {
-        return;
-      }
-    } catch (error) {
-      console.error(error);
-
-      return thunkAPI.rejectWithValue(error);
-    }
-  },
-);
-
 export const SearchResultsSlice = createSlice({
   name: "searchResults",
   initialState: initialState,
   reducers: {
-    searchResults: (state, action) => {
-      state.articleOptions = action.payload.data;
-    },
     getPages: (state, action) => {
       state.pages = action.payload;
     },
@@ -83,14 +48,40 @@ export const SearchResultsSlice = createSlice({
     },
     resetResults: () => initialState,
     resetArticles: (state) => {
-      state.articleOptions = { status: "initial" };
+      state.activeRequestId = null;
+      state.pages = { status: "initial" };
       state.currentPage = 0;
     },
+  },
+  extraReducers(builder) {
+    builder.addCase(searchNewsApi.pending, (state, action) => {
+      state.activeRequestId = action.meta.requestId;
+      state.currentPage = 0;
+      state.pages = { status: "pending" };
+    });
+
+    builder.addCase(searchNewsApi.rejected, (state, action) => {
+      if (state.activeRequestId !== action.meta.requestId) return;
+
+      state.activeRequestId = null;
+      state.pages = action.meta.aborted
+        ? { status: "initial" }
+        : { status: "failed", details: "Failed to query NewsAPI" };
+    });
+
+    builder.addCase(searchNewsApi.fulfilled, (state, action) => {
+      if (state.activeRequestId !== action.meta.requestId) return;
+
+      state.activeRequestId = null;
+      state.pages =
+        action.payload.length > 0
+          ? { status: "ready", data: action.payload }
+          : { status: "empty", message: "No data found" };
+    });
   },
 });
 
 export const {
-  searchResults,
   resetResults,
   resetArticles,
   getPages,

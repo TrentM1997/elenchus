@@ -1,38 +1,46 @@
 import { useEffect, useState } from "react";
-import { emailValidation, requiredInput, confirmPassword } from "@/lib/helpers/formatting/validation";
+import {
+  emailValidation,
+  requiredInput,
+  confirmPassword,
+} from "@/lib/helpers/formatting/validation";
 
-type CheckStatusType = 'confirmation' | 'n/a';
+type CheckStatusType = "confirmation" | "n/a";
 
-const useCheckCredentials = (userEmail: string | null, userPassword: string | null, secondPW?: string | null) => {
-    const [validEmail, setValidEmail] = useState<boolean>(null)
-    const [acceptedInput, setAcceptedInput] = useState<boolean>(null)
-    const [checkStatus, setCheckStatus] = useState<CheckStatusType>('n/a');
+export type ValidStatus = "initial" | "invalid" | "valid";
 
-    useEffect(() => {
-        if ((userEmail === "") || (userPassword === "")) return;
+const useCheckCredentials = (
+  userEmail: string | null,
+  userPassword: string | null,
+  secondPW?: string | null,
+) => {
+  const [validEmail, setValidEmail] = useState<ValidStatus>("initial");
+  const [acceptedInput, setAcceptedInput] = useState<ValidStatus>("initial");
+  const [checkStatus, setCheckStatus] = useState<CheckStatusType>("n/a");
 
-        if (userEmail) {
-            setValidEmail(emailValidation(userEmail));
-        };
-        if (userEmail && userPassword) {
-            requiredInput(userEmail, userPassword, setAcceptedInput);
-        };
-    }, [userEmail, userPassword]);
+  useEffect(() => {
+    if (userEmail === "" || userPassword === "") return;
 
-    useEffect(() => {
-        if (secondPW) {
-            setCheckStatus("confirmation");
-        };
+    if (userEmail) {
+      setValidEmail(emailValidation(userEmail));
+    }
+    if (userEmail && userPassword) {
+      requiredInput(userEmail, userPassword, setAcceptedInput);
+    }
+  }, [userEmail, userPassword]);
 
+  useEffect(() => {
+    if (secondPW) {
+      setCheckStatus("confirmation");
+    }
 
-        if ((checkStatus === 'confirmation')) {
-            const valid = confirmPassword(userPassword, secondPW)
-            setAcceptedInput(valid);
-        }
+    if (checkStatus === "confirmation") {
+      const valid = confirmPassword(userPassword, secondPW);
+      setAcceptedInput(valid ? "valid" : "invalid");
+    }
+  }, [secondPW]);
 
-    }, [secondPW]);
-
-    return { validEmail, acceptedInput };
+  return { validEmail, acceptedInput };
 };
 
-export { useCheckCredentials }
+export { useCheckCredentials };

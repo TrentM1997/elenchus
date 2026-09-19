@@ -1,9 +1,9 @@
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/state/store";
-import { grabAssociatedArticle } from "@/state/Reducers/UserContent/UserContentReducer";
-import { presentAssociatedArticle } from "@/state/Reducers/UserContent/ProfileNavigationSlice";
+import { grabAssociatedArticle } from "@/state/Reducers/Dashboard/UserContent/UserContentReducer";
+import { presentAssociatedArticle } from "@/state/Reducers/Dashboard/UserContent/ProfileNavigationSlice";
 import React from "react";
-import { chooseTab } from "@/state/Reducers/UserContent/DashboardTabs";
+import { chooseTab } from "@/state/Reducers/Dashboard/UserContent/DashboardTabs";
 
 
 

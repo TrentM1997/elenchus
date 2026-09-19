@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { IAppServices } from "../../../services/appServices";
-import { requireAuth } from "../../middleware/requireAuth";
-import { publicRoutes } from "./publicRoutes";
-import { protectedRoutes } from "./privateRoutes";
-import { authenticate } from "../../middleware/authenticate";
+import { IAppServices } from "../../../services/appServices.js";
+import { requireAuth } from "../../middleware/requireAuth.js";
+import { publicRoutes } from "./publicRoutes.js";
+import { protectedRoutes } from "./privateRoutes.js";
+import { authenticate } from "../../middleware/authenticate.js";
 
 type UseMiddleWareParams = {
   publicRouter: Router;

@@ -1,29 +1,36 @@
+import { selectPOVData } from "@/state/Reducers/Investigate/pov/selectors";
 import StepsEditor from "@/components/React/global/TipTap/StepsEditor";
 import { RootState } from "@/state/store";
 import { useSelector } from "react-redux";
-import { getPremises } from "@/state/Reducers/Investigate/UserPOV";
-import { motion } from "framer-motion"
-import { stepVariants } from "@/motion/variants"
+import { updatePOVDraft } from "@/state/Reducers/Investigate/pov/thunks";
+import { motion } from "framer-motion";
+import { stepVariants } from "@/motion/variants";
 import React from "react";
 
 function Step4(): JSX.Element | null {
-  const premises = useSelector((state: RootState) => state.investigation.pov.premises);
+  const premises = useSelector(
+    (state: RootState) => selectPOVData(state).premises,
+  );
 
   return (
     <motion.div
       variants={stepVariants}
-      initial='closed'
-      animate='open'
-      exit='exit'
-      className='absolute inset-0'>
+      initial="closed"
+      animate="open"
+      exit="exit"
+      className="absolute inset-0"
+    >
       <div className="inline-block h-fit box-border mx-auto min-w-full max-w-full 2xl:h-full">
-        <div className="flex flex-col items-center w-full 
-       xs:px-0 relative lg:rounded-t-[3rem]">
+        <div
+          className="flex flex-col items-center w-full 
+       xs:px-0 relative lg:rounded-t-[3rem]"
+        >
           <div className="text-center relative z-10 w-full">
-
-            <div className="w-full border-none h-44 sm:h-52 xl:h-72 2xl:max-w-168 text-md text-white bg-transparent focus:ring-1 focus:ring-white
-     resize-none text-wrap flex justify-items-start">
-              <StepsEditor context={premises} setterFunction={getPremises} />
+            <div
+              className="w-full border-none h-44 sm:h-52 xl:h-72 2xl:max-w-168 text-md text-white bg-transparent focus:ring-1 focus:ring-white
+     resize-none text-wrap flex justify-items-start"
+            >
+              <StepsEditor context={premises} setterFunction={(premises: string) => updatePOVDraft({ premises })} />
             </div>
           </div>
         </div>
@@ -31,6 +38,5 @@ function Step4(): JSX.Element | null {
     </motion.div>
   );
 }
-
 
 export default React.memo(Step4);

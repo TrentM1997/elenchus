@@ -1,3 +1,4 @@
+import { establishPOV } from "@/state/Reducers/Investigate/pov/thunks";
 import { motion } from "framer-motion"
 import { useDispatch } from "react-redux"
 import { changePhase } from "@/state/Reducers/Investigate/Rendering";
@@ -10,6 +11,7 @@ function Step5(): JSX.Element | null {
     const dispatch = useDispatch<AppDispatch>();
 
     const beginSearch = () => {
+        dispatch(establishPOV());
         dispatch(changePhase('Phase 2'));
     };
 

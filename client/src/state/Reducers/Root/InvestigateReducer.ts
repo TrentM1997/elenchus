@@ -1,16 +1,15 @@
 import { combineReducers } from "@reduxjs/toolkit";
 import type { UnknownAction } from "@reduxjs/toolkit";
-import StepsReducer from "../Investigate/Steps";
-import UserPOVReducer from "../Investigate/UserPOV";
-import NoteReducer from "../Investigate/NoteTaking";
-import ReadingReducer from "../Investigate/Reading";
+import StepsReducer from "../Investigate/pov/Steps";
+import UserPOVReducer from "../Investigate/pov/UserPOV";
+import NoteReducer from "../Investigate/articles/NoteTaking";
+import ReadingReducer from "../Investigate/articles/ExtractedArticles";
 import SelectingArticles from "../Investigate/articles/ChosenArticles";
 import SearchResults from "../Investigate/articles/SearchResults";
-import ReviewReducer from "../Investigate/Review";
-import HelpReducer from "../Investigate/HelpModal";
-import EndInvestigateReducer from "../Investigate/EndInvestigation";
-import WikipediaSlice from "../Investigate/WikipediaSlice";
+import ReviewReducer from "../Investigate/pov/Review";
+import HelpReducer from "../Investigate/help/HelpModal";
 import RenderingSlice from "../Investigate/Rendering";
+import WikipediaExtractSlice from "../Investigate/wiki/WikiSlice";
 
 export const CLEAR_INVESTIGATION = "investigation/clear" as const;
 
@@ -23,8 +22,7 @@ const investigateReducer = combineReducers({
   search: SearchResults,
   review: ReviewReducer,
   help: HelpReducer,
-  end: EndInvestigateReducer,
-  wiki: WikipediaSlice,
+  wiki: WikipediaExtractSlice,
   rendering: RenderingSlice,
 });
 

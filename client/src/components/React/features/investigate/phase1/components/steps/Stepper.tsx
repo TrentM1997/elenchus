@@ -8,7 +8,7 @@ import Step5 from "./Step5";
 import { RootState } from "@/state/store";
 
 export default function Stepper(): JSX.Element | null {
-    const step: number = useSelector((state: RootState) => state.investigation.stepper.step);
+    const step: number = useSelector((state: RootState) => state.investigation.stepper.wizardStep.num);
 
     return (
         <div className="grow h-44 sm:h-52 2xl:h-72

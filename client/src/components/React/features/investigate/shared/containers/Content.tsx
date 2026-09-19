@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
-import type { ModalStages } from "@/state/Reducers/Investigate/WikipediaSlice";
+import type { ModalStages } from "@/state/Reducers/Investigate/wiki/WikiSlice";
 import { Phase } from "@/state/Reducers/Investigate/Rendering";
 import { renderContent } from "../../switches/renderContent";
 

@@ -9,62 +9,66 @@ import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/state/store";
 import MaxChosen from "./MaxChosen";
 import { useMaxSelectedToast } from "@/hooks/useAutoDismiss";
-import { populateTooltip, TooltipDisplayed } from "@/state/Reducers/Investigate/Rendering";
+import {
+  populateTooltip,
+  TooltipDisplayed,
+} from "@/state/Reducers/Investigate/Rendering";
 import { wait } from "@/lib/helpers/formatting/Presentation";
 
 interface TooltipWrapper {
-    canAnimate: boolean
-};
+  canAnimate: boolean;
+}
 
-export default function SelectTooltipWrapper({ canAnimate }: TooltipWrapper): JSX.Element | null {
-    const tooltip: TooltipDisplayed = useSelector((s: RootState) => s.investigation.rendering.tooltip);
-    const chosenArticles = useSelector((state: RootState) => state.investigation.getArticle.chosenArticles);
-    const dispatch = useDispatch<AppDispatch>();
-    const { getFlags } = useTooltipFlags();
-    const count: number = useMemo(() => {
-        if (Array.isArray(chosenArticles)) {
-            return chosenArticles.length;
-        } else {
-            return 0;
-        };
-    }, [chosenArticles]);
-    useMaxSelectedToast({ count });
+export default function SelectTooltipWrapper({
+  canAnimate,
+}: TooltipWrapper): JSX.Element | null {
+  const tooltip: TooltipDisplayed = useSelector(
+    (s: RootState) => s.investigation.rendering.tooltip,
+  );
+  const chosenArticles = useSelector(
+    (state: RootState) => state.investigation.getArticle.selected,
+  );
+  const dispatch = useDispatch<AppDispatch>();
+  const { getFlags } = useTooltipFlags();
+  const count: number = useMemo(() => {
+    if (
+      chosenArticles.status !== "empty" &&
+      Array.isArray(chosenArticles.data)
+    ) {
+      return chosenArticles.data.length;
+    } else {
+      return 0;
+    }
+  }, [chosenArticles]);
+  useMaxSelectedToast({ count });
 
-    const surfaceTooltip = async () => {
-        const flags = getFlags();
-        if (flags.selectingTooltip === false) {
-            await wait(1500);
-            dispatch(populateTooltip('Guide Selection'));
-        };
-    };
+  const surfaceTooltip = async () => {
+    const flags = getFlags();
+    if (flags.selectingTooltip === false) {
+      await wait(1500);
+      dispatch(populateTooltip("Guide Selection"));
+    }
+  };
 
+  useEffect(() => {
+    surfaceTooltip();
+  }, []);
 
+  return (
+    <>
+      <AnimatePresence mode="wait">
+        {tooltip === "Selection Required" && canAnimate && (
+          <SelectionRequired key={"minimum-chosen warning"} />
+        )}
 
-    useEffect(() => {
+        {tooltip === "Guide Selection" && canAnimate && (
+          <GuideSelectingArticles key={"tooltip"} />
+        )}
 
-        surfaceTooltip();
-
-    }, []);
-
-    return (
-        <>
-            <AnimatePresence mode="wait">
-                {(tooltip === 'Selection Required') && (canAnimate) &&
-                    <SelectionRequired key={'minimum-chosen warning'} />
-                }
-
-                {(tooltip === 'Guide Selection') && (canAnimate) &&
-                    <GuideSelectingArticles key={'tooltip'}
-                    />
-                }
-
-                {(tooltip === 'Max Toast') && (canAnimate) &&
-                    <MaxChosen
-                        key={'max-articles-selected'}
-                    />
-                }
-            </AnimatePresence>
-        </>
-    );
-
-};
+        {tooltip === "Max Toast" && canAnimate && (
+          <MaxChosen key={"max-articles-selected"} />
+        )}
+      </AnimatePresence>
+    </>
+  );
+}

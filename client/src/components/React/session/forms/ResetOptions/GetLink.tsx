@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { emailValidation } from "@/lib/helpers/formatting/validation"
 import { AnimatePresence } from "framer-motion"
 import { Link } from "react-router-dom"
-import { sendResetEmail } from "@/infra/api/sendResetEmail"
+import { serverClient } from "@/lib/services/client/serverClient"
 import AuthNotification from "../../notifications/AuthNotification";
 import { SigninStatus } from "@/hooks/useSignIn"
 
@@ -22,8 +22,8 @@ export default function GetLink({ }) {
         if (validEmail) {
             window.localStorage.setItem('email_for_pw_reset', JSON.stringify({ email: emailToReset }));
             try {
-                const res: boolean = await sendResetEmail(email);
-                if (!res) {
+                const res = await serverClient.general.user.resetPassword(email);
+                if (!res.ok) {
                     throw new Error('unexpected error sending email request for reset');
                 }
                 setEmailSent(true);
@@ -41,7 +41,7 @@ export default function GetLink({ }) {
 
         if (emailToReset !== null) {
             const valid = emailValidation(emailToReset)
-            setValidEmail(valid);
+            setValidEmail(valid === "valid");
         }
 
         if (status === 'success') setEmailSent(true);
@@ -52,7 +52,7 @@ export default function GetLink({ }) {
     return (
         <div className="w-full max-w-md md:max-w-sm mx-auto">
             <AnimatePresence>
-                {(status !== 'idle') && <AuthNotification complete={emailSent} setStatus={setStatus} status={status} />}
+                {(status !== 'idle') && <AuthNotification toast={{ status, kind: "Auth", action: "password reset" }} />}
             </AnimatePresence>
             <div className="flex flex-col">
                 <div className="border-b pb-12">

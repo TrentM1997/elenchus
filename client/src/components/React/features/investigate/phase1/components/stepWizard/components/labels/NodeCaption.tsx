@@ -10,7 +10,7 @@ interface Caption {
 }
 
 export default function NodeCaption({ caption, thisStep }: Caption): JSX.Element {
-    const step: number = useSelector((state: RootState) => state.investigation.stepper.step);
+    const step: number = useSelector((state: RootState) => state.investigation.stepper.wizardStep.num);
     const showCaption: boolean = (thisStep === step) || (thisStep < step);
 
 

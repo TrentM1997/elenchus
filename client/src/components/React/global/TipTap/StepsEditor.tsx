@@ -5,35 +5,14 @@ import { AppDispatch, RootState } from "@/state/store";
 import Placeholder from "@tiptap/extension-placeholder";
 import { TipTapProps } from "@/env";
 import EditorControls from "./EditorControls";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import styles from './StepsEditor.module.css';
 
 export default function StepsEditor({ setterFunction, context, id }: TipTapProps): JSX.Element | null {
     const dispatch = useDispatch<AppDispatch>();
 
-    const step = useSelector((state: RootState) => state.investigation.stepper.step);
-    const draftRef = useRef<string | null>(null);
-    const debounce = useRef<number | null>(null);
+    const step = useSelector((state: RootState) => state.investigation.stepper.wizardStep.num);
     const placeholderText = step === 0 ? 'type the idea to challenge here...' : 'type premises here...'
-
-    const handleContent = () => {
-        debounce.current = window.setTimeout(() => {
-            draftRef.current = editor.getText();
-            dispatch(setterFunction(draftRef.current));
-        }, 300);
-        debounce.current = null;
-    };
-
-    useEffect(() => {
-
-        return () => {
-            if (debounce.current !== null) {
-                clearTimeout(debounce.current);
-            };
-        };
-    }, []);
-
-
 
     const editor: Editor = useEditor({
         content: context && context.trim().length > 0 ? context : null,
@@ -61,11 +40,22 @@ export default function StepsEditor({ setterFunction, context, id }: TipTapProps
     });
 
 
+    useEffect(() => {
+        if (!editor) return;
+
+        const handleContent = () => {
+            dispatch(setterFunction(editor.getText()));
+        };
+
+        editor.on('update', handleContent);
+        return () => {
+            editor.off('update', handleContent);
+        };
+    }, [editor, dispatch, setterFunction]);
+
     if (!editor) {
         return null
     };
-
-    editor.on('update', handleContent)
 
     const handleContainerClick = () => {
         if (editor && !editor.isFocused) {
@@ -92,4 +82,3 @@ export default function StepsEditor({ setterFunction, context, id }: TipTapProps
         </div>
     )
 };
-

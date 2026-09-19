@@ -8,7 +8,7 @@ import ItemText from "./ItemText";
 
 function SidebarItem({ item }: { item: SidebarItemData }) {
     const state: InvestigateState = useSelector((state: RootState) => state.investigation);
-    const { step } = state.stepper;
+    const { num: step } = state.stepper.wizardStep;
     const [hasInput, setHasInput] = useState<boolean>(item.data ? true : false);
     const active = useMemo(() => {
         const isActive: boolean = (item.step - 1) === step;

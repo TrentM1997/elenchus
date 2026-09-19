@@ -8,7 +8,7 @@ import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 
 export default function InvestigateMore() {
     const [open, setOpen] = useState<boolean>(false)
-    const activeSession = useSelector((state: RootState) => state.auth.activeSession);
+    const activeSession = useSelector((state: RootState) => (state.auth.userKind === "authenticated"));
     const saved = useSelector((state: RootState) => state.saveResearch.saved)
     const dispatch = useDispatch()
 

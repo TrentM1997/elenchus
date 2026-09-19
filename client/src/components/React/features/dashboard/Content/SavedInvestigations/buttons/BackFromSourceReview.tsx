@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux"
-import { presentThisInvestigation } from "@/state/Reducers/UserContent/ProfileNavigationSlice";
+import { presentThisInvestigation } from "@/state/Reducers/Dashboard/UserContent/ProfileNavigationSlice";
 import { AppDispatch } from "@/state/store";
 
 

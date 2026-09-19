@@ -1,11 +1,11 @@
 import {
-  getPerspective,
-  getExpertise,
   InitialPerspective,
   TopicExpertise,
-} from "@/state/Reducers/Investigate/UserPOV";
+} from "@/state/Reducers/Investigate/pov/types";
+import { updatePOVDraft } from "@/state/Reducers/Investigate/pov/thunks";
+import { selectPOVData } from "@/state/Reducers/Investigate/pov/selectors";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/state/store";
+import { AppDispatch } from "@/state/store";
 import Perspective from "../inputs/interactive/Perspective";
 import Expertise from "../inputs/interactive/Expertise";
 import { motion } from "framer-motion";
@@ -13,23 +13,8 @@ import { stepVariants } from "@/motion/variants";
 import React from "react";
 
 function Step2(): JSX.Element | null {
-  const perspective = useSelector(
-    (state: RootState) => state.investigation.pov.perspective,
-  );
-  const expertise = useSelector(
-    (state: RootState) => state.investigation.pov.expertise,
-  );
-  const dispatch = useDispatch();
-
-  const getPOV = (e: React.MouseEvent<HTMLDivElement>) => {
-    const targetDiv = e.target as HTMLDivElement;
-    dispatch(getPerspective(targetDiv.getAttribute("data-set")));
-  };
-
-  const assignKnowledge = (e: React.MouseEvent<HTMLDivElement>) => {
-    const divTarget = e.target as HTMLDivElement;
-    dispatch(getExpertise(divTarget.getAttribute("data-set")));
-  };
+  const { perspective, expertise } = useSelector(selectPOVData);
+  const dispatch = useDispatch<AppDispatch>();
 
   const opinions: InitialPerspective[] = ["Agree", "Disagree", "Neutral"];
 
@@ -63,7 +48,7 @@ function Step2(): JSX.Element | null {
             key={opinion}
             opinion={opinion}
             perspective={perspective}
-            getPOV={getPOV}
+            getPOV={() => dispatch(updatePOVDraft({ perspective: opinion }))}
           />
         ))}
       </div>
@@ -79,7 +64,7 @@ function Step2(): JSX.Element | null {
             key={item}
             item={item}
             expertise={expertise}
-            assignKnowledge={assignKnowledge}
+            assignKnowledge={() => dispatch(updatePOVDraft({ expertise: item }))}
           />
         ))}
       </div>

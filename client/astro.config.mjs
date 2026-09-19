@@ -23,15 +23,23 @@ export default defineConfig({
       proxy:
         process.env.NODE_ENV === "development"
           ? {
-              "/search": {
+              "/articles": {
                 target: "http://localhost:5001",
                 changeOrigin: true,
               },
-              "/firecrawl_extractions": {
+              "/user": {
                 target: "http://localhost:5001",
                 changeOrigin: true,
               },
-              "/firecrawl_extractions/:jobId": {
+              "/blueSky": {
+                target: "http://localhost:5001",
+                changeOrigin: true,
+              },
+              "/wiki": {
+                target: "http://localhost:5001",
+                changeOrigin: true,
+              },
+              "/auth": {
                 target: "http://localhost:5001",
                 changeOrigin: true,
               },
@@ -39,55 +47,7 @@ export default defineConfig({
                 target: "http://localhost:5001",
                 changeOrigin: true,
               },
-              "/getBlueSkyFeed": {
-                target: "http://localhost:5001",
-                changeOrigin: true,
-              },
-              "/supabaseLogIn": {
-                target: "http://localhost:5001",
-                changeOrigin: true,
-              },
-              "/getUserArticles": {
-                target: "http://localhost:5001",
-                changeOrigin: true,
-              },
-              "/getUserResearch": {
-                target: "http://localhost:5001",
-                changeOrigin: true,
-              },
-              "/articleOperation": {
-                target: "http://localhost:5001",
-                changeOrigin: true,
-              },
-              "/saveResearch": {
-                target: "http://localhost:5001",
-                changeOrigin: true,
-              },
-              "/signUserOut": {
-                target: "http://localhost:5001",
-                changeOrigin: true,
-              },
               "/resetUserPassword": {
-                target: "http://localhost:5001",
-                changeOrigin: true,
-              },
-              "/getCurrentUser": {
-                target: "http://localhost:5001",
-                changeOrigin: true,
-              },
-              "/createNewUser": {
-                target: "http://localhost:5001",
-                changeOrigin: true,
-              },
-              "/sendFeedback": {
-                target: "http://localhost:5001",
-                changeOrigin: true,
-              },
-              "/passwordReset": {
-                target: "http://localhost:5001",
-                changeOrigin: true,
-              },
-              "/newsArticles": {
                 target: "http://localhost:5001",
                 changeOrigin: true,
               },

@@ -2,7 +2,7 @@ import { useMemo, useRef } from "react";
 import { useScrollTrap } from "@/hooks/useOverScrollTrap";
 import { AnimatePresence } from "framer-motion";
 import { useAppSelector } from "@/state/hooks/useAppSelector";
-import { selectWikiSummary, selectWikiDisambig } from "@/state/Reducers/Investigate/WikipediaSlice";
+import { selectWikiSummary, selectWikiDisambig } from "@/state/Reducers/Investigate/wiki/WikiSlice";
 import { WikiSummaryResponse, WikiDisambigResponse } from "@/lib/services/wiki/wiki";
 import StandardExtract from "./standard/StandardExtract";
 import DisambigExtract from "./disambig/DisambigExtract";

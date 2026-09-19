@@ -1,15 +1,19 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { SelectedArticle } from "@/env";
+import { BrowsingOptionSchemaType } from "@/lib/schemas/articles/BrowsingOptionSchema";
+import { assertNever } from "@/lib/helpers/asserts/assertNever";
+
+const MAX = 3;
+const MIN = 0;
 
 export type SelectedArticles =
   | { status: "empty" }
   | {
       status: "partial";
-      data: SelectedArticle[];
+      data: BrowsingOptionSchemaType[];
     }
   | {
       status: "max";
-      data: SelectedArticle[];
+      data: BrowsingOptionSchemaType[];
     };
 
 interface InitialState {
@@ -26,68 +30,65 @@ export const ArticlesSlice = createSlice({
   name: "chosenArticles",
   initialState: initialState,
   reducers: {
-    choose: (state: InitialState, action: PayloadAction<SelectedArticle>) => {
-      if (state.selected.status === "empty") {
-        state.selected = { status: "partial", data: [action.payload] };
-      } else {
-        const currentUrls = state.selected.data.map((art) => art.url);
-        const set = new Set([...currentUrls]);
-
-        if (set.has(action.payload.url)) {
-          const filtered = state.selected.data.filter(
-            (art) => art.url !== action.payload.url,
-          );
-
-          if (state.selected.data.length > 1) {
-            state.selected = { status: "partial", data: filtered };
-            return;
-          } else {
-            state.selected = { status: "empty" };
-            return;
-          }
-        }
-
-        if (state.selected.status === "max") {
+    choose: (
+      state: InitialState,
+      action: PayloadAction<BrowsingOptionSchemaType>,
+    ) => {
+      switch (state.selected.status) {
+        case "empty": {
+          state.selected = {
+            status: "partial",
+            data: [action.payload],
+          };
           return;
         }
 
-        if (state.selected.status === "partial") {
-          if (state.selected.data.length === 2) {
-            const temp = state.selected.data;
-            temp.push(action.payload);
-            state.selected = {
-              status: "max",
-              data: temp,
-            };
+        case "partial": {
+          const current = state.selected.data;
+
+          if (current.some((article) => article.url === action.payload.url)) {
+            return;
           }
+          const data = [action.payload, ...current];
+          state.selected = {
+            status: data.length >= MAX ? "max" : "partial",
+            data,
+          };
+          return;
         }
+
+        case "max":
+          return;
+
+        default:
+          return assertNever(state.selected);
       }
     },
     discard: (
       state: InitialState,
-      action: PayloadAction<SelectedArticle["url"]>,
+      action: PayloadAction<BrowsingOptionSchemaType>,
     ) => {
-      const urlToRemove = action.payload;
-
       switch (state.selected.status) {
+        case "empty":
+          return;
+
         case "partial":
         case "max": {
-          const current = state.selected.data;
-          const filtered = current.filter(
-            (selected: SelectedArticle) => selected.url !== urlToRemove,
+          const data = state.selected.data.filter(
+            (article) => article.url !== action.payload.url,
           );
-          if (current.length - 1 > 0) {
-            state.selected = {
-              status: "partial",
-              data: filtered,
-            };
-          } else {
-            state.selected = { status: "empty" };
-          }
-        }
-        default: {
+          state.selected =
+            data.length === 0
+              ? { status: "empty" }
+              : {
+                  status: data.length >= MAX ? "max" : "partial",
+                  data,
+                };
           return;
         }
+
+        default:
+          return assertNever(state.selected);
       }
     },
     openMaxtoast: (state, action) => {
@@ -98,8 +99,6 @@ export const ArticlesSlice = createSlice({
     },
   },
 });
-
-export type ChosenArticleSlice = ReturnType<typeof ArticlesSlice.reducer>;
 
 export const { choose, discard, clearChosenArticles, openMaxtoast } =
   ArticlesSlice.actions;

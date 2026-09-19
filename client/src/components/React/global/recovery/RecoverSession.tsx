@@ -1,10 +1,14 @@
 import { useRecoverSession } from "@/hooks/recovery/useRecoverSession";
 import React from "react";
 
-function RecoverSession({ children }: { children: React.ReactNode }): React.ReactNode {
-    useRecoverSession();
+function RecoverSession({
+  children,
+}: {
+  children: React.ReactNode;
+}): React.ReactNode {
+  useRecoverSession();
 
-    return children;
-};
+  return children;
+}
 
 export default RecoverSession;

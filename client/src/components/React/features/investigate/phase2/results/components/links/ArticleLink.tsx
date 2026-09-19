@@ -26,12 +26,8 @@ function ArticleLink({
       ? "opacity-30 pointer-events-none"
       : "pointer-events-auto opacity-80 hover:opacity-100";
   const inModalStyles: string = inModal && highlight ? "opacity-75" : "";
-
-  const dynamicProps = inModal
-    ? {}
-    : {
-        onClick: chooseArticle(article),
-      };
+  const dynamicProps =
+    chooseArticle && !inModal ? { onClick: chooseArticle(article) } : {};
 
   return (
     <li
@@ -48,16 +44,16 @@ function ArticleLink({
       >
         <LinkThumbnail
           thumbnail={thumbnail}
-          name={article.title}
+          name={article.name}
           isPriority={isPriority}
         />
-        <LinkTitle name={article.title} />
+        <LinkTitle name={article.name} />
       </div>
       <LinkDescription
         isPriority={isPriority}
         chosen={highlight}
-        logo={article.logo}
-        provider={article.source}
+        logo={article.logo ?? ""}
+        provider={article.provider}
         description={article.description}
         inModal={inModal}
       />

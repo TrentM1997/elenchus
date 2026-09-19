@@ -1,20 +1,22 @@
-import { IDbClient } from "../../db/access/client/dbClient";
-import { IAuthorization } from "../auth/authorization";
-import { ArticleSchemaType } from "../../schemas/ArticleSchema";
-import { LoginSchema } from "../../schemas/LoginSchema";
+import { IDbClient } from "../../db/access/client/dbClient.js";
+import { IAuthorization } from "../auth/authorization.js";
+import { ArticleSchemaType } from "../../schemas/ArticleSchema.js";
+import { LoginSchema } from "../../schemas/LoginSchema.js";
 import {
   CreateUserResult,
   PasswordResetResult,
   AccountDeletionResult,
-} from "../../db/access/repositories/user/userWriteHandler";
+  ChangePasswordResult,
+} from "../../db/access/repositories/user/userWriteHandler.js";
 import {
   BookmarkDeleteResponse,
   BookmarkResponse,
-} from "../../db/access/repositories/bookmarks/bookmarksRepository";
-import { ServerError } from "../../core/errors/ServerError";
-import { BookmarkSchemaType } from "../../schemas/BookmarkSchema";
-import { FeedbackReqSchemaType } from "../../schemas/FeedbackReqSchema";
-import { FeedbackSubmitResult } from "../../db/access/repositories/feedback/feedbackRespository";
+} from "../../db/access/repositories/bookmarks/bookmarksRepository.js";
+import { ServerError } from "../../core/errors/ServerError.js";
+import { BookmarkSchemaType } from "../../schemas/BookmarkSchema.js";
+import { FeedbackReqSchemaType } from "../../schemas/FeedbackReqSchema.js";
+import { FeedbackSubmitResult } from "../../db/access/repositories/feedback/feedbackRespository.js";
+import { ResetPasswordResponseSchemaType } from "../../schemas/ChangePasswordSchema.ts";
 
 type BookmarkOperation = {
   user_id: string | null | undefined;
@@ -22,6 +24,10 @@ type BookmarkOperation = {
 };
 
 export interface IUserService {
+  changePassword(credentials: {
+    email: string;
+    password: string;
+  }): Promise<ResetPasswordResponseSchemaType>;
   deleteAccount(
     user_id: string | null | undefined,
     credentials: LoginSchema,
@@ -46,6 +52,26 @@ export class UserService implements IUserService {
     >,
     private readonly policy: IAuthorization,
   ) {}
+
+  public async changePassword(credentials: {
+    email: string;
+    password: string;
+  }): Promise<ResetPasswordResponseSchemaType> {
+    return await this.db.user.write.resetPassword(credentials);
+  }
+
+  public async bookmark(params: {
+    user_id: string | null | undefined;
+    article_id: number;
+  }): Promise<BookmarkResponse> {
+    return await this.executeBookmark(params.user_id, params.article_id);
+  }
+
+  public async removeBookmark(
+    params: BookmarkOperation,
+  ): Promise<BookmarkDeleteResponse> {
+    return await this.executeRemoveBookmark(params.user_id, params.article_id);
+  }
 
   public async submitFeedback(
     feedback: FeedbackReqSchemaType,
@@ -135,19 +161,6 @@ export class UserService implements IUserService {
       const article = articlesById.get(id);
       return article ? [article] : [];
     });
-  }
-
-  public async bookmark(params: {
-    user_id: string | null | undefined;
-    article_id: number;
-  }): Promise<BookmarkResponse> {
-    return await this.executeBookmark(params.user_id, params.article_id);
-  }
-
-  public async removeBookmark(
-    params: BookmarkOperation,
-  ): Promise<BookmarkDeleteResponse> {
-    return await this.executeRemoveBookmark(params.user_id, params.article_id);
   }
 
   private async executeRemoveBookmark(

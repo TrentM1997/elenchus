@@ -4,10 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { AppDispatch } from "@/state/store";
 import { useRef } from "react";
-import { searchBlueSky } from "@/state/Reducers/BlueSky/BlueSkySlice";
+import { searchBlueSky } from "@/state/Reducers/BlueSky/thunks";
 
 export default function SearchBlueSky() {
-    const status = useSelector((state: RootState) => state.bluesky.status);
+    const status = useSelector((state: RootState) => state.bluesky.posts.status);
     const dispatch = useDispatch<AppDispatch>();
     const draftRef = useRef<string | null>(null);
     const lastQuery = useRef<string | null>(null);

@@ -1,33 +1,76 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getArticles } from "@/lib/services/news/getArticles";
+import { createAsyncThunk, GetThunkAPI } from "@reduxjs/toolkit";
+import { pollExtraction } from "@/lib/services/articles/pollExtraction";
+import { serverClient } from "@/lib/services/client/serverClient";
+import { extractionProgressReceived } from "./actions";
+import {
+  ArticleSchemaType,
+  ExtractionResult,
+} from "@/lib/schemas/articles/ArticleSchema";
 
-export type QueryNewsApiParams = {
-  query: string;
-  timeout: number;
-};
+export type QueryNewsApiParams = { query: string; timeout: number };
 
-export const queryNewsApi = createAsyncThunk(
-  "/investigation/queryNewsApi",
-  async (params: QueryNewsApiParams, thunkAPI) => {
+export const extractArticles = createAsyncThunk<
+  ExtractionResult,
+  SelectedArticle[],
+  {
+    rejectValue: string;
+    state: { investigation: { read: { activeRequestId: string | null } } };
+  }
+>(
+  "investigate/runFirecrawlExtraction",
+  async (articles, { signal, dispatch, rejectWithValue, requestId }) => {
     try {
-      const response = await getArticles(
-        params.query,
-        params.timeout,
-        thunkAPI.signal,
-      );
-
-      if (!response) {
-        throw new Error(`Unable to query endpoint for article links`);
-      }
-      if (response) {
-        return response;
-      } else {
-        return;
-      }
+      return await pollExtraction({
+        client: serverClient.general.extraction,
+        articles,
+        signal,
+        onProgress: (result) => {
+          if (!signal.aborted) {
+            dispatch(extractionProgressReceived({ requestId, result }));
+          }
+        },
+      });
     } catch (error) {
-      console.error(error);
+      return rejectWithValue(
+        signal.aborted
+          ? "Extraction canceled by user/navigation"
+          : error instanceof Error
+            ? error.message
+            : "Article extraction failed",
+      );
+    }
+  },
+  {
+    condition: (articles, { getState }) =>
+      articles.length > 0 &&
+      getState().investigation.read.activeRequestId === null,
+  },
+);
 
-      return thunkAPI.rejectWithValue(error);
+export const searchNewsApi = createAsyncThunk(
+  "SearchResults/searchNewsApi",
+  async (params: { query: string }, { rejectWithValue, signal }) => {
+    const { query } = params;
+    try {
+      return await serverClient.general.integrations.search.articles({
+        query,
+        signal,
+      });
+    } catch (err) {
+      return rejectWithValue(
+        err instanceof Error ? err.message : "Article search failed",
+      );
+    }
+  },
+);
+
+export const saveThisArticle = createAsyncThunk(
+  "ExtractedArticles/saveThisArticle",
+  async (article_id: ArticleSchemaType["id"], thunkAPI) => {
+    try {
+      return await serverClient.privileged.user.write.bookmark(article_id);
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err);
     }
   },
 );

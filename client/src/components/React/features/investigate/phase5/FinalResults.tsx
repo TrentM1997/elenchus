@@ -1,3 +1,4 @@
+import { selectPOVData } from "@/state/Reducers/Investigate/pov/selectors";
 import SaveInvestigation from "./buttons/SaveInvestigation"
 import InvestigateMore from "./buttons/InvestigateMore"
 import { useSelector } from "react-redux"
@@ -8,9 +9,9 @@ import SavingResearch from "@/components/React/session/notifications/SavingResea
 
 
 export default function FinalResults() {
-    const activeSession = useSelector((s: RootState) => s.auth.activeSession);
+    const activeSession = useSelector((s: RootState) => (s.auth.userKind === "authenticated"));
     const saveStatus = useSelector((state: RootState) => state.saveResearch.status)
-    const idea = useSelector((s: RootState) => s.investigation.pov.idea);
+    const idea = useSelector((s: RootState) => selectPOVData(s).idea);
 
     return (
         <section

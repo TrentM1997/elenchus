@@ -11,7 +11,7 @@ type ImgProps = React.ImgHTMLAttributes<HTMLImageElement> & {
 };
 
 function HeroImage() {
-	const activeSession = useSelector((state: RootState) => state.auth.activeSession);
+	const activeSession = useSelector((state: RootState) => (state.auth.userKind === "authenticated"));
 
 
 	const ImageProperties: ImgProps = {

@@ -2,7 +2,8 @@ import { motion } from "framer-motion";
 import { variants } from "@/motion/variants";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "@/state/store";
-import { getWikiExtract, modalStages } from "@/state/Reducers/Investigate/WikipediaSlice";
+import { getWikiExtract } from "@/state/Reducers/Investigate/wiki/thunks";
+import { modalStages } from "@/state/Reducers/Investigate/wiki/WikiSlice";
 import { useState } from "react";
 
 export default function TermModal(): JSX.Element | null {

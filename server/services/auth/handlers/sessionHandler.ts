@@ -6,18 +6,18 @@ import type {
   SupabaseClient,
 } from "@supabase/supabase-js";
 import { isAuthError } from "@supabase/supabase-js";
-import type { Database } from "../../../types/databaseInterfaces";
+import type { Database } from "../../../types/databaseInterfaces.js";
 import {
   AuthenticationParser,
   IAuthenticationParser,
-} from "./authenticationParser";
-import { ServerError } from "../../../core/errors/ServerError";
+} from "./authenticationParser.js";
+import { ServerError } from "../../../core/errors/ServerError.js";
 import {
   ISessionRecoveryHandler,
   SessionRecoveryHandler,
-} from "./sessionRecoveryHandler";
-import { CookieHandler, ICookieHandler } from "./cookieHandler";
-import type { LogOutResult, AuthenticateUserResult } from "./types";
+} from "./sessionRecoveryHandler.js";
+import { CookieHandler, ICookieHandler } from "./cookieHandler.js";
+import type { LogOutResult, AuthenticateUserResult } from "./types.js";
 
 export interface ISessionHandler {
   recoverSession(

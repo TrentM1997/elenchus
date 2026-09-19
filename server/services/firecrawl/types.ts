@@ -1,11 +1,11 @@
-import { ArticleSchemaType } from "../../schemas/ArticleSchema";
-import { FailedAttempt, FcParam } from "../../types/types";
+import { ArticleSchemaType } from "../../schemas/ArticleSchema.js";
+import { FailedAttempt, FcParam } from "../../types/types.js";
 
 export interface JobResult {
   status: "pending" | "fulfilled" | "rejected";
   result?: {
     progress: string;
-    retrieved: ArticleSchemaType[] | null;
+    retrieved: ArticleSchemaType[];
     rejected: FailedAttempt[];
   };
   error?: string | null;

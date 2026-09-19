@@ -1,5 +1,8 @@
 import Firecrawl from "@mendable/firecrawl-js";
-import { validateArticle } from "../../../schemas/ArticleSchema.js";
+import {
+  ArticleSchemaType,
+  validateArticle,
+} from "../../../schemas/ArticleSchema.js";
 import type {
   Article,
   FcParam,
@@ -40,7 +43,7 @@ export class FirecrawlScrapeHandler implements IFirecrawlScrapeHandler {
         return;
       }
 
-      const extracted: Article = this.parser.toArticleDto(
+      const extracted: ArticleSchemaType = this.parser.toArticleDto(
         content,
         article,
         MBFC_DATA,

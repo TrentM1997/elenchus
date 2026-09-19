@@ -1,12 +1,12 @@
-import { SelectedArticles } from "@/state/Reducers/Investigate/articles/ChosenArticles";
 import type { JSX } from "react";
-import React from "react";
+import { SelectedArticles } from "@/state/Reducers/Investigate/articles/ChosenArticles";
 import ArticleLink from "../features/investigate/phase2/results/components/links/ArticleLink";
+import { BrowsingOptionSchemaType } from "@/lib/schemas/articles/BrowsingOptionSchema";
 
 type RenderSelectedArticlesProps = {
   state: SelectedArticles;
-  chooseArticle: (article: SelectedArticle) => () => void;
   onScrollHandler: (event: any) => void;
+  chooseArticle?: (article: BrowsingOptionSchemaType) => () => void;
 };
 
 export default function RenderSelectedArticles({

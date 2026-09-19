@@ -75,7 +75,7 @@ export default function LazyHydrationSection() {
         <section
             aria-label='animated components'
             className={`w-full h-auto z-20
-        ${popoverPost ? 'overflow-y-hidden' : ''}
+        ${popoverPost.status === 'ready' ? 'overflow-y-hidden' : ''}
         `}>
             <div ref={sentinelRef} className='h-1 w-full' />
 

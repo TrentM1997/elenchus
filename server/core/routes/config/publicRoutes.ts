@@ -8,10 +8,12 @@ import { LoginSchema } from "../../../schemas/LoginSchema.js";
 import { ScrapeRequestSchema } from "../../../schemas/ScrapeRequestSchema.js";
 import { PasswordResetRequestSchema } from "../../../schemas/PasswordResetRequestSchema.js";
 import { FeedbackReqSchema } from "../../../schemas/FeedbackReqSchema.js";
+import { PUBLIC_API_ROUTES } from "./routeConfig.js";
+import { ClientError } from "../../errors/ClientError.js";
 
 export function publicRoutes(app: IAppServices, router: Router) {
   router.post(
-    "/user/feedback",
+    PUBLIC_API_ROUTES.user.feedback,
     wrapAsync(async (req, res) => {
       const feedback = validateOrThrow(FeedbackReqSchema, req.body.feedback);
 
@@ -26,7 +28,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
   );
 
   router.post(
-    "/resetUserPassword",
+    PUBLIC_API_ROUTES.user.passwordReset,
     wrapAsync(async (req, res) => {
       const { email } = validateOrThrow(PasswordResetRequestSchema, req.body);
       const result = await app.services.api.user.requestPasswordReset(email);
@@ -44,16 +46,16 @@ export function publicRoutes(app: IAppServices, router: Router) {
   );
 
   router.post(
-    "/auth/recover",
+    PUBLIC_API_ROUTES.auth.recoverSession,
     wrapAsync(async (req, res) => {
       const result = await req.auth.recoverSession(req, res);
 
-      res.success("Session checked", result.status, 200);
+      res.success("Session checked", result, 200);
     }),
   );
 
   router.post(
-    "/auth/login",
+    PUBLIC_API_ROUTES.auth.login,
     wrapAsync(async (req, res) => {
       const { data, error } = await req.auth.login(req, res);
 
@@ -66,7 +68,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
   );
 
   router.post(
-    "/auth/logOut",
+    PUBLIC_API_ROUTES.auth.logOut,
     wrapAsync(async (req, res) => {
       const result = await req.auth.logOut(req, res);
 
@@ -79,7 +81,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
   );
 
   router.post(
-    "/auth/signup",
+    PUBLIC_API_ROUTES.auth.signUp,
     wrapAsync(async (req, res) => {
       const body = validateOrThrow(LoginSchema, req.body);
 
@@ -96,34 +98,46 @@ export function publicRoutes(app: IAppServices, router: Router) {
   );
 
   router.get(
-    "/articles/extract/:jobId",
+    PUBLIC_API_ROUTES.integrations.wiki,
     wrapAsync(async (req, res) => {
-      const { jobId } = req.params;
-      const job = app.services.api.articles.getExtractionJob(jobId);
-      if (!job) {
-        res.status(404).json({ status: "unknown", error: "Job not found" });
-        return;
-      }
-      res.setHeader(
-        "Cache-Control",
-        "no-store, no-cache, must-revalidate, max-age=0",
-      );
-      res.status(200).json(job);
-    }),
-  );
+      const query = req.query.q;
+      const term = validateOrThrow(SearchQuerySchema, query);
+      const result = await app.integrations.wiki.extract(term);
 
-  router.post(
-    "/articles/extract",
-    wrapAsync(async (req, res) => {
-      const { articles } = validateOrThrow(ScrapeRequestSchema, req.body);
-      const result = app.services.api.articles.extract(articles);
-
-      res.status(202).json(result);
+      res.success("extracted term from wikipedia successfully", result, 200);
     }),
   );
 
   router.get(
-    "/blueSky/feed",
+    PUBLIC_API_ROUTES.articles.poll,
+    wrapAsync(async (req, res) => {
+      const { jobId } = req.params;
+      const job = app.services.api.articles.getExtractionJob(jobId);
+
+      if (!job) {
+        throw new ClientError("Job not found", null, 404);
+      }
+
+      res.setHeader(
+        "Cache-Control",
+        "no-store, no-cache, must-revalidate, max-age=0",
+      );
+      res.success("Extraction status retrieved", job, 200);
+    }),
+  );
+
+  router.post(
+    PUBLIC_API_ROUTES.articles.extract,
+    wrapAsync(async (req, res) => {
+      const { articles } = validateOrThrow(ScrapeRequestSchema, req.body);
+      const result = app.services.api.articles.extract(articles);
+
+      res.success("Extraction started", result, 202);
+    }),
+  );
+
+  router.get(
+    PUBLIC_API_ROUTES.integrations.blueSky.feed,
     wrapAsync(async (req, res) => {
       const result = await app.integrations.blueSky.feed();
 
@@ -132,7 +146,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
   );
 
   router.get(
-    "/blueSky/search",
+    PUBLIC_API_ROUTES.integrations.blueSky.search,
     wrapAsync(async (req, res) => {
       const query = validateOrThrow(SearchQuerySchema, req.query.q);
       const result = await app.integrations.blueSky.search(query);
@@ -142,7 +156,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
   );
 
   router.get(
-    "/articles/search",
+    PUBLIC_API_ROUTES.integrations.newsApi,
     wrapAsync(async (req, res) => {
       const query = validateOrThrow(SearchQuerySchema, req.query.q);
 

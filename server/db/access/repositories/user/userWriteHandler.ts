@@ -1,15 +1,31 @@
-import { AuthError, createClient } from "@supabase/supabase-js";
-import { Database } from "../../../../types/databaseInterfaces";
-import { CreatedUserSchemaType } from "../../../../schemas/Users";
-import { SupabaseSessionSchemaType } from "../../../../schemas/SessionSchema";
-import { UserDataValidator } from "./userDataValidator";
+import {
+  AuthError,
+  createClient,
+  User,
+  UserAttributes,
+} from "@supabase/supabase-js";
+import { Database } from "../../../../types/databaseInterfaces.js";
+import { CreatedUserSchemaType } from "../../../../schemas/Users.js";
+import { SupabaseSessionSchemaType } from "../../../../schemas/SessionSchema.js";
+import { UserDataValidator } from "./userDataValidator.js";
 import {
   SUPABASE_KEY,
   SUPABASE_PUBLIC_KEY,
   SUPABASE_URL,
-} from "../../../../src/Config";
-import type { LoginSchema } from "../../../../schemas/LoginSchema";
-import type { AuthenticatedUserId } from "../../../../services/auth/authorization";
+} from "../../../../src/Config.js";
+import type { LoginSchema } from "../../../../schemas/LoginSchema.js";
+import type { AuthenticatedUserId } from "../../../../services/auth/authorization.js";
+import { ResetPasswordResponseSchemaType } from "../../../../schemas/ChangePasswordSchema.ts";
+
+export type ChangePasswordResult =
+  | {
+      ok: false;
+      message: string;
+    }
+  | {
+      ok: true;
+      user: User;
+    };
 
 export type CreateUserResult = Promise<
   | {
@@ -40,6 +56,10 @@ export interface IUserWriteHandler {
     email: string;
     password: string;
   }): CreateUserResult;
+  resetPassword(credentials: {
+    email: string;
+    password: string;
+  }): Promise<ResetPasswordResponseSchemaType>;
 }
 
 export class UserWriteHandler implements IUserWriteHandler {
@@ -113,7 +133,9 @@ export class UserWriteHandler implements IUserWriteHandler {
     return { ok: true };
   }
 
-  public async requestPasswordReset(email: string): Promise<PasswordResetResult> {
+  public async requestPasswordReset(
+    email: string,
+  ): Promise<PasswordResetResult> {
     return await this.executeRequestPasswordReset(email);
   }
 
@@ -132,9 +154,12 @@ export class UserWriteHandler implements IUserWriteHandler {
       },
     );
 
-    const { data, error } = await resetClient.auth.resetPasswordForEmail(email, {
-      redirectTo: "https://elenchusapp.io/reset-password",
-    });
+    const { data, error } = await resetClient.auth.resetPasswordForEmail(
+      email,
+      {
+        redirectTo: "https://elenchusapp.io/reset-password",
+      },
+    );
 
     if (error) {
       return { ok: false, error };
@@ -143,11 +168,57 @@ export class UserWriteHandler implements IUserWriteHandler {
     return { ok: true, data };
   }
 
+  public async resetPassword(credentials: {
+    email: string;
+    password: string;
+  }): Promise<ResetPasswordResponseSchemaType> {
+    return await this.executeChangePassword(credentials);
+  }
+
   public async createUser(credentials: {
     email: string;
     password: string;
   }): CreateUserResult {
     return this.executeCreateUser(credentials);
+  }
+
+  private async executeChangePassword(credentials: {
+    email: string;
+    password: string;
+  }): Promise<ResetPasswordResponseSchemaType> {
+    const client = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLIC_KEY, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false,
+      },
+    });
+
+    const { data, error } = await client.auth.updateUser({
+      email: credentials.email,
+      password: credentials.password,
+    });
+
+    if (error) {
+      return {
+        ok: false,
+        message: error.message,
+      };
+    }
+
+    const { user } = data;
+
+    if (user) {
+      return {
+        ok: false,
+        message: "Failed to change password",
+      };
+    }
+
+    return this.validator.validateChangedPasswordResponse({
+      ok: true,
+      user,
+    });
   }
 
   private async executeCreateUser(credentials: {

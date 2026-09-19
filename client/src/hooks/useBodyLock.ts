@@ -1,23 +1,18 @@
 import { RootState } from "@/state/store";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
 
 export function useBodyLock() {
-    const popoverPost = useSelector((state: RootState) => state.bluesky.popoverPost);
-    const prevStyles = useRef<{ pos: string; top: string; width: string; pr: string }>();
+    const isPopoverOpen = useSelector(
+        (state: RootState) => state.bluesky.popoverPost.status === "ready",
+    );
 
     useEffect(() => {
-        if (!popoverPost) {
+        document.body.classList.toggle('overflow-hidden', isPopoverOpen);
+
+        return () => {
             document.body.classList.remove('overflow-hidden');
-            return;
         };
-
-        if (popoverPost) {
-            document.body.classList.add('overflow-hidden');
-
-        }
-
-
-    }, [popoverPost])
-} 
+    }, [isPopoverOpen])
+}

@@ -1,3 +1,4 @@
+import { selectPOVData } from "@/state/Reducers/Investigate/pov/selectors";
 import { motion } from "framer-motion"
 import { createPortal } from "react-dom"
 import { useSelector, useDispatch } from "react-redux"
@@ -5,11 +6,12 @@ import { RootState } from "@/state/store"
 import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 
 export function PreviousWork() {
-    const activeSession = useSelector((s: RootState) => s.auth.activeSession);
+    const activeSession = useSelector((s: RootState) => (s.auth.userKind === "authenticated"));
     const investigateState = useSelector((state: RootState) => state.investigation);
-    const { pov, review } = investigateState;
+    const { review } = investigateState;
+    const pov = useSelector(selectPOVData);
     const { idea, premises, perspective, biases } = pov;
-    const { endingPerspective, newConcepts, newPOV, takeaway } = review;
+    const { endingPerspective, newConcepts, newPOV, takeAway: takeaway } = review.final.data;
     const dispatch = useDispatch();
 
     const investigateData = {

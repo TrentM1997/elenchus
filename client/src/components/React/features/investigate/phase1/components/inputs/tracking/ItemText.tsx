@@ -15,7 +15,7 @@ function ItemText({
   itemStep,
 }: ItemTextProps): JSX.Element | null {
   const step = useSelector(
-    (state: RootState) => state.investigation.stepper.step,
+    (state: RootState) => state.investigation.stepper.wizardStep.num,
   );
   const formatted: string =
     data && data.length > 50 ? limitString(data, 100) : data || "";

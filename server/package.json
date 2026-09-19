@@ -10,10 +10,10 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --watch dist --exec node --enable-source-maps ./dist/src/app.js",
     "start": "node dist/src/app.js",
     "prebuild": "tsc -p tsconfig.build.json && node dist/scripts/generateLogoMap.js",
-    "build": "tsc -p tsconfig.build.json"
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "keywords": [],
   "author": "",

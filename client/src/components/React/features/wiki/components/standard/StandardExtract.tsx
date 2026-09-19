@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { useScrollTrap } from "@/hooks/useOverScrollTrap";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAppSelector } from "@/state/hooks/useAppSelector";
-import { selectWikiSummary } from "@/state/Reducers/Investigate/WikipediaSlice";
+import { selectWikiSummary } from "@/state/Reducers/Investigate/wiki/WikiSlice";
 import { WikiSummaryResponse } from "@/lib/services/wiki/wiki";
 
 

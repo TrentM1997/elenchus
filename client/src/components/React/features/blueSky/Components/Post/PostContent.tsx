@@ -13,7 +13,7 @@ export default function PostContent({ text }: PostContentProps): React.ReactNode
             <blockquote className='relative'>
                 <p className={`
                 text-sm text-wrap 
-                ${text === selected
+                ${selected.status === "ready" && text === selected.data.record.text
                         ? 'text-black'
                         : 'text-white'
                     }`

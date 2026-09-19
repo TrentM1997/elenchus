@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
-import type { ActiveTab } from "@/state/Reducers/UserContent/DashboardTabs";
+import type { ActiveTab } from "@/state/Reducers/Dashboard/UserContent/DashboardTabs";
 import renderTab from "../../switches/renderTab";
 
 

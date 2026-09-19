@@ -11,14 +11,23 @@ export type ActiveModal =
   | "Article Extraction Warning"
   | null;
 
+export type ToastKind = "Extraction" | "Auth";
+
+type ToastAction =
+  | "deleting"
+  | "saving"
+  | "login"
+  | "logout"
+  | "signup"
+  | "password reset"
+  | "feedback"
+  | "article extraction";
+
 export type ActiveToast =
-  | "Pending Extractions Status"
-  | "Sign In Status"
-  | "Sign Out Status"
-  | "Deleting Article Status"
-  | "Maximum Articles Selected"
-  | "Article Saving Status"
-  | null;
+  | { status: "idle"; kind: null }
+  | { status: "pending"; kind: ToastKind; action: ToastAction }
+  | { status: "success"; kind: ToastKind; action: ToastAction }
+  | { status: "failed"; kind: ToastKind; action: ToastAction };
 
 export interface PipelineState {
   modal: ActiveModal;
@@ -27,7 +36,7 @@ export interface PipelineState {
 
 const initialState: PipelineState = {
   modal: null,
-  toast: null,
+  toast: { status: "idle", kind: null },
 };
 
 const PipelineSlice = createSlice({

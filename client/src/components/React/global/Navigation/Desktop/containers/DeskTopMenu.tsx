@@ -4,7 +4,7 @@ import React from "react"
 import DesktopNavOptions from "./DesktopNavOptions"
 
 function DeskTopMenu() {
-    const signingOut = useSelector((state: RootState) => state.auth.signOut)
+    const signingOut = useSelector((state: RootState) => state.overlay.modal === "Sign Out")
 
     return (
         <div className={`fixed top-0 w-full inset-x-0 z-40

@@ -1,6 +1,6 @@
-import { IIntegrations, Integrations } from "../integrations/integrations";
-import { IServicesAPI, ServicesAPI } from "./api/servicesApi";
-import { Authorization, IAuthorization } from "./auth/authorization";
+import { IIntegrations, Integrations } from "../integrations/integrations.js";
+import { IServicesAPI, ServicesAPI } from "./api/servicesApi.js";
+import { Authorization, IAuthorization } from "./auth/authorization.js";
 
 export interface IAppServices {
   readonly services: IServicesAPI;

@@ -45,7 +45,7 @@ const useSignupValidation = (): SignupValidationHook => {
     };
 
     const confirmEmail = (ea: SignupFields["email"]) => {
-        validateAndSet('e', emailValidation(ea));
+        validateAndSet('e', emailValidation(ea) === 'valid');
     };
 
     const confirmPW = (p: SignupFields["password"], cp: SignupFields["confirmPw"]) => {

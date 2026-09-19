@@ -8,18 +8,17 @@
     ],
     "target": "ESNext",
     "module": "ESNext",
-    "ignoreDeprecations": "6.0",
-    "moduleResolution": "node10",
+    "moduleResolution": "bundler",
+    "skipLibCheck": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "baseUrl": ".",
     "allowImportingTsExtensions": true,
     "allowSyntheticDefaultImports": true,
     "checkJs": false,
     "allowJs": true,
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     },
     "jsx": "react-jsx",
     "jsxImportSource": "react"

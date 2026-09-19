@@ -1,3 +1,4 @@
+import { ArticleSchemaType } from "../../../schemas/ArticleSchema.js";
 import {
   Article,
   Bias,
@@ -5,7 +6,7 @@ import {
   FcParam,
   MBFC,
   ScrapedArticle,
-} from "../../../types/types";
+} from "../../../types/types.js";
 
 export interface BatchItem {
   url: string;
@@ -24,7 +25,7 @@ interface BiasInfo {
 export type ScrapeParameters = {
   article: FcParam;
   MBFC_DATA: MBFC;
-  pushRetrieved: (a: Article) => void;
+  pushRetrieved: (a: ArticleSchemaType) => void;
   pushFailed: (f: FailedAttempt) => void;
 };
 
