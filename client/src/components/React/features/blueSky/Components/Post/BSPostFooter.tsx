@@ -1,14 +1,15 @@
-import type { BlueSkyPost } from "@/state/Reducers/BlueSky/BlueSkySlice";
+import type { BlueSkyPostSchemaType as BlueSkyPost } from "@/lib/schemas/integrations/BlueSkySchemas";
+import type { SelectedPost } from "@/state/Reducers/BlueSky/types";
 
 interface BSPostFooterProps {
     text: BlueSkyPost["record"]["text"],
     likeCount: BlueSkyPost["likeCount"],
-    selected: any
+    selected: SelectedPost
 };
 
 
 function BSPostFooter({ text, selected, likeCount }: BSPostFooterProps): JSX.Element {
-    const active: boolean = (text === selected);
+    const active: boolean = (selected.status === "ready" && text === selected.data.record.text);
 
     return (
         <footer className="w-full mx-auto flex items-center relative bottom-0 pt-2">

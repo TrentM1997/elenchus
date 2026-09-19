@@ -4,7 +4,7 @@ import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBounda
 import { motion } from "framer-motion";
 import { variants } from "@/motion/variants";
 import DetailView from "../../../ProfileNavigation/mobile/DetailView";
-import { chooseTab } from "@/state/Reducers/UserContent/DashboardTabs";
+import { chooseTab } from "@/state/Reducers/Dashboard/UserContent/DashboardTabs";
 import RenderSavedArticle from "./RenderSavedArticle";
 
 export default function ArticleReview() {

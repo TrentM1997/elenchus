@@ -1,6 +1,6 @@
-import { logoMap } from "../../src/logoMap";
-import { validateSearchResult } from "../../schemas/SearchResultsSchema";
-import { BrowsingOption, NewsArticle } from "../../types/types";
+import { logoMap } from "../../src/logoMap.js";
+import { validateSearchResult } from "../../schemas/SearchResultsSchema.js";
+import { BrowsingOption, NewsArticle } from "../../types/types.js";
 
 const logoMapData = new Map(Object.entries(logoMap));
 

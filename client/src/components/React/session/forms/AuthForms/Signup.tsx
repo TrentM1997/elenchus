@@ -8,13 +8,13 @@ import NewPasswordGuide from "../InputGuides/NewPasswordGuide"
 import AuthNotification from "@/components/React/session/notifications/AuthNotification"
 import type { SigninStatus } from "@/hooks/useSignIn"
 import { useSignupValidation } from "@/hooks/auth/useSignupValidation"
-import { newUser } from "@/lib/services/supabase/SupabaseData"
-import { authenticate } from "@/state/Reducers/Athentication/Authentication"
+import { serverClient } from "@/lib/services/client/serverClient"
+import { authenticated } from "@/state/Reducers/Athentication/Authentication"
 
 
 
 export default function Signup() {
-    const activeSession = useSelector((state: RootState) => state.auth.activeSession);
+    const activeSession = useSelector((state: RootState) => (state.auth.userKind === "authenticated"));
     const [status, setStatus] = useState<SigninStatus>('idle');
     const navigate = useNavigate();
     const { fieldStatus, setFieldValue, canSubmit, fields } = useSignupValidation();
@@ -34,9 +34,13 @@ export default function Signup() {
     const submitNewUserRequest = async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
         e.preventDefault();
         setStatus('pending');
-        const result = await newUser(fields.email, fields.password);
-        setStatus((result.ok) ? 'success' : 'failed');
-        dispatch(authenticate(true))
+        try {
+            const result = await serverClient.general.auth.signup({ email: fields.email, password: fields.password });
+            setStatus('success');
+            if (result.data.session) dispatch(authenticated("authenticated"));
+        } catch (error) {
+            setStatus('failed');
+        }
     }
 
 
@@ -56,7 +60,7 @@ export default function Signup() {
     return (
         <section className="lg:p-8 min-h-dvh overflow-hidden bg-black animate-fade-in relative">
             <AnimatePresence>
-                {(status !== 'idle') && <AuthNotification action="Account creation" status={status} setterFunction={setStatus} />}
+                {(status !== 'idle') && <AuthNotification toast={{ status, kind: "Auth", action: "signup" }} />}
             </AnimatePresence>
             <div className="mx-auto 2xl:max-w-7xl py-12 sm:py-24 lg:px-16 md:px-12 px-8 xl:px-36">
                 <div className="border-b pb-4 sm:pb-12">

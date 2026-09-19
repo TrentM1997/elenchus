@@ -1,6 +1,6 @@
 import { JobStatus, Prog } from "@/state/Reducers/Investigate/articles/types";
 import { ArticleSchemaType } from "../../../../schemas/api/types/ArticlesSchema";
-import { ExtractionJobResultSchemaType } from "../schemas/ArticleSchema";
+import { ExtractionJobResultSchemaType } from "../schemas/articles/ArticleSchema";
 
 export interface FailedAttempt {
   title: string;

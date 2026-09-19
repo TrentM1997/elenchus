@@ -1,6 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { ArticleSchemaType } from "../../../../../schemas/api/types/ArticlesSchema";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AsyncState } from "@/state/types";
+import { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
 
 type SavedArticles = AsyncState<ArticleSchemaType[]>;
 
@@ -26,6 +26,9 @@ const UserContentSlice = createSlice({
   name: "userContent",
   initialState: initialState,
   reducers: {
+    grabAssociatedArticle: (state, action: PayloadAction<ArticleSchemaType | null>) => {
+      state.associatedArticle = action.payload;
+    },
     clearUser: () => {
       return initialState;
     },
@@ -47,6 +50,7 @@ const UserContentSlice = createSlice({
 
 export const {
   clearUser,
+  grabAssociatedArticle,
   supabaseContext,
   readSavedArticle,
   populateArticles,

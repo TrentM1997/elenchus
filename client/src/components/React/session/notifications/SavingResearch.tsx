@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { useDispatch } from "react-redux";
-import { removeNotification } from "@/state/Reducers/UserContent/SaveInvestigationSlice";
+import { removeNotification } from "@/state/Reducers/Dashboard/UserContent/SaveInvestigationSlice";
 import Failed from "./Failed";
 import Pending from "./Pending";
 import Success from "./Success";

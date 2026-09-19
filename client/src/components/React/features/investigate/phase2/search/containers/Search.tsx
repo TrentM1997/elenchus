@@ -1,17 +1,18 @@
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/state/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/state/store";
 import { useEffect, useRef } from "react";
-import {
-  RetrieveArticles,
-  resetArticles,
-} from "@/state/Reducers/Investigate/articles/SearchResults";
+import { resetArticles } from "@/state/Reducers/Investigate/articles/SearchResults";
 import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary";
 import SearchBar from "../components/input/SearchBar";
 import { clearChosenArticles } from "@/state/Reducers/Investigate/articles/ChosenArticles";
 import { normalize } from "@/lib/helpers/formatting/Normailize";
 import React from "react";
+import { searchNewsApi } from "@/state/Reducers/Investigate/articles/thunks";
 
 export default function Search({}): JSX.Element | null {
+  const searchStatus = useSelector(
+    (state: RootState) => state.investigation.search.pages.status,
+  );
   const dispatch = useDispatch<AppDispatch>();
   const lastCommitedInput = useRef<string | null>(null);
   const draftRef = useRef<string | null>(null);
@@ -20,15 +21,18 @@ export default function Search({}): JSX.Element | null {
 
   const recordQuery = (raw: string | null): boolean => {
     if (!raw) return false;
-    const q = normalize(raw);
-    if (q.length <= 2) return false;
 
-    if (q !== lastCommitedInput.current) {
-      draftRef.current = q;
-      return true;
-    } else {
+    const query = normalize(raw);
+    if (query.length <= 2) return false;
+
+    const isDuplicate = query === lastCommitedInput.current;
+
+    if (isDuplicate && searchStatus !== "failed") {
       return false;
     }
+
+    draftRef.current = query;
+    return true;
   };
 
   const getSearchInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -57,9 +61,7 @@ export default function Search({}): JSX.Element | null {
     if (!q) return;
     dispatch(clearChosenArticles());
     dispatch(resetArticles());
-    const thunkPromise = dispatch(
-      RetrieveArticles({ query: q, timeout: 5000 }),
-    );
+    const thunkPromise = dispatch(searchNewsApi({ query: q }));
     inFlightRef.current = thunkPromise as unknown as { abort: () => void };
     lastCommitedInput.current = q;
   };

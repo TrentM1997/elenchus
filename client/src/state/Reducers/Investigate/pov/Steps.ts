@@ -9,7 +9,7 @@ export type WizardStep = { num: number; status: StepProgress };
 
 export interface StepState {
   wizardStep: WizardStep;
-  status: PaginationStatus;
+  status: PaginationStatus | null;
   acceptInput: boolean | null;
 }
 
@@ -23,6 +23,9 @@ export const StepSlice = createSlice({
   name: "StepsCounter",
   initialState: initialState,
   reducers: {
+    updatePaginateStatus: (state, action: PayloadAction<PaginationStatus | null>) => {
+      state.status = action.payload;
+    },
     increment: (state) => {
       const next = state.wizardStep.num + 1;
       state.wizardStep = { num: next, status: "initial" };
@@ -53,6 +56,7 @@ export const {
   backToStart,
   denyIncrement,
   allowIncrement,
+  updatePaginateStatus,
 } = StepSlice.actions;
 
 export default StepSlice.reducer;

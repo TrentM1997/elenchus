@@ -13,7 +13,7 @@ interface StepHeader {
 };
 
 function StepHeader({ title, subheader, info }: StepHeader) {
-    const step = useSelector((state: RootState) => state.investigation.stepper.step);
+    const step = useSelector((state: RootState) => state.investigation.stepper.wizardStep.num);
     const [display, setDisplay] = useState({
         title: title,
         subheader: subheader

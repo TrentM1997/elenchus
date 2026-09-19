@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { RootState } from "@/state/store";
 import Scroller from "../../Containers/Scroller";
 import { variants } from "@/motion/variants";
-import { SplitBlueSkyFeed } from "@/lib/services/hydrateBlueSkyService";
+import type { SplitBlueSkyFeedSchemaType as SplitBlueSkyFeed } from "@/lib/schemas/integrations/BlueSkySchemas";
 
 type FeedProps = {
   posts: SplitBlueSkyFeed;
@@ -16,7 +16,7 @@ export default function Feed({
 }: FeedProps): JSX.Element {
   const selected = useSelector((state: RootState) => state.bluesky.selected);
   const postForPopover = useSelector((s: RootState) => s.bluesky.popoverPost);
-  const playAnimation = shouldAnimate && !postForPopover;
+  const playAnimation = shouldAnimate && postForPopover.status === "initial";
 
   return (
     <motion.div

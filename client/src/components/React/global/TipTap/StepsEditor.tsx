@@ -11,7 +11,7 @@ import styles from './StepsEditor.module.css';
 export default function StepsEditor({ setterFunction, context, id }: TipTapProps): JSX.Element | null {
     const dispatch = useDispatch<AppDispatch>();
 
-    const step = useSelector((state: RootState) => state.investigation.stepper.step);
+    const step = useSelector((state: RootState) => state.investigation.stepper.wizardStep.num);
     const placeholderText = step === 0 ? 'type the idea to challenge here...' : 'type premises here...'
 
     const editor: Editor = useEditor({

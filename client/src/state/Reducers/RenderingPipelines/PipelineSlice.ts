@@ -19,6 +19,8 @@ type ToastAction =
   | "login"
   | "logout"
   | "signup"
+  | "password reset"
+  | "feedback"
   | "article extraction";
 
 export type ActiveToast =

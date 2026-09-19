@@ -40,7 +40,7 @@ export default function AuthNotification({ toast }: AuthNotificationProps) {
   );
 
   const general: JSX.Element | null = (
-    <p className="text-white font-light text-sm">{`${toast.action} ${toast.status}`}</p>
+    <p className="text-white font-light text-sm">{`${toast.kind} ${toast.status}`}</p>
   );
 
   const notification: JSX.Element | null = (
@@ -58,7 +58,9 @@ export default function AuthNotification({ toast }: AuthNotificationProps) {
         className="flex w-full h-full items-center justify-between"
       >
         <div key="titleContainer" className="w-auto h-fit">
-          {toast.action && toast.action === "deleting" ? deleteStatus : general}
+          {toast.status !== "idle" && toast.action === "deleting"
+            ? deleteStatus
+            : general}
         </div>
         <div className="w-auto h-fit relative">
           {

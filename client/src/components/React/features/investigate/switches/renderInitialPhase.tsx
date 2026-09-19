@@ -26,6 +26,8 @@ export const renderInitialPhase = (path: PathSelected): JSX.Element | null => {
                 </Suspense>
             )
 
+        case "Path Chosen":
+            return null;
         default: {
             const exhaustive: never = path;
             return null;

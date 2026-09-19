@@ -2,7 +2,7 @@ import {
   storeResearchScrollPosition,
   storeScrollPosition,
   VirtuosoScrollPos,
-} from "@/state/Reducers/UserContent/ProfileNavigationSlice";
+} from "@/state/Reducers/Dashboard/UserContent/ProfileNavigationSlice";
 import { AppDispatch } from "@/state/store";
 import { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { useDispatch } from "react-redux";

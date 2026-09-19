@@ -1,4 +1,4 @@
-import { OpenedArticle } from "@/state/Reducers/UserContent/UserContentReducer";
+import { OpenedArticle } from "@/state/Reducers/Dashboard/UserContent/UserContentReducer";
 import type { JSX } from "react";
 import { lazy, Suspense, useMemo } from "react";
 const Article = lazy(

@@ -1,5 +1,5 @@
-import { ArticleSchemaType } from "../../schemas/ArticleSchema";
-import { FailedAttempt, FcParam } from "../../types/types";
+import { ArticleSchemaType } from "../../schemas/ArticleSchema.js";
+import { FailedAttempt, FcParam } from "../../types/types.js";
 
 export interface JobResult {
   status: "pending" | "fulfilled" | "rejected";

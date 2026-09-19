@@ -14,6 +14,7 @@ export function getEnvVar(name: string): string {
   return val;
 }
 
+export const NEWS_API_KEY = getEnvVar("NEWS_API_KEY");
 export const FIRECRAWL_KEY = getEnvVar("FIRECRAWL_KEY");
 export const SUPABASE_URL = getEnvVar("SUPABASE_URL");
 export const SUPABASE_KEY = getEnvVar("SUPABASE_SERVICE_KEY");

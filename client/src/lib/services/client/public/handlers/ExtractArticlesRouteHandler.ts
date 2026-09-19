@@ -4,11 +4,14 @@ import {
   ExecuteExtractResponseSchemaType,
   ExtractionJobResultSchema,
   ExtractionJobResultSchemaType,
-} from "@/lib/schemas/ArticleSchema";
+} from "@/lib/schemas/articles/ArticleSchema";
 import { IHttpClient } from "../../http/types";
 
 export interface IExtractArticlesRouteHandler {
-  extract(body: SelectedArticle[], signal?: AbortSignal): Promise<ExecuteExtractResponseSchemaType>;
+  extract(
+    body: SelectedArticle[],
+    signal?: AbortSignal,
+  ): Promise<ExecuteExtractResponseSchemaType>;
   poll({
     jobId,
     signal,

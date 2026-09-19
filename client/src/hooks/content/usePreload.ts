@@ -1,4 +1,4 @@
-import { ArticleSchemaType } from "@/lib/schemas/ArticleSchema";
+import { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
 import { useEffect, useCallback, useState } from "react";
 
 interface UsePreloadReturn {

@@ -3,12 +3,12 @@ import {
   BookmarkResponseSchema,
   BookmarkResponseSchemaType,
 } from "@/lib/schemas/articles/BookmarkSchema";
-import { IHttpClient } from "@/lib/services/client/http/httpClient";
+import { IHttpClient } from "@/lib/services/client/http/types";
 import { InvestigationSchemaType } from "../../../../../../../schemas/api/types/InvestigationSchema";
 import {
   InvestigationSaveResponse,
   InvestigationSaveResponseType,
-} from "@/lib/schemas/InvestigationSchema";
+} from "@/lib/schemas/investigations/InvestigationSchema";
 
 export interface IPrivateUserWritesHandler {
   bookmark(article_id: number): Promise<BookmarkResponseSchemaType>;

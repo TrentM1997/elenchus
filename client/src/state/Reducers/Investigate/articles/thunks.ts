@@ -2,7 +2,10 @@ import { createAsyncThunk, GetThunkAPI } from "@reduxjs/toolkit";
 import { pollExtraction } from "@/lib/services/articles/pollExtraction";
 import { serverClient } from "@/lib/services/client/serverClient";
 import { extractionProgressReceived } from "./actions";
-import { ExtractionResult } from "@/lib/schemas/articles/ArticleSchema";
+import {
+  ArticleSchemaType,
+  ExtractionResult,
+} from "@/lib/schemas/articles/ArticleSchema";
 
 export type QueryNewsApiParams = { query: string; timeout: number };
 
@@ -46,14 +49,28 @@ export const extractArticles = createAsyncThunk<
 
 export const searchNewsApi = createAsyncThunk(
   "SearchResults/searchNewsApi",
-  async (query: string, { rejectWithValue, signal }) => {
+  async (params: { query: string }, { rejectWithValue, signal }) => {
+    const { query } = params;
     try {
       return await serverClient.general.integrations.search.articles({
         query,
         signal,
       });
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(
+        err instanceof Error ? err.message : "Article search failed",
+      );
+    }
+  },
+);
+
+export const saveThisArticle = createAsyncThunk(
+  "ExtractedArticles/saveThisArticle",
+  async (article_id: ArticleSchemaType["id"], thunkAPI) => {
+    try {
+      return await serverClient.privileged.user.write.bookmark(article_id);
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err);
     }
   },
 );

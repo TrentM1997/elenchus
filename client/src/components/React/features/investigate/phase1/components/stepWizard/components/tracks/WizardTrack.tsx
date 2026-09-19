@@ -10,7 +10,7 @@ interface Track {
 export default function WizardTrack({ thisStep }: Track): JSX.Element {
     const investigateState = useSelector((state: RootState) => state.investigation);
     const { stepper } = investigateState;
-    const { step } = stepper;
+    const { num: step } = stepper.wizardStep;
     const animateTrack: boolean = useMemo(() => {
         const show: boolean = (thisStep < step);
         return show;

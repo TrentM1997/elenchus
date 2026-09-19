@@ -27,7 +27,7 @@ export type TooltipDisplayed =
 
 export type SelectionBar = "active" | "hidden";
 
-export type PathSelected = "BlueSky Feed" | "Choose Path";
+export type PathSelected = "BlueSky Feed" | "Choose Path" | "Path Chosen";
 
 export type ShowOptions = "Show Options" | "Preselected";
 

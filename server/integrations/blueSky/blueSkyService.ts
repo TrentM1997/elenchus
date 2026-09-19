@@ -2,9 +2,9 @@ import { AtpAgent } from "@atproto/api";
 import {
   BlueSkyPostSchemaType,
   SplitBlueSkyFeedSchemaType,
-} from "../../schemas/BlueSkyPostSchema";
-import { ServerError } from "../../core/errors/ServerError";
-import { BlueSkyParser, IBlueSkyParser } from "./blueSkyParser";
+} from "../../schemas/BlueSkyPostSchema.js";
+import { ServerError } from "../../core/errors/ServerError.js";
+import { BlueSkyParser, IBlueSkyParser } from "./blueSkyParser.js";
 
 export interface IBlueSkyService {
   search(query: string): Promise<BlueSkyPostSchemaType[]>;

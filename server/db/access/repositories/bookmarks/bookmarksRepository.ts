@@ -1,11 +1,11 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import { Database } from "../../../../types/databaseInterfaces";
-import type { AuthenticatedUserId } from "../../../../services/auth/authorization";
+import { Database } from "../../../../types/databaseInterfaces.js";
+import type { AuthenticatedUserId } from "../../../../services/auth/authorization.js";
 import {
   BookmarkSchema,
   BookmarkSchemaType,
-} from "../../../../schemas/BookmarkSchema";
-import { validateServerOrThrow } from "../../../../core/validation/validateOrThrow";
+} from "../../../../schemas/BookmarkSchema.js";
+import { validateServerOrThrow } from "../../../../core/validation/validateOrThrow.js";
 
 export type BookmarkResponse =
   | { ok: true; data: BookmarkSchemaType }

@@ -1,4 +1,4 @@
-import { Article } from "@/state/Reducers/Investigate/articles/ExtractedArticles";
+import type { ArticleSchemaType as Article } from "@/lib/schemas/articles/ArticleSchema";
 import React from "react";
 
 interface SourceInfoProps {

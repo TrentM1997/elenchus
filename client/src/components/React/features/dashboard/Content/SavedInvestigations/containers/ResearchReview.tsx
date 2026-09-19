@@ -2,25 +2,27 @@ import { useSelector, useDispatch } from "react-redux"
 import { SourcesFromResearch } from "../Details/sources/SourcesUsed"
 import { RootState } from "@/state/store"
 import { useLayoutEffect } from "react"
-import { getInvestigationSources } from "@/lib/services/supabase/SupabaseData"
-import { getSourcesToReview } from "@/state/Reducers/UserContent/UserInvestigations"
+import { getSourcesToReview } from "@/state/Reducers/Dashboard/UserContent/UserInvestigations"
 import DetailsTable from "../Details/DetailsTable"
 import { Terms } from "../Details/wiki/containers/WikipediaTerms"
 import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary"
 import DetailView from "../../../ProfileNavigation/mobile/DetailView"
 import { ScrollUp } from "@/lib/helpers/scroll/ScrollToTop"
-import { chooseTab } from "@/state/Reducers/UserContent/DashboardTabs"
+import { chooseTab } from "@/state/Reducers/Dashboard/UserContent/DashboardTabs"
 
 export default function ResearchReview() {
     const investigation = useSelector((state: RootState) => state.userWork.investigationToReview);
     const sources = investigation ? investigation.sources : null;
-    const savedArticles = useSelector((state: RootState) => state.userdata.userArticles)
+    const savedArticles = useSelector((state: RootState) => state.dash.articles)
     const dispatch = useDispatch()
     const cachedSources = JSON.parse(localStorage.getItem('cachedSources'))
 
     useLayoutEffect(() => {
 
-        const retrieved = getInvestigationSources(sources, savedArticles)
+        const sourceSet = new Set<string>(Array.isArray(sources) ? sources : []);
+        const retrieved = savedArticles.status === "ready"
+            ? savedArticles.data.filter(article => sourceSet.has(article.article_url))
+            : null;
         if (retrieved) {
             dispatch(getSourcesToReview(retrieved))
         }
@@ -28,7 +30,7 @@ export default function ResearchReview() {
         if (!sources && cachedSources) {
             dispatch(getSourcesToReview(cachedSources))
         }
-    }, [investigation]);
+    }, [investigation, savedArticles, dispatch]);
 
 
     const backTo = (): void => {

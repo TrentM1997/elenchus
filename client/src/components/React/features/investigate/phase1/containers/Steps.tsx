@@ -6,7 +6,7 @@ import { titles } from "../components/tokens/titles";
 import { help } from "@/components/React/global/Help/tokens/helptokens";
 
 export default function Steps({ }): JSX.Element | null {
-  const step = useSelector((state: RootState) => state.investigation.stepper.step);
+  const step = useSelector((state: RootState) => state.investigation.stepper.wizardStep.num);
 
   return (
     <section

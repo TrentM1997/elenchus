@@ -1,6 +1,6 @@
-import { LoginCredentials } from "@/lib/services/auth/clientAuthService";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { serverClient } from "@/lib/services/client/serverClient";
+import { LoginCredentials } from "@/lib/services/client/public/handlers/AuthHandler";
 
 export const loginUser = createAsyncThunk(
   "/auth/login",
@@ -29,3 +29,14 @@ export const logOut = createAsyncThunk("/auth/logOut", async (_, thunkAPI) => {
     return thunkAPI.rejectWithValue(err);
   }
 });
+
+export const resetPassword = createAsyncThunk(
+  "auth/resetPassword",
+  async (credentials: LoginCredentials, thunkAPI) => {
+    try {
+      return await serverClient.general.auth.resetPassword(credentials);
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err);
+    }
+  },
+);

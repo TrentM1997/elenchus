@@ -1,6 +1,6 @@
 import StepsEditor from "../../../global/TipTap/StepsEditor";
 import EndInvestigateButton from "./buttons/FinishInvestigation";
-import { getTakeAways } from "@/state/Reducers/Investigate/pov/Review";
+import { updateFinalDraft } from "@/state/Reducers/Investigate/pov/Review";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/state/store";
 import { SetStateAction, useEffect, useState } from "react";
@@ -11,11 +11,13 @@ type Opt = "initial" | "Opt-in" | "Opt-out";
 
 export default function Stance() {
   const takeAway = useSelector(
-    (state: RootState) => state.investigation.review.takeAway,
+    (state: RootState) => state.investigation.review.final.data.takeAway,
   );
   const newPOV = useSelector(
-    (state: RootState) => state.investigation.review.newPOV,
+    (state: RootState) => state.investigation.review.final.data.newPOV,
   );
+  const data = useSelector((state: RootState) => state.investigation.review.final.data);
+  const getTakeAways = (takeAway: string) => updateFinalDraft({ status: "draft", data: { ...data, takeAway } });
   const [option, setOption] = useState<Opt>("initial");
   const dispatch = useDispatch<AppDispatch>();
 

@@ -2,7 +2,7 @@ import { useState, useRef, useMemo } from "react";
 import { useScrollTrap } from "@/hooks/useOverScrollTrap";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAppSelector } from "@/state/hooks/useAppSelector";
-import { selectWikiDisambig } from "@/state/Reducers/Investigate/WikipediaSlice";
+import { selectWikiDisambig } from "@/state/Reducers/Investigate/wiki/WikiSlice";
 import { WikiDisambigCandidate, WikiDisambigResponse, } from "@/lib/services/wiki/wiki";
 import NavCandidates from "./buttons/NavDisambig";
 import Candidate from "./term/Candidate";

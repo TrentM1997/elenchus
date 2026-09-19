@@ -1,16 +1,16 @@
-import { IDbClient } from "../../db/access/client/dbClient";
-import { ArticleService, IArticleService } from "../articles/articleService";
-import { IAuthorization } from "../auth/authorization";
-import { IUserService, UserService } from "../user/userService";
+import { IDbClient } from "../../db/access/client/dbClient.js";
+import { ArticleService, IArticleService } from "../articles/articleService.js";
+import { IAuthorization } from "../auth/authorization.js";
+import { IUserService, UserService } from "../user/userService.js";
 import {
   FirecrawlService,
   IFirecrawlService,
-} from "../firecrawl/firecrawlService";
-import { firecrawlClient } from "../firecrawl/client/firecrawlClient";
+} from "../firecrawl/firecrawlService.js";
+import { firecrawlClient } from "../firecrawl/client/firecrawlClient.js";
 import {
   IInvestigationService,
   InvestionService,
-} from "../investigations/InvestigationService";
+} from "../investigations/InvestigationService.js";
 
 export interface IDomains {
   readonly user: IUserService;

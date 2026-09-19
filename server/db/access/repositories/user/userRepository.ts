@@ -1,5 +1,5 @@
-import { IUserWriteHandler, UserWriteHandler } from "./userWriteHandler";
-import { UserDataValidator } from "./userDataValidator";
+import { IUserWriteHandler, UserWriteHandler } from "./userWriteHandler.js";
+import { UserDataValidator } from "./userDataValidator.js";
 
 export interface IUserRepository {
   readonly write: IUserWriteHandler;

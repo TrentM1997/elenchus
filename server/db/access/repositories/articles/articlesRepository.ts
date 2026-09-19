@@ -1,13 +1,13 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import { Database } from "../../../../types/databaseInterfaces";
-import { ArticleSchemaType } from "../../../../schemas/ArticleSchema";
-import { ServerError } from "../../../../core/errors/ServerError";
+import { Database } from "../../../../types/databaseInterfaces.js";
+import { ArticleSchemaType } from "../../../../schemas/ArticleSchema.js";
+import { ServerError } from "../../../../core/errors/ServerError.js";
 import {
   IArticlesDbParser,
   ArticlesDbParser,
   type InsertableArticleType,
-} from "./articlesParser";
-import { BookmarkSchemaType } from "../../../../schemas/BookmarkSchema";
+} from "./articlesParser.js";
+import { BookmarkSchemaType } from "../../../../schemas/BookmarkSchema.js";
 
 type ArticlesFromBookmarks =
   | { ok: true; data: ArticleSchemaType[] }

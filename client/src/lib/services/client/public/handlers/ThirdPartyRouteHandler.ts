@@ -69,9 +69,10 @@ class ThirdPartyRouteSearchHandler implements IThirdPartyRouteSearchHandler {
     params: NewsApiSearchParams,
   ): Promise<SearchResultsResponseSchemaType> {
     const { query, signal } = params;
+    const encodedQuery = encodeURIComponent(query);
 
     return await this.http.get(
-      `${this.routes.integrations.newsApi}${query}`,
+      `${this.routes.integrations.newsApi}${encodedQuery}`,
       SearchResultsResponseSchema,
       signal,
     );

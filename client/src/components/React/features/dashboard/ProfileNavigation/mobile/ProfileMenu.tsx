@@ -2,8 +2,8 @@ import { useSelector, useDispatch } from "react-redux"
 import { RootState } from "@/state/store";
 import { createPortal } from "react-dom";
 import React from "react";
-import { chooseTab } from "@/state/Reducers/UserContent/DashboardTabs";
-import type { ActiveTab } from "@/state/Reducers/UserContent/DashboardTabs";
+import { chooseTab } from "@/state/Reducers/Dashboard/UserContent/DashboardTabs";
+import type { ActiveTab } from "@/state/Reducers/Dashboard/UserContent/DashboardTabs";
 import { isArticlesTab, isInvestigationsTab } from "@/lib/helpers/lookup/isActiveTab";
 
 function MobileProfileNav() {

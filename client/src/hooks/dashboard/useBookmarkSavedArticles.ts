@@ -1,9 +1,9 @@
 import { useCallback, useState } from "react";
 import type { ArticleSchemaType } from "../../../../schemas/api/types/ArticlesSchema";
-import { BookmarkService } from "@/lib/services/bookmarkService";
+import { serverClient } from "@/lib/services/client/serverClient";
 import { wait } from "@/lib/helpers/formatting/Presentation";
 import { createInitialBookmarkStates } from "@/lib/helpers/createInitialBookmarkStates";
-const service = new BookmarkService();
+const service = serverClient.privileged.user.write;
 
 export type BookmarkStatus =
   | "bookmarked"
@@ -57,9 +57,9 @@ export const useHandleBookmark = ({
         updateBookmark("unbookmarking", article.id);
 
         try {
-          const result = await service.removeBookmark(article.id);
+          const result = await service.unBookmark(String(article.id));
 
-          if (!result.ok) {
+          if (result.ok === false) {
             throw new Error(
               `Unexpected error: ${result.message} | ${result.details}`,
             );

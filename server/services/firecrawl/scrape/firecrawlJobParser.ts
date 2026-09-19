@@ -1,12 +1,12 @@
-import { validateServerOrThrow } from "../../../core/validation/validateOrThrow";
+import { validateServerOrThrow } from "../../../core/validation/validateOrThrow.js";
 import {
   ArticleSchema,
   ArticleSchemaType,
   FactualReportingRatingSchema,
   FactualReportingRatingSchemaType,
-} from "../../../schemas/ArticleSchema";
-import { BiasSchemaType } from "../../../schemas/BiasSchema";
-import { validateSchema } from "../../../schemas/ValidateSchema";
+} from "../../../schemas/ArticleSchema.js";
+import { BiasSchemaType } from "../../../schemas/BiasSchema.js";
+import { validateSchema } from "../../../schemas/ValidateSchema.js";
 import {
   Article,
   BiasInfo,
@@ -14,8 +14,8 @@ import {
   FcParam,
   FirecrawlContent,
   MBFC,
-} from "../../../types/types";
-import { dropParams } from "./scrapeConfig";
+} from "../../../types/types.js";
+import { dropParams } from "./scrapeConfig.js";
 
 export interface IFirecrawlJobParser {
   reconcileFailed(

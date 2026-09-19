@@ -8,7 +8,8 @@ import { populateTooltip } from "@/state/Reducers/Investigate/Rendering"
 
 export default function SelectionRequired() {
     const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation);
-    const { chosenArticles } = investigateState.getArticle;
+    const { selected } = investigateState.getArticle;
+    const count = selected.status === "empty" ? 0 : selected.data.length;
     const dispatch = useDispatch()
     const max = 3;
 
@@ -50,7 +51,7 @@ export default function SelectionRequired() {
                     </h1>
 
                     <h2 className="text-black text-wrap text-base w-full font-light tracking-tight">
-                        Current Selection: {`${chosenArticles.length}/${max}`}
+                        Current Selection: {`${count}/${max}`}
                     </h2>
                 </div>
             </div>

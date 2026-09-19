@@ -16,7 +16,7 @@ import { serverClient } from "@/lib/services/client/serverClient";
 
 export default function FeedBackForm() {
   const activeSession = useSelector(
-    (state: RootState) => state.auth.activeSession,
+    (state: RootState) => (state.auth.userKind === "authenticated"),
   );
   const authorEmail = useSelector(
     (state: RootState) => state.feedback.authorEmail,
@@ -115,9 +115,7 @@ export default function FeedBackForm() {
         <AnimatePresence>
           {status !== "idle" && (
             <AuthNotification
-              action="Feedback"
-              setStatus={setStatus}
-              status={status}
+              toast={{ status, kind: "Auth", action: "feedback" }}
             />
           )}
         </AnimatePresence>

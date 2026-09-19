@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { finalPerspective } from "@/state/Reducers/Investigate/pov/Review";
+import { updateFinalDraft } from "@/state/Reducers/Investigate/pov/Review";
 import Lottie from "lottie-react";
 import blueCheck from "@/lotties/blueCheck.json";
 import { RootState } from "@/state/store";
@@ -11,7 +11,7 @@ export default function Retrospect() {
     (state: RootState) => state.investigation,
   );
   const { review } = investigateState;
-  const { endingPerspective } = review;
+  const { endingPerspective } = review.final.data;
   const dispatch = useDispatch();
 
   return (
@@ -25,7 +25,7 @@ export default function Retrospect() {
         <div key={index} className="relative">
           <div
             key={opinion}
-            onClick={() => dispatch(finalPerspective(opinion))}
+            onClick={() => dispatch(updateFinalDraft({ status: "draft", data: { ...review.final.data, endingPerspective: opinion } }))}
             className="bg-white text-black xl:text-lg lg:text-[0.8rem] xs:text-[0.6rem]
               rounded-lg xl:w-52 xl:h-12 lg:w-[12rem] md:w-[12rem] md:h-12 xs:w-28 xs:h-9 relative
                cursor-pointer hover:bg-white/10 hover:text-white transition-all duration-200 ease-in-out

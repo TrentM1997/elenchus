@@ -1,10 +1,10 @@
-import { IDbClient } from "../../db/access/client/dbClient";
-import { IAuthorization } from "../auth/authorization";
-import { InvestigationSchemaType } from "../../schemas/InvestigationSchema";
+import { IDbClient } from "../../db/access/client/dbClient.js";
+import { IAuthorization } from "../auth/authorization.js";
+import { InvestigationSchemaType } from "../../schemas/InvestigationSchema.js";
 import {
   InvestigationSaveResult,
   SavedInvestigationsResult,
-} from "../../db/access/repositories/investigations/investigationsRepository";
+} from "../../db/access/repositories/investigations/investigationsRepository.js";
 
 export interface IInvestigationService {
   save(

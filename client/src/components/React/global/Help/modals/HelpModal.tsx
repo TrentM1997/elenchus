@@ -18,7 +18,7 @@ export default function HelpModal({
     (state: RootState) => state.investigation,
   );
   const { stepper } = investigateState;
-  const { step } = stepper;
+  const { num: step } = stepper.wizardStep;
   const dispatch = useDispatch();
 
   useEffect(() => {

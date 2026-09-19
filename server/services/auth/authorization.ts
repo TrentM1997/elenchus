@@ -1,5 +1,5 @@
-import { validateOrThrow } from "../../core/validation/validateOrThrow";
-import { AuthenticatedRequestSchema } from "../../schemas/AuthenticatedRequestSchema";
+import { validateOrThrow } from "../../core/validation/validateOrThrow.js";
+import { AuthenticatedRequestSchema } from "../../schemas/AuthenticatedRequestSchema.js";
 
 declare const authenticatedUser: unique symbol;
 

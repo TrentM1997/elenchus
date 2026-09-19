@@ -1,4 +1,4 @@
-import { VirtuosoScrollPos } from "@/state/Reducers/UserContent/ProfileNavigationSlice";
+import { VirtuosoScrollPos } from "@/state/Reducers/Dashboard/UserContent/ProfileNavigationSlice";
 import { ArticleSchemaType } from "../../../../../../../../../schemas/api/types/ArticlesSchema";
 
 export interface ArticleScroller {

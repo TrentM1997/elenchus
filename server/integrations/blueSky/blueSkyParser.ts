@@ -3,7 +3,7 @@ import {
   PostValidator,
   FeedItemValidator,
   SplitBlueSkyFeedSchemaType,
-} from "../../schemas/BlueSkyPostSchema";
+} from "../../schemas/BlueSkyPostSchema.js";
 
 export interface BlueskyFeedItem {
   post: BlueSkyPostSchemaType;

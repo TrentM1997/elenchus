@@ -1,15 +1,15 @@
 import Firecrawl from "@mendable/firecrawl-js";
-import { Article, FailedAttempt, FcParam } from "../../types/types";
+import { Article, FailedAttempt, FcParam } from "../../types/types.js";
 import {
   FirecrawlJobParser,
   IFirecrawlJobParser,
-} from "./scrape/firecrawlJobParser";
+} from "./scrape/firecrawlJobParser.js";
 import {
   FirecrawlScrapeHandler,
   IFirecrawlScrapeHandler,
-} from "./scrape/firecrawlScrapeHandler";
-import { JobResult, RunFirecrawlJobParameters } from "./types";
-import { ArticleSchemaType } from "../../schemas/ArticleSchema";
+} from "./scrape/firecrawlScrapeHandler.js";
+import { JobResult, RunFirecrawlJobParameters } from "./types.js";
+import { ArticleSchemaType } from "../../schemas/ArticleSchema.js";
 
 export interface IFirecrawlService {
   runFirecrawlJob(

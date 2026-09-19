@@ -1,6 +1,4 @@
 import { PublicServerClientRoutes } from "@/infra/transport/types/routeDefinitions";
-import { IHttpClient } from "@/lib/services/client/http/httpClient";
-import { LoginCredentials } from "@/lib/services/auth/clientAuthService";
 import {
   AuthTokenResponsePasswordSchema,
   AuthTokenResponsePasswordType,
@@ -10,18 +8,26 @@ import {
   LogOutResultSchemaType,
   RecoverSessionResponseSchema,
   RecoverSessionResponseSchemaType,
+  ResetPasswordResponseSchema,
+  ResetPasswordResponseSchemaType,
 } from "@/lib/schemas/auth/AuthSchemas";
+import { IHttpClient } from "../../http/types";
+
+export type LoginCredentials = { email: string; password: string };
 
 export interface IAuthRouteHandler {
   login(credentials: LoginCredentials): Promise<AuthTokenResponsePasswordType>;
   logOut(): Promise<LogOutResultSchemaType>;
   recover(): Promise<RecoverSessionResponseSchemaType>;
   signup(credentials: LoginCredentials): Promise<CreateUserResponseSchemaType>;
+  resetPassword(
+    credentials: LoginCredentials,
+  ): Promise<ResetPasswordResponseSchemaType>;
 }
 
 export class AuthRouteHandler implements IAuthRouteHandler {
   constructor(
-    private readonly routes: Pick<PublicServerClientRoutes, "auth">,
+    private readonly routes: Pick<PublicServerClientRoutes, "auth" | "user">,
     private readonly http: IHttpClient,
   ) {}
 
@@ -52,6 +58,16 @@ export class AuthRouteHandler implements IAuthRouteHandler {
     return await this.http.post(
       this.routes.auth.signUp,
       CreateUserResponseSchema,
+      credentials,
+    );
+  }
+
+  public async resetPassword(
+    credentials: LoginCredentials,
+  ): Promise<ResetPasswordResponseSchemaType> {
+    return await this.http.post(
+      this.routes.user.passwordReset,
+      ResetPasswordResponseSchema,
       credentials,
     );
   }

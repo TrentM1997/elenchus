@@ -6,7 +6,7 @@ import React from "react";
 
 function BackButton({}): JSX.Element | null {
   const step = useSelector(
-    (state: RootState) => state.investigation.stepper.step,
+    (state: RootState) => state.investigation.stepper.wizardStep.num,
   );
   const dispatch = useDispatch();
 

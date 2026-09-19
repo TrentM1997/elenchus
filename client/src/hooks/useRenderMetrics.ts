@@ -26,14 +26,14 @@ export function useRenderMetrics(): RenderValues {
     (state: RootState) => state.userWork,
     shallowEqual,
   );
-  const hasArticles: boolean = Array.isArray(articles) && articles.length > 0;
+  const hasArticles: boolean = articles.status === "ready" && articles.data.length > 0;
   const hasInvestigations: boolean =
     Array.isArray(userResearch) && userResearch.length > 0;
   const biasRatings = useSelector(
-    (state: RootState) => state.chart.biasRatings,
+    (state: RootState) => state.dash.metrics.bias.status === "ready" ? state.dash.metrics.bias.data : null,
   );
   const ratingData = useSelector(
-    (state: RootState) => state.chart.reportingIntegrity,
+    (state: RootState) => state.dash.metrics.integrity.status === "ready" ? state.dash.metrics.integrity.data : null,
   );
   const [priority, setPriority] = useState<RenderMetrics>({
     priority1: "pending",

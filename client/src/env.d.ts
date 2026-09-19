@@ -6,7 +6,6 @@ import type { Extracts } from "./state/Reducers/Investigate/pov/Review";
 import React, { ReactEventHandler, ReactNode, SetStateAction } from "react";
 import { User } from "@supabase/supabase-js";
 import { SigninStatus } from "./hooks/useSignIn";
-import type { ActiveTab } from "./state/Reducers/UserContent/DashboardTabs";
 import {
   ArticleSchemaType,
   FactualReportingRatingSchemaType,
@@ -14,11 +13,12 @@ import {
 import { BlueSkyPosts } from "./state/Reducers/BlueSky/types";
 import { BlueSkyPostSchemaType } from "../../schemas/api/types/BlueSkyPostSchema";
 import { ActiveToast } from "./state/Reducers/RenderingPipelines/PipelineSlice";
+import { BrowsingOptionSchemaType } from "./lib/schemas/articles/BrowsingOptionSchema";
+import { ActiveTab } from "./state/Reducers/Dashboard/UserContent/DashboardTabs";
 
 declare global {
   interface ImportMetaEnv {
     readonly PUBLIC_SERVER_PORT: string;
-    // Add other public environment variables here as needed
   }
 
   interface ImportMeta {
@@ -255,7 +255,7 @@ declare global {
   }
 
   interface AuthNotificationProps {
-    toast: Exclude<ActiveToast, { status: "idle" }>;
+    toast: ActiveToast;
   }
 
   interface SaveArticleButton {
@@ -273,15 +273,15 @@ declare global {
   }
 
   interface LinkProps {
-    chooseArticle: (article: SelectedArticle) => () => void;
     highlight?: boolean;
-    article: SelectedArticle;
+    article: BrowsingOptionSchemaType;
     index?: number;
     isPriority?: boolean;
     showGetArticlesModal?: boolean;
     mute?: boolean;
     chosenArticles?: Array<SelectedArticle>;
     inModal?: boolean;
+    chooseArticle?: (article: BrowsingOptionSchemaType) => () => void;
   }
 
   interface ArticleOperationData {

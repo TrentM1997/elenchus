@@ -1,4 +1,4 @@
-import type { ISessionHandler } from "../services/auth/handlers/sessionHandler";
+import type { ISessionHandler } from "../services/auth/handlers/sessionHandler.js";
 
 interface AuthenticatedUser {
   userId?: string;

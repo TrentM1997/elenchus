@@ -10,7 +10,7 @@ export default function DataTable() {
     const { review } = investigateState
     const pov = useSelector(selectPOVData);
     const { idea, perspective, expertise } = pov
-    const { endingPerspective, merit, movedOnIdea } = review
+    const { endingPerspective, merit, movedOnIdea } = review.final.data
     const changed = endingPerspective !== perspective
     const finalOpinion = endingPerspective === 'Agree'
 

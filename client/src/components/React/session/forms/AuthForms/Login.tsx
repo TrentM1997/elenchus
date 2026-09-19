@@ -13,11 +13,11 @@ import { renderToast } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 
 export default function Login(): JSX.Element {
   const activeSession = useSelector(
-    (state: RootState) => state.auth.activeSession,
+    (state: RootState) => (state.auth.userKind === "authenticated"),
   );
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [userPassword, setUserPassword] = useState<string | null>(null);
-  const { setStatus, loginErr } = useSignIn(userEmail, userPassword);
+  const { status, setStatus, loginErr } = useSignIn(userEmail, userPassword);
   const { acceptedInput, validEmail } = useCheckCredentials(
     userEmail,
     userPassword,
@@ -30,7 +30,7 @@ export default function Login(): JSX.Element {
   ): Promise<void> => {
     e.preventDefault();
     if (acceptedInput === "valid" && userPassword) {
-      dispatch(renderToast({ status: "pending", kind: "Auth" }));
+      setStatus("pending");
     }
   };
 
@@ -51,7 +51,7 @@ export default function Login(): JSX.Element {
       <ScrolltoTop />
       <AnimatePresence>
         {status !== "idle" && (
-          <AuthNotification id="login" setStatus={setStatus} action="Login" />
+          <AuthNotification toast={{ status, kind: "Auth", action: "login" }} />
         )}
       </AnimatePresence>
       <div className="mx-auto 2xl:max-w-7xl py-24 lg:px-16 md:px-12 px-8 xl:px-36">

@@ -1,4 +1,4 @@
-import { ArticleSchemaType } from "../../../schemas/ArticleSchema";
+import { ArticleSchemaType } from "../../../schemas/ArticleSchema.js";
 import {
   Article,
   Bias,
@@ -6,7 +6,7 @@ import {
   FcParam,
   MBFC,
   ScrapedArticle,
-} from "../../../types/types";
+} from "../../../types/types.js";
 
 export interface BatchItem {
   url: string;

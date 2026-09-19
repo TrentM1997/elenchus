@@ -6,11 +6,11 @@ import PriorInvestigation from "../components/InvestigationSaved";
 import InvestigationSkeletons from "../skeletons/InvestigationSkeletons";
 import { useRef, useCallback } from "react";
 import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";
-import { reviewThisResearch } from "@/state/Reducers/UserContent/UserInvestigations";
+import { reviewThisResearch } from "@/state/Reducers/Dashboard/UserContent/UserInvestigations";
 import { useSkeletons } from "@/hooks/useSkeletons";
-import { chooseTab } from "@/state/Reducers/UserContent/DashboardTabs";
+import { chooseTab } from "@/state/Reducers/Dashboard/UserContent/DashboardTabs";
 import { wait } from "@/lib/helpers/formatting/Presentation";
-import { InvestigationSchemaType } from "../../../../../../../../../schemas/api/types/InvestigationSchema";
+import { InvestigationSchemaType } from "@/lib/schemas/investigations/InvestigationSchema";
 
 interface ResearchScroller {
   timeline: InvestigationSchemaType[];
@@ -33,7 +33,7 @@ export default function ResearchScroller({ timeline }: ResearchScroller) {
   } = useVirtuoso(
     timeline,
     "investigations",
-    restorePosition ?? null,
+    restorePosition?.status === "ready" ? restorePosition.position : undefined,
     timeline[0].id,
   );
   const { boxShadow, onScrollHandler } = useScrollWithShadow();

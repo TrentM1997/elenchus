@@ -1,6 +1,6 @@
 import React from "react";
 import SourceInfo from "../SourceInfo";
-import type { Article } from "@/state/Reducers/Investigate/articles/ExtractedArticles";
+import type { ArticleSchemaType as Article } from "@/lib/schemas/articles/ArticleSchema";
 
 interface MetaData {
   article: Article;

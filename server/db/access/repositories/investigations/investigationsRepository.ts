@@ -1,15 +1,15 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import { Database } from "../../../../types/databaseInterfaces";
+import { Database } from "../../../../types/databaseInterfaces.js";
 import {
   validateOrThrow,
   validateServerOrThrow,
-} from "../../../../core/validation/validateOrThrow";
+} from "../../../../core/validation/validateOrThrow.js";
 import {
   InvestigationSchemaType,
   InvestigationSchema,
-} from "../../../../schemas/InvestigationSchema";
-import type { AuthenticatedUserId } from "../../../../services/auth/authorization";
-import { ServerError } from "../../../../core/errors/ServerError";
+} from "../../../../schemas/InvestigationSchema.js";
+import type { AuthenticatedUserId } from "../../../../services/auth/authorization.js";
+import { ServerError } from "../../../../core/errors/ServerError.js";
 
 type InvestigationDbOperation<T> =
   | { ok: true; data: T }

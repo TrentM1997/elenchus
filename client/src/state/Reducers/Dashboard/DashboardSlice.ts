@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ArticleSchemaType } from "../../../../../schemas/api/types/ArticlesSchema";
 import { AsyncState } from "@/state/types";
 import { hydrateDashboard } from "./thunks";
-import { InvestigationSchemaType } from "../../../../../schemas/api/types/InvestigationSchema";
+import { InvestigationSchemaType } from "@/lib/schemas/investigations/InvestigationSchema";
+import { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
 
 type SavedArticles = AsyncState<ArticleSchemaType[]>;
 
@@ -98,10 +98,13 @@ const DashboardSlice = createSlice({
         }
       }
 
-      if (investigations.length === 0) {
-        state.investigations = { status: "empty", message: "No data found" };
-      } else {
-        state.investigations = { status: "ready", data: investigations };
+      if (investigations.ok) {
+        if (investigations.data.length > 0) {
+          state.investigations = { status: "ready", data: investigations.data };
+
+          state.investigations = { status: "empty", message: "No data found" };
+        } else {
+        }
       }
     });
   },

@@ -9,7 +9,7 @@ import SavingResearch from "@/components/React/session/notifications/SavingResea
 
 
 export default function FinalResults() {
-    const activeSession = useSelector((s: RootState) => s.auth.activeSession);
+    const activeSession = useSelector((s: RootState) => (s.auth.userKind === "authenticated"));
     const saveStatus = useSelector((state: RootState) => state.saveResearch.status)
     const idea = useSelector((s: RootState) => selectPOVData(s).idea);
 

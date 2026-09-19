@@ -1,7 +1,7 @@
 import type { Request } from "express";
 import { SupabaseClient, Session } from "@supabase/supabase-js";
-import { Database } from "../../../types/databaseInterfaces";
-import { IAuthenticationParser } from "./authenticationParser";
+import { Database } from "../../../types/databaseInterfaces.js";
+import { IAuthenticationParser } from "./authenticationParser.js";
 
 export interface ISessionRecoveryHandler {
   restoreSession(req: Request): Promise<Session | null>;

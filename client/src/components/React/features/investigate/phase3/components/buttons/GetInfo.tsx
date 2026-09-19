@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/state/store";
-import { modalStages } from "@/state/Reducers/Investigate/WikipediaSlice";
+import { modalStages } from "@/state/Reducers/Investigate/wiki/WikiSlice";
 import PanelLabel from "./PanelLabel";
 import { ArticleExtractionState } from "@/state/Reducers/Investigate/articles/types";
 

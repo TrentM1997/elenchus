@@ -1,7 +1,7 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ArticleType } from "@/env";
 import { AsyncState } from "@/state/types";
-import { QueryNewsApiParams, searchNewsApi } from "./thunks";
+import { searchNewsApi } from "./thunks";
 import { SearchResultsResponseSchemaType } from "@/lib/schemas/articles/BrowsingOptionSchema";
 
 export type SearchResultsState = AsyncState<SearchResultsResponseSchemaType>;
@@ -48,20 +48,35 @@ export const SearchResultsSlice = createSlice({
     },
     resetResults: () => initialState,
     resetArticles: (state) => {
+      state.activeRequestId = null;
       state.pages = { status: "initial" };
       state.currentPage = 0;
     },
   },
   extraReducers(builder) {
-    builder.addCase(searchNewsApi.pending, (state: SearchResults) => {
+    builder.addCase(searchNewsApi.pending, (state, action) => {
+      state.activeRequestId = action.meta.requestId;
+      state.currentPage = 0;
       state.pages = { status: "pending" };
     });
+
     builder.addCase(searchNewsApi.rejected, (state, action) => {
-      state.pages = { status: "failed", details: "Failed to query NewsAPI" };
+      if (state.activeRequestId !== action.meta.requestId) return;
+
+      state.activeRequestId = null;
+      state.pages = action.meta.aborted
+        ? { status: "initial" }
+        : { status: "failed", details: "Failed to query NewsAPI" };
     });
+
     builder.addCase(searchNewsApi.fulfilled, (state, action) => {
-      const payload = action.payload;
-      state.pages = { status: "ready", data: payload };
+      if (state.activeRequestId !== action.meta.requestId) return;
+
+      state.activeRequestId = null;
+      state.pages =
+        action.payload.length > 0
+          ? { status: "ready", data: action.payload }
+          : { status: "empty", message: "No data found" };
     });
   },
 });

@@ -1,8 +1,8 @@
-import { IDbClient } from "../../db/access/client/dbClient";
-import { ArticleSchemaType } from "../../schemas/ArticleSchema";
-import { FcParam } from "../../types/types";
-import { IFirecrawlService } from "../firecrawl/firecrawlService";
-import { JobResult } from "../firecrawl/types";
+import { IDbClient } from "../../db/access/client/dbClient.js";
+import { ArticleSchemaType } from "../../schemas/ArticleSchema.js";
+import { FcParam } from "../../types/types.js";
+import { IFirecrawlService } from "../firecrawl/firecrawlService.js";
+import { JobResult } from "../firecrawl/types.js";
 
 export interface IArticleService {
   extract(articles: FcParam[]): { jobId: string };

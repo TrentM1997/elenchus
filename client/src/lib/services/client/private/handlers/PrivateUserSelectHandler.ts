@@ -3,11 +3,11 @@ import {
   BookmarkedArticlesResponseSchema,
   BookmarkedArticlesResponseSchemaType,
 } from "@/lib/schemas/articles/BookmarkSchema";
-import { IHttpClient } from "@/lib/services/client/http/types";
 import {
   InvestigationsSavedReponseSchema,
   InvestigationsSavedReponseSchemaType,
-} from "@/lib/schemas/InvestigationSchema";
+} from "@/lib/schemas/investigations/InvestigationSchema";
+import { IHttpClient } from "@/lib/services/client/http/types";
 
 export interface IPrivateUserSelectHandler {
   bookmarks(): Promise<BookmarkedArticlesResponseSchemaType>;

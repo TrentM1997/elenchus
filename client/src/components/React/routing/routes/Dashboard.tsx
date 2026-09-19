@@ -10,7 +10,7 @@ import {
   clearResearchScrollPos,
   clearScrollPosition,
   presentMetrics,
-} from "@/state/Reducers/UserContent/ProfileNavigationSlice";
+} from "@/state/Reducers/Dashboard/UserContent/ProfileNavigationSlice";
 import { useHydrateDashboard } from "@/lib/hooks/useHydrateDashboard";
 const MobileProfileNav = lazy(
   () => import("../../features/dashboard/ProfileNavigation/mobile/ProfileMenu"),

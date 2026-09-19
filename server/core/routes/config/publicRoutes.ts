@@ -2,10 +2,7 @@ import { Router } from "express";
 import { IAppServices } from "../../../services/appServices.js";
 import { wrapAsync } from "../../async/wrapAsync.js";
 import { ServerError } from "../../errors/ServerError.js";
-import {
-  validateOrThrow,
-  validateServerOrThrow,
-} from "../../validation/validateOrThrow.js";
+import { validateOrThrow } from "../../validation/validateOrThrow.js";
 import { SearchQuerySchema } from "../../../schemas/SearchQuerySchema.js";
 import { LoginSchema } from "../../../schemas/LoginSchema.js";
 import { ScrapeRequestSchema } from "../../../schemas/ScrapeRequestSchema.js";
@@ -53,7 +50,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
     wrapAsync(async (req, res) => {
       const result = await req.auth.recoverSession(req, res);
 
-      res.success("Session checked", result.status, 200);
+      res.success("Session checked", result, 200);
     }),
   );
 

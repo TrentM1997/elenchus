@@ -1,4 +1,4 @@
-import { SummaryHelp } from "@/helpInfo/help"
+import { SummaryHelp } from "@/components/React/global/Help/tokens/helptokens"
 import HelpButton from "@/components/React/global/Help/buttons/Question"
 
 export default function ReadingHero({ }) {

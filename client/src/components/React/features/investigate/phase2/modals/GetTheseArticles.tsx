@@ -1,7 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "@/state/store";
 import DisplayThese from "./DisplayThese";
-import { ChosenArticleSlice } from "@/state/Reducers/Investigate/articles/ChosenArticles";
 import { wait } from "@/lib/helpers/formatting/Presentation";
 import { changePhase } from "@/state/Reducers/Investigate/Rendering";
 import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
@@ -9,13 +8,21 @@ import { extractArticles } from "@/state/Reducers/Investigate/articles/thunks";
 import ExtractThese, { GetArticlesHeader } from "./ExtractThese";
 
 export function GetTheseArticles(): JSX.Element {
-  const { selected }: ChosenArticleSlice = useSelector(
+  const { selected } = useSelector(
     (state: RootState) => state.investigation.getArticle,
   );
   const dispatch = useDispatch<AppDispatch>();
   const retrieveArticles = (): void => {
     if (selected.status !== "empty") {
-      dispatch(extractArticles(selected.data));
+      dispatch(extractArticles(selected.data.map(article => ({
+        url: article.url,
+        source: article.provider,
+        date: article.date_published,
+        logo: article.logo,
+        title: article.name,
+        image: article.image ?? "",
+        description: article.description,
+      }))));
     }
   };
 

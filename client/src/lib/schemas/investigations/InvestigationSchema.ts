@@ -1,7 +1,6 @@
 import { Type } from "@sinclair/typebox";
-import { TypeCompiler } from "@sinclair/typebox/compiler";
 import type { Static } from "@sinclair/typebox";
-import { PersistenceFailedResponseSchema } from "./PersistenceFailedSchema";
+import { PersistenceFailedResponseSchema } from "../auth/PersistenceFailedSchema";
 
 export const InitialPerspectiveSchema = Type.Union([
   Type.Literal("Neutral"),

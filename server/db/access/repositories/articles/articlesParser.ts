@@ -1,13 +1,13 @@
-import { Database } from "../../../../types/databaseInterfaces";
+import { Database } from "../../../../types/databaseInterfaces.js";
 import {
   validateOrThrow,
   validateServerOrThrow,
-} from "../../../../core/validation/validateOrThrow";
+} from "../../../../core/validation/validateOrThrow.js";
 import {
   ArticleSchemaType,
   ArticleSchema,
-} from "../../../../schemas/ArticleSchema";
-import type { AuthenticatedUserId } from "../../../../services/auth/authorization";
+} from "../../../../schemas/ArticleSchema.js";
+import type { AuthenticatedUserId } from "../../../../services/auth/authorization.js";
 
 export type InsertableArticleType =
   Database["public"]["Tables"]["articles"]["Insert"];

@@ -1,9 +1,12 @@
-import { BLUESKY_EMAIL, BLUESKY_PASSWORD, getEnvVar } from "../src/Config";
-import { BlueSkyService, IBlueSkyService } from "./blueSky/blueSkyService";
-import { INewsAPIService, NewsAPIService } from "./newsApi/newsApiHandler";
+import { BLUESKY_EMAIL, BLUESKY_PASSWORD } from "../src/Config.js";
+import { BlueSkyService, IBlueSkyService } from "./blueSky/blueSkyService.js";
+import { INewsAPIService, NewsAPIService } from "./newsApi/newsApiHandler.js";
 import { AtpAgent } from "@atproto/api";
-import { IWikipediaService, WikipediaService } from "./wiki/WikipediaService";
-const NEWS_API_KEY = getEnvVar("NEWS_API_KEY");
+import {
+  IWikipediaService,
+  WikipediaService,
+} from "./wiki/WikipediaService.js";
+import { NEWS_API_KEY } from "../src/Config.js";
 
 export interface IIntegrations {
   readonly newsApi: INewsAPIService;

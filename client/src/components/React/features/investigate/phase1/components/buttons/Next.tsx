@@ -4,7 +4,6 @@ import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import {
   increment,
   denyIncrement,
-  acceptedInput,
 } from "@/state/Reducers/Investigate/pov/Steps";
 import { motion } from "framer-motion";
 import { selectPost } from "@/state/Reducers/BlueSky/BlueSkySlice";
@@ -12,7 +11,7 @@ import { useEffect, useMemo } from "react";
 import React from "react";
 
 function NextButton({}): JSX.Element | null {
-  const { step, status } = useSelector(
+  const { wizardStep: { num: step }, status } = useSelector(
     (state: RootState) => state.investigation.stepper,
     shallowEqual,
   );
@@ -33,8 +32,7 @@ function NextButton({}): JSX.Element | null {
       dispatch(increment());
       dispatch(selectPost({ status: "initial" }));
     } else if (noInput) {
-      dispatch(acceptedInput(false));
-      dispatch(denyIncrement("idle"));
+      dispatch(denyIncrement());
     }
   };
 

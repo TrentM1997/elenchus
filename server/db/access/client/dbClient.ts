@@ -1,26 +1,26 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import { Database } from "../../../types/databaseInterfaces";
+import { Database } from "../../../types/databaseInterfaces.js";
 import {
   IUserRepository,
   UserRepository,
-} from "../repositories/user/userRepository";
+} from "../repositories/user/userRepository.js";
 import {
   IArticlesRepository,
   ArticlesRepository,
-} from "../repositories/articles/articlesRepository";
+} from "../repositories/articles/articlesRepository.js";
 import {
   IInvestigationsRepository,
   InvestigationsRepository,
-} from "../repositories/investigations/investigationsRepository";
-import { SourcesRepository } from "../repositories/sources/sourcesRepository";
+} from "../repositories/investigations/investigationsRepository.js";
+import { SourcesRepository } from "../repositories/sources/sourcesRepository.js";
 import {
   IBookmarksRepository,
   BookmarksRepository,
-} from "../repositories/bookmarks/bookmarksRepository";
+} from "../repositories/bookmarks/bookmarksRepository.js";
 import {
   IFeedbackRespository,
   FeedbackRepository,
-} from "../repositories/feedback/feedbackRespository";
+} from "../repositories/feedback/feedbackRespository.js";
 
 export interface IDbClient {
   readonly user: IUserRepository;

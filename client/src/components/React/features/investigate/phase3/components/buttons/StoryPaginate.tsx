@@ -5,10 +5,10 @@ import {
   decrementStory,
   incrementStoryBy,
 } from "@/state/Reducers/Investigate/articles/ExtractedArticles";
-import type { ModalStages } from "@/state/Reducers/Investigate/WikipediaSlice";
-import { modalStages } from "@/state/Reducers/Investigate/WikipediaSlice";
+import type { ModalStages } from "@/state/Reducers/Investigate/wiki/WikiSlice";
+import { modalStages } from "@/state/Reducers/Investigate/wiki/WikiSlice";
 import { wait } from "@/lib/helpers/formatting/Presentation";
-import { ArticleSchemaType } from "@/lib/schemas/ArticleSchema";
+import { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
 
 export default function StoryPaginate({
   articles,

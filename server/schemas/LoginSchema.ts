@@ -1,4 +1,4 @@
-import { LoginBody } from "../types/types";
+import { LoginBody } from "../types/types.js";
 import { Type } from '@sinclair/typebox';
 import { TypeCompiler } from '@sinclair/typebox/compiler';
 import type { Static } from '@sinclair/typebox';

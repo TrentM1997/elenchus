@@ -4,7 +4,7 @@ import DashboardOption from "./DashboardOption";
 import SignoutIcon from "@/components/React/global/IconComponents/SignoutIcon";
 import SettingsIcon from "@/components/React/global/IconComponents/SettingsIcon";
 import React from "react";
-import { chooseTab, type ActiveTab } from "@/state/Reducers/UserContent/DashboardTabs";
+import { chooseTab, type ActiveTab } from "@/state/Reducers/Dashboard/UserContent/DashboardTabs";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/state/store";
 import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
@@ -13,7 +13,7 @@ import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 
 function SessionOptions() {
     const tab: ActiveTab = useSelector((s: RootState) => s.dashboard.tab);
-    const signingOut = useSelector((s: RootState) => s.auth.signOut);
+    const signingOut = useSelector((s: RootState) => s.overlay.modal === "Sign Out");
     const dispatch = useDispatch<AppDispatch>();
 
     return (

@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { TypeCompiler } from "@sinclair/typebox/compiler";
-import { ExtractionJobSchema } from "../../lib/schemas/ArticleSchema";
-import type { ArticleSchemaType, ExtractionResult } from "../../lib/schemas/ArticleSchema";
+import { ExtractionJobSchema } from "../../lib/schemas/articles/ArticleSchema";
+import type { ArticleSchemaType, ExtractionResult } from "../../lib/schemas/articles/ArticleSchema";
 import { serverClient } from "../../lib/services/client/serverClient";
 import reducer, { closeNotification, resetReadingSlice, incrementStoryBy } from "../../state/Reducers/Investigate/articles/ExtractedArticles";
 import { extractionProgressReceived } from "../../state/Reducers/Investigate/articles/actions";
@@ -21,7 +21,7 @@ jest.mock("../../lib/services/client/serverClient", () => ({
 const client = jest.mocked(serverClient.general.extraction);
 const article: ArticleSchemaType = {
   title: "An article", provider: "Source", article_url: "https://example.com/a",
-  date_published: "2026-09-17", full_text: "Article content", id: null,
+  date_published: "2026-09-17", full_text: "Article content", id: 1,
   factual_reporting: "Unknown",
 };
 const failure = {
@@ -191,8 +191,8 @@ test("the response schema accepts actual server snapshots and rejects malformed 
 
 test("the HTTP client sends the server's extraction body and polls its job route", async () => {
   const fetchMock = jest.spyOn(globalThis, "fetch")
-    .mockResolvedValueOnce(new Response(JSON.stringify({ jobId: "job-1" }), { status: 202 }))
-    .mockResolvedValueOnce(new Response(JSON.stringify(snapshot("pending")), { status: 200 }));
+    .mockResolvedValueOnce(new Response(JSON.stringify({ status: "success", message: "Extraction started", data: { jobId: "job-1" } }), { status: 202 }))
+    .mockResolvedValueOnce(new Response(JSON.stringify({ status: "success", message: "Extraction progress", data: snapshot("pending") }), { status: 200 }));
   const handler = new ExtractArticlesRouteHandler(
     serverClientRoutes.public,
     new HttpClient(new RequestParser(), new ConfigRequestHandler()),

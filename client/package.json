@@ -10,7 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "disable-toolbar": "astro preferences disable devToolbar"
+    "disable-toolbar": "astro preferences disable devToolbar",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",

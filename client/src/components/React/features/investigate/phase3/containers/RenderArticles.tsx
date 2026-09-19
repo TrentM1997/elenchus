@@ -6,7 +6,6 @@ import Article from "@/components/React/global/Articles/SuccessFull/containers/A
 import ArticleLoader from "@/components/React/global/Articles/loaders/ArticleLoader";
 import NoContent from "@/components/React/global/Articles/Failed/NoContent";
 import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary";
-import { ReadingSliceState } from "@/state/Reducers/Investigate/articles/ExtractedArticles";
 import PendingExtractions from "../components/notification/PendingExtractions";
 import { useEffect } from "react";
 import ControlPanel from "../components/controls/ControlPanel";
@@ -19,18 +18,20 @@ export default function RenderArticles(): JSX.Element | null {
   );
   const [showPendingExtractions, setShowPendingExtractions] =
     useState<boolean>(false);
-  const { articles, currentStory, status }: ReadingSliceState = useSelector(
+  const { articles: extraction, currentStory } = useSelector(
     (state: RootState) => state.investigation.read,
   );
+  const articles = "data" in extraction ? extraction.data.retrieved : [];
+  const status = extraction.status;
   const canRender = Array.isArray(articles) && articles.length > 0;
   const noResults = useMemo(() => {
     const failed: boolean =
-      status === "fulfilled" &&
+      (status === "ready" || status === "failed" || status === "error") &&
       Array.isArray(articles) &&
       articles.length === 0;
     return failed;
   }, [status, articles]);
-  const renderControlPanel = articles.length > 0 || status === "fulfilled";
+  const renderControlPanel = articles.length > 0 || (status === "ready" || status === "failed" || status === "error");
   const { displayed } = usePreload(articles[currentStory]);
 
   useEffect(() => {
@@ -40,7 +41,7 @@ export default function RenderArticles(): JSX.Element | null {
       !noResults &&
       Array.isArray(articles) &&
       articles.length > 0 &&
-      status === "pending"
+      (status === "pending" || status === "partial")
     ) {
       setShowPendingExtractions(true);
     }
@@ -52,11 +53,8 @@ export default function RenderArticles(): JSX.Element | null {
                   flex flex-col"
     >
       <AnimatePresence>
-        {showPendingExtractions && (
-          <PendingExtractions
-            status={status}
-            setShowPendingExtractions={setShowPendingExtractions}
-          />
+        {showPendingExtractions && (status === "pending" || status === "partial") && (
+          <PendingExtractions />
         )}
       </AnimatePresence>
       <div
