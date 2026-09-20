@@ -66,13 +66,19 @@ export const ArticleSchema = Type.Object({
   summary: Type.Optional(Type.Any()),
   full_text: Type.String(),
   logo: Type.Optional(Type.String()),
-  id: Type.Union([Type.String(), Type.Number(), Type.Null()]),
+  id: Type.Number(),
   factual_reporting: FactualReportingRatingSchema,
   bias: Type.Optional(BiasSchema),
   country: Type.Optional(Type.Union([Type.String(), Type.Null()])),
 });
 
 export type ArticleSchemaType = Static<typeof ArticleSchema>;
+
+export const InsertableArticleSchema = Type.Omit(ArticleSchema, ["id"]);
+
+export type InsertableArticleSchemaType = Static<
+  typeof InsertableArticleSchema
+>;
 
 export const FactualReportingValidator = TypeCompiler.Compile(
   FactualReportingRatingSchema,
@@ -82,7 +88,7 @@ export type FactualReportingRatingSchemaType = Static<
   typeof FactualReportingRatingSchema
 >;
 
-const validator = TypeCompiler.Compile(ArticleSchema);
+const validator = TypeCompiler.Compile(InsertableArticleSchema);
 
 export const validateArticle = (article: unknown) => {
   const isValid = validator.Check(article);

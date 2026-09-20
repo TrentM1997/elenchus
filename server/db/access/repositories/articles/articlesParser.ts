@@ -6,6 +6,8 @@ import {
 import {
   ArticleSchemaType,
   ArticleSchema,
+  InsertableArticleSchema,
+  InsertableArticleSchemaType,
 } from "../../../../schemas/ArticleSchema.js";
 import type { AuthenticatedUserId } from "../../../../services/auth/authorization.js";
 
@@ -19,14 +21,16 @@ export interface IArticlesDbParser {
     user_id: AuthenticatedUserId,
     article_id: number,
   ): InsertableBookmark;
-  validateArticleInput(article: unknown): ArticleSchemaType;
+  validateArticleInput(article: unknown): InsertableArticleSchemaType;
   validateArticleSelected(article: unknown): ArticleSchemaType;
-  toInsertableArticle(article: ArticleSchemaType): InsertableArticleType;
+  toInsertableArticle(
+    article: InsertableArticleSchemaType,
+  ): InsertableArticleType;
   validateArticles(results: unknown[]): ArticleSchemaType[];
 }
 
 export class ArticlesDbParser implements IArticlesDbParser {
-  toInsertableBookmark(
+  public toInsertableBookmark(
     user_id: AuthenticatedUserId,
     article_id: number,
   ): InsertableBookmark {
@@ -36,7 +40,7 @@ export class ArticlesDbParser implements IArticlesDbParser {
     };
   }
 
-  validateArticles(results: unknown[]): ArticleSchemaType[] {
+  public validateArticles(results: unknown[]): ArticleSchemaType[] {
     const articles = [];
 
     for (const result of results) {
@@ -46,15 +50,17 @@ export class ArticlesDbParser implements IArticlesDbParser {
     return articles;
   }
 
-  validateArticleInput(article: unknown): ArticleSchemaType {
-    return validateOrThrow(ArticleSchema, article);
+  public validateArticleInput(article: unknown): InsertableArticleSchemaType {
+    return validateOrThrow(InsertableArticleSchema, article);
   }
 
-  validateArticleSelected(article: unknown): ArticleSchemaType {
+  public validateArticleSelected(article: unknown): ArticleSchemaType {
     return validateServerOrThrow(ArticleSchema, article);
   }
 
-  toInsertableArticle(article: ArticleSchemaType): InsertableArticleType {
+  public toInsertableArticle(
+    article: InsertableArticleSchemaType,
+  ): InsertableArticleType {
     const {
       full_text,
       article_url,

@@ -17,6 +17,8 @@ export default function ExtractionRenderer({
   state: ArticleExtractionState;
   page: number;
 }): JSX.Element | null {
+  console.log(state);
+
   switch (state.status) {
     case "initial": {
       return null;
@@ -29,9 +31,10 @@ export default function ExtractionRenderer({
     case "error":
     case "partial": {
       const article = state.data.retrieved[page];
-      const interruption = state.status === "error"
-        ? <FailedState title="Extraction interrupted" message={state.details} />
-        : null;
+      const interruption =
+        state.status === "error" ? (
+          <FailedState title="Extraction interrupted" message={state.details} />
+        ) : null;
       if (!article) {
         if (interruption) return interruption;
         return state.status === "partial" ? <PendingState /> : <NoContent />;
@@ -39,7 +42,10 @@ export default function ExtractionRenderer({
       return (
         <>
           {interruption}
-          <Suspense fallback={<ArticleLoader />} key={"partial-loader-fallback"}>
+          <Suspense
+            fallback={<ArticleLoader />}
+            key={"partial-loader-fallback"}
+          >
             <Article
               key={article.article_url}
               articleData={article}

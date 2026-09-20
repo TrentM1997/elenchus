@@ -24,6 +24,7 @@ export const extractArticles = createAsyncThunk<
         signal,
         onProgress: (result) => {
           if (!signal.aborted) {
+            console.log({ Request: requestId, "Poll Result": result });
             dispatch(extractionProgressReceived({ requestId, result }));
           }
         },

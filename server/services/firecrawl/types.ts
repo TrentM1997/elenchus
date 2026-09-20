@@ -1,4 +1,7 @@
-import { ArticleSchemaType } from "../../schemas/ArticleSchema.js";
+import {
+  ArticleSchemaType,
+  InsertableArticleSchemaType,
+} from "../../schemas/ArticleSchema.js";
 import { FailedAttempt, FcParam } from "../../types/types.js";
 
 export interface JobResult {
@@ -17,4 +20,7 @@ export type RunFirecrawlJobParameters = {
   articles: FcParam[];
   MBFC_DATA: any;
   jobs: Record<string, JobResult>;
+  persistArticle: (
+    article: InsertableArticleSchemaType,
+  ) => Promise<ArticleSchemaType>;
 };
