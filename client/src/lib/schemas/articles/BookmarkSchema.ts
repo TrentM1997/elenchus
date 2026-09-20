@@ -53,22 +53,3 @@ export type DeleteBookmarkResponseSchemaType = Static<
 export type BookmarkResponseSchemaType = Static<typeof BookmarkResponseSchema>;
 
 export type BookmarkSchemaType = Static<typeof BookmarkSchema>;
-
-export type BookmarkResponse =
-  | { ok: true; data: BookmarkSchemaType }
-  | { ok: false; message: string; details: string };
-
-export type BookmarkDeleteResponse =
-  | { ok: false; message: string; cause?: unknown }
-  | { ok: true; data: BookmarkSchemaType };
-
-export type BookmarkedArticlesResponse =
-  | {
-      ok: true;
-      data: BookmarkSchemaType[];
-    }
-  | {
-      ok: false;
-      message: string;
-      details: string;
-    };
