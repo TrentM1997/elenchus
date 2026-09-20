@@ -1,4 +1,8 @@
+import { FeedbackResponseSchemaType } from "@/lib/schemas/auth/FeedbackSchema";
+import { AsyncState } from "@/state/types";
 import { createSlice } from "@reduxjs/toolkit";
+
+export type FeedbackState = AsyncState<FeedbackResponseSchemaType>;
 
 interface FeedbackTypes {
   status: string;
@@ -6,6 +10,7 @@ interface FeedbackTypes {
   message: string;
   seen: boolean | null;
   declined: boolean | null;
+  feedback: FeedbackState;
 }
 
 const initialState: FeedbackTypes = {
@@ -14,6 +19,7 @@ const initialState: FeedbackTypes = {
   message: "",
   seen: false,
   declined: false,
+  feedback: { status: "initial" },
 };
 
 export const FeedBackSlice = createSlice({

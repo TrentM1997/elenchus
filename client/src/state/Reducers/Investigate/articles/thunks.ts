@@ -1,5 +1,4 @@
-import { createAsyncThunk, GetThunkAPI } from "@reduxjs/toolkit";
-import { pollExtraction } from "@/lib/services/articles/pollExtraction";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import { serverClient } from "@/lib/services/client/serverClient";
 import { extractionProgressReceived } from "./actions";
 import {
@@ -20,8 +19,7 @@ export const extractArticles = createAsyncThunk<
   "investigate/runFirecrawlExtraction",
   async (articles, { signal, dispatch, rejectWithValue, requestId }) => {
     try {
-      return await pollExtraction({
-        client: serverClient.general.extraction,
+      return await serverClient.general.extraction.runExtractionJob({
         articles,
         signal,
         onProgress: (result) => {
