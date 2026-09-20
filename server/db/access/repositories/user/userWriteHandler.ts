@@ -16,46 +16,29 @@ import {
 import type { LoginSchema } from "../../../../schemas/LoginSchema.js";
 import type { AuthenticatedUserId } from "../../../../services/auth/authorization.js";
 import { ResetPasswordResponseSchemaType } from "../../../../schemas/ChangePasswordSchema.ts";
+import type { DbResult } from "../../../types/types.ts";
 
-export type ChangePasswordResult =
-  | {
-      ok: false;
-      message: string;
-    }
-  | {
-      ok: true;
-      user: User;
-    };
+type CreateUserSuccessPayload = {
+  user: CreatedUserSchemaType;
+  session: SupabaseSessionSchemaType;
+};
 
-export type CreateUserResult = Promise<
-  | {
-      ok: false;
-      error: AuthError;
-    }
-  | {
-      ok: true;
-      data: { user: CreatedUserSchemaType; session: SupabaseSessionSchemaType };
-    }
->;
+export type CreateUserResult = DbResult<CreateUserSuccessPayload>;
 
-export type PasswordResetResult =
-  | { ok: true; data: Record<string, never> }
-  | { ok: false; error: AuthError };
+export type RequestPasswordResetResult = DbResult<Record<string, never>>;
 
-export type AccountDeletionResult =
-  | { ok: true }
-  | { ok: false; message: string; statusCode: number; details?: unknown };
+export type AccountDeletionResult = DbResult<User | null>;
 
 export interface IUserWriteHandler {
   deleteAccount(
     user_id: AuthenticatedUserId,
     credentials: LoginSchema,
   ): Promise<AccountDeletionResult>;
-  requestPasswordReset(email: string): Promise<PasswordResetResult>;
+  requestPasswordReset(email: string): Promise<RequestPasswordResetResult>;
   createUser(credentials: {
     email: string;
     password: string;
-  }): CreateUserResult;
+  }): Promise<CreateUserResult>;
   resetPassword(credentials: {
     email: string;
     password: string;
@@ -64,6 +47,26 @@ export interface IUserWriteHandler {
 
 export class UserWriteHandler implements IUserWriteHandler {
   constructor(private readonly validator: UserDataValidator) {}
+
+  public async requestPasswordReset(
+    email: string,
+  ): Promise<RequestPasswordResetResult> {
+    return await this.executeRequestPasswordReset(email);
+  }
+
+  public async resetPassword(credentials: {
+    email: string;
+    password: string;
+  }): Promise<ResetPasswordResponseSchemaType> {
+    return await this.executeChangePassword(credentials);
+  }
+
+  public async createUser(credentials: {
+    email: string;
+    password: string;
+  }): Promise<CreateUserResult> {
+    return this.executeCreateUser(credentials);
+  }
 
   public async deleteAccount(
     user_id: AuthenticatedUserId,
@@ -75,7 +78,7 @@ export class UserWriteHandler implements IUserWriteHandler {
   private async executeDeleteAccount(
     user_id: AuthenticatedUserId,
     credentials: LoginSchema,
-  ): Promise<AccountDeletionResult> {
+  ): Promise<DbResult<User | null>> {
     const verificationClient = createClient<Database>(
       SUPABASE_URL,
       SUPABASE_PUBLIC_KEY,
@@ -95,8 +98,6 @@ export class UserWriteHandler implements IUserWriteHandler {
       return {
         ok: false,
         message: "Unable to verify credentials for account deletion",
-        statusCode:
-          error.code === "invalid_credentials" ? 401 : (error.status ?? 503),
         details: error.message,
       };
     }
@@ -105,11 +106,9 @@ export class UserWriteHandler implements IUserWriteHandler {
       return {
         ok: false,
         message: "Credentials do not match the authenticated account",
-        statusCode: 403,
       };
     }
 
-    // Never sign in on this client: deletion must retain the server credentials.
     const adminClient = createClient<Database>(SUPABASE_URL, SUPABASE_KEY, {
       auth: {
         persistSession: false,
@@ -118,30 +117,25 @@ export class UserWriteHandler implements IUserWriteHandler {
       },
     });
 
-    const { error: deletionError } =
-      await adminClient.auth.admin.deleteUser(user_id);
+    const {
+      error: deletionError,
+      data: { user },
+    } = await adminClient.auth.admin.deleteUser(user_id);
 
     if (deletionError) {
       return {
         ok: false,
         message: "Failed to delete user account",
-        statusCode: deletionError.status ?? 500,
         details: deletionError.message,
       };
     }
 
-    return { ok: true };
-  }
-
-  public async requestPasswordReset(
-    email: string,
-  ): Promise<PasswordResetResult> {
-    return await this.executeRequestPasswordReset(email);
+    return { ok: true, data: user };
   }
 
   private async executeRequestPasswordReset(
     email: string,
-  ): Promise<PasswordResetResult> {
+  ): Promise<RequestPasswordResetResult> {
     const resetClient = createClient<Database>(
       SUPABASE_URL,
       SUPABASE_PUBLIC_KEY,
@@ -162,24 +156,10 @@ export class UserWriteHandler implements IUserWriteHandler {
     );
 
     if (error) {
-      return { ok: false, error };
+      return { ok: false, message: error.message };
     }
 
     return { ok: true, data };
-  }
-
-  public async resetPassword(credentials: {
-    email: string;
-    password: string;
-  }): Promise<ResetPasswordResponseSchemaType> {
-    return await this.executeChangePassword(credentials);
-  }
-
-  public async createUser(credentials: {
-    email: string;
-    password: string;
-  }): CreateUserResult {
-    return this.executeCreateUser(credentials);
   }
 
   private async executeChangePassword(credentials: {
@@ -206,25 +186,16 @@ export class UserWriteHandler implements IUserWriteHandler {
       };
     }
 
-    const { user } = data;
-
-    if (user) {
-      return {
-        ok: false,
-        message: "Failed to change password",
-      };
-    }
-
     return this.validator.validateChangedPasswordResponse({
       ok: true,
-      user,
+      data: data.user,
     });
   }
 
   private async executeCreateUser(credentials: {
     email: string;
     password: string;
-  }): CreateUserResult {
+  }): Promise<CreateUserResult> {
     const signupClient = createClient<Database>(
       SUPABASE_URL,
       SUPABASE_PUBLIC_KEY,
@@ -240,7 +211,7 @@ export class UserWriteHandler implements IUserWriteHandler {
     const { data, error } = await signupClient.auth.signUp(credentials);
 
     if (error) {
-      return { ok: false, error };
+      return { ok: false, message: error.message };
     }
 
     const validated = this.validator.validateNewUserResponse(

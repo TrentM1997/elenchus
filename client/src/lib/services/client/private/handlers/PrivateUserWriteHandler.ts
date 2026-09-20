@@ -2,6 +2,8 @@ import { PrivateServerClientRoutes } from "@/infra/transport/types/routeDefiniti
 import {
   BookmarkResponseSchema,
   BookmarkResponseSchemaType,
+  DeleteBookmarkResponseSchema,
+  DeleteBookmarkResponseSchemaType,
 } from "@/lib/schemas/articles/BookmarkSchema";
 import { IHttpClient } from "@/lib/services/client/http/types";
 import { InvestigationSchemaType } from "../../../../../../../schemas/api/types/InvestigationSchema";
@@ -12,7 +14,7 @@ import {
 
 export interface IPrivateUserWritesHandler {
   bookmark(article_id: number): Promise<BookmarkResponseSchemaType>;
-  unBookmark(article_id: string): Promise<BookmarkResponseSchemaType>;
+  unBookmark(article_id: string): Promise<DeleteBookmarkResponseSchemaType>;
   investigation(
     investigation: InvestigationSchemaType,
   ): Promise<InvestigationSaveResponseType>;
@@ -49,10 +51,10 @@ export class PrivateUserWritesHandler implements IPrivateUserWritesHandler {
 
   public async unBookmark(
     article_id: string,
-  ): Promise<BookmarkResponseSchemaType> {
+  ): Promise<DeleteBookmarkResponseSchemaType> {
     return await this.http.delete(
       `${this.routes.bookmarks.delete}${article_id}`,
-      BookmarkResponseSchema,
+      DeleteBookmarkResponseSchema,
     );
   }
 }

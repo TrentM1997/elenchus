@@ -1,6 +1,7 @@
 import { Type, Static } from "@sinclair/typebox";
 import { CreatedUserSchema } from "./UserSchema";
 import { SupabaseSessionSchema } from "./SupabaseSchemas";
+import { PersistenceFailedResponseSchema } from "./PersistenceFailedSchema";
 
 // Nested User Metadata / Identity Schemas
 const UserIdentitySchema = Type.Object({
@@ -57,11 +58,21 @@ const WeakPasswordSchema = Type.Object({
   message: Type.String(),
 });
 
-const AuthErrorResponseSchema = Type.Object({
-  message: Type.String(),
-  status: Type.Optional(Type.Number()),
-  code: Type.Optional(Type.String()),
+const LoginSuccessResponseSchema = Type.Object({
+  ok: Type.Literal(true),
+  data: Type.Object({
+    user: UserSchema,
+    session: SessionSchema,
+    weakPassword: Type.Optional(WeakPasswordSchema),
+  }),
 });
+
+export const LoginResponseSchema = Type.Union([
+  LoginSuccessResponseSchema,
+  PersistenceFailedResponseSchema,
+]);
+
+export type LoginResponseSchemaType = Static<typeof LoginResponseSchema>;
 
 export const AuthTokenResponsePasswordSchema = Type.Union([
   Type.Object({
@@ -79,18 +90,16 @@ export const AuthTokenResponsePasswordSchema = Type.Union([
       session: Type.Null(),
       weakPassword: Type.Optional(Type.Null()),
     }),
-    error: AuthErrorResponseSchema,
+    error: PersistenceFailedResponseSchema,
   }),
 ]);
 
 export const LogOutResultSchema = Type.Union([
   Type.Object({
     ok: Type.Literal(true),
+    data: Type.Literal("success"),
   }),
-  Type.Object({
-    ok: Type.Literal(false),
-    message: Type.String({ minLength: 1 }),
-  }),
+  PersistenceFailedResponseSchema,
 ]);
 
 export const RecoverSessionResponseSchema = Type.Union([
@@ -117,10 +126,7 @@ export const ResetPasswordResponseSchema = Type.Union([
     ok: Type.Literal(true),
     data: Type.Record(Type.String(), Type.Never()),
   }),
-  Type.Object({
-    ok: Type.Literal(false),
-    error: AuthErrorResponseSchema,
-  }),
+  PersistenceFailedResponseSchema,
 ]);
 
 export type ResetPasswordResponseSchemaType = Static<

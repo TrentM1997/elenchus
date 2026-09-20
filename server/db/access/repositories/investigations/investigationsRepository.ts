@@ -10,17 +10,11 @@ import {
 } from "../../../../schemas/InvestigationSchema.js";
 import type { AuthenticatedUserId } from "../../../../services/auth/authorization.js";
 import { ServerError } from "../../../../core/errors/ServerError.js";
+import { DbResult } from "../../../types/types.ts";
 
-type InvestigationDbOperation<T> =
-  | { ok: true; data: T }
-  | { ok: false; message: string; details: string };
+export type InvestigationSaveResult = DbResult<InvestigationSchemaType>;
 
-export type InvestigationSaveResult =
-  InvestigationDbOperation<InvestigationSchemaType>;
-
-export type SavedInvestigationsResult = InvestigationDbOperation<
-  InvestigationSchemaType[]
->;
+export type SavedInvestigationsResult = DbResult<InvestigationSchemaType[]>;
 
 export type InsertableInvestigation =
   Database["public"]["Tables"]["investigations"]["Insert"];

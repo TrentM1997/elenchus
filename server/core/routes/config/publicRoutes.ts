@@ -23,7 +23,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
         throw new ServerError("Failed to submit feedback", 500, result.details);
       }
 
-      res.success("Feedback submitted successfully", null, 200);
+      res.success("Feedback submitted successfully", result, 200);
     }),
   );
 
@@ -36,12 +36,12 @@ export function publicRoutes(app: IAppServices, router: Router) {
       if (!result.ok) {
         throw new ServerError(
           "Failed to send password reset email",
-          result.error.status ?? 400,
-          result.error.message,
+          400,
+          result.message,
         );
       }
 
-      res.success("Reset email sent.", result.data, 200);
+      res.success("Reset email sent.", result, 200);
     }),
   );
 
@@ -63,7 +63,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
         throw new ServerError("Failed to authenticate user", 401, error.cause);
       }
 
-      res.success("Login successful", data, 200);
+      res.success("Login successful", { ok: true, data }, 200);
     }),
   );
 
@@ -76,7 +76,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
         throw new ServerError("Failed to sign out user", 500, result.message);
       }
 
-      res.success("signed out successfully", null, 200);
+      res.success("signed out successfully", result, 200);
     }),
   );
 
@@ -160,9 +160,9 @@ export function publicRoutes(app: IAppServices, router: Router) {
     wrapAsync(async (req, res) => {
       const query = validateOrThrow(SearchQuerySchema, req.query.q);
 
-      const results = await app.integrations.newsApi.search(query);
+      const result = await app.integrations.newsApi.search(query);
 
-      res.success("successful search", results, 200);
+      res.success("successful search", result, 200);
     }),
   );
 
