@@ -1,7 +1,7 @@
 export type BookmarkRoutes = {
   get: "/user/bookmarks";
   post: "/user/bookmarks";
-  delete: `/user//bookmarks/:${string}`;
+  delete: `/user/bookmarks/${string}`;
 };
 
 export type AuthRoutes = {
@@ -101,7 +101,7 @@ export const serverClientRoutes = {
     bookmarks: {
       get: "/user/bookmarks",
       post: "/user/bookmarks",
-      delete: "/user//bookmarks/:id",
+      delete: "/user/bookmarks/",
     },
   },
 } as const satisfies ServerClientRoutes;

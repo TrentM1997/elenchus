@@ -6,25 +6,15 @@ import {
   BookmarkSchemaType,
 } from "../../../../schemas/BookmarkSchema.js";
 import { validateServerOrThrow } from "../../../../core/validation/validateOrThrow.js";
+import { DbResult } from "../../../types/types.ts";
 
-export type BookmarkResponse =
-  | { ok: true; data: BookmarkSchemaType }
-  | { ok: false; message: string; details: string };
+export type BookmarkResponse = DbResult<BookmarkSchemaType>;
 
-export type BookmarkDeleteResponse =
-  | { ok: false; message: string; details: string }
-  | { ok: true; data: Database["public"]["Tables"]["bookmarks"]["Row"][] };
+export type BookmarkDeleteResponse = DbResult<
+  Database["public"]["Tables"]["bookmarks"]["Row"][]
+>;
 
-export type BookmarkedArticlesResponse =
-  | {
-      ok: true;
-      data: BookmarkSchemaType[];
-    }
-  | {
-      ok: false;
-      message: string;
-      details: string;
-    };
+export type BookmarkedArticlesResponse = DbResult<BookmarkSchemaType[]>;
 
 export interface IBookmarksRepository {
   bookmarkArticle(

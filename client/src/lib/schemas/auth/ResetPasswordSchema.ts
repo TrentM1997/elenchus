@@ -3,7 +3,7 @@ import { UserSchema } from "./UserSchema";
 
 const PasswordChangeSuccessSchema = Type.Object({
   ok: Type.Literal(true),
-  user: UserSchema,
+  data: UserSchema,
 });
 
 const PasswordChangeFailedSchema = Type.Object({

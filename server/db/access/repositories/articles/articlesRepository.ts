@@ -8,10 +8,9 @@ import {
   type InsertableArticleType,
 } from "./articlesParser.js";
 import { BookmarkSchemaType } from "../../../../schemas/BookmarkSchema.js";
+import { DbResult } from "../../../types/types.ts";
 
-type ArticlesFromBookmarks =
-  | { ok: true; data: ArticleSchemaType[] }
-  | { ok: false; message: string; details: string };
+export type ArticlesFromBookmarks = DbResult<ArticleSchemaType[]>;
 
 export interface IArticlesRepository {
   saveArticle(article: unknown): Promise<ArticleSchemaType>;
@@ -58,7 +57,9 @@ export class ArticlesRepository implements IArticlesRepository {
     };
   }
 
-  private async executeSaveArticle(article: unknown) {
+  private async executeSaveArticle(
+    article: unknown,
+  ): Promise<ArticleSchemaType> {
     const validated = this.parser.validateArticleInput(article);
     const insertableArticle = this.parser.toInsertableArticle(validated);
     return await this.upsertArticle(insertableArticle);

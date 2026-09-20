@@ -19,15 +19,11 @@ export function protectedRoutes(app: IAppServices, router: Router) {
       );
 
       if (!result.ok) {
-        throw new ServerError(
-          result.message,
-          result.statusCode,
-          result.details,
-        );
+        throw new ServerError(result.message, 401, result.details);
       }
 
       req.auth.clearSessionCookies(res);
-      res.success("User deleted successfully.", null, 200);
+      res.success("User deleted successfully.", result, 200);
     }),
   );
 
@@ -61,7 +57,7 @@ export function protectedRoutes(app: IAppServices, router: Router) {
           result.details,
         );
       }
-      res.success("article saved successfully", result.data);
+      res.success("article saved successfully", result);
     }),
   );
 
@@ -83,7 +79,7 @@ export function protectedRoutes(app: IAppServices, router: Router) {
         throw new ServerError("Failed to remove bookmark", 500, result.message);
       }
 
-      res.success("Bookmark deleted successfully", result.data, 200);
+      res.success("Bookmark deleted successfully", result, 200);
     }),
   );
 
@@ -109,7 +105,7 @@ export function protectedRoutes(app: IAppServices, router: Router) {
         );
       }
 
-      res.success("Investigation saved successfully", result.data, 200);
+      res.success("Investigation saved successfully", result, 200);
     }),
   );
 
@@ -128,11 +124,7 @@ export function protectedRoutes(app: IAppServices, router: Router) {
         );
       }
 
-      res.success(
-        "Saved investigations retreived successfully",
-        result.data,
-        200,
-      );
+      res.success("Saved investigations retreived successfully", result, 200);
     }),
   );
 

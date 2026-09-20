@@ -4,9 +4,8 @@ import { ArticleSchemaType } from "../../schemas/ArticleSchema.js";
 import { LoginSchema } from "../../schemas/LoginSchema.js";
 import {
   CreateUserResult,
-  PasswordResetResult,
+  RequestPasswordResetResult,
   AccountDeletionResult,
-  ChangePasswordResult,
 } from "../../db/access/repositories/user/userWriteHandler.js";
 import {
   BookmarkDeleteResponse,
@@ -17,6 +16,8 @@ import { BookmarkSchemaType } from "../../schemas/BookmarkSchema.js";
 import { FeedbackReqSchemaType } from "../../schemas/FeedbackReqSchema.js";
 import { FeedbackSubmitResult } from "../../db/access/repositories/feedback/feedbackRespository.js";
 import { ResetPasswordResponseSchemaType } from "../../schemas/ChangePasswordSchema.ts";
+import { DbResult } from "../../db/types/types.ts";
+import { ArticlesFromBookmarks } from "../../db/access/repositories/articles/articlesRepository.ts";
 
 type BookmarkOperation = {
   user_id: string | null | undefined;
@@ -32,13 +33,13 @@ export interface IUserService {
     user_id: string | null | undefined,
     credentials: LoginSchema,
   ): Promise<AccountDeletionResult>;
-  signUp(credentials: LoginSchema): CreateUserResult;
-  requestPasswordReset(email: string): Promise<PasswordResetResult>;
+  signUp(credentials: LoginSchema): Promise<CreateUserResult>;
+  requestPasswordReset(email: string): Promise<RequestPasswordResetResult>;
   bookmark(params: BookmarkOperation): Promise<BookmarkResponse>;
   removeBookmark(params: BookmarkOperation): Promise<BookmarkDeleteResponse>;
   articlesBookmarked(
     user_id: string | undefined | null,
-  ): Promise<ArticleSchemaType[]>;
+  ): Promise<ArticlesFromBookmarks>;
   submitFeedback(
     feedback: FeedbackReqSchemaType,
   ): Promise<FeedbackSubmitResult>;
@@ -79,7 +80,7 @@ export class UserService implements IUserService {
     return await this.db.feedback.submit(feedback);
   }
 
-  public async signUp(credentials: LoginSchema): CreateUserResult {
+  public async signUp(credentials: LoginSchema): Promise<CreateUserResult> {
     return await this.db.user.write.createUser(credentials);
   }
 
@@ -100,19 +101,19 @@ export class UserService implements IUserService {
 
   public async requestPasswordReset(
     email: string,
-  ): Promise<PasswordResetResult> {
+  ): Promise<RequestPasswordResetResult> {
     return await this.db.user.write.requestPasswordReset(email);
   }
 
   public async articlesBookmarked(
     user_id: string | undefined | null,
-  ): Promise<ArticleSchemaType[]> {
+  ): Promise<ArticlesFromBookmarks> {
     return this.articlesFromBookmarks(user_id);
   }
 
   private async articlesFromBookmarks(
     user_id: string | null | undefined,
-  ): Promise<ArticleSchemaType[]> {
+  ): Promise<ArticlesFromBookmarks> {
     const userId = this.policy.requireAuthenticated(user_id);
     const bookmarks = await this.db.bookmarks.getBookmarks(userId);
 
@@ -129,24 +130,27 @@ export class UserService implements IUserService {
 
   private async getArticlesFromBookmarks(
     bookmarks: BookmarkSchemaType[],
-  ): Promise<ArticleSchemaType[]> {
+  ): Promise<ArticlesFromBookmarks> {
     const ids = bookmarks.map((bkm) => bkm.article_id);
 
     if (ids.length === 0) {
-      return [];
+      return {
+        ok: true,
+        data: [],
+      };
     }
 
     const results = await this.db.articles.fromBookmarkIds(ids);
 
     if (!results.ok) {
-      throw new ServerError(
-        "Failed to retrieve articles from bookmarks",
-        500,
-        results.details,
-      );
+      return results;
     }
 
-    return this.sortBookmarkedArticles(results.data, ids);
+    const sorted = this.sortBookmarkedArticles(results.data, ids);
+    return {
+      ok: true,
+      data: sorted,
+    };
   }
 
   private sortBookmarkedArticles(

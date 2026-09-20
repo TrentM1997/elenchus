@@ -4,6 +4,8 @@ import {
   AuthTokenResponsePasswordType,
   CreateUserResponseSchema,
   CreateUserResponseSchemaType,
+  LoginResponseSchema,
+  LoginResponseSchemaType,
   LogOutResultSchema,
   LogOutResultSchemaType,
   RecoverSessionResponseSchema,
@@ -16,7 +18,7 @@ import { IHttpClient } from "../../http/types";
 export type LoginCredentials = { email: string; password: string };
 
 export interface IAuthRouteHandler {
-  login(credentials: LoginCredentials): Promise<AuthTokenResponsePasswordType>;
+  login(credentials: LoginCredentials): Promise<LoginResponseSchemaType>;
   logOut(): Promise<LogOutResultSchemaType>;
   recover(): Promise<RecoverSessionResponseSchemaType>;
   signup(credentials: LoginCredentials): Promise<CreateUserResponseSchemaType>;
@@ -33,10 +35,10 @@ export class AuthRouteHandler implements IAuthRouteHandler {
 
   public async login(
     credentials: LoginCredentials,
-  ): Promise<AuthTokenResponsePasswordType> {
+  ): Promise<LoginResponseSchemaType> {
     return await this.http.post(
       this.routes.auth.login,
-      AuthTokenResponsePasswordSchema,
+      LoginResponseSchema,
       credentials,
     );
   }

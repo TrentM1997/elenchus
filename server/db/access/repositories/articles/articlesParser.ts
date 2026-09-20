@@ -63,12 +63,10 @@ export class ArticlesDbParser implements IArticlesDbParser {
       title,
       date_published,
       provider,
-      fallbackDate,
       factual_reporting,
       bias,
       country,
     } = article;
-    const date = date_published ?? fallbackDate;
     const authorsDto =
       typeof article.authors === "string"
         ? [article.authors]
@@ -80,7 +78,7 @@ export class ArticlesDbParser implements IArticlesDbParser {
       provider: provider,
       full_text: full_text,
       authors: authorsDto,
-      date_published: date ?? null,
+      date_published: date_published,
       article_url: article_url,
       summary: summary,
       bias: bias,

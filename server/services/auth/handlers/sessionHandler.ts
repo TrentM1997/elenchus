@@ -18,6 +18,7 @@ import {
 } from "./sessionRecoveryHandler.js";
 import { CookieHandler, ICookieHandler } from "./cookieHandler.js";
 import type { LogOutResult, AuthenticateUserResult } from "./types.js";
+import { DbResult } from "../../../db/types/types.ts";
 
 export interface ISessionHandler {
   recoverSession(
@@ -143,19 +144,29 @@ export class SessionHandler implements ISessionHandler {
   private async executeLogOut(
     req: Request,
     res: Response,
-  ): Promise<LogOutResult> {
+  ): Promise<DbResult<"success">> {
     try {
       const session = await this.recovery.restoreSession(req);
 
       if (!session) {
-        return { ok: true };
+        return { ok: true, data: "success" };
       }
 
       const { error } = await this.db.auth.signOut({
         scope: "local",
       });
 
-      return error ? { ok: false, message: error.message } : { ok: true };
+      if (error) {
+        return {
+          ok: false,
+          message: error.message,
+        };
+      }
+
+      return {
+        ok: true,
+        data: "success",
+      };
     } catch (error) {
       return {
         ok: false,

@@ -1,15 +1,13 @@
 import { Type, Static } from "@sinclair/typebox";
-
-export type AccountDeletionResult =
-  | { ok: true }
-  | { ok: false; message: string; statusCode: number; details?: unknown };
+import { UserSchema } from "./UserSchema";
 
 export const DeleteAccountResponseSchema = Type.Union([
   Type.Object({
     ok: Type.Literal(true),
+    data: Type.Union([Type.Null(), UserSchema]),
   }),
   Type.Object({
-    ok: Type.Literal(true),
+    ok: Type.Literal(false),
     message: Type.String(),
     statusCode: Type.Number(),
     details: Type.Unknown(),

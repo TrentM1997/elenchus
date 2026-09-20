@@ -21,11 +21,6 @@ const BookmarkSavedSchema = Type.Object({
   data: BookmarkSchema,
 });
 
-const BookmarkedArticlesSuccessSchema = Type.Object({
-  ok: Type.Literal(true),
-  data: Type.Array(BookmarkSchema),
-});
-
 export const BookmarkResponseSchema = Type.Union([
   BookmarkSavedSchema,
   PersistenceFailedResponseSchema,
@@ -41,6 +36,18 @@ export const BookmarkedArticlesResponseSchema = Type.Union([
 
 export type BookmarkedArticlesResponseSchemaType = Static<
   typeof BookmarkedArticlesResponseSchema
+>;
+
+export const DeleteBookmarkResponseSchema = Type.Union([
+  Type.Object({
+    ok: Type.Literal(true),
+    data: Type.Array(BookmarkSchema),
+  }),
+  PersistenceFailedResponseSchema,
+]);
+
+export type DeleteBookmarkResponseSchemaType = Static<
+  typeof DeleteBookmarkResponseSchema
 >;
 
 export type BookmarkResponseSchemaType = Static<typeof BookmarkResponseSchema>;

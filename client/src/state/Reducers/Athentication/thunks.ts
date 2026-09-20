@@ -7,7 +7,7 @@ export const loginUser = createAsyncThunk(
   async (params: LoginCredentials, thunkAPI) => {
     try {
       const result = await serverClient.general.auth.login(params);
-      if (result.error) {
+      if (result.ok === false) {
         throw new Error("Login failed");
       }
       return result;

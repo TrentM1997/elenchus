@@ -1,14 +1,12 @@
 import { Type, Static } from "@sinclair/typebox";
+import { PersistenceFailedResponseSchema } from "./PersistenceFailedSchema";
 
 export const FeedbackResponseSchema = Type.Union([
   Type.Object({
     ok: Type.Literal(true),
+    data: Type.String(),
   }),
-  Type.Object({
-    ok: Type.Literal(false),
-    message: Type.String({ minLength: 1 }),
-    details: Type.String({ minLength: 1 }),
-  }),
+  PersistenceFailedResponseSchema,
 ]);
 
 export type FeedbackResponseSchemaType = Static<typeof FeedbackResponseSchema>;

@@ -1,11 +1,9 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "../../../../types/databaseInterfaces.js";
 import type { FeedbackReqSchemaType } from "../../../../schemas/FeedbackReqSchema.js";
+import { DbResult } from "../../../types/types.ts";
 
-export type FeedbackSubmitResult =
-  | { ok: true }
-  | { ok: false; message: string; details: string };
-
+export type FeedbackSubmitResult = DbResult<string>;
 export interface IFeedbackRespository {
   submit(feedback: FeedbackReqSchemaType): Promise<FeedbackSubmitResult>;
 }
@@ -22,7 +20,7 @@ export class FeedbackRepository implements IFeedbackRespository {
   private async executeSubmit(
     feedback: FeedbackReqSchemaType,
   ): Promise<FeedbackSubmitResult> {
-    const { error } = await this.db
+    const { error, data } = await this.db
       .from("user_feedback")
       .insert({ email: feedback.email, message: feedback.message })
       .select()
@@ -36,8 +34,16 @@ export class FeedbackRepository implements IFeedbackRespository {
       };
     }
 
+    if (!data.id) {
+      return {
+        ok: false,
+        message: "Failed to persist user feedback",
+      };
+    }
+
     return {
       ok: true,
+      data: data.created_at,
     };
   }
 }
