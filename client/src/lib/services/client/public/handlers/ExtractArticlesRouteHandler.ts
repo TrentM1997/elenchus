@@ -4,28 +4,36 @@ import {
   ExecuteExtractResponseSchemaType,
   ExtractionJobResultSchema,
   ExtractionJobResultSchemaType,
+  ExtractionResult,
 } from "@/lib/schemas/articles/ArticleSchema";
 import { IHttpClient } from "../../http/types";
+import {
+  IPollExtractionHandler,
+  PollExtractionHandler,
+  PollExtractionParams,
+} from "./PollExtractionHandler";
 
 export interface IExtractArticlesRouteHandler {
-  extract(
-    body: SelectedArticle[],
-    signal?: AbortSignal,
-  ): Promise<ExecuteExtractResponseSchemaType>;
-  poll({
-    jobId,
-    signal,
-  }: {
-    jobId: string;
-    signal?: AbortSignal;
-  }): Promise<ExtractionJobResultSchemaType>;
+  runExtractionJob(params: PollExtractionParams): Promise<ExtractionResult>;
 }
 
 export class ExtractArticlesRouteHandler implements IExtractArticlesRouteHandler {
+  private pollRunner: IPollExtractionHandler;
   constructor(
     private readonly routes: Pick<PublicServerClientRoutes, "articles">,
     private readonly http: Pick<IHttpClient, "post" | "get">,
-  ) {}
+  ) {
+    this.pollRunner = new PollExtractionHandler({
+      poll: this.poll.bind(this),
+      extract: this.extract.bind(this),
+    });
+  }
+
+  public async runExtractionJob(
+    params: PollExtractionParams,
+  ): Promise<ExtractionResult> {
+    return await this.pollRunner.runExtraction(params);
+  }
 
   public async poll({
     jobId,

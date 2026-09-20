@@ -12,13 +12,20 @@ import { RequestParser } from "../../lib/services/client/http/RequestParser";
 import { ConfigRequestHandler } from "../../lib/services/client/http/ConfigRequestHandler";
 import { serverClientRoutes } from "../../infra/transport/types/routeDefinitions";
 import { ServerRequestError } from "../../lib/services/client/errors/ServerRequestError";
-import { EXTRACTION_POLLING_POLICY } from "../../lib/services/articles/pollExtraction";
+import { EXTRACTION_POLLING_POLICY, type ExtractionRequests } from "../../lib/services/client/public/handlers/PollExtractionHandler";
 
 jest.mock("../../lib/services/client/serverClient", () => ({
-  serverClient: { general: { extraction: { extract: jest.fn(), poll: jest.fn() } } },
+  serverClient: { general: { extraction: { runExtractionJob: jest.fn() } } },
 }));
 
-const client = jest.mocked(serverClient.general.extraction);
+const client: jest.Mocked<ExtractionRequests> = { extract: jest.fn(), poll: jest.fn() };
+// Simulate a stalled fetch that rejects when its signal is aborted.
+function pendingUntilAborted(signal: AbortSignal): Promise<never> {
+  return new Promise((_, reject) => {
+    signal.throwIfAborted();
+    signal.addEventListener("abort", () => reject(signal.reason), { once: true });
+  });
+}
 const article: ArticleSchemaType = {
   title: "An article", provider: "Source", article_url: "https://example.com/a",
   date_published: "2026-09-17", full_text: "Article content", id: 1,
@@ -42,6 +49,14 @@ beforeEach(() => {
   jest.clearAllMocks();
   client.extract.mockReset().mockResolvedValue({ jobId: "job-1" });
   client.poll.mockReset();
+  jest.spyOn(ExtractArticlesRouteHandler.prototype, "extract").mockImplementation(client.extract);
+  jest.spyOn(ExtractArticlesRouteHandler.prototype, "poll").mockImplementation(client.poll);
+  const handler = new ExtractArticlesRouteHandler(
+    serverClientRoutes.public,
+    new HttpClient(new RequestParser(), new ConfigRequestHandler()),
+  );
+  jest.mocked(serverClient.general.extraction.runExtractionJob)
+    .mockImplementation((params) => handler.runExtractionJob(params));
 });
 afterEach(() => { jest.useRealTimers(); jest.restoreAllMocks(); });
 
@@ -190,6 +205,7 @@ test("the response schema accepts actual server snapshots and rejects malformed 
 });
 
 test("the HTTP client sends the server's extraction body and polls its job route", async () => {
+  jest.restoreAllMocks();
   const fetchMock = jest.spyOn(globalThis, "fetch")
     .mockResolvedValueOnce(new Response(JSON.stringify({ status: "success", message: "Extraction started", data: { jobId: "job-1" } }), { status: 202 }))
     .mockResolvedValueOnce(new Response(JSON.stringify({ status: "success", message: "Extraction progress", data: snapshot("pending") }), { status: 200 }));
@@ -205,6 +221,30 @@ test("the HTTP client sends the server's extraction body and polls its job route
   const polled = await handler.poll({ jobId: started.jobId, signal });
   expect(fetchMock).toHaveBeenNthCalledWith(2, "/articles/extract/job-1", expect.objectContaining({ method: "GET", signal }));
   expect(polled).toEqual(snapshot("pending"));
+});
+
+test("the composed entry point starts, reports progress, and completes through HTTP", async () => {
+  jest.restoreAllMocks();
+  const response = (data: unknown, status = 200) => new Response(
+    JSON.stringify({ status: "success", message: "OK", data }), { status },
+  );
+  const fetchMock = jest.spyOn(globalThis, "fetch")
+    .mockResolvedValueOnce(response({ jobId: "job-1" }, 202))
+    .mockResolvedValueOnce(response(snapshot("pending")))
+    .mockResolvedValueOnce(response(snapshot("fulfilled")));
+  const handler = new ExtractArticlesRouteHandler(
+    serverClientRoutes.public,
+    new HttpClient(new RequestParser(), new ConfigRequestHandler()),
+  );
+  const onProgress = jest.fn();
+  const task = handler.runExtractionJob({ articles: selected, signal: new AbortController().signal, onProgress });
+  await jest.advanceTimersByTimeAsync(1000);
+  await expect(task).resolves.toEqual(result);
+  expect(onProgress).toHaveBeenCalledWith(result);
+  expect(fetchMock.mock.calls.map(([url]) => url)).toEqual([
+    "/articles/extract", "/articles/extract/job-1", "/articles/extract/job-1",
+  ]);
+  expect(jest.getTimerCount()).toBe(0);
 });
 
 test("completion without any article outcomes is an error, not all-extractions-failed", async () => {
@@ -360,7 +400,7 @@ test("the overall deadline ends permanently pending jobs while retaining results
 
 test("hanging poll requests are aborted and retries are bounded", async () => {
   const store = makeStore();
-  client.poll.mockImplementation(() => new Promise(() => {}));
+  client.poll.mockImplementation(({ signal }) => pendingUntilAborted(signal));
   const task = store.dispatch(extractArticles(selected));
   await jest.advanceTimersByTimeAsync(67000);
   await task;
@@ -372,7 +412,7 @@ test("hanging poll requests are aborted and retries are bounded", async () => {
 
 test("job creation times out without being retried", async () => {
   const store = makeStore();
-  client.extract.mockImplementation(() => new Promise(() => {}));
+  client.extract.mockImplementation((_, signal) => pendingUntilAborted(signal));
   const task = store.dispatch(extractArticles(selected));
   await jest.advanceTimersByTimeAsync(15000);
   await task;
@@ -399,8 +439,8 @@ test("cancellation interrupts retry backoff immediately", async () => {
 test("the overall deadline aborts an in-flight poll before its request timeout", async () => {
   const store = makeStore();
   const start = Date.now();
-  client.poll.mockImplementation(() => Date.now() - start >= 299000
-    ? new Promise(() => {})
+  client.poll.mockImplementation(({ signal }) => Date.now() - start >= 299000
+    ? pendingUntilAborted(signal)
     : Promise.resolve(snapshot("pending")));
   const task = store.dispatch(extractArticles(selected));
   await jest.advanceTimersByTimeAsync(300000);

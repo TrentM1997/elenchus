@@ -62,20 +62,25 @@ export class ArticlesRepository implements IArticlesRepository {
   ): Promise<ArticleSchemaType> {
     const validated = this.parser.validateArticleInput(article);
     const insertableArticle = this.parser.toInsertableArticle(validated);
-    return await this.upsertArticle(insertableArticle);
+    return await this.insertArticle(insertableArticle);
   }
 
-  private async upsertArticle(
+  private async insertArticle(
     article: InsertableArticleType,
   ): Promise<ArticleSchemaType> {
     const { data, error } = await this.db
       .from("articles")
-      .upsert([article], { onConflict: "article_url" })
+      .insert([article])
       .select()
       .single();
 
     if (error) {
-      throw new ServerError("Failed to save article", 500, error.details);
+      throw new ServerError("Failed to save article", 500, {
+        message: error.message,
+        code: error.code,
+        details: error.details,
+        hint: error.hint,
+      });
     }
 
     return this.parser.validateArticleSelected(data);
