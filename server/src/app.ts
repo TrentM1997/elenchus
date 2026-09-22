@@ -21,6 +21,7 @@ const corsOptions: object = {
   allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept",
 };
 
+app.use(responseBinder);
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
@@ -63,8 +64,6 @@ app.options("*", (req, res) => {
   );
   res.sendStatus(200);
 });
-
-app.use(responseBinder);
 
 app.use(createRouter(new AppServices()));
 

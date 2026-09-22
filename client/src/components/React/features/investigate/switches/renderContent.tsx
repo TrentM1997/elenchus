@@ -1,14 +1,14 @@
-import type { Phase } from "@/state/Reducers/Investigate/Rendering";
+import type { UserResearchType } from "@/state/Reducers/Investigate/research/types";
 import { motion } from "framer-motion";
 import SearchResults from "../phase2/results/containers/SearchResults";
 import ArticleContainer from "@/components/React/global/Articles/containers/ArticleContainer";
 import ScrolltoTop from "@/lib/helpers/scroll/ScrollToTop";
 import { articleContent } from "@/motion/variants";
 
-export const renderContent = (phase: Phase): JSX.Element | null => {
+export const renderContent = (phase: UserResearchType["phase"]): JSX.Element | null => {
 
     switch (phase) {
-        case "Phase 2":
+        case "searching":
             return (
                 <motion.div
                     key='links'
@@ -23,7 +23,7 @@ export const renderContent = (phase: Phase): JSX.Element | null => {
                 </motion.div>
             );
 
-        case "Phase 3":
+        case "evidence":
             return (
                 <motion.div
                     key='articles'

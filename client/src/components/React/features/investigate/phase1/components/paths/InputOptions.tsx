@@ -1,6 +1,7 @@
 import { useDispatch } from "react-redux";
 import React from "react";
-import { changePhase, choosePath } from "@/state/Reducers/Investigate/Rendering";
+import { choosePath } from "@/state/Reducers/Investigate/Rendering";
+import { startFraming } from "@/state/Reducers/Investigate/research/ResearchSlice";
 
 
 const actions = [
@@ -26,7 +27,7 @@ function InputOptions() {
   };
 
   const inputManually = () => {
-    dispatch(changePhase('Phase 1'));
+    dispatch(startFraming({ idea: "", initial_perspective: null, expertise: null, biases: "", premises: "" }));
   };
 
   const importFromBlueSky = actions[0];

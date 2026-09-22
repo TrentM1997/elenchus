@@ -2,11 +2,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import type { ModalStages } from "@/state/Reducers/Investigate/wiki/WikiSlice";
-import { Phase } from "@/state/Reducers/Investigate/Rendering";
+import type { UserResearchType } from "@/state/Reducers/Investigate/research/types";
 import { renderContent } from "../../switches/renderContent";
 
 export default function Content() {
-    const phase: Phase = useSelector((s: RootState) => s.investigation.rendering.phase);
+    const phase: UserResearchType["phase"] = useSelector((s: RootState) => s.investigation.research.research.phase);
     const wikiModalStages: ModalStages = useSelector((state: RootState) => state.investigation.wiki.wikiModalStages);
 
     return (
@@ -18,7 +18,7 @@ export default function Content() {
             className={`${wikiModalStages.highlight
                 && 'cursor-text'
                 }
-                ${((phase === 'Phase 2') || (phase === 'Phase 3')) ? 'min-h-screen' : ''}
+                ${((phase === 'searching') || (phase === 'evidence')) ? 'min-h-screen' : ''}
                 relative w-full h-full
                 mx-auto`}
         >
@@ -32,3 +32,4 @@ export default function Content() {
 
     )
 }
+

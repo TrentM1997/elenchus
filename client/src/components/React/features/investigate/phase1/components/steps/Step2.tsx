@@ -1,7 +1,3 @@
-import {
-  InitialPerspective,
-  TopicExpertise,
-} from "@/state/Reducers/Investigate/pov/types";
 import { updatePOVDraft } from "@/state/Reducers/Investigate/pov/thunks";
 import { selectPOVData } from "@/state/Reducers/Investigate/pov/selectors";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,14 +7,18 @@ import Expertise from "../inputs/interactive/Expertise";
 import { motion } from "framer-motion";
 import { stepVariants } from "@/motion/variants";
 import React from "react";
+import {
+  ExpertiseSchemaType,
+  PerspectiveSchemaType,
+} from "@/lib/schemas/investigations/InvestigationSchema";
 
 function Step2(): JSX.Element | null {
   const { perspective, expertise } = useSelector(selectPOVData);
   const dispatch = useDispatch<AppDispatch>();
 
-  const opinions: InitialPerspective[] = ["Agree", "Disagree", "Neutral"];
+  const opinions: PerspectiveSchemaType[] = ["Agree", "Disagree", "Neutral"];
 
-  const expertiseArray: TopicExpertise[] = [
+  const expertiseArray: ExpertiseSchemaType[] = [
     "New to the Topic",
     "Familiar",
     "Area of Expertise",
@@ -64,7 +64,9 @@ function Step2(): JSX.Element | null {
             key={item}
             item={item}
             expertise={expertise}
-            assignKnowledge={() => dispatch(updatePOVDraft({ expertise: item }))}
+            assignKnowledge={() =>
+              dispatch(updatePOVDraft({ expertise: item }))
+            }
           />
         ))}
       </div>

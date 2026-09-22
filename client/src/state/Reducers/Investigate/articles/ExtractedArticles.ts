@@ -14,6 +14,11 @@ interface InitialState {
   dismissedFailureUrls: string[];
 }
 
+export type ExtractionProgressToastTypes = Pick<
+  InitialState,
+  "articles" | "progress"
+>;
+
 const initialState: InitialState = {
   articles: { status: "initial" },
   currentStory: 0,
@@ -33,14 +38,22 @@ export const ExtractedArticleSlice = createSlice({
         state.dismissedFailureUrls.push(action.payload);
       }
     },
-    incrementStory: (state) => { state.currentStory += 1; },
-    decrementStory: (state) => { state.currentStory = Math.max(0, state.currentStory - 1); },
+    incrementStory: (state) => {
+      state.currentStory += 1;
+    },
+    decrementStory: (state) => {
+      state.currentStory = Math.max(0, state.currentStory - 1);
+    },
     incrementStoryBy: (state, action: PayloadAction<number>) => {
       state.currentStory = Math.max(0, action.payload);
     },
-    isReading: (state, action: PayloadAction<boolean>) => { state.reading = action.payload; },
+    isReading: (state, action: PayloadAction<boolean>) => {
+      state.reading = action.payload;
+    },
     resetReadingSlice: () => initialState,
-    limitPagination: (state, action: PayloadAction<boolean>) => { state.paginateLimit = action.payload; },
+    limitPagination: (state, action: PayloadAction<boolean>) => {
+      state.paginateLimit = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -58,8 +71,14 @@ export const ExtractedArticleSlice = createSlice({
         const { retrieved, rejected, progress } = action.payload.result;
         state.progress = progress;
         if (retrieved.length === 0 && rejected.length === 0) return;
-        state.articles = { status: "partial", data: { retrieved, failed: rejected } };
-        state.currentStory = Math.min(state.currentStory, Math.max(0, retrieved.length - 1));
+        state.articles = {
+          status: "partial",
+          data: { retrieved, failed: rejected },
+        };
+        state.currentStory = Math.min(
+          state.currentStory,
+          Math.max(0, retrieved.length - 1),
+        );
       })
       .addCase(extractArticles.fulfilled, (state, action) => {
         if (state.activeRequestId !== action.meta.requestId) return;
@@ -68,12 +87,19 @@ export const ExtractedArticleSlice = createSlice({
         state.activeRequestId = null;
         if (retrieved.length > 0 || rejected.length > 0) {
           state.progress = progress;
-          state.currentStory = Math.min(state.currentStory, Math.max(0, retrieved.length - 1));
+          state.currentStory = Math.min(
+            state.currentStory,
+            Math.max(0, retrieved.length - 1),
+          );
         }
         if (retrieved.length > 0) {
           state.articles = { status: "ready", data };
         } else if (rejected.length > 0) {
-          state.articles = { status: "failed", data, details: "All article extractions failed" };
+          state.articles = {
+            status: "failed",
+            data,
+            details: "All article extractions failed",
+          };
         } else {
           state.articles = {
             status: "error",
@@ -87,20 +113,30 @@ export const ExtractedArticleSlice = createSlice({
         state.activeRequestId = null;
         state.articles = {
           status: "error",
-          data: "data" in state.articles
-            ? state.articles.data
-            : { retrieved: [], failed: [] },
+          data:
+            "data" in state.articles
+              ? state.articles.data
+              : { retrieved: [], failed: [] },
           details: action.meta.aborted
             ? "Extraction canceled by user/navigation"
-            : action.payload || action.error.message || "Article extraction failed",
+            : action.payload ||
+              action.error.message ||
+              "Article extraction failed",
         };
       });
   },
 });
 
-export type ExtractedArticleSliceState = ReturnType<typeof ExtractedArticleSlice.reducer>;
+export type ExtractedArticleSliceState = ReturnType<
+  typeof ExtractedArticleSlice.reducer
+>;
 export const {
-  incrementStory, decrementStory, incrementStoryBy, isReading,
-  resetReadingSlice, closeNotification, limitPagination,
+  incrementStory,
+  decrementStory,
+  incrementStoryBy,
+  isReading,
+  resetReadingSlice,
+  closeNotification,
+  limitPagination,
 } = ExtractedArticleSlice.actions;
 export default ExtractedArticleSlice.reducer;

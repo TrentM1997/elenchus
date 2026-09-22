@@ -17,8 +17,6 @@ export default function ExtractionRenderer({
   state: ArticleExtractionState;
   page: number;
 }): JSX.Element | null {
-  console.log(state);
-
   switch (state.status) {
     case "initial": {
       return null;

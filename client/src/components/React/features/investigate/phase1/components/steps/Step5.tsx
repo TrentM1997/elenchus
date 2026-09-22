@@ -1,7 +1,6 @@
 import { establishPOV } from "@/state/Reducers/Investigate/pov/thunks";
 import { motion } from "framer-motion"
 import { useDispatch } from "react-redux"
-import { changePhase } from "@/state/Reducers/Investigate/Rendering";
 import { stepVariants } from "@/motion/variants"
 import PromptForSearch from "../inputs/prompts/PromptForSearch"
 import React from "react"
@@ -12,7 +11,6 @@ function Step5(): JSX.Element | null {
 
     const beginSearch = () => {
         dispatch(establishPOV());
-        dispatch(changePhase('Phase 2'));
     };
 
     return (
@@ -66,5 +64,6 @@ function StartSearchButton({ beginSearch }): JSX.Element | null {
         </div>
     )
 }
+
 
 

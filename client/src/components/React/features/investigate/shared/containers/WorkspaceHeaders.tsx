@@ -1,11 +1,11 @@
-import type { Phase } from "@/state/Reducers/Investigate/Rendering";
+import type { UserResearchType } from "@/state/Reducers/Investigate/research/types";
 import { renderWorkSpaceHeader } from "../../switches/renderWorkspaceHeader";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/state/store";
 
 
 export default function WorkspaceHeaders() {
-    const phase: Phase = useSelector((s: RootState) => s.investigation.rendering.phase);
+    const phase: UserResearchType["phase"] = useSelector((s: RootState) => s.investigation.research.research.phase);
 
     return renderWorkSpaceHeader(phase);
 };

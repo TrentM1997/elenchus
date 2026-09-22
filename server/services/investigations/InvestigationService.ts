@@ -1,6 +1,9 @@
 import { IDbClient } from "../../db/access/client/dbClient.js";
 import { IAuthorization } from "../auth/authorization.js";
-import { InvestigationSchemaType } from "../../schemas/InvestigationSchema.js";
+import {
+  InvestigationSchemaType,
+  PersistInvestigationInputSchemaType,
+} from "../../schemas/InvestigationSchema.js";
 import {
   InvestigationSaveResult,
   SavedInvestigationsResult,
@@ -9,7 +12,7 @@ import {
 export interface IInvestigationService {
   save(
     user_id: string | undefined | null,
-    investigation: InvestigationSchemaType,
+    investigation: PersistInvestigationInputSchemaType,
   ): Promise<InvestigationSaveResult>;
   getSavedResearch(
     user_id: string | undefined | null,
@@ -24,7 +27,7 @@ export class InvestionService implements IInvestigationService {
 
   public async save(
     user_id: string | undefined | null,
-    investigation: InvestigationSchemaType,
+    investigation: PersistInvestigationInputSchemaType,
   ): Promise<InvestigationSaveResult> {
     return await this.executeSave(user_id, investigation);
   }
@@ -44,7 +47,7 @@ export class InvestionService implements IInvestigationService {
 
   private async executeSave(
     user_id: string | undefined | null,
-    investigation: InvestigationSchemaType,
+    investigation: PersistInvestigationInputSchemaType,
   ) {
     const userId = this.policy.requireAuthenticated(user_id);
     return await this.db.investigations.save(investigation, userId);

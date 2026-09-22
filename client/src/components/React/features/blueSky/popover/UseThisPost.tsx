@@ -5,9 +5,7 @@ import {
 } from "@/state/Reducers/BlueSky/BlueSkySlice";
 import { updatePOVDraft } from "@/state/Reducers/Investigate/pov/thunks";
 import { useEffect } from "react";
-import { changePhase } from "@/state/Reducers/Investigate/Rendering";
 import { smoothScrollUp } from "@/lib/helpers/scroll/ScrollToTop";
-import { wait } from "@/lib/helpers/formatting/Presentation";
 import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 import { AppDispatch } from "@/state/store";
 
@@ -23,14 +21,6 @@ export default function UseThisPost({ post, shouldRedirect }: UseThis) {
     dispatch(updatePOVDraft({ idea: post.record.text }));
     dispatch(renderModal(null));
     smoothScrollUp();
-    await wait(400);
-    if (shouldRedirect) {
-      await wait(400);
-      dispatch(changePhase("Phase 1"));
-    } else {
-      await wait(300);
-      dispatch(changePhase("Phase 1"));
-    }
   };
 
   const unselect = async () => {

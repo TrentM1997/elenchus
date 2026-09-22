@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useSelector } from "react-redux";
-import { updateFinalDraft } from "@/state/Reducers/Investigate/pov/Review";
+import { updateReflection } from "@/state/Reducers/Investigate/research/ResearchSlice";
 import { RootState } from "@/state/store";
 import Retrospect from "./Retrospect";
 import Stance from "./Stance";
@@ -13,13 +13,12 @@ const questions = [
 ];
 
 export default function ReviewQuestions({ step }) {
-  const investigateState = useSelector(
-    (state: RootState) => state.investigation,
-  );
-  const data = investigateState.review.final.data;
-  const { merit, movedOnIdea } = data;
-  const getMerit = (merit: boolean) => updateFinalDraft({ status: "draft", data: { ...data, merit } });
-  const moved = (movedOnIdea: boolean) => updateFinalDraft({ status: "draft", data: { ...data, movedOnIdea } });
+  const research = useSelector((state: RootState) => state.investigation.research.research);
+  if (research.phase !== "reflection" && research.phase !== "completed") return null;
+  const data = research.data.reflection;
+  const { had_merit: merit, changed_opinion: movedOnIdea } = data;
+  const getMerit = (had_merit: boolean) => updateReflection({ ...data, had_merit });
+  const moved = (changed_opinion: boolean) => updateReflection({ ...data, changed_opinion });
 
   return (
     <div
@@ -112,3 +111,4 @@ export default function ReviewQuestions({ step }) {
     </div>
   );
 }
+

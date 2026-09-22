@@ -1,17 +1,18 @@
-import { changePhase } from "@/state/Reducers/Investigate/Rendering";
 import { resetResults } from "@/state/Reducers/Investigate/articles/SearchResults";
 import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 import { useDispatch } from "react-redux";
+import { startSearching } from "@/state/Reducers/Investigate/research/ResearchSlice";
+import { resetReadingSlice } from "@/state/Reducers/Investigate/articles/ExtractedArticles";
 
 export default function BackToSearch(): JSX.Element {
   const dispatch = useDispatch();
   const wait = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
   const returnToSearch = async () => {
+    dispatch(resetReadingSlice());
+    dispatch(startSearching());
     dispatch(resetResults());
-    await wait(200);
-    dispatch(changePhase("Phase 2"));
-    await wait(100);
+    await wait(300);
     dispatch(renderModal(null));
   };
 
@@ -59,3 +60,4 @@ export default function BackToSearch(): JSX.Element {
     </div>
   );
 }
+

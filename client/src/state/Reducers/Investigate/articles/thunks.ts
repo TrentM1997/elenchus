@@ -5,6 +5,10 @@ import {
   ArticleSchemaType,
   ExtractionResult,
 } from "@/lib/schemas/articles/ArticleSchema";
+import {
+  startEvidence,
+  updateResearchSources,
+} from "../research/ResearchSlice";
 
 export type QueryNewsApiParams = { query: string; timeout: number };
 
@@ -17,18 +21,41 @@ export const extractArticles = createAsyncThunk<
   }
 >(
   "investigate/runFirecrawlExtraction",
-  async (articles, { signal, dispatch, rejectWithValue, requestId }) => {
+  async (
+    articles,
+    { signal, dispatch, rejectWithValue, requestId, getState },
+  ) => {
+    dispatch(startEvidence({ sources: [], wikipedia_extracts: [] }));
+
     try {
-      return await serverClient.general.extraction.runExtractionJob({
+      const result = await serverClient.general.extraction.runExtractionJob({
         articles,
         signal,
         onProgress: (result) => {
-          if (!signal.aborted) {
-            console.log({ Request: requestId, "Poll Result": result });
+          if (
+            !signal.aborted &&
+            getState().investigation.read.activeRequestId === requestId
+          ) {
             dispatch(extractionProgressReceived({ requestId, result }));
+            dispatch(
+              updateResearchSources(
+                result.retrieved.map((article) => article.article_url),
+              ),
+            );
           }
         },
       });
+      if (
+        !signal.aborted &&
+        getState().investigation.read.activeRequestId === requestId
+      ) {
+        dispatch(
+          updateResearchSources(
+            result.retrieved.map((article) => article.article_url),
+          ),
+        );
+      }
+      return result;
     } catch (error) {
       return rejectWithValue(
         signal.aborted
@@ -69,7 +96,9 @@ export const saveThisArticle = createAsyncThunk(
     try {
       return await serverClient.privileged.user.write.bookmark(article_id);
     } catch (err) {
-      return thunkAPI.rejectWithValue(err);
+      return thunkAPI.rejectWithValue(
+        err instanceof Error ? err.message : "Failed to save article",
+      );
     }
   },
 );

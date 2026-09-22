@@ -9,10 +9,12 @@ export const globalErrorHandler = (
   next: NextFunction,
 ) => {
   if (err instanceof ClientError) {
+    console.error(err);
     return res.clientError(err.message, err.details, err.statusCode);
   }
 
   if (err instanceof ServerError) {
+    console.error(err);
     return res.serverError(err.message, null, err.statusCode);
   }
 

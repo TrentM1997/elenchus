@@ -6,7 +6,7 @@ import {
   selectWikiDisambig,
   selectWikiSummary,
 } from "@/state/Reducers/Investigate/wiki/WikiSlice";
-import { getExtract } from "@/state/Reducers/Investigate/pov/Review";
+import { updateResearchExtracts } from "@/state/Reducers/Investigate/research/ResearchSlice";
 import { WikiDisambigResponse } from "../services/wiki/wiki";
 import { wait } from "../helpers/formatting/Presentation";
 
@@ -36,6 +36,7 @@ export const useHandleSaveExtract = ({
   const saveVersion = useRef(0);
   const summary = useAppSelector(selectWikiSummary);
   const disambig = useAppSelector(selectWikiDisambig);
+  const research = useAppSelector(state => state.investigation.research.research);
 
   const payload: SavePayload | null = useMemo(() => {
     if (summary) {
@@ -66,12 +67,17 @@ export const useHandleSaveExtract = ({
 
   const handleSaveExtract = useCallback(async () => {
     if (payload === null) return;
+    if (research.phase === "initial" || !("context" in research.data)) return;
     const version = ++saveVersion.current;
     setStatus("pending");
-    dispatch(getExtract(payload));
+    const extracts = research.data.context.wikipedia_extracts ?? [];
+    const exists = extracts.some(extract => extract.title === payload.title);
+    dispatch(updateResearchExtracts(exists
+      ? extracts.filter(extract => extract.title !== payload.title)
+      : [...extracts, payload]));
     await wait(500);
     if (version === saveVersion.current) setStatus("saved");
-  }, [payload, dispatch]);
+  }, [payload, dispatch, research]);
 
   return {
     handleSaveExtract,

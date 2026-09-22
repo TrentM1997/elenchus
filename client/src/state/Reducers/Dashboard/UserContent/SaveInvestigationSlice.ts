@@ -1,3 +1,5 @@
+import { serverClient } from "@/lib/services/client/serverClient";
+import type { PersistInvestigationInputSchemaType } from "@/lib/schemas/investigations/InvestigationSchema";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface SaveInvestigation {
@@ -16,37 +18,13 @@ const initialState: SaveInvestigation = {
 
 export const saveUserInvestigation = createAsyncThunk(
   "user/SaveInvestigation",
-  async (investigationData: Investigation, thunkAPI) => {
-    const investigation = investigationData;
-    typeof investigation;
-    const url: string = "/saveResearch";
-
+  async (investigation: PersistInvestigationInputSchemaType, { rejectWithValue }) => {
     try {
-      const response = await fetch(url, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          investigation: investigation,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(
-          `Unable to connect to endpoint: ${url} - Error Message: ${response.statusText}`,
-        );
-      }
-
-      const result = await response.json();
-
-      if (result) {
-        return result;
-      }
+      const result = await serverClient.privileged.user.write.investigation(investigation);
+      if (result.ok === false) return rejectWithValue(result.message);
+      return result.data;
     } catch (error) {
-      const errorMessage = thunkAPI.rejectWithValue(error);
-      return errorMessage;
+      return rejectWithValue(error instanceof Error ? error.message : "Failed to save investigation");
     }
   },
 );
@@ -94,3 +72,4 @@ export const {
 } = SaveInvestigationSlice.actions;
 
 export default SaveInvestigationSlice.reducer;
+

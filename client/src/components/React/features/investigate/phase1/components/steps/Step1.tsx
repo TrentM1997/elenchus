@@ -8,12 +8,9 @@ import { stepVariants } from "@/motion/variants";
 import Requirements from "../inputs/interactive/Requirements";
 import { useCheckFirstStep } from "@/hooks/useCheckFirstStep";
 import React from "react";
-import type { PaginationStatus } from "@/state/Reducers/Investigate/pov/Steps";
 
 function Step1() {
-  const status: PaginationStatus = useSelector(
-    (s: RootState) => s.investigation.stepper.status,
-  );
+  const status = useSelector((s: RootState) => s.investigation.stepper.status);
   const idea = useSelector((state: RootState) => selectPOVData(state).idea);
   useCheckFirstStep();
 

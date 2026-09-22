@@ -1,15 +1,15 @@
 import { lazy, Suspense } from "react";
-import type { Phase } from "@/state/Reducers/Investigate/Rendering";
+import type { UserResearchType } from "@/state/Reducers/Investigate/research/types";
 import DelayedFallback from "@/components/React/global/fallbacks/DelayedFallback";
 import ComponentLoader from "@/components/React/global/Loaders/ComponentLoader";
 import InitialPhase from "../initial/InitialPhase";
 const HeroContainer = lazy(() => import('@/components/React/features/investigate/shared/containers/HeroContainer'));
 
 
-export const renderWorkSpaceHeader = (phase: Phase) => {
+export const renderWorkSpaceHeader = (phase: UserResearchType["phase"]) => {
 
     switch (phase) {
-        case 'Initial':
+        case 'initial':
             return (
                 <InitialPhase key={'initial-phase-renderer'} />
             );

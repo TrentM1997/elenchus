@@ -2,7 +2,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "@/state/store";
 import DisplayThese from "./DisplayThese";
 import { wait } from "@/lib/helpers/formatting/Presentation";
-import { changePhase } from "@/state/Reducers/Investigate/Rendering";
 import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 import { extractArticles } from "@/state/Reducers/Investigate/articles/thunks";
 import ExtractThese, { GetArticlesHeader } from "./ExtractThese";
@@ -29,9 +28,7 @@ export function GetTheseArticles(): JSX.Element {
   const executeExtraction = async () => {
     if (selected.status === "empty" || selected.data.length === 0) return;
     retrieveArticles();
-    await wait(200);
-    dispatch(changePhase("Phase 3"));
-    await wait(200);
+    await wait(400);
     dispatch(renderModal(null));
   };
 
@@ -67,3 +64,4 @@ interface ExtractThese {
   executeExtraction: () => Promise<void>;
   dontExecute: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
+

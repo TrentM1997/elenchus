@@ -17,18 +17,23 @@ export const loginUser = createAsyncThunk(
   },
 );
 
-export const logOut = createAsyncThunk("/auth/logOut", async (_, thunkAPI) => {
-  try {
-    const result = await serverClient.general.auth.logOut();
+export const logOut = createAsyncThunk(
+  "/auth/logOut",
+  async (_: void, thunkAPI) => {
+    try {
+      const result = await serverClient.general.auth.logOut();
 
-    if (!result.ok) {
-      throw new Error("Login request failed");
+      if (!result.ok) {
+        throw new Error("Login request failed");
+      }
+      return result;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err instanceof Error ? err.message : "Failed to log out user",
+      );
     }
-    return result;
-  } catch (err) {
-    return thunkAPI.rejectWithValue(err);
-  }
-});
+  },
+);
 
 export const resetPassword = createAsyncThunk(
   "auth/resetPassword",

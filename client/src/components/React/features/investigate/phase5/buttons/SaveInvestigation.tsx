@@ -1,69 +1,25 @@
-import { selectPOVData } from "@/state/Reducers/Investigate/pov/selectors";
-import { RootState } from "@/state/store"
-import { useSelector } from "react-redux"
-import { fetchSavedInvestigations } from "@/state/Reducers/Dashboard/UserContent/UserInvestigations"
-import { useDispatch } from "react-redux"
-import { AppDispatch } from "@/state/store"
-import { saveUserInvestigation } from "@/state/Reducers/Dashboard/UserContent/SaveInvestigationSlice"
-import { useEffect, useState } from "react"
-import { InvestigateState } from "@/state/Reducers/Root/InvestigateReducer"
-import GoToDashboard from "./GoToDashboard"
+import { SaveInvestigationState } from "@/state/Reducers/Investigate/research/types";
 
-export default function SaveInvestigation({ }) {
-    const saved = useSelector((state: RootState) => state.saveResearch.saved)
-    const sources = useSelector((state: RootState) => state.saveResearch.sources)
-    const investigateState: InvestigateState = useSelector((state: RootState) => state.investigation)
-    const [prevWork, setPrevWork] = useState<any>(null)
-    const { review } = investigateState
-    const pov = useSelector(selectPOVData);
-    const { idea, premises, perspective, biases } = pov
-    const { endingPerspective, newConcepts, merit, movedOnIdea, extracts } = review.final.data
-    const dispatch = useDispatch<AppDispatch>()
-
-    const investigateData = {
-        idea: idea,
-        premises: premises,
-        initial_perspective: perspective,
-        biases: biases,
-        ending_perspective: endingPerspective,
-        new_concepts: newConcepts,
-        changed_opinion: movedOnIdea,
-        takeaway: null,
-        had_merit: merit,
-        user_id: null,
-        sources: sources,
-        wikipedia_extracts: extracts
-    }
-
-    useEffect(() => {
-
-        const storedWork: any = localStorage.getItem('userWork');
-
-        if (storedWork) setPrevWork(storedWork);
-
-    }, []);
-
-    const handleSave = () => {
-        dispatch(saveUserInvestigation(investigateData));
-        dispatch(fetchSavedInvestigations());
-    };
-
-    if (saved) {
-        return <GoToDashboard />
-    }
-
-    if (!saved) {
-        return (
-            <button
-                onClick={handleSave}
-                className={`bg-white w-auto 2xl:w-60 hover:bg-white/10 group shadow-thick 
-                    transition-all duration-200 ease-in-out rounded-full h-fit py-2 px-4 mx-auto flex items-center`}>
-                <p className={`${saved ? 'text-slate-500' : 'text-black'} transition-all duration-200 ease-in-out
-             w-full text-xs 2xl:text-lg text-nowrap group-hover:text-white font-light text-center`}>
-                    Save your research <span className="ml-2">&#8594;</span>
-                </p>
-            </button>
-        )
-    }
-
+export default function SaveInvestigation({
+  status,
+  handleSave,
+}: {
+  status: SaveInvestigationState["status"];
+  handleSave: () => Promise<void>;
+}) {
+  return (
+    <button
+      disabled={status === "pending"}
+      onClick={handleSave}
+      className={`bg-white w-auto 2xl:w-60 hover:bg-white/10 group shadow-thick 
+                    transition-all duration-200 ease-in-out rounded-full h-fit py-2 px-4 mx-auto flex items-center`}
+    >
+      <p
+        className={`${status === "ready" ? "text-slate-500" : "text-black"} transition-all duration-200 ease-in-out
+             w-full text-xs 2xl:text-lg text-nowrap group-hover:text-white font-light text-center`}
+      >
+        Save your research <span className="ml-2">&#8594;</span>
+      </p>
+    </button>
+  );
 }

@@ -15,8 +15,9 @@ const checkSpecialChars = (arr: string[]) => {
 export const requiredInput = (
   emailString: string,
   passwordString: string,
-  setterFunction: Function,
-) => {
+):
+  | { email: string; password: string; status: "valid" }
+  | { status: "invalid" } => {
   const validateEmail = /[A-Za-z0-9\._%+\-]+@[A-Za-z0-9\.\-]+\.[A-Za-z]{2,}/gm;
 
   const isValidEmail = validateEmail.test(emailString);
@@ -28,13 +29,15 @@ export const requiredInput = (
   const noSpecialChars = checkSpecialChars(splitPassword);
 
   if (noSpecialChars) {
-    return;
+    return {
+      status: "invalid",
+    };
   }
 
   if (validLength && isValidEmail && !noSpecialChars) {
-    return setterFunction(true);
+    return { email: emailString, password: passwordString, status: "valid" };
   } else {
-    return setterFunction(false);
+    return { status: "invalid" };
   }
 };
 

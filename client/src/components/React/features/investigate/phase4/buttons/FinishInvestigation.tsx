@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux"
-import { changePhase } from "@/state/Reducers/Investigate/Rendering"
+import { completeResearch } from "@/state/Reducers/Investigate/research/ResearchSlice";
 
 export default function EndInvestigateButton() {
     const dispatch = useDispatch()
@@ -7,7 +7,7 @@ export default function EndInvestigateButton() {
     return (
         <button
             onClick={() => {
-                dispatch(changePhase('Phase 5'));
+                dispatch(completeResearch());
             }}
             className="w-auto bg-white hover:bg-white/10 group shadow-thick 
             transition-colors duration-200 ease-in-out rounded-full h-fit py-2 px-8 mx-auto flex items-center">
@@ -17,3 +17,4 @@ export default function EndInvestigateButton() {
         </button>
     )
 }
+

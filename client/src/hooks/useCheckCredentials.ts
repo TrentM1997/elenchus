@@ -25,7 +25,8 @@ const useCheckCredentials = (
       setValidEmail(emailValidation(userEmail));
     }
     if (userEmail && userPassword) {
-      requiredInput(userEmail, userPassword, setAcceptedInput);
+      const result = requiredInput(userEmail, userPassword);
+      setAcceptedInput(result.status);
     }
   }, [userEmail, userPassword]);
 

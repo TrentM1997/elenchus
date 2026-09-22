@@ -11,23 +11,13 @@ export type ActiveModal =
   | "Article Extraction Warning"
   | null;
 
-export type ToastKind = "Extraction" | "Auth";
-
-type ToastAction =
-  | "deleting"
-  | "saving"
-  | "login"
-  | "logout"
-  | "signup"
-  | "password reset"
-  | "feedback"
-  | "article extraction";
+export type ToastKind = "login" | "logout" | "signup" | "save investigation";
 
 export type ActiveToast =
   | { status: "idle"; kind: null }
-  | { status: "pending"; kind: ToastKind; action: ToastAction }
-  | { status: "success"; kind: ToastKind; action: ToastAction }
-  | { status: "failed"; kind: ToastKind; action: ToastAction };
+  | { status: "pending"; kind: ToastKind }
+  | { status: "success"; kind: ToastKind }
+  | { status: "failed"; kind: ToastKind };
 
 export interface PipelineState {
   modal: ActiveModal;
