@@ -2,8 +2,8 @@ import Trash from "@/components/React/global/IconComponents/Trash";
 import React from "react";
 import SavedArticleThumbnail from "./SavedArticleThumbnail";
 import ThumbnailSwap from "./ThumbnailSwap";
-import { ArticleSchemaType } from "../../../../../../../../../schemas/api/types/ArticlesSchema";
 import { BookmarkState } from "@/hooks/dashboard/useBookmarkSavedArticles";
+import { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
 
 interface SavedThumbnail {
   article: ArticleSchemaType;
@@ -27,7 +27,7 @@ function ArticleThumbnail({
   bookmark,
 }: SavedThumbnail): React.ReactNode {
   const imgProps: ImgProps = {
-    src: article.image_url,
+    src: article.image_url ?? "",
     alt: article.title,
     loading: isPriority ? "eager" : "lazy",
     decoding: isPriority ? "sync" : "async",

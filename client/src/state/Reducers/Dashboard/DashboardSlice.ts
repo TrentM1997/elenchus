@@ -91,19 +91,18 @@ const DashboardSlice = createSlice({
     builder.addCase(hydrateDashboard.fulfilled, (state, action) => {
       const { articles, investigations } = action.payload;
       if (articles.ok) {
-        if (articles.data.length === 0) {
-          state.articles = { status: "empty", message: "No data found" };
-        } else {
+        if (articles.data.length > 0) {
           state.articles = { status: "ready", data: articles.data };
+        } else {
+          state.articles = { status: "empty", message: "No data found" };
         }
       }
 
       if (investigations.ok) {
         if (investigations.data.length > 0) {
           state.investigations = { status: "ready", data: investigations.data };
-
-          state.investigations = { status: "empty", message: "No data found" };
         } else {
+          state.investigations = { status: "empty", message: "No data found" };
         }
       }
     });

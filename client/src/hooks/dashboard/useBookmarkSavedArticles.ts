@@ -1,8 +1,8 @@
 import { useCallback, useState } from "react";
-import type { ArticleSchemaType } from "../../../../schemas/api/types/ArticlesSchema";
 import { serverClient } from "@/lib/services/client/serverClient";
 import { wait } from "@/lib/helpers/formatting/Presentation";
 import { createInitialBookmarkStates } from "@/lib/helpers/createInitialBookmarkStates";
+import { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
 const service = serverClient.privileged.user.write;
 
 export type BookmarkStatus =

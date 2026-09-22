@@ -5,23 +5,13 @@ import { delays } from "@/motion/variants";
 import ScrolltoTop from "@/lib/helpers/scroll/ScrollToTop";
 import NoSavedArticles from "../fallbacks/NoSavedArticles";
 import ArticlesScroller from "./ArticlesScroller";
-import { useEffect, useRef } from "react";
 import AsyncStateRenderer from "@/components/React/pipelines/AsyncStateRenderer";
 
-export default function SavedArticles({}) {
-  const articles = useSelector((s: RootState) => s.userdata.articles);
+export default function SavedArticles() {
+  const articles = useSelector((s: RootState) => s.dash.articles);
   const restorePosition = useSelector(
     (state: RootState) => state.profileNav.articleScrollPosition,
   );
-  const isUnmountingRef = useRef<boolean | null>(null);
-
-  useEffect(() => {
-    return () => {
-      isUnmountingRef.current = true;
-    };
-  }, []);
-
-  if (restorePosition.status === "initial") return;
 
   return (
     <motion.section
@@ -38,7 +28,11 @@ export default function SavedArticles({}) {
           {(state) => (
             <ArticlesScroller
               articles={state}
-              restorePosition={restorePosition.position}
+              restorePosition={
+                restorePosition.status === "ready"
+                  ? restorePosition.position
+                  : undefined
+              }
             />
           )}
         </AsyncStateRenderer>

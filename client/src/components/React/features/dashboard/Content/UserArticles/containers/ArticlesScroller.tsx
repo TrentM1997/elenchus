@@ -11,19 +11,21 @@ import type { AppDispatch } from "@/state/store";
 import { readSavedArticle } from "@/state/Reducers/Dashboard/UserContent/UserContentReducer";
 import { chooseTab } from "@/state/Reducers/Dashboard/UserContent/DashboardTabs";
 import { wait } from "@/lib/helpers/formatting/Presentation";
-import { ArticleSchemaType } from "../../../../../../../../../schemas/api/types/ArticlesSchema";
 import { useHandleBookmark } from "@/hooks/dashboard/useBookmarkSavedArticles";
 import ArticleSurface from "../components/ArticleSurface";
 import { stylesWithShadow } from "@/lib/helpers/scroll/stylesWithShadow";
 import { ArticleScroller } from "./types";
+import { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
 
 export default function ArticlesScroller({
   articles,
   restorePosition,
 }: ArticleScroller): JSX.Element | null {
   const virutuosoRef = useRef(null);
-  const { visible, loadMore, topKeyRef, topIndexRef, saveNow, scrollRef } =
-    useVirtuoso(articles, "articles", restorePosition, articles[0].id);
+  const {
+    visible, loadMore, topKeyRef, topIndexRef, saveNow, scrollRef,
+    fullyLoaded, numSkeletons,
+  } = useVirtuoso(articles, "articles", restorePosition);
   const { fastScroll, clockScrollSpeed } = useSkeletons(200);
   const { boxShadow, onScrollHandler } = useScrollWithShadow();
   const articleScrollerStyles: CSSProperties = stylesWithShadow(boxShadow);
@@ -58,6 +60,10 @@ export default function ArticlesScroller({
           onScroll={onScrollHandler}
           defaultItemHeight={240}
           components={{ Footer: SkeletonMap }}
+          context={{
+            fullyLoaded: fullyLoaded || visible.length >= articles.length,
+            numSkeletons: Math.max(0, numSkeletons),
+          }}
           computeItemKey={(_, article) => article.id}
           itemContent={(index, article) => {
             return (

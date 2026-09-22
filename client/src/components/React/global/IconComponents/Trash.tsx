@@ -1,7 +1,7 @@
 import React from "react";
 import TrashTooltip from "../../features/dashboard/Content/UserArticles/tooltips/TrashTooltip";
-import { ArticleSchemaType } from "../../../../../../schemas/api/types/ArticlesSchema";
 import { BookmarkState } from "@/hooks/dashboard/useBookmarkSavedArticles";
+import { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
 
 interface Trash {
   deleteHandler: (article: ArticleSchemaType) => () => Promise<void>;
