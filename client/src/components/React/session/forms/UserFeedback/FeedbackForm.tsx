@@ -1,4 +1,3 @@
-import { AnimatePresence, motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAuthorEmail,
@@ -7,7 +6,6 @@ import {
 } from "@/state/Reducers/Feedback/FeedbackSlice";
 import React, { useEffect, useState } from "react";
 import { RootState } from "@/state/store";
-import AuthNotification from "@/components/React/session/notifications/AuthNotification";
 import type { SigninStatus } from "@/hooks/useSignIn";
 import { wait } from "@/lib/helpers/formatting/Presentation";
 import { populateModal } from "@/state/Reducers/Investigate/Rendering";
@@ -16,7 +14,7 @@ import { serverClient } from "@/lib/services/client/serverClient";
 
 export default function FeedBackForm() {
   const activeSession = useSelector(
-    (state: RootState) => (state.auth.userKind === "authenticated"),
+    (state: RootState) => state.auth.userKind === "authenticated",
   );
   const authorEmail = useSelector(
     (state: RootState) => state.feedback.authorEmail,
@@ -112,13 +110,6 @@ export default function FeedBackForm() {
             </g>
           </g>
         </svg>
-        <AnimatePresence>
-          {status !== "idle" && (
-            <AuthNotification
-              toast={{ status, kind: "Auth", action: "feedback" }}
-            />
-          )}
-        </AnimatePresence>
       </div>
       <h2 className="title-font mb-1 text-lg lg:text-2xl font-light font-serif tracking-tight text-center text-white">
         Feedback

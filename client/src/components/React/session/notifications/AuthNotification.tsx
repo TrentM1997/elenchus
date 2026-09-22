@@ -1,47 +1,23 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect } from "react";
+import React from "react";
 import Success from "./Success";
 import Failed from "./Failed";
 import Pending from "./Pending";
 import { hideTop } from "@/motion/variants";
 import { createPortal } from "react-dom";
-import { AuthNotificationProps } from "@/env";
-import { renderToast } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+import { ActiveToast } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+import { createToastMessage } from "@/lib/helpers/toasts/createToastMessage";
+import { assertNever } from "@/lib/helpers/asserts/assertNever";
+import { useHandleDismissToast } from "@/lib/hooks/useHandleDismissToast";
 
-interface DeleteActions {
-  pending: string;
-  success: string;
-  failed: string;
-}
-
-const deleteMessages: DeleteActions = {
-  pending: "Deleting article",
-  success: "Deleted successfully",
-  failed: "Failed to delete",
-};
-
-export default function AuthNotification({ toast }: AuthNotificationProps) {
-  useEffect(() => {
-    if (toast.status === "success" || toast.status === "failed") {
-      const timer = window.setTimeout(() => {
-        renderToast({ status: "idle", kind: null });
-      }, 2000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [toast.status]);
-
-  const deleteStatus: JSX.Element | null = (
-    <p key={`delete${toast.status}`} className="text-white font-light text-sm">
-      {toast.status === "pending" && deleteMessages.pending}
-      {toast.status === "success" && deleteMessages.success}
-      {toast.status === "failed" && deleteMessages.failed}
-    </p>
-  );
-
-  const general: JSX.Element | null = (
-    <p className="text-white font-light text-sm">{`${toast.kind} ${toast.status}`}</p>
-  );
+export default function AuthNotification({
+  status,
+  kind,
+}: {
+  status: ActiveToast["status"];
+  kind: ActiveToast["kind"];
+}) {
+  useHandleDismissToast(status);
 
   const notification: JSX.Element | null = (
     <motion.div
@@ -57,23 +33,54 @@ export default function AuthNotification({ toast }: AuthNotificationProps) {
         key="title"
         className="flex w-full h-full items-center justify-between"
       >
-        <div key="titleContainer" className="w-auto h-fit">
-          {toast.status !== "idle" && toast.action === "deleting"
-            ? deleteStatus
-            : general}
-        </div>
-        <div className="w-auto h-fit relative">
-          {
-            <AnimatePresence mode="wait">
-              {status === "pending" && <Pending key={"pending-status"} />}
-              {status === "success" && <Success key={"success-status"} />}
-              {status === "failed" && <Failed key={"failed-status"} />}
-            </AnimatePresence>
-          }
-        </div>
+        <ActiveToastMessage message={createToastMessage({ kind, status })} />
+        <ActiveToastAnimation status={status} />
       </div>
     </motion.div>
   );
 
   return createPortal(notification, document.body);
+}
+
+function ActiveToastMessage({
+  message,
+}: {
+  message: string;
+}): React.JSX.Element {
+  return (
+    <div key="titleContainer" className="w-auto h-fit">
+      {message}
+    </div>
+  );
+}
+
+function ActiveToastAnimation({ status }: { status: ActiveToast["status"] }) {
+  return (
+    <div className="w-auto h-fit relative">
+      <AnimatePresence mode="wait">
+        <RenderToastAnimation status={status} />
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function RenderToastAnimation({ status }: { status: ActiveToast["status"] }) {
+  switch (status) {
+    case "idle": {
+      return null;
+    }
+    case "pending": {
+      return <Pending key={"pending-status"} />;
+    }
+    case "success": {
+      return <Success key={"success-status"} />;
+    }
+    case "failed": {
+      return <Failed key={"failed-status"} />;
+    }
+
+    default: {
+      return assertNever(status);
+    }
+  }
 }

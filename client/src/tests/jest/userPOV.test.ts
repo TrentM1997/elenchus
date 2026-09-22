@@ -1,12 +1,12 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import reducer from "../../state/Reducers/Investigate/pov/UserPOV";
+import reducer from "../../state/Reducers/Investigate/research/ResearchSlice";
 import { establishPOV, updatePOVDraft } from "../../state/Reducers/Investigate/pov/thunks";
-import { selectPOV, selectPOVData } from "../../state/Reducers/Investigate/pov/selectors";
+import { selectPOVData } from "../../state/Reducers/Investigate/pov/selectors";
 import type { AppDispatch, RootState } from "../../state/store";
 
 function createWorkflow() {
   const store = configureStore({
-    reducer: { investigation: combineReducers({ pov: reducer }) },
+    reducer: { investigation: combineReducers({ research: reducer }) },
   });
   return {
     dispatch: store.dispatch as AppDispatch,
@@ -23,7 +23,7 @@ describe("perspective workflow", () => {
     dispatch(updatePOVDraft({ biases: "Don't have an opinion on the idea" }));
     dispatch(updatePOVDraft({ premises: "My starting assumptions" }));
 
-    expect(selectPOV(getState()).status).toBe("draft");
+    expect(getState().investigation.research.research.phase).toBe("framing");
     expect(selectPOVData(getState())).toEqual({
       idea: "An idea worth looking into",
       perspective: "Neutral",
@@ -52,20 +52,22 @@ describe("perspective workflow", () => {
     const draft = selectPOVData(getState());
     dispatch(establishPOV());
 
-    expect(selectPOV(getState())).toEqual({ status: "established", data: draft });
+    expect(getState().investigation.research.research.phase).toBe("searching");
+    expect(selectPOVData(getState())).toEqual(draft);
   });
 
-  test("editing an established perspective returns to draft and supports clearing text", () => {
+  test("editing an established perspective preserves its phase and supports clearing text", () => {
     const { dispatch, getState } = createWorkflow();
     dispatch(updatePOVDraft({ idea: "An idea worth looking into", premises: "An assumption" }));
     dispatch(establishPOV());
-    const established = selectPOV(getState());
+    const established = selectPOVData(getState());
     dispatch(updatePOVDraft({ premises: "" }));
 
-    expect(selectPOV(getState()).status).toBe("draft");
+    expect(getState().investigation.research.research.phase).toBe("searching");
     expect(selectPOVData(getState())).toMatchObject({ idea: "An idea worth looking into", premises: "" });
-    expect(established.data.premises).toBe("An assumption");
+    expect(established.premises).toBe("An assumption");
     dispatch(establishPOV());
-    expect(selectPOV(getState()).status).toBe("established");
+    expect(getState().investigation.research.research.phase).toBe("searching");
   });
 });
+

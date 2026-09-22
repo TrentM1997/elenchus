@@ -4,61 +4,64 @@ import ReviewContainer from "@/components/React/features/investigate/phase4/cont
 import CompletionHero from "@/components/React/features/investigate/heros/CompletionHero";
 import FinalResults from "@/components/React/features/investigate/phase5/FinalResults";
 import ScrolltoTop from "@/lib/helpers/scroll/ScrollToTop";
-import { Phase } from "@/state/Reducers/Investigate/Rendering";
 import HeroWrapper from "../shared/wrappers/HeroWrapper";
 import RenderExtractedArticlesPagination from "../phase3/containers/RenderExtractedArticlesPagination";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
+import { UserResearchType } from "@/state/Reducers/Investigate/research/types";
+import { assertNever } from "@/lib/helpers/asserts/assertNever";
 
-export default function RenderHero({ phase }: { phase: Phase }) {
+export default function RenderHero({ state }: { state: UserResearchType }) {
   const articlesState = useSelector(
     (s: RootState) => s.investigation.read.articles,
   );
 
-  switch (phase) {
-    case "Phase 1":
+  switch (state.phase) {
+    case "framing":
       return (
         <HeroWrapper key="gather-pov-hero">
           <InvestigateHero />
         </HeroWrapper>
       );
-    case "Phase 2":
+    case "searching":
       return (
         <HeroWrapper key="searchHero">
           <SearchHero />
           <ScrolltoTop />
         </HeroWrapper>
       );
-    case "Phase 3":
+    case "evidence":
       return <RenderExtractedArticlesPagination state={articlesState} />;
-    case "Phase 4":
+    case "reflection":
       return (
         <HeroWrapper key="review-hero">
           <ScrolltoTop />
           <ReviewContainer />
         </HeroWrapper>
       );
-    case "Phase 5":
+
+    case "completed": {
       return (
-        <HeroWrapper key="completion-animation">
-          <CompletionHero />
+        <HeroWrapper key={"completion-hero"}>
           <ScrolltoTop />
+          <CompletionHero />
         </HeroWrapper>
       );
-    case "Phase 6":
+    }
+
+    case "end":
       return (
         <HeroWrapper key="final-results-hero">
-          <FinalResults />
+          <FinalResults idea={state.data.framing.idea} />
           <ScrolltoTop />
         </HeroWrapper>
       );
 
-    case "Initial":
+    case "initial":
       return null;
 
     default: {
-      const exhaustive: never = phase;
-      return null;
+      return assertNever(state);
     }
   }
 }

@@ -6,7 +6,7 @@ import FailedExtractionsRenderer from "@/components/React/features/investigate/p
 import { RenderControlPanel } from "@/components/React/features/investigate/phase3/components/render/RenderControlPanel";
 
 export default function ArticleContainer(): JSX.Element {
-  const { articles, currentStory } = useSelector(
+  const { articles, currentStory, progress } = useSelector(
     (state: RootState) => state.investigation.read,
     shallowEqual,
   );

@@ -1,7 +1,7 @@
 import { assertNever } from "@/lib/helpers/asserts/assertNever";
-import { ArticleSchemaType } from "../../../../../schemas/api/types/ArticlesSchema";
-import { BiasSchemaType } from "../../../../../schemas/api/types/BiasSchema";
-import { InvestigationSchemaType } from "../../../../../schemas/api/types/InvestigationSchema";
+import type { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
+import type { BiasSchemaType } from "@/lib/schemas/articles/BiasSchema";
+import type { InvestigationSchemaType } from "@/lib/schemas/investigations/InvestigationSchema";
 
 export type MetricsRequest = {
   articles: ArticleSchemaType[];
@@ -176,6 +176,11 @@ class MetricsCalculator implements IMetricsCalculator {
         }
 
         case "Unknown": {
+          integrityRatings.Unknown++;
+          break;
+        }
+
+        case null: {
           integrityRatings.Unknown++;
           break;
         }

@@ -1,21 +1,18 @@
-import { clearAuthSlice } from "@/state/Reducers/Athentication/Authentication";
 import { useDispatch, useSelector } from "react-redux";
-import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState, useRef } from "react";
-import { serverClient } from "@/lib/services/client/serverClient";
-import AuthNotification from "@/components/React/session/notifications/AuthNotification";
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { SigninStatus } from "@/hooks/useSignIn";
 import { wait } from "@/lib/helpers/formatting/Presentation";
-import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
-import { RootState } from "@/state/store";
+import {
+  renderModal,
+  renderToast,
+} from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+import { logOut } from "@/state/Reducers/Athentication/thunks";
+import { AppDispatch, RootState } from "@/state/store";
 
 export default function SignOutModal(): JSX.Element {
   const toast = useSelector((s: RootState) => s.overlay.toast);
-  const [status, setStatus] = useState<SigninStatus>("idle");
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const timerRef = useRef<number | null>();
 
   async function redirect(): Promise<void> {
     dispatch(renderModal(null));
@@ -23,34 +20,21 @@ export default function SignOutModal(): JSX.Element {
     navigate("/");
   }
 
-  useEffect(() => {
-    const executeSignOut = async (): Promise<void> => {
-      try {
-        const data = await serverClient.general.auth.logOut();
-        if (data.ok === true) {
-          setStatus("success");
-          timerRef.current = window.setTimeout(() => {
-            dispatch(clearAuthSlice());
-            timerRef.current = null;
-          }, 2400);
-        } else {
-          setStatus("failed");
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  const handleSignOut = async () => {
+    dispatch(renderModal(null));
+    dispatch(renderToast({ status: "pending", kind: "logout" }));
 
-    if (status === "pending") {
-      executeSignOut();
+    try {
+      await dispatch(logOut()).unwrap();
+
+      dispatch(renderToast({ kind: "logout", status: "success" }));
+    } catch (err) {
+      dispatch(renderToast({ status: "failed", kind: "logout" }));
+    } finally {
+      await wait(300);
+      redirect();
     }
-
-    return () => {
-      if (status === "success") {
-        redirect();
-      }
-    };
-  }, [status]);
+  };
 
   return (
     <div
@@ -62,9 +46,6 @@ export default function SignOutModal(): JSX.Element {
         sm:gap-y-10 sm:p-10 lg:col-span-2 lg:flex-row lg:items-center bg-black border border-border_gray
         text-center"
     >
-      <AnimatePresence>
-        {status !== "idle" && <AuthNotification toast={{ status, kind: "Auth", action: "logout" }} />}
-      </AnimatePresence>
       <div className="lg:min-w-0 lg:flex-1 max-w-sm mx-auto">
         <p id="signout-title" className="text-white xl:text-4xl">
           Sign out
@@ -81,7 +62,7 @@ export default function SignOutModal(): JSX.Element {
             aria-label="Confirm sign out"
             whileTap={{ scale: 0.95 }}
             transition={{ type: "tween", duration: 0.2 }}
-            onClick={() => setStatus("pending")}
+            onClick={() => handleSignOut()}
             type="button"
             className="text-sm py-2 w-full px-6 md:px-4 border md:focus:ring-2 rounded-full border-transparent 
                     bg-white md:hover:bg-white/10 text-black lg:text-base

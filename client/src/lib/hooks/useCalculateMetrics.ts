@@ -69,7 +69,8 @@ export const useCalculateMetrics = () => {
         });
       };
 
-      worker.onerror = () => {
+      worker.onerror = (event) => {
+        console.error("Dashboard metrics worker failed", event.message);
         fail("Failed to calculate dashboard metrics");
       };
 

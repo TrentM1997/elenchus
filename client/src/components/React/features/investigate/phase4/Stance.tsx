@@ -1,23 +1,15 @@
 import StepsEditor from "../../../global/TipTap/StepsEditor";
 import EndInvestigateButton from "./buttons/FinishInvestigation";
-import { updateFinalDraft } from "@/state/Reducers/Investigate/pov/Review";
+import { updateReflection, completeResearch } from "@/state/Reducers/Investigate/research/ResearchSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/state/store";
 import { SetStateAction, useEffect, useState } from "react";
 import type { AppDispatch } from "@/state/store";
-import { changePhase } from "@/state/Reducers/Investigate/Rendering";
 
 type Opt = "initial" | "Opt-in" | "Opt-out";
 
 export default function Stance() {
-  const takeAway = useSelector(
-    (state: RootState) => state.investigation.review.final.data.takeAway,
-  );
-  const newPOV = useSelector(
-    (state: RootState) => state.investigation.review.final.data.newPOV,
-  );
-  const data = useSelector((state: RootState) => state.investigation.review.final.data);
-  const getTakeAways = (takeAway: string) => updateFinalDraft({ status: "draft", data: { ...data, takeAway } });
+  const research = useSelector((state: RootState) => state.investigation.research.research);
   const [option, setOption] = useState<Opt>("initial");
   const dispatch = useDispatch<AppDispatch>();
 
@@ -25,9 +17,15 @@ export default function Stance() {
     if (option === "initial") return;
 
     if (option === "Opt-out") {
-      dispatch(changePhase("Phase 5"));
+      dispatch(completeResearch());
     }
   }, [option, dispatch]);
+
+  if (research.phase !== "reflection" && research.phase !== "completed") return null;
+  const reflection = research.data.reflection;
+  const takeAway = reflection.takeaway ?? null;
+  const newPOV = reflection.changed_opinion;
+  const getTakeAways = (takeaway: string) => updateReflection({ ...reflection, takeaway });
 
   return (
     <section className="w-full h-full xs:px-6 flex flex-col gap-y-1 items-center content-center mx-auto">
@@ -117,3 +115,5 @@ function OptionFortakeaway({ setOption }: OptionButtons): JSX.Element | null {
     </div>
   );
 }
+
+

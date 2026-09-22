@@ -1,13 +1,10 @@
 import Firecrawl from "@mendable/firecrawl-js";
 import {
   ArticleSchemaType,
+  InsertableArticleSchemaType,
   validateArticle,
 } from "../../../schemas/ArticleSchema.js";
-import type {
-  Article,
-  FcParam,
-  FirecrawlResponse,
-} from "../../../types/types.js";
+import type { FcParam, FirecrawlResponse } from "../../../types/types.js";
 import { ServerError } from "../../../core/errors/ServerError.js";
 import { IFirecrawlJobParser } from "./firecrawlJobParser.js";
 import { FIRECRAWL_OPTIONS } from "./scrapeConfig.js";
@@ -34,6 +31,7 @@ export class FirecrawlScrapeHandler implements IFirecrawlScrapeHandler {
     pushRetrieved,
   }: ScrapeParameters): Promise<void> {
     const urlClean = this.parser.cleanUrl(article.url);
+    let extracted: InsertableArticleSchemaType;
 
     try {
       const content = await this.scrapeContent(urlClean);
@@ -43,7 +41,7 @@ export class FirecrawlScrapeHandler implements IFirecrawlScrapeHandler {
         return;
       }
 
-      const extracted: ArticleSchemaType = this.parser.toArticleDto(
+      extracted = this.parser.toScrapedArticleDto(
         content,
         article,
         MBFC_DATA,
@@ -56,11 +54,17 @@ export class FirecrawlScrapeHandler implements IFirecrawlScrapeHandler {
         console.error(details);
         throw new ServerError("invalid schema from Firecrawl extraction");
       }
-      pushRetrieved(extracted);
     } catch (error) {
       console.error(error);
       this.pushFailedContent(article, pushFailed, "scrape failed");
       return;
+    }
+
+    try {
+      await pushRetrieved(extracted);
+    } catch (error) {
+      console.error("Failed to persist extracted article", error);
+      this.pushFailedContent(article, pushFailed, "article persistence failed");
     }
   }
 
@@ -75,7 +79,10 @@ export class FirecrawlScrapeHandler implements IFirecrawlScrapeHandler {
   private pushFailedContent(
     article: FcParam,
     pushFailed: ScrapeParameters["pushFailed"],
-    message: "empty or incomplete body" | "scrape failed",
+    message:
+      | "empty or incomplete body"
+      | "scrape failed"
+      | "article persistence failed",
   ): void {
     const failedArticle = this.parser.toFailedAttempt(article, message);
     pushFailed(failedArticle);

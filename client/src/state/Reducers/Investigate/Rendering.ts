@@ -1,14 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export type Phase =
-  | "Initial"
-  | "Phase 1"
-  | "Phase 2"
-  | "Phase 3"
-  | "Phase 4"
-  | "Phase 5"
-  | "Phase 6";
-
 export type ModalDisplayed =
   | "Back to Search"
   | "Extract Confirmation"
@@ -32,7 +23,6 @@ export type PathSelected = "BlueSky Feed" | "Choose Path" | "Path Chosen";
 export type ShowOptions = "Show Options" | "Preselected";
 
 export interface RenderingState {
-  phase: Phase;
   modal: ModalDisplayed;
   tooltip: TooltipDisplayed;
   selection: SelectionBar;
@@ -41,7 +31,6 @@ export interface RenderingState {
 }
 
 const initialState: RenderingState = {
-  phase: "Initial",
   modal: null,
   tooltip: null,
   selection: "hidden",
@@ -53,9 +42,6 @@ const RenderingSlice = createSlice({
   name: "rendering",
   initialState: initialState,
   reducers: {
-    changePhase: (state: RenderingState, action: PayloadAction<Phase>) => {
-      state.phase = action.payload;
-    },
     populateModal: (
       state: RenderingState,
       action: PayloadAction<ModalDisplayed>,
@@ -89,7 +75,6 @@ const RenderingSlice = createSlice({
 export type RenderingSliceState = ReturnType<typeof RenderingSlice.reducer>;
 
 export const {
-  changePhase,
   populateModal,
   populateTooltip,
   animateSelectBar,

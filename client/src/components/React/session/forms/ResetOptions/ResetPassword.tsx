@@ -4,8 +4,6 @@ import {
   ConfirmNewPassword,
 } from "@/components/React/session/forms/InputFields";
 import { Link, useNavigate } from "react-router-dom";
-import { AnimatePresence } from "framer-motion";
-import AuthNotification from "../../notifications/AuthNotification";
 import { SigninStatus } from "@/hooks/useSignIn";
 import { useValidateNewPassword } from "@/hooks/auth/useValidateNewPassword";
 import { useDispatch, useSelector } from "react-redux";
@@ -58,9 +56,6 @@ export default function ResetPassword({}) {
 
   return (
     <div className="w-full max-w-md md:max-w-sm mx-auto">
-      <AnimatePresence>
-        {status === "pending" && <AuthNotification toast={toast} />}
-      </AnimatePresence>
       <div className="flex flex-col">
         <div className="border-b pb-12">
           <p className="text-3xl tracking-tight font-light lg:text-4xl text-white">

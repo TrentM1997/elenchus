@@ -1,7 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "../../../../types/databaseInterfaces.js";
 import { ArticleSchemaType } from "../../../../schemas/ArticleSchema.js";
-import { ServerError } from "../../../../core/errors/ServerError.js";
 import {
   IArticlesDbParser,
   ArticlesDbParser,
@@ -12,8 +11,10 @@ import { DbResult } from "../../../types/types.ts";
 
 export type ArticlesFromBookmarks = DbResult<ArticleSchemaType[]>;
 
+export type SaveArticleResult = DbResult<ArticleSchemaType>;
+
 export interface IArticlesRepository {
-  saveArticle(article: unknown): Promise<ArticleSchemaType>;
+  saveArticle(article: unknown): Promise<SaveArticleResult>;
   fromBookmarkIds(
     ids: BookmarkSchemaType["article_id"][],
   ): Promise<ArticlesFromBookmarks>;
@@ -25,7 +26,7 @@ export class ArticlesRepository implements IArticlesRepository {
     this.parser = new ArticlesDbParser();
   }
 
-  public async saveArticle(article: unknown): Promise<ArticleSchemaType> {
+  public async saveArticle(article: unknown): Promise<SaveArticleResult> {
     return await this.executeSaveArticle(article);
   }
 
@@ -59,7 +60,7 @@ export class ArticlesRepository implements IArticlesRepository {
 
   private async executeSaveArticle(
     article: unknown,
-  ): Promise<ArticleSchemaType> {
+  ): Promise<SaveArticleResult> {
     const validated = this.parser.validateArticleInput(article);
     const insertableArticle = this.parser.toInsertableArticle(validated);
     return await this.insertArticle(insertableArticle);
@@ -67,7 +68,7 @@ export class ArticlesRepository implements IArticlesRepository {
 
   private async insertArticle(
     article: InsertableArticleType,
-  ): Promise<ArticleSchemaType> {
+  ): Promise<SaveArticleResult> {
     const { data, error } = await this.db
       .from("articles")
       .insert([article])
@@ -75,14 +76,18 @@ export class ArticlesRepository implements IArticlesRepository {
       .single();
 
     if (error) {
-      throw new ServerError("Failed to save article", 500, {
+      return {
+        ok: false,
         message: error.message,
-        code: error.code,
         details: error.details,
-        hint: error.hint,
-      });
+      };
     }
 
-    return this.parser.validateArticleSelected(data);
+    const validArticle = this.parser.validateArticleSelected(data);
+
+    return {
+      ok: true,
+      data: validArticle,
+    };
   }
 }

@@ -4,7 +4,10 @@ import { wrapAsync } from "../../async/wrapAsync.js";
 import { validateOrThrow } from "../../validation/validateOrThrow.js";
 import { BookmarkArticleIdSchema } from "../../../schemas/BookmarkSchema.js";
 import { ServerError } from "../../errors/ServerError.js";
-import { InvestigationSchema } from "../../../schemas/InvestigationSchema.js";
+import {
+  InvestigationSchema,
+  PersistInvestigationInputSchema,
+} from "../../../schemas/InvestigationSchema.js";
 import { LoginSchema } from "../../../schemas/LoginSchema.js";
 import { PRIVATE_API_ROUTES } from "./routeConfig.js";
 
@@ -88,8 +91,8 @@ export function protectedRoutes(app: IAppServices, router: Router) {
     wrapAsync(async (req, res) => {
       const userId = req.user.userId;
       const investigation = validateOrThrow(
-        InvestigationSchema,
-        req.body.investigation,
+        PersistInvestigationInputSchema,
+        req.body,
       );
 
       const result = await app.services.api.investigations.save(

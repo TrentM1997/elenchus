@@ -27,7 +27,9 @@ export default function NotifySavedArticle({
                 border border-astro_gray shadow-thick"
     >
       <div className="w-full h-auto p-2">
-        <h1 className="text-black text-nowrap text-sm w-full font-light tracking-tight"></h1>
+        <h1 className="text-black text-nowrap text-sm w-full font-light tracking-tight">
+          {message}
+        </h1>
       </div>
     </motion.div>
   );

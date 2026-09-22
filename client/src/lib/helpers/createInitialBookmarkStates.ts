@@ -2,7 +2,7 @@ import {
   BookmarkState,
   InitialBookmarkStatus,
 } from "@/hooks/dashboard/useBookmarkSavedArticles";
-import { ArticleSchemaType } from "../../../../schemas/api/types/ArticlesSchema";
+import { ArticleSchemaType } from "../schemas/articles/ArticleSchema";
 
 export function createInitialBookmarkStates({
   articles,

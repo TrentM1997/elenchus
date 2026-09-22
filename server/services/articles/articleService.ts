@@ -1,5 +1,9 @@
 import { IDbClient } from "../../db/access/client/dbClient.js";
-import { ArticleSchemaType } from "../../schemas/ArticleSchema.js";
+import { ServerError } from "../../core/errors/ServerError.js";
+import {
+  ArticleSchemaType,
+  InsertableArticleSchemaType,
+} from "../../schemas/ArticleSchema.js";
 import { FcParam } from "../../types/types.js";
 import { IFirecrawlService } from "../firecrawl/firecrawlService.js";
 import { JobResult } from "../firecrawl/types.js";
@@ -49,16 +53,15 @@ export class ArticleService implements IArticleService {
     jobId: string,
     articles: FcParam[],
   ): Promise<void> {
-    let scraped: ArticleSchemaType[];
-
     try {
       const biases = await this.db.sources.getBiases(articles);
 
-      scraped = await this.firecrawl.runFirecrawlJob(
+      await this.firecrawl.runFirecrawlJob(
         jobId,
         articles,
         biases,
         this.jobs,
+        this.save.bind(this),
       );
     } catch (error) {
       this.jobs[jobId] = {
@@ -69,26 +72,15 @@ export class ArticleService implements IArticleService {
       };
       return;
     }
-
-    try {
-      await this.persistExtractions(scraped);
-    } catch (error) {
-      console.error("Failed to persist extracted articles", {
-        jobId,
-        error,
-      });
-    }
   }
 
-  private async persistExtractions(
-    scraped: ArticleSchemaType[],
-  ): Promise<void> {
-    for (const article of scraped) {
-      await this.save(article);
+  private async save(
+    article: InsertableArticleSchemaType,
+  ): Promise<ArticleSchemaType> {
+    const result = await this.db.articles.saveArticle(article);
+    if (!result.ok) {
+      throw new ServerError(result.message, 500, result.details);
     }
-  }
-
-  private async save(article: unknown): Promise<ArticleSchemaType> {
-    return await this.db.articles.saveArticle(article);
+    return result.data;
   }
 }

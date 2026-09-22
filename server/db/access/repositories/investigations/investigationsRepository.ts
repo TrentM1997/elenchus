@@ -7,9 +7,11 @@ import {
 import {
   InvestigationSchemaType,
   InvestigationSchema,
+  PersistInvestigationInputSchema,
+  PersistInvestigationInputSchemaType,
+  InsertableInvestigationSchemaType,
 } from "../../../../schemas/InvestigationSchema.js";
 import type { AuthenticatedUserId } from "../../../../services/auth/authorization.js";
-import { ServerError } from "../../../../core/errors/ServerError.js";
 import { DbResult } from "../../../types/types.ts";
 
 export type InvestigationSaveResult = DbResult<InvestigationSchemaType>;
@@ -98,9 +100,9 @@ export class InvestigationsRepository implements IInvestigationsRepository {
   }
 
   private toInsertableInvestigation(
-    investigation: InvestigationSchemaType,
-    id: AuthenticatedUserId,
-  ): InsertableInvestigation {
+    investigation: PersistInvestigationInputSchemaType,
+    user_id: AuthenticatedUserId,
+  ): InsertableInvestigationSchemaType {
     const {
       idea,
       initial_perspective,
@@ -113,11 +115,13 @@ export class InvestigationsRepository implements IInvestigationsRepository {
       sources,
       wikipedia_extracts,
       biases,
+      expertise,
     } = investigation;
 
     return {
       idea: idea,
       biases: biases,
+      expertise: expertise,
       initial_perspective: initial_perspective,
       premises: premises,
       ending_perspective: ending_perspective,
@@ -125,7 +129,7 @@ export class InvestigationsRepository implements IInvestigationsRepository {
       new_concepts: new_concepts,
       takeaway: takeaway,
       had_merit: had_merit,
-      user_id: id,
+      user_id: user_id,
       sources: sources,
       wikipedia_extracts: wikipedia_extracts,
     };
@@ -149,7 +153,7 @@ export class InvestigationsRepository implements IInvestigationsRepository {
 
   private validateInvestigationInput(
     investigation: unknown,
-  ): InvestigationSchemaType {
-    return validateOrThrow(InvestigationSchema, investigation);
+  ): PersistInvestigationInputSchemaType {
+    return validateOrThrow(PersistInvestigationInputSchema, investigation);
   }
 }

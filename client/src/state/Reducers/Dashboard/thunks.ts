@@ -16,7 +16,9 @@ export const hydrateDashboard = createAsyncThunk(
       };
     } catch (err) {
       console.error(err);
-      return thunkAPI.rejectWithValue(err);
+      return thunkAPI.rejectWithValue(
+        err instanceof Error ? err.message : "Failed to load dashboard",
+      );
     }
   },
 );

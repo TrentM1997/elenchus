@@ -10,13 +10,14 @@ import { InvestigationSchemaType } from "../../../../../../../schemas/api/types/
 import {
   InvestigationSaveResponse,
   InvestigationSaveResponseType,
+  PersistInvestigationInputSchemaType,
 } from "@/lib/schemas/investigations/InvestigationSchema";
 
 export interface IPrivateUserWritesHandler {
   bookmark(article_id: number): Promise<BookmarkResponseSchemaType>;
   unBookmark(article_id: string): Promise<DeleteBookmarkResponseSchemaType>;
   investigation(
-    investigation: InvestigationSchemaType,
+    investigation: PersistInvestigationInputSchemaType,
   ): Promise<InvestigationSaveResponseType>;
 }
 
@@ -35,12 +36,12 @@ export class PrivateUserWritesHandler implements IPrivateUserWritesHandler {
     return await this.http.post(
       this.routes.bookmarks.post,
       BookmarkResponseSchema,
-      article_id,
+      { article_id },
     );
   }
 
   public async investigation(
-    investigation: InvestigationSchemaType,
+    investigation: PersistInvestigationInputSchemaType,
   ): Promise<InvestigationSaveResponseType> {
     return await this.http.post(
       this.routes.investigations,

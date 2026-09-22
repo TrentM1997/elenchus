@@ -1,8 +1,8 @@
 import { BookmarkStates } from "@/hooks/dashboard/useBookmarkSavedArticles";
-import { ArticleSchemaType } from "../../../../../../../../../schemas/api/types/ArticlesSchema";
 import ArticleSaved from "./ArticleSaved";
 import ArticleThumbnail from "./ArticleThumbnail";
 import Title from "./Title";
+import { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
 
 interface ArticleSurface {
   article: ArticleSchemaType;

@@ -48,15 +48,15 @@ export type Database = {
           bias: string | null
           country: string | null
           created_at: string
-          date_published: string | null
+          date_published: string
           factual_reporting: string | null
-          full_text: string | null
+          full_text: string
           id: number
           image_url: string | null
           normalizedUrl: string | null
-          provider: string | null
+          provider: string
           summary: string | null
-          title: string | null
+          title: string
           urlHash: string | null
         }
         Insert: {
@@ -65,15 +65,15 @@ export type Database = {
           bias?: string | null
           country?: string | null
           created_at?: string
-          date_published?: string | null
+          date_published: string
           factual_reporting?: string | null
-          full_text?: string | null
+          full_text: string
           id?: number
           image_url?: string | null
           normalizedUrl?: string | null
-          provider?: string | null
+          provider: string
           summary?: string | null
-          title?: string | null
+          title: string
           urlHash?: string | null
         }
         Update: {
@@ -82,15 +82,15 @@ export type Database = {
           bias?: string | null
           country?: string | null
           created_at?: string
-          date_published?: string | null
+          date_published?: string
           factual_reporting?: string | null
-          full_text?: string | null
+          full_text?: string
           id?: number
           image_url?: string | null
           normalizedUrl?: string | null
-          provider?: string | null
+          provider?: string
           summary?: string | null
-          title?: string | null
+          title?: string
           urlHash?: string | null
         }
         Relationships: []
@@ -133,9 +133,10 @@ export type Database = {
           changed_opinion: boolean | null
           created_at: string
           ending_perspective: string | null
+          expertise: string | null
           had_merit: boolean | null
           id: number
-          idea: string | null
+          idea: string
           initial_perspective: string | null
           new_concepts: boolean | null
           premises: string | null
@@ -149,9 +150,10 @@ export type Database = {
           changed_opinion?: boolean | null
           created_at?: string
           ending_perspective?: string | null
+          expertise?: string | null
           had_merit?: boolean | null
           id?: number
-          idea?: string | null
+          idea: string
           initial_perspective?: string | null
           new_concepts?: boolean | null
           premises?: string | null
@@ -165,9 +167,10 @@ export type Database = {
           changed_opinion?: boolean | null
           created_at?: string
           ending_perspective?: string | null
+          expertise?: string | null
           had_merit?: boolean | null
           id?: number
-          idea?: string | null
+          idea?: string
           initial_perspective?: string | null
           new_concepts?: boolean | null
           premises?: string | null

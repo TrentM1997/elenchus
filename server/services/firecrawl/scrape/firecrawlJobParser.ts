@@ -4,6 +4,8 @@ import {
   ArticleSchemaType,
   FactualReportingRatingSchema,
   FactualReportingRatingSchemaType,
+  InsertableArticleSchema,
+  InsertableArticleSchemaType,
 } from "../../../schemas/ArticleSchema.js";
 import { BiasSchemaType } from "../../../schemas/BiasSchema.js";
 import { validateSchema } from "../../../schemas/ValidateSchema.js";
@@ -24,12 +26,12 @@ export interface IFirecrawlJobParser {
   ): void;
   toFailedAttempt(a: FcParam, reason: string): FailedAttempt;
   cleanUrl(url: string): string;
-  toArticleDto(
+  toScrapedArticleDto(
     c: FirecrawlContent,
     a: FcParam,
     mb: MBFC,
     urlClean: string,
-  ): ArticleSchemaType;
+  ): InsertableArticleSchemaType;
   isInvalidContent(c: FirecrawlContent | null | undefined): boolean;
 }
 
@@ -67,12 +69,12 @@ export class FirecrawlJobParser implements IFirecrawlJobParser {
     };
   }
 
-  public toArticleDto(
+  public toScrapedArticleDto(
     c: FirecrawlContent,
     a: FcParam,
     mb: MBFC,
     urlClean: string,
-  ): ArticleSchemaType {
+  ): InsertableArticleSchemaType {
     const rating: BiasInfo | null | undefined = mb.has(a.source)
       ? mb.get(a.source)
       : null;
@@ -93,11 +95,10 @@ export class FirecrawlJobParser implements IFirecrawlJobParser {
       summary: null,
       full_text: content_markdown,
       logo: logo,
-      id: null,
       factual_reporting: validatedFactRating,
       bias: bias as BiasSchemaType,
       country: country,
-    } satisfies ArticleSchemaType;
+    } satisfies InsertableArticleSchemaType;
 
     return this.validateArticle(article_extracted);
   }
@@ -110,8 +111,8 @@ export class FirecrawlJobParser implements IFirecrawlJobParser {
     return "Unknown";
   }
 
-  private validateArticle(article: unknown): ArticleSchemaType {
-    return validateServerOrThrow(ArticleSchema, article);
+  private validateArticle(article: unknown): InsertableArticleSchemaType {
+    return validateServerOrThrow(InsertableArticleSchema, article);
   }
 
   public cleanUrl(url: string): string {

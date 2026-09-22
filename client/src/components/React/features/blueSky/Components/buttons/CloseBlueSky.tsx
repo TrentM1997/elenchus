@@ -1,10 +1,10 @@
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/state/store";
 import {
-  changePhase,
   choosePath,
 } from "@/state/Reducers/Investigate/Rendering";
 import { wait } from "@/lib/helpers/formatting/Presentation";
+import { updatePOVDraft } from "@/state/Reducers/Investigate/pov/thunks";
 
 export default function CloseBlueSky() {
   const dispatch = useDispatch<AppDispatch>();
@@ -12,12 +12,12 @@ export default function CloseBlueSky() {
   const handleClose = async () => {
     dispatch(choosePath("Path Chosen"));
     await wait(300);
-    dispatch(changePhase("Phase 1"));
+    dispatch(updatePOVDraft({}));
   };
 
   return (
     <div
-      onClick={() => dispatch(changePhase("Phase 1"))}
+      onClick={handleClose}
       className="absolute top-1.5 right-1.5 z-50 max-h-8 max-w-8 p-1 
                   cursor-pointer rounded-full hover:bg-white/20 transition-all 
                   duration-200 ease-in-out"

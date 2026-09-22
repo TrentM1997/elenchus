@@ -1,18 +1,17 @@
 import { useDispatch, useSelector } from "react-redux";
-import { updateFinalDraft } from "@/state/Reducers/Investigate/pov/Review";
+import { updateReflection } from "@/state/Reducers/Investigate/research/ResearchSlice";
 import Lottie from "lottie-react";
 import blueCheck from "@/lotties/blueCheck.json";
 import { RootState } from "@/state/store";
 
-const opinions: string[] = ["Agree", "Disagree", "Neutral"];
+const opinions = ["Agree", "Disagree", "Neutral"] as const;
 
 export default function Retrospect() {
-  const investigateState = useSelector(
-    (state: RootState) => state.investigation,
-  );
-  const { review } = investigateState;
-  const { endingPerspective } = review.final.data;
+  const research = useSelector((state: RootState) => state.investigation.research.research);
   const dispatch = useDispatch();
+  if (research.phase !== "reflection" && research.phase !== "completed") return null;
+  const reflection = research.data.reflection;
+  const endingPerspective = reflection.ending_perspective;
 
   return (
     <div className="w-full h-full flex flex-col mx-auto gap-y-2">
@@ -21,11 +20,11 @@ export default function Retrospect() {
           What's your perspective now?
         </h1>
       </header>
-      {opinions.map((opinion: string, index: number) => (
+      {opinions.map((opinion, index) => (
         <div key={index} className="relative">
           <div
             key={opinion}
-            onClick={() => dispatch(updateFinalDraft({ status: "draft", data: { ...review.final.data, endingPerspective: opinion } }))}
+            onClick={() => dispatch(updateReflection({ ...reflection, ending_perspective: opinion }))}
             className="bg-white text-black xl:text-lg lg:text-[0.8rem] xs:text-[0.6rem]
               rounded-lg xl:w-52 xl:h-12 lg:w-[12rem] md:w-[12rem] md:h-12 xs:w-28 xs:h-9 relative
                cursor-pointer hover:bg-white/10 hover:text-white transition-all duration-200 ease-in-out
@@ -62,3 +61,4 @@ export default function Retrospect() {
     </div>
   );
 }
+

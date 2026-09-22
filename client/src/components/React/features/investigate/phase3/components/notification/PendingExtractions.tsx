@@ -1,19 +1,16 @@
 import { motion } from "framer-motion";
 import { extractionToastVariants } from "@/motion/variants";
-import { useSelector } from "react-redux";
-import { RootState } from "@/state/store";
-import type { Prog } from "@/state/Reducers/Investigate/articles/types";
 import { createPortal } from "react-dom";
 import PulseDot from "./PulseDot";
 import ExtractionProgress from "./ExtractionProgress";
 
-export default function PendingExtractions(): JSX.Element | null {
+export default function PendingExtractions({
+  progress,
+}: {
+  progress: string;
+}): JSX.Element | null {
   const root = document.getElementById("portal-root");
   if (root === null) return null;
-
-  const progress: Prog = useSelector(
-    (state: RootState) => state.investigation.read.progress,
-  );
 
   const toast: JSX.Element = (
     <motion.div

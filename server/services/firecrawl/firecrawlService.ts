@@ -9,7 +9,10 @@ import {
   IFirecrawlScrapeHandler,
 } from "./scrape/firecrawlScrapeHandler.js";
 import { JobResult, RunFirecrawlJobParameters } from "./types.js";
-import { ArticleSchemaType } from "../../schemas/ArticleSchema.js";
+import {
+  ArticleSchemaType,
+  InsertableArticleSchemaType,
+} from "../../schemas/ArticleSchema.js";
 
 export interface IFirecrawlService {
   runFirecrawlJob(
@@ -17,6 +20,7 @@ export interface IFirecrawlService {
     articles: FcParam[],
     MBFC_DATA: any,
     jobs: Record<string, JobResult>,
+    persistArticle: RunFirecrawlJobParameters["persistArticle"],
   ): Promise<ArticleSchemaType[]>;
 }
 
@@ -33,8 +37,15 @@ export class FirecrawlService implements IFirecrawlService {
     articles: FcParam[],
     MBFC_DATA: any,
     jobs: Record<string, JobResult>,
+    persistArticle: RunFirecrawlJobParameters["persistArticle"],
   ): Promise<ArticleSchemaType[]> {
-    return await this.executeFirecrawlJob({ id, articles, MBFC_DATA, jobs });
+    return await this.executeFirecrawlJob({
+      id,
+      articles,
+      MBFC_DATA,
+      jobs,
+      persistArticle,
+    });
   }
 
   private async executeFirecrawlJob(params: RunFirecrawlJobParameters) {
@@ -61,6 +72,7 @@ export class FirecrawlService implements IFirecrawlService {
     jobs,
     id,
     failed,
+    persistArticle,
   }: RunFirecrawlJobParameters & {
     retrieved: ArticleSchemaType[];
     failed: FailedAttempt[];
@@ -82,8 +94,9 @@ export class FirecrawlService implements IFirecrawlService {
       updateJobSnapshot();
     };
 
-    const pushRetrieved = (a: ArticleSchemaType) => {
-      retrieved.push(a);
+    const pushRetrieved = async (a: InsertableArticleSchemaType) => {
+      const saved = await persistArticle(a);
+      retrieved.push(saved);
       updateJobSnapshot();
     };
 
@@ -98,15 +111,17 @@ export class FirecrawlService implements IFirecrawlService {
         pushFailed,
       });
 
+      let timer: ReturnType<typeof setTimeout>;
       const result = await Promise.race([
         scrapeJob.then(() => ({ timedOut: false as const })),
-        new Promise<{ timedOut: true }>((resolve) =>
-          setTimeout(
-            () => resolve({ timedOut: true as const }),
-            NEXT_SCRAPE_WAIT_MS,
-          ),
+        new Promise<{ timedOut: true }>(
+          (resolve) =>
+            (timer = setTimeout(
+              () => resolve({ timedOut: true as const }),
+              NEXT_SCRAPE_WAIT_MS,
+            )),
         ),
-      ]);
+      ]).finally(() => clearTimeout(timer));
 
       if (result.timedOut) inFlight.push(scrapeJob);
     }

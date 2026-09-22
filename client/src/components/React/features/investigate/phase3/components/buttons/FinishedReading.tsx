@@ -5,13 +5,13 @@ import { useEffect, useRef } from "react";
 import { useTooltipFlags } from "@/hooks/useTooltipFlags";
 import PanelLabel from "./PanelLabel";
 import {
-  changePhase,
   populateTooltip,
   TooltipDisplayed,
 } from "@/state/Reducers/Investigate/Rendering";
 import { AnimatePresence } from "framer-motion";
 import { smoothScrollUp } from "@/lib/helpers/scroll/ScrollToTop";
 import { wait } from "@/lib/helpers/formatting/Presentation";
+import { startReflection } from "@/state/Reducers/Investigate/research/ResearchSlice";
 import ButtonHoverTooltip from "../../tooltips/ButtonHoverTooltip";
 
 export function FinishedReading() {
@@ -46,7 +46,13 @@ export function FinishedReading() {
   const handleClick = async (): Promise<void> => {
     smoothScrollUp();
     await wait(500);
-    dispatch(changePhase("Phase 4"));
+    dispatch(startReflection({
+      ending_perspective: null,
+      changed_opinion: null,
+      had_merit: null,
+      new_concepts: null,
+      takeaway: null,
+    }));
   };
 
   return (
@@ -104,3 +110,4 @@ function ForwardArrow(): JSX.Element {
 //        </svg>
 //    )
 //};
+

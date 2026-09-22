@@ -5,7 +5,7 @@ import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 
 export default function Bookmark({ article, open }: SaveArticleButton) {
-  const { handleSaveArticle } = useSaveArticle({
+  const { handleSaveArticle, status } = useSaveArticle({
     article,
   });
   const [notification, setNotification] = useState<string | null>(null);
@@ -17,17 +17,19 @@ export default function Bookmark({ article, open }: SaveArticleButton) {
             w-full h-full self-start flex items-center justify-start 
             group relative cursor-pointer`}
     >
-      {!notification && <SaveArticleTooltip isSaved={false} />}
+      {!notification && (
+        <SaveArticleTooltip isSaved={status === "bookmarked"} />
+      )}
       <AnimatePresence>
         {notification && (
           <NotifySavedArticle
-            message={notification}
+            message={status}
             setNotification={setNotification}
           />
         )}
       </AnimatePresence>
 
-      <BookmarkSVG isSaved={false} />
+      <BookmarkSVG isSaved={status === "bookmarked"} />
     </div>
   );
 }

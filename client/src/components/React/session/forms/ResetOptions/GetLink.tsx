@@ -1,106 +1,116 @@
-import { useEffect, useState } from "react"
-import { emailValidation } from "@/lib/helpers/formatting/validation"
-import { AnimatePresence } from "framer-motion"
-import { Link } from "react-router-dom"
-import { serverClient } from "@/lib/services/client/serverClient"
-import AuthNotification from "../../notifications/AuthNotification";
-import { SigninStatus } from "@/hooks/useSignIn"
+import { useEffect, useState } from "react";
+import { emailValidation } from "@/lib/helpers/formatting/validation";
+import { Link } from "react-router-dom";
+import { serverClient } from "@/lib/services/client/serverClient";
+import { SigninStatus } from "@/hooks/useSignIn";
 
-export default function GetLink({ }) {
-    const [emailToReset, setEmailToReset] = useState<string>(null)
-    const [validEmail, setValidEmail] = useState<boolean>(null)
-    const [emailSent, setEmailSent] = useState<boolean>(null)
-    const [status, setStatus] = useState<SigninStatus>('idle')
+export default function GetLink({}) {
+  const [emailToReset, setEmailToReset] = useState<string>("");
+  const [validEmail, setValidEmail] = useState<boolean | null>(null);
+  const [emailSent, setEmailSent] = useState<boolean | null>(null);
+  const [status, setStatus] = useState<SigninStatus>("idle");
 
-    const emailInput = (e: any) => {
-        setEmailToReset(e.target.value)
+  const emailInput = (e: any) => {
+    setEmailToReset(e.target.value);
+  };
+
+  const handleResetLink = async (e: any, email: string): Promise<void> => {
+    e.preventDefault();
+    setStatus("pending");
+    if (validEmail) {
+      window.localStorage.setItem(
+        "email_for_pw_reset",
+        JSON.stringify({ email: emailToReset }),
+      );
+      try {
+        const res = await serverClient.general.user.resetPassword(email);
+        if (!res.ok) {
+          throw new Error("unexpected error sending email request for reset");
+        }
+        setEmailSent(true);
+        setStatus("success");
+      } catch (err) {
+        setStatus("failed");
+        setEmailSent(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (emailToReset !== null) {
+      const valid = emailValidation(emailToReset);
+      setValidEmail(valid === "valid");
     }
 
-    const handleResetLink = async (e: any, email: string): Promise<void> => {
-        e.preventDefault()
-        setStatus('pending')
-        if (validEmail) {
-            window.localStorage.setItem('email_for_pw_reset', JSON.stringify({ email: emailToReset }));
-            try {
-                const res = await serverClient.general.user.resetPassword(email);
-                if (!res.ok) {
-                    throw new Error('unexpected error sending email request for reset');
-                }
-                setEmailSent(true);
-                setStatus('success')
+    if (status === "success") setEmailSent(true);
+  }, [emailToReset, validEmail, status]);
 
-            } catch (err) {
-                setStatus('failed');
-                setEmailSent(false)
-            }
-
-        };
-    };
-
-    useEffect(() => {
-
-        if (emailToReset !== null) {
-            const valid = emailValidation(emailToReset)
-            setValidEmail(valid === "valid");
-        }
-
-        if (status === 'success') setEmailSent(true);
-    }, [emailToReset, validEmail, status]);
-
-
-
-    return (
-        <div className="w-full max-w-md md:max-w-sm mx-auto">
-            <AnimatePresence>
-                {(status !== 'idle') && <AuthNotification toast={{ status, kind: "Auth", action: "password reset" }} />}
-            </AnimatePresence>
-            <div className="flex flex-col">
-                <div className="border-b pb-12">
-                    <p className="text-3xl tracking-tight font-light lg:text-4xl text-white">
-                        Reset password
-                    </p>
-                    <p className="mt-2 text-sm text-zinc-400">
-                        Submit your email and you will get a reset link
-                    </p>
-                </div>
-            </div>
-            <form className="mt-12">
-                <div className="space-y-6">
-                    <div className="col-span-full">
-                        <label htmlFor="email" className="block mb-3 text-sm font-medium text-white">
-                            Email
-                        </label>
-                        <input onChange={(e) => emailInput(e)} id="email" name="email" type="email" autoComplete="email" placeholder="email@example.com"
-                            className="block w-full px-3 py-3 border-2 border-zinc-100 rounded-xl appearance-none text-white placeholder-black/50 bg-white/5 focus:border-white/10 focus:bg-transparent focus:outline-none focus:ring-black sm:text-sm placeholder-zinc-500 h-10" required />
-                    </div>
-                    <div className="col-span-full">
-                        <button onClick={(e) => handleResetLink(e, emailToReset)} type="button" className="text-sm py-2 px-4 border focus:ring-2 h-10 rounded-full border-zinc-100 bg-white hover:bg-black/10 text-black duration-200 focus:ring-offset-2 focus:ring-white hover:text-white w-full inline-flex items-center justify-center ring-1 ring-transparent">
-                            Submit
-                        </button>
-                    </div>
-                    <div>
-                        <Link to={'/login'} >
-                            <p className="font-medium text-sm leading-tight text-white mx-auto lg:text-nowrap">
-                                Already have a password? <span className="text-white underline hover:text-blue-400 ml-3">Log in instead</span>
-                            </p>
-                        </Link>
-                    </div>
-                </div>
-            </form>
-            {emailSent && <Instructions />}
+  return (
+    <div className="w-full max-w-md md:max-w-sm mx-auto">
+      <div className="flex flex-col">
+        <div className="border-b pb-12">
+          <p className="text-3xl tracking-tight font-light lg:text-4xl text-white">
+            Reset password
+          </p>
+          <p className="mt-2 text-sm text-zinc-400">
+            Submit your email and you will get a reset link
+          </p>
         </div>
-    )
+      </div>
+      <form className="mt-12">
+        <div className="space-y-6">
+          <div className="col-span-full">
+            <label
+              htmlFor="email"
+              className="block mb-3 text-sm font-medium text-white"
+            >
+              Email
+            </label>
+            <input
+              onChange={(e) => emailInput(e)}
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              placeholder="email@example.com"
+              className="block w-full px-3 py-3 border-2 border-zinc-100 rounded-xl appearance-none text-white placeholder-black/50 bg-white/5 focus:border-white/10 focus:bg-transparent focus:outline-none focus:ring-black sm:text-sm placeholder-zinc-500 h-10"
+              required
+            />
+          </div>
+          <div className="col-span-full">
+            <button
+              onClick={(e) => handleResetLink(e, emailToReset)}
+              type="button"
+              className="text-sm py-2 px-4 border focus:ring-2 h-10 rounded-full border-zinc-100 bg-white hover:bg-black/10 text-black duration-200 focus:ring-offset-2 focus:ring-white hover:text-white w-full inline-flex items-center justify-center ring-1 ring-transparent"
+            >
+              Submit
+            </button>
+          </div>
+          <div>
+            <Link to={"/login"}>
+              <p className="font-medium text-sm leading-tight text-white mx-auto lg:text-nowrap">
+                Already have a password?{" "}
+                <span className="text-white underline hover:text-blue-400 ml-3">
+                  Log in instead
+                </span>
+              </p>
+            </Link>
+          </div>
+        </div>
+      </form>
+      {emailSent && <Instructions />}
+    </div>
+  );
 }
 
 function Instructions() {
-
-    return (
-        <div className="bg-white/5 w-full my-8 p-6 h-auto rounded-lg">
-            <header className="w-full mx-auto">
-                <h1 className="text-white text-wrap font-light tracking-tight text-lg">
-                    Check your email, we sent a link to reset your password!
-                </h1>
-            </header>
-        </div>
-    )
+  return (
+    <div className="bg-white/5 w-full my-8 p-6 h-auto rounded-lg">
+      <header className="w-full mx-auto">
+        <h1 className="text-white text-wrap font-light tracking-tight text-lg">
+          Check your email, we sent a link to reset your password!
+        </h1>
+      </header>
+    </div>
+  );
 }
