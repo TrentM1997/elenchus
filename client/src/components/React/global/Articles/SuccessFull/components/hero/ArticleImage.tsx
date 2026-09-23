@@ -1,7 +1,5 @@
 import React from "react";
 import type { ArticleSchemaType as Article } from "@/lib/schemas/articles/ArticleSchema";
-import ArticleTitle from "./ArticleTitle";
-import PublishedBy from "./PublishedBy";
 import type { ImgProps } from "@/components/React/features/investigate/phase2/results/components/links/LinkThumbnail";
 
 interface ArticleThumbnail {
@@ -27,18 +25,12 @@ function ArticleImage({ article }: ArticleThumbnail): JSX.Element | null {
   };
 
   return (
-    <div className="relative w-full sm:w-96 md:w-[350px] lg:w-[400px] xl:w-[800px] overflow-hidden aspect-[16/9] rounded-2xl">
+    <div className="relative w-full overflow-hidden aspect-[16/10] rounded-2xl bg-white/5 ring-1 ring-inset ring-white/10">
       <img
         {...imgProps}
-        className="absolute inset-0 w-full h-full object-cover opacity-70"
+        className="absolute inset-0 w-full h-full object-cover"
       />
 
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-
-      <div className="absolute bottom-0 left-0 p-4 text-white z-10">
-        <ArticleTitle title={article.title} />
-        <PublishedBy article={article} />
-      </div>
     </div>
   );
 }

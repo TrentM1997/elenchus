@@ -9,13 +9,18 @@ export default function RenderExtractProgressToast(state: {
   switch (state.articles.status) {
     case "initial":
     case "failed":
+    case "pending":
+    case "ready":
     case "error": {
       return null;
     }
-    case "pending":
-    case "partial":
-    case "ready": {
-      return <PendingExtractions progress={state.progress} />;
+    case "partial": {
+      return (
+        <PendingExtractions
+          key={"pending-extractions-toast"}
+          progress={state.progress}
+        />
+      );
     }
 
     default: {

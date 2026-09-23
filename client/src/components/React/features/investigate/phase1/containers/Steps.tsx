@@ -1,12 +1,14 @@
 import { useSelector } from "react-redux";
-import type { RootState } from '@/state/store'
+import type { RootState } from "@/state/store";
 import StepHeader from "../components/steps/StepHeader";
 import Stepper from "../components/steps/Stepper";
 import { titles } from "../components/tokens/titles";
 import { help } from "@/components/React/global/Help/tokens/helptokens";
 
-export default function Steps({ }): JSX.Element | null {
-  const step = useSelector((state: RootState) => state.investigation.stepper.wizardStep.num);
+export default function Steps({}): JSX.Element | null {
+  const step = useSelector(
+    (state: RootState) => state.investigation.stepper.wizardStep.num,
+  );
 
   return (
     <section
@@ -15,16 +17,20 @@ export default function Steps({ }): JSX.Element | null {
       rounded-4xl bg-ebony/50 shadow-inset p-4 shrink-0 mx-auto 
       w-full max-w-full sm:w-[27rem] mb-4 md:mb-0
       transition-all duration-400 animate-fade-in 
-      delay-300 no-scrollbar box-border min-w-80">
+      delay-300 no-scrollbar box-border min-w-80"
+    >
       <div
         className="flex flex-col items-start
-        justify-start relative w-full h-full p-2">
-
-        <StepHeader info={help[step]} title={titles[step].title} subheader={titles[step].subheader} />
+        justify-start relative w-full h-full p-2"
+      >
+        <StepHeader
+          info={help[step]}
+          title={titles[step].title}
+          subheader={titles[step].subheader}
+        />
 
         <Stepper />
       </div>
     </section>
   );
-};
-
+}

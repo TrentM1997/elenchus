@@ -1,30 +1,18 @@
 import type { ArticleSchemaType as Article } from "@/lib/schemas/articles/ArticleSchema";
 import React from "react";
 
-interface SourceInfoProps {
-  article: Article;
-}
-
-function SourceInfo({ article }: SourceInfoProps): JSX.Element | null {
+function SourceInfo({ article }: { article: Article }): JSX.Element {
   return (
-    <>
-      <div>
-        <p className="text-blue-400 text-xs">
-          Published <span className="text-zinc-400 px-1">•</span>{" "}
-          <span className="text-zinc-400 transition-all ease-in-out duration-200">
-            {article.date_published ?? "Date of publication unavailable"}
-          </span>
-        </p>
+    <dl className="flex flex-wrap items-start gap-x-6 gap-y-3 text-xs font-light tracking-tight sm:text-sm">
+      <div className="flex flex-col gap-1">
+        <dt className="text-xs text-zinc-400">Published</dt>
+        <dd className="text-zinc-300">{article.date_published ?? "Date of publication unavailable"}</dd>
       </div>
-      <div>
-        <p className="text-blue-400 text-xs">
-          Source Bias <span className="text-zinc-400 px-1">•</span>{" "}
-          <span className="text-zinc-400 transition-all ease-in-out duration-200">
-            {article.bias ? article.bias : "Unknown"}
-          </span>
-        </p>
+      <div className="flex flex-col gap-1">
+        <dt className="text-xs text-zinc-400">Source bias</dt>
+        <dd className="text-zinc-300">{article.bias || "Unknown"}</dd>
       </div>
-    </>
+    </dl>
   );
 }
 

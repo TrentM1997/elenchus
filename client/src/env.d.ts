@@ -6,15 +6,13 @@ import type { Extracts } from "./state/Reducers/Investigate/research/types";
 import React, { ReactEventHandler, ReactNode, SetStateAction } from "react";
 import { User } from "@supabase/supabase-js";
 import { SigninStatus } from "./hooks/useSignIn";
-import {
-  ArticleSchemaType,
-  FactualReportingRatingSchemaType,
-} from "../../schemas/api/types/ArticlesSchema";
+import { FactualReportingRatingSchemaType } from "../../schemas/api/types/ArticlesSchema";
 import { BlueSkyPosts } from "./state/Reducers/BlueSky/types";
 import { BlueSkyPostSchemaType } from "../../schemas/api/types/BlueSkyPostSchema";
 import { ActiveToast } from "./state/Reducers/RenderingPipelines/PipelineSlice";
 import { BrowsingOptionSchemaType } from "./lib/schemas/articles/BrowsingOptionSchema";
 import type { DashboardTab } from "./state/Reducers/Dashboard/types";
+import type { ArticleSchemaType } from "./lib/schemas/articles/ArticleSchema";
 
 declare global {
   interface ImportMetaEnv {
@@ -333,7 +331,12 @@ declare global {
     status?: SigninStatus;
   }
 
-  type DashboardOptionName = "Metrics" | "Articles" | "Investigations" | "Manage Account" | "Sign Out";
+  type DashboardOptionName =
+    | "Metrics"
+    | "Articles"
+    | "Investigations"
+    | "Manage Account"
+    | "Sign Out";
 
   interface DashboardOption {
     name: DashboardOptionName;
