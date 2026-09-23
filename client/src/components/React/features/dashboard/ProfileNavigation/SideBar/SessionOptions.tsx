@@ -4,7 +4,8 @@ import DashboardOption from "./DashboardOption";
 import SignoutIcon from "@/components/React/global/IconComponents/SignoutIcon";
 import SettingsIcon from "@/components/React/global/IconComponents/SettingsIcon";
 import React from "react";
-import { chooseTab, type ActiveTab } from "@/state/Reducers/Dashboard/UserContent/DashboardTabs";
+import { changeTab } from "@/state/Reducers/Dashboard/DashboardSlice";
+import type { DashboardTab } from "@/state/Reducers/Dashboard/types";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/state/store";
 import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
@@ -12,7 +13,7 @@ import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 
 
 function SessionOptions() {
-    const tab: ActiveTab = useSelector((s: RootState) => s.dashboard.tab);
+    const tab: DashboardTab = useSelector((s: RootState) => s.dash.tab);
     const signingOut = useSelector((s: RootState) => s.overlay.modal === "Sign Out");
     const dispatch = useDispatch<AppDispatch>();
 
@@ -26,7 +27,7 @@ function SessionOptions() {
                 <SignoutIcon />
             </DashboardOption>
 
-            <DashboardOption active={tab === 'Manage Account'} name="Manage Account" tab={tab} onSelect={() => dispatch(chooseTab('Manage Account'))}>
+            <DashboardOption active={tab.kind === 'manage account'} name="Manage Account" tab={tab} onSelect={() => dispatch(changeTab({ kind: "manage account" }))}>
                 <SettingsIcon />
             </DashboardOption>
         </ul>

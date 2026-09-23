@@ -2,6 +2,7 @@ import { Type } from "@sinclair/typebox";
 import { TypeCompiler } from "@sinclair/typebox/compiler";
 import type { Static } from "@sinclair/typebox";
 import { BiasSchema } from "./BiasSchema";
+import { PersistenceFailedResponseSchema } from "../auth/PersistenceFailedSchema";
 
 export const FactualReportingRatingSchema = Type.Union([
   Type.Literal("Very High"),
@@ -38,6 +39,18 @@ export const ArticleSchema = Type.Object({
 });
 
 export type ArticleSchemaType = Static<typeof ArticleSchema>;
+
+export const GetArticleResponseSchema = Type.Union([
+  Type.Object({
+    ok: Type.Literal(true),
+    data: ArticleSchema,
+  }),
+  PersistenceFailedResponseSchema,
+]);
+
+export type GetArticleResponseSchemaType = Static<
+  typeof GetArticleResponseSchema
+>;
 
 export const FactualReportingValidator = TypeCompiler.Compile(
   FactualReportingRatingSchema,

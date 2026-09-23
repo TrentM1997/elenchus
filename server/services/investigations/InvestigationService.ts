@@ -8,6 +8,7 @@ import {
   InvestigationSaveResult,
   SavedInvestigationsResult,
 } from "../../db/access/repositories/investigations/investigationsRepository.js";
+import { DbResult } from "../../db/types/types.ts";
 
 export interface IInvestigationService {
   save(
@@ -17,6 +18,10 @@ export interface IInvestigationService {
   getSavedResearch(
     user_id: string | undefined | null,
   ): Promise<SavedInvestigationsResult>;
+  getInvestigation(params: {
+    user_id: string | undefined | null;
+    investigation_id: InvestigationSchemaType["id"];
+  }): Promise<DbResult<InvestigationSchemaType>>;
 }
 
 export class InvestionService implements IInvestigationService {
@@ -36,6 +41,22 @@ export class InvestionService implements IInvestigationService {
     user_id: string | undefined | null,
   ): Promise<SavedInvestigationsResult> {
     return await this.executeGetSavedResearch(user_id);
+  }
+
+  public async getInvestigation(params: {
+    user_id: string | undefined | null;
+    investigation_id: InvestigationSchemaType["id"];
+  }): Promise<DbResult<InvestigationSchemaType>> {
+    const { user_id, investigation_id } = params;
+    return await this.executeGetInvestigation(user_id, investigation_id);
+  }
+
+  private async executeGetInvestigation(
+    user_id: string | undefined | null,
+    investigation_id: InvestigationSchemaType["id"],
+  ) {
+    const userId = this.policy.requireAuthenticated(user_id);
+    return await this.db.investigations.selectById(userId, investigation_id);
   }
 
   private async executeGetSavedResearch(

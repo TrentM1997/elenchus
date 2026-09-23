@@ -1,16 +1,12 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { wait } from "@/lib/helpers/formatting/Presentation";
-import {
-  renderModal,
-  renderToast,
-} from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 import { logOut } from "@/state/Reducers/Athentication/thunks";
-import { AppDispatch, RootState } from "@/state/store";
+import { AppDispatch } from "@/state/store";
 
 export default function SignOutModal(): JSX.Element {
-  const toast = useSelector((s: RootState) => s.overlay.toast);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
@@ -22,18 +18,10 @@ export default function SignOutModal(): JSX.Element {
 
   const handleSignOut = async () => {
     dispatch(renderModal(null));
-    dispatch(renderToast({ status: "pending", kind: "logout" }));
-
-    try {
-      await dispatch(logOut()).unwrap();
-
-      dispatch(renderToast({ kind: "logout", status: "success" }));
-    } catch (err) {
-      dispatch(renderToast({ status: "failed", kind: "logout" }));
-    } finally {
-      await wait(300);
-      redirect();
-    }
+    const result = await dispatch(logOut());
+    if (!logOut.fulfilled.match(result)) return;
+    await wait(200);
+    await redirect();
   };
 
   return (

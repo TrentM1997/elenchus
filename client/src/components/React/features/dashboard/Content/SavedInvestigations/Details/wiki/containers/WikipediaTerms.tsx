@@ -1,19 +1,19 @@
-import { RootState } from "@/state/store";
-import { useSelector } from "react-redux";
-import type { Extracts } from "@/state/Reducers/Investigate/pov/Review";
 import { TermList } from "./TermList";
 import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary";
 import NoSavedExtracts from "../fallbacks/NoSavedExtracts";
+import { Extracts } from "@/state/Reducers/Investigate/research/types";
+import { InvestigationSchemaType } from "@/lib/schemas/investigations/InvestigationSchema";
 
 export interface TermsTypes {
   wikipedia_extracts: Extracts[];
   excess: boolean | null;
 }
 
-export function Terms(): JSX.Element | null {
-  const research = useSelector(
-    (state: RootState) => state.userWork.investigationToReview,
-  );
+export function Terms({
+  research,
+}: {
+  research: InvestigationSchemaType;
+}): JSX.Element | null {
   const { wikipedia_extracts } = research;
   const excess: boolean | null = wikipedia_extracts
     ? wikipedia_extracts.length > 4

@@ -5,7 +5,6 @@ import NoteReducer from "../Investigate/articles/NoteTaking";
 import ReadingReducer from "../Investigate/articles/ExtractedArticles";
 import SelectingArticles from "../Investigate/articles/ChosenArticles";
 import SearchResults from "../Investigate/articles/SearchResults";
-
 import HelpReducer from "../Investigate/help/HelpModal";
 import RenderingSlice from "../Investigate/Rendering";
 import WikipediaExtractSlice from "../Investigate/wiki/WikiSlice";
@@ -19,7 +18,6 @@ const investigateReducer = combineReducers({
   read: ReadingReducer,
   getArticle: SelectingArticles,
   search: SearchResults,
-
   help: HelpReducer,
   wiki: WikipediaExtractSlice,
   rendering: RenderingSlice,
@@ -40,4 +38,3 @@ export const InvestigateFeature = (
       return investigateReducer(state, action);
   }
 };
-

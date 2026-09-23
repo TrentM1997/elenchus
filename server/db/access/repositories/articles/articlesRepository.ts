@@ -18,6 +18,9 @@ export interface IArticlesRepository {
   fromBookmarkIds(
     ids: BookmarkSchemaType["article_id"][],
   ): Promise<ArticlesFromBookmarks>;
+  byId(
+    article_id: ArticleSchemaType["id"],
+  ): Promise<DbResult<ArticleSchemaType>>;
 }
 
 export class ArticlesRepository implements IArticlesRepository {
@@ -34,6 +37,42 @@ export class ArticlesRepository implements IArticlesRepository {
     ids: BookmarkSchemaType["article_id"][],
   ): Promise<ArticlesFromBookmarks> {
     return await this.executeFromBookmarkIds(ids);
+  }
+
+  public async byId(
+    article_id: ArticleSchemaType["id"],
+  ): Promise<DbResult<ArticleSchemaType>> {
+    return await this.executeById(article_id);
+  }
+
+  private async executeById(
+    article_id: ArticleSchemaType["id"],
+  ): Promise<DbResult<ArticleSchemaType>> {
+    const { data, error } = await this.db
+      .from("articles")
+      .select()
+      .eq("id", article_id)
+      .maybeSingle();
+
+    if (error) {
+      return {
+        ok: false,
+        message: error.message,
+        details: error.details,
+      };
+    }
+
+    if (data === null) {
+      return {
+        ok: false,
+        message: "Article not found",
+      };
+    }
+
+    return {
+      ok: true,
+      data: this.parser.validateArticleSelected(data),
+    };
   }
 
   private async executeFromBookmarkIds(

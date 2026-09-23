@@ -9,16 +9,14 @@ import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 
 export default function InvestigateMore() {
   const userKind = useSelector((state: RootState) => state.auth.userKind);
-  const status = useSelector(
-    (s: RootState) => s.investigation.research.persistence.status,
-  );
+  const persistence = useSelector((s: RootState) => s.investigation.research.persistence);
   const dispatch = useDispatch();
 
   const showModal = () => {
-    if (status === "ready" && userKind === "authenticated") {
+    if (persistence.status === "ready" && userKind === "authenticated") {
       dispatch({ type: CLEAR_INVESTIGATION });
       clearCachedPlayStates(PLAYSTATE_KEYS);
-    } else if (userKind === "authenticated" && status !== "ready") {
+    } else if (userKind === "authenticated" && persistence.status !== "ready") {
       dispatch(renderModal("Work Modal"));
     } else if (userKind === "anonymous") {
       dispatch(renderModal("Feedback Form"));
@@ -29,7 +27,7 @@ export default function InvestigateMore() {
 
   return (
     <button
-      disabled={status !== "pending"}
+      disabled={persistence.status === "pending"}
       onClick={showModal}
       className="2xl:w-60 bg-white hover:bg-white/10 group shadow-thick 
                     transition-colors duration-200 ease-in-out rounded-full h-fit py-2 px-4 mx-auto flex items-center"

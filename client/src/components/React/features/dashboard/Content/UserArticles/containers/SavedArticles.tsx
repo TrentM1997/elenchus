@@ -10,7 +10,7 @@ import AsyncStateRenderer from "@/components/React/pipelines/AsyncStateRenderer"
 export default function SavedArticles() {
   const articles = useSelector((s: RootState) => s.dash.articles);
   const restorePosition = useSelector(
-    (state: RootState) => state.profileNav.articleScrollPosition,
+    (state: RootState) => state.dash.articleScrollPosition,
   );
 
   return (

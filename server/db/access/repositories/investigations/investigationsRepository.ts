@@ -29,6 +29,10 @@ export interface IInvestigationsRepository {
   getSavedInvestigations(
     user_id: AuthenticatedUserId,
   ): Promise<SavedInvestigationsResult>;
+  selectById(
+    user_id: AuthenticatedUserId,
+    investigation_id: InvestigationSchemaType["id"],
+  ): Promise<DbResult<InvestigationSchemaType>>;
 }
 
 export class InvestigationsRepository implements IInvestigationsRepository {
@@ -45,6 +49,45 @@ export class InvestigationsRepository implements IInvestigationsRepository {
     user_id: AuthenticatedUserId,
   ): Promise<InvestigationSaveResult> {
     return await this.executeSave(investigation, user_id);
+  }
+
+  public async selectById(
+    user_id: AuthenticatedUserId,
+    investigation_id: InvestigationSchemaType["id"],
+  ): Promise<DbResult<InvestigationSchemaType>> {
+    return await this.executeSelectById(user_id, investigation_id);
+  }
+
+  private async executeSelectById(
+    user_id: AuthenticatedUserId,
+    investigation_id: InvestigationSchemaType["id"],
+  ): Promise<DbResult<InvestigationSchemaType>> {
+    const { data, error } = await this.db
+      .from("investigations")
+      .select()
+      .eq("user_id", user_id)
+      .eq("id", investigation_id)
+      .maybeSingle();
+
+    if (error) {
+      return {
+        ok: false,
+        message: error.message,
+        details: error.details,
+      };
+    }
+
+    if (data === null) {
+      return {
+        ok: false,
+        message: "Investigation not found",
+      };
+    }
+
+    return {
+      ok: true,
+      data: this.validateInvestigation(data),
+    };
   }
 
   private async executeGetSavedInvestigations(

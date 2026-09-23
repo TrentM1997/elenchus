@@ -1,5 +1,5 @@
 export type BookmarkRoutes = {
-  get: "/user/bookmarks";
+  get: { all: "/user/bookmarks"; single: `/user/bookmarks/${string}` };
   post: "/user/bookmarks";
   delete: `/user/bookmarks/${string}`;
 };
@@ -27,6 +27,14 @@ export type IntegrationsRoutes = {
 
 export type InvestigationsRoute = "/user/investigations";
 
+export type InvestigationRoutes = {
+  get: {
+    all: InvestigationsRoute;
+    single: `${InvestigationsRoute}/${string}`;
+  };
+  post: InvestigationsRoute;
+};
+
 export type UserRoutes = {
   feedback: "/user/feedback";
   passwordReset: "/resetUserPassword";
@@ -38,7 +46,7 @@ export type AccountRoutes = {
 
 export type PrivateServerClientRoutes = {
   account: AccountRoutes;
-  investigations: InvestigationsRoute;
+  investigations: InvestigationRoutes;
   bookmarks: BookmarkRoutes;
 };
 
@@ -63,9 +71,6 @@ type RouteStrings<T> = T extends string
     : never;
 
 export type ValidServerRoute = RouteStrings<ServerClientRoutes>;
-
-// TODO: finish implementing ServerClient facade handlers for all routes
-// CURRENT FINISHED: public: done ✅ private: done ✅
 
 export const serverClientRoutes = {
   public: {
@@ -97,9 +102,18 @@ export const serverClientRoutes = {
     account: {
       delete: "/deleteUser",
     },
-    investigations: "/user/investigations",
+    investigations: {
+      get: {
+        all: "/user/investigations",
+        single: `/user/investigations/`,
+      },
+      post: "/user/investigations",
+    },
     bookmarks: {
-      get: "/user/bookmarks",
+      get: {
+        all: "/user/bookmarks",
+        single: "/user/bookmarks/",
+      },
       post: "/user/bookmarks",
       delete: "/user/bookmarks/",
     },

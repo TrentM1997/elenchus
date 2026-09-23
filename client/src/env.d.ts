@@ -2,7 +2,7 @@
 /// <reference types="astro/client" />
 
 import { Session } from "@supabase/supabase-js";
-import type { Extracts } from "./state/Reducers/Investigate/pov/Review";
+import type { Extracts } from "./state/Reducers/Investigate/research/types";
 import React, { ReactEventHandler, ReactNode, SetStateAction } from "react";
 import { User } from "@supabase/supabase-js";
 import { SigninStatus } from "./hooks/useSignIn";
@@ -14,7 +14,7 @@ import { BlueSkyPosts } from "./state/Reducers/BlueSky/types";
 import { BlueSkyPostSchemaType } from "../../schemas/api/types/BlueSkyPostSchema";
 import { ActiveToast } from "./state/Reducers/RenderingPipelines/PipelineSlice";
 import { BrowsingOptionSchemaType } from "./lib/schemas/articles/BrowsingOptionSchema";
-import { ActiveTab } from "./state/Reducers/Dashboard/UserContent/DashboardTabs";
+import type { DashboardTab } from "./state/Reducers/Dashboard/types";
 
 declare global {
   interface ImportMetaEnv {
@@ -333,12 +333,12 @@ declare global {
     status?: SigninStatus;
   }
 
-  type DashboardOptionName = ActiveTab | "Sign Out";
+  type DashboardOptionName = "Metrics" | "Articles" | "Investigations" | "Manage Account" | "Sign Out";
 
   interface DashboardOption {
     name: DashboardOptionName;
     children: ReactNode;
-    tab: ActiveTab;
+    tab: DashboardTab;
     onSelect: () => void;
     active: boolean;
   }

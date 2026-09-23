@@ -6,10 +6,8 @@ import PriorInvestigation from "../components/InvestigationSaved";
 import InvestigationSkeletons from "../skeletons/InvestigationSkeletons";
 import { useRef, useCallback } from "react";
 import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";
-import { reviewThisResearch } from "@/state/Reducers/Dashboard/UserContent/UserInvestigations";
 import { useSkeletons } from "@/hooks/useSkeletons";
-import { chooseTab } from "@/state/Reducers/Dashboard/UserContent/DashboardTabs";
-import { wait } from "@/lib/helpers/formatting/Presentation";
+import { changeTab } from "@/state/Reducers/Dashboard/DashboardSlice";
 import { InvestigationSchemaType } from "@/lib/schemas/investigations/InvestigationSchema";
 
 interface ResearchScroller {
@@ -18,7 +16,7 @@ interface ResearchScroller {
 
 export default function ResearchScroller({ timeline }: ResearchScroller) {
   const restorePosition = useSelector(
-    (state: RootState) => state.profileNav.researchScrollPosition,
+    (state: RootState) => state.dash.researchScrollPosition,
   );
   const {
     visible,
@@ -34,7 +32,6 @@ export default function ResearchScroller({ timeline }: ResearchScroller) {
     timeline,
     "investigations",
     restorePosition?.status === "ready" ? restorePosition.position : undefined,
-    timeline[0].id,
   );
   const { boxShadow, onScrollHandler } = useScrollWithShadow();
   const dispatch = useDispatch<AppDispatch>();
@@ -44,11 +41,9 @@ export default function ResearchScroller({ timeline }: ResearchScroller) {
   const review = useCallback((investigation: any) => {
     return async () => {
       saveNow();
-      dispatch(reviewThisResearch(investigation));
-      await wait(200);
-      dispatch(chooseTab("Review Investigation"));
+      dispatch(changeTab({ kind: "investigations", display: "review", current: "investigation", investigationId: investigation.id }));
     };
-  }, []);
+  }, [dispatch, saveNow]);
 
   return (
     <div
@@ -71,7 +66,7 @@ export default function ResearchScroller({ timeline }: ResearchScroller) {
           boxShadow: boxShadow,
         }}
         rangeChanged={(r: ListRange) => {
-          topIndexRef.current = r.endIndex;
+          topIndexRef.current = r.startIndex;
           const item = visible[r.startIndex];
           topKeyRef.current = item ? (item as any).id : null;
         }}
@@ -83,7 +78,7 @@ export default function ResearchScroller({ timeline }: ResearchScroller) {
         endReached={loadMore}
         increaseViewportBy={200}
         computeItemKey={(_, investigation) => investigation.id}
-        context={{ fullyLoaded, numSkeletons }}
+        context={{ fullyLoaded: fullyLoaded || visible.length >= timeline.length, numSkeletons: Math.max(0, numSkeletons) }}
         components={{ Footer: InvestigationSkeletons }}
         itemContent={(_, investigation) => {
           return (

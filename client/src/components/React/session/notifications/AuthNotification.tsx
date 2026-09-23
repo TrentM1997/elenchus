@@ -8,7 +8,6 @@ import { createPortal } from "react-dom";
 import { ActiveToast } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 import { createToastMessage } from "@/lib/helpers/toasts/createToastMessage";
 import { assertNever } from "@/lib/helpers/asserts/assertNever";
-import { useHandleDismissToast } from "@/lib/hooks/useHandleDismissToast";
 
 export default function AuthNotification({
   status,
@@ -17,8 +16,6 @@ export default function AuthNotification({
   status: ActiveToast["status"];
   kind: ActiveToast["kind"];
 }) {
-  useHandleDismissToast(status);
-
   const notification: JSX.Element | null = (
     <motion.div
       key="accountCreationNotification"
@@ -48,7 +45,10 @@ function ActiveToastMessage({
   message: string;
 }): React.JSX.Element {
   return (
-    <div key="titleContainer" className="w-auto h-fit">
+    <div
+      key="titleContainer"
+      className="w-auto h-fit text-white tracking-tight"
+    >
       {message}
     </div>
   );

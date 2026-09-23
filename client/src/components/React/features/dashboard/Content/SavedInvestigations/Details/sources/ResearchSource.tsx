@@ -1,18 +1,17 @@
-import { useDispatch } from "react-redux";
-import type { AppDispatch } from "@/state/store";
-import { grabAssociatedArticle } from "@/state/Reducers/Dashboard/UserContent/UserContentReducer";
-import { presentAssociatedArticle } from "@/state/Reducers/Dashboard/UserContent/ProfileNavigationSlice";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "@/state/store";
 import React from "react";
-import { chooseTab } from "@/state/Reducers/Dashboard/UserContent/DashboardTabs";
+import { changeTab } from "@/state/Reducers/Dashboard/DashboardSlice";
 
 
 
 function ResearchSource({ source }) {
     const dispatch = useDispatch<AppDispatch>();
+    const tab = useSelector((s: RootState) => s.dash.tab);
 
     const handleArticleSelection = () => {
-        dispatch(grabAssociatedArticle(source));
-        dispatch(chooseTab('Associated Article'));
+        if (tab.kind !== "investigations" || tab.display !== "review") return;
+        dispatch(changeTab({ kind: "investigations", display: "review", current: "article", investigationId: tab.investigationId, articleId: source.id }));
     };
 
 

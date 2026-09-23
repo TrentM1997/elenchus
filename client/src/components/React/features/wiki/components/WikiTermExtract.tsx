@@ -42,7 +42,6 @@ export default function WikiTermExtract({ article_url }: WikiTerm) {
     >
       <div className="min-w-full max-w-full h-auto relative">
         <WikiModalHeader />
-
         <RenderExtractContents extract={extract} />
         <TermFooter article_url={article_url} />
         <AnimatePresence>

@@ -46,6 +46,13 @@ export const PersistInvestigationInputSchema = Type.Omit(
   ["user_id"],
 );
 
+export const GetInvestigationSchema = Type.Object({
+  user_id: Type.String(),
+  investigation_id: Type.Number(),
+});
+
+export type GetInvestigationSchemaType = Static<typeof GetInvestigationSchema>;
+
 export type PersistInvestigationInputSchemaType = Static<
   typeof PersistInvestigationInputSchema
 >;

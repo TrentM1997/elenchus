@@ -1,4 +1,4 @@
-import { SaveInvestigationState } from "@/state/Reducers/Investigate/research/types";
+import type { SaveInvestigationState } from "@/state/Reducers/Investigate/research/types";
 
 export default function SaveInvestigation({
   status,

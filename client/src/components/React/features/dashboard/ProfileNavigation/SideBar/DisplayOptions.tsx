@@ -5,13 +5,13 @@ import InvestigationsIcon from "@/components/React/global/IconComponents/Investi
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/state/store";
 import React from "react";
-import type { ActiveTab } from "@/state/Reducers/Dashboard/UserContent/DashboardTabs";
-import { chooseTab } from "@/state/Reducers/Dashboard/UserContent/DashboardTabs";
+import type { DashboardTab } from "@/state/Reducers/Dashboard/types";
+import { changeTab } from "@/state/Reducers/Dashboard/DashboardSlice";
 import { isArticlesTab, isInvestigationsTab } from "@/lib/helpers/lookup/isActiveTab";
 
 
 function DisplayOptions() {
-    const tab: ActiveTab = useSelector((s: RootState) => s.dashboard.tab);
+    const tab: DashboardTab = useSelector((s: RootState) => s.dash.tab);
     const dispatch = useDispatch<AppDispatch>();
 
 
@@ -20,15 +20,15 @@ function DisplayOptions() {
             id="dashboard-controls"
             className="space-y-2 font-medium">
 
-            <DashboardOption tab={tab} name="Metrics" active={tab === 'Metrics'} onSelect={() => dispatch(chooseTab('Metrics'))}>
-                <MetricsIcon active={tab === 'Metrics'} />
+            <DashboardOption tab={tab} name="Metrics" active={tab.kind === 'metrics'} onSelect={() => dispatch(changeTab({ kind: "metrics" }))}>
+                <MetricsIcon active={tab.kind === 'metrics'} />
             </DashboardOption>
 
-            <DashboardOption name="Investigations" active={isInvestigationsTab(tab)} tab={tab} onSelect={() => dispatch(chooseTab('Investigations'))}>
+            <DashboardOption name="Investigations" active={isInvestigationsTab(tab)} tab={tab} onSelect={() => dispatch(changeTab({ kind: "investigations", display: "main" }))}>
                 <InvestigationsIcon active={isInvestigationsTab(tab)} />
             </DashboardOption>
 
-            <DashboardOption name="Articles" active={isArticlesTab(tab)} tab={tab} onSelect={() => dispatch(chooseTab('Articles'))}>
+            <DashboardOption name="Articles" active={isArticlesTab(tab)} tab={tab} onSelect={() => dispatch(changeTab({ kind: "articles", display: "main" }))}>
                 <BookmarkIcon active={isArticlesTab(tab)} />
             </DashboardOption>
         </ul>

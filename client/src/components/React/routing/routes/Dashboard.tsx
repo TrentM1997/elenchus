@@ -6,11 +6,7 @@ import Display from "../../features/dashboard/Content/containers/Display";
 import FooterBarLoader from "../../features/dashboard/ProfileNavigation/skeletons/FooterBarSkeleton";
 import SidebarLoader from "../../features/dashboard/ProfileNavigation/skeletons/SidebarSkeleton";
 import DelayedFallback from "../../global/fallbacks/DelayedFallback";
-import {
-  clearResearchScrollPos,
-  clearScrollPosition,
-  presentMetrics,
-} from "@/state/Reducers/Dashboard/UserContent/ProfileNavigationSlice";
+import { resetDashboardNavigation } from "@/state/Reducers/Dashboard/DashboardSlice";
 import { useHydrateDashboard } from "@/lib/hooks/useHydrateDashboard";
 const MobileProfileNav = lazy(
   () => import("../../features/dashboard/ProfileNavigation/mobile/ProfileMenu"),
@@ -26,9 +22,7 @@ export default function Dashboard(): JSX.Element {
 
   useEffect(() => {
     return () => {
-      dispatch(clearScrollPosition());
-      dispatch(clearResearchScrollPos());
-      dispatch(presentMetrics());
+      dispatch(resetDashboardNavigation());
     };
   }, []);
 

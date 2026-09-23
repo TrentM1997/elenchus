@@ -1,58 +1,47 @@
-import { useSelector, useDispatch } from "react-redux"
-import { SourcesFromResearch } from "../Details/sources/SourcesUsed"
-import { RootState } from "@/state/store"
-import { useLayoutEffect } from "react"
-import { getSourcesToReview } from "@/state/Reducers/Dashboard/UserContent/UserInvestigations"
-import DetailsTable from "../Details/DetailsTable"
-import { Terms } from "../Details/wiki/containers/WikipediaTerms"
-import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary"
-import DetailView from "../../../ProfileNavigation/mobile/DetailView"
-import { ScrollUp } from "@/lib/helpers/scroll/ScrollToTop"
-import { chooseTab } from "@/state/Reducers/Dashboard/UserContent/DashboardTabs"
+import { useSelector, useDispatch } from "react-redux";
+import { SourcesFromResearch } from "../Details/sources/SourcesUsed";
+import DetailsTable from "../Details/DetailsTable";
+import { Terms } from "../Details/wiki/containers/WikipediaTerms";
+import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary";
+import DetailView from "../../../ProfileNavigation/mobile/DetailView";
+import { ScrollUp } from "@/lib/helpers/scroll/ScrollToTop";
+import { changeTab } from "@/state/Reducers/Dashboard/DashboardSlice";
+import { useHydrateOpenedInvestigation } from "@/lib/hooks/useHydrateOpenedInvestigaton";
+import { InvestigationSchemaType } from "@/lib/schemas/investigations/InvestigationSchema";
+import { RootState } from "@/state/store";
+import AsyncStateRenderer from "@/components/React/pipelines/AsyncStateRenderer";
 
-export default function ResearchReview() {
-    const investigation = useSelector((state: RootState) => state.userWork.investigationToReview);
-    const sources = investigation ? investigation.sources : null;
-    const savedArticles = useSelector((state: RootState) => state.dash.articles)
-    const dispatch = useDispatch()
-    const cachedSources = JSON.parse(localStorage.getItem('cachedSources'))
+export default function ResearchReview({
+  investigationId,
+}: {
+  investigationId: InvestigationSchemaType["id"];
+}) {
+  useHydrateOpenedInvestigation(investigationId);
+  const investigation = useSelector((s: RootState) => s.dash.openInvestigation);
+  const dispatch = useDispatch();
 
-    useLayoutEffect(() => {
+  const backTo = (): void => {
+    dispatch(changeTab({ kind: "investigations", display: "main" }));
+    ScrollUp();
+  };
 
-        const sourceSet = new Set<string>(Array.isArray(sources) ? sources : []);
-        const retrieved = savedArticles.status === "ready"
-            ? savedArticles.data.filter(article => sourceSet.has(article.article_url))
-            : null;
-        if (retrieved) {
-            dispatch(getSourcesToReview(retrieved))
-        }
-
-        if (!sources && cachedSources) {
-            dispatch(getSourcesToReview(cachedSources))
-        }
-    }, [investigation, savedArticles, dispatch]);
-
-
-    const backTo = (): void => {
-        dispatch(chooseTab('Investigations'))
-        ScrollUp();
-    };
-
-
-    return (
-        <section
-            className="h-full min-h-dvh w-full opacity-0
-          animate-fade-blur animation-delay-200ms">
-            <DetailView backTo={backTo} />
-            {investigation && <div className="w-full h-full pb-20 overscroll-contain overflow-y-scroll no-scrollbar grow flex flex-col gap-y-24 items-center justify-start">
-                <ErrorBoundary>
-                    <DetailsTable />
-                    <SourcesFromResearch />
-                    <Terms />
-                </ErrorBoundary>
-            </div>}
-
-
-        </section>
-    )
-};
+  return (
+    <section
+      className="h-full min-h-dvh w-full opacity-0
+          animate-fade-blur animation-delay-200ms"
+    >
+      <DetailView backTo={backTo} />
+      <AsyncStateRenderer state={investigation}>
+        {(state) => (
+          <div className="w-full h-full pb-20 overscroll-contain overflow-y-scroll no-scrollbar grow flex flex-col gap-y-24 items-center justify-start">
+            <ErrorBoundary>
+              <DetailsTable investigation={state} />
+              <SourcesFromResearch />
+              <Terms research={state} />
+            </ErrorBoundary>
+          </div>
+        )}
+      </AsyncStateRenderer>
+    </section>
+  );
+}

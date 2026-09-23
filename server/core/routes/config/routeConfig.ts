@@ -2,9 +2,18 @@ export type PrivateAPIRoutes = {
   account: {
     delete: "/deleteUser";
   };
-  investigations: "/user/investigations";
+  investigations: {
+    get: {
+      all: "/user/investigations";
+      single: "/user/investigations/:investigationId";
+    };
+    post: "/user/investigations";
+  };
   bookmarks: {
-    get: "/user/bookmarks";
+    get: {
+      all: "/user/bookmarks";
+      single: "/user/bookmarks/:articleId";
+    };
     post: "/user/bookmarks";
     delete: "/user/bookmarks/:articleId";
   };
@@ -64,9 +73,18 @@ export const PRIVATE_API_ROUTES = {
   account: {
     delete: "/deleteUser",
   },
-  investigations: "/user/investigations",
+  investigations: {
+    get: {
+      all: "/user/investigations",
+      single: "/user/investigations/:investigationId",
+    },
+    post: "/user/investigations",
+  },
   bookmarks: {
-    get: "/user/bookmarks",
+    get: {
+      all: "/user/bookmarks",
+      single: "/user/bookmarks/:articleId",
+    },
     post: "/user/bookmarks",
     delete: "/user/bookmarks/:articleId",
   },
