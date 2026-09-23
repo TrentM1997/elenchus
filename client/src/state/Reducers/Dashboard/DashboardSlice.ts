@@ -9,7 +9,7 @@ import { InvestigationSchemaType } from "@/lib/schemas/investigations/Investigat
 import { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
 import { DashboardTab, OpenInvestigation, VirtuosoScrollPos } from "./types";
 
-type SavedArticles = AsyncState<ArticleSchemaType[]>;
+export type SavedArticles = AsyncState<ArticleSchemaType[]>;
 
 type SavedInvestigations = AsyncState<InvestigationSchemaType[]>;
 
