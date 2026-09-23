@@ -139,6 +139,7 @@ const ResearchSlice = createSlice({
 });
 
 export const {
+  updateResearchPersistence,
   startReflection,
   completeResearch,
   updateReflection,
@@ -148,7 +149,6 @@ export const {
   updateFraming,
   updateResearchExtracts,
   updateResearchSources,
-  updateResearchPersistence,
   endInvestigation,
 } = ResearchSlice.actions;
 

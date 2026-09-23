@@ -2,14 +2,14 @@ import { useSelector, useDispatch } from "react-redux"
 import { RootState } from "@/state/store";
 import { createPortal } from "react-dom";
 import React from "react";
-import { chooseTab } from "@/state/Reducers/Dashboard/UserContent/DashboardTabs";
-import type { ActiveTab } from "@/state/Reducers/Dashboard/UserContent/DashboardTabs";
+import { changeTab } from "@/state/Reducers/Dashboard/DashboardSlice";
+import type { DashboardTab } from "@/state/Reducers/Dashboard/types";
 import { isArticlesTab, isInvestigationsTab } from "@/lib/helpers/lookup/isActiveTab";
 
 function MobileProfileNav() {
-  const tab: ActiveTab = useSelector((s: RootState) => s.dashboard.tab);
+  const tab: DashboardTab = useSelector((s: RootState) => s.dash.tab);
   const dispatch = useDispatch();
-  const hideProfileNav = ((tab === 'Associated Article') || (tab === 'Review Article') || (tab === 'Review Investigation'));
+  const hideProfileNav = "display" in tab && tab.display === "review";
 
 
   const mobileDashboardNav = (
@@ -20,11 +20,11 @@ function MobileProfileNav() {
       <div className="w-full h-auto mx-auto flex items-center justify-between">
         <button
           onClick={() => {
-            dispatch(chooseTab('Metrics'))
+            dispatch(changeTab({ kind: "metrics" }))
           }}
           type="button" className="inline-flex flex-col items-center justify-center group">
           <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
-            className={`${(tab === 'Metrics') ? 'text-blue-500' : 'text-zinc-400'} transition-all duration-200 ease-in-out icon icon-tabler icons-tabler-outline icon-tabler-layout-board`}><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" /><path d="M4 9h8" /><path d="M12 15h8" /><path d="M12 4v16" /></svg>
+            className={`${(tab.kind === 'metrics') ? 'text-blue-500' : 'text-zinc-400'} transition-all duration-200 ease-in-out icon icon-tabler icons-tabler-outline icon-tabler-layout-board`}><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" /><path d="M4 9h8" /><path d="M12 15h8" /><path d="M12 4v16" /></svg>
 
 
           <span className={`text-xs text-zinc-400
@@ -32,7 +32,7 @@ function MobileProfileNav() {
         </button>
         <button
           onClick={() => {
-            dispatch(chooseTab('Investigations'))
+            dispatch(changeTab({ kind: "investigations", display: "main" }))
           }}
           type="button" className="inline-flex flex-col items-center justify-center group">
           <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
@@ -44,7 +44,7 @@ function MobileProfileNav() {
         </button>
         <button
           onClick={() => {
-            dispatch(chooseTab('Articles'))
+            dispatch(changeTab({ kind: "articles", display: "main" }))
           }}
           type="button" className="inline-flex flex-col items-center justify-center group">
           <svg className={`w-5 h-5 mb-2 text-xs transition-all duration-200 ease-in-out
@@ -57,11 +57,11 @@ function MobileProfileNav() {
         </button>
         <button
           onClick={() => {
-            dispatch(chooseTab('Manage Account'))
+            dispatch(changeTab({ kind: "manage account" }))
           }}
           type="button" className="inline-flex flex-col items-center justify-center group">
           <svg className={`w-5 h-5 mb-2 text-xs transition-all duration-200 ease-in-out
-        ${(tab === 'Manage Account') ? 'text-blue-500' : 'text-zinc-400'}
+        ${(tab.kind === 'manage account') ? 'text-blue-500' : 'text-zinc-400'}
         `} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 12.25V1m0 11.25a2.25 2.25 0 0 0 0 4.5m0-4.5a2.25 2.25 0 0 1 0 4.5M4 19v-2.25m6-13.5V1m0 2.25a2.25 2.25 0 0 0 0 4.5m0-4.5a2.25 2.25 0 0 1 0 4.5M10 19V7.75m6 4.5V1m0 11.25a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM16 19v-2" />
           </svg>

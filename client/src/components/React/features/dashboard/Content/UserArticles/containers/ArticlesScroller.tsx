@@ -8,9 +8,7 @@ import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";
 import type { CSSProperties } from "react";
 import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary";
 import type { AppDispatch } from "@/state/store";
-import { readSavedArticle } from "@/state/Reducers/Dashboard/UserContent/UserContentReducer";
-import { chooseTab } from "@/state/Reducers/Dashboard/UserContent/DashboardTabs";
-import { wait } from "@/lib/helpers/formatting/Presentation";
+import { changeTab } from "@/state/Reducers/Dashboard/DashboardSlice";
 import { useHandleBookmark } from "@/hooks/dashboard/useBookmarkSavedArticles";
 import ArticleSurface from "../components/ArticleSurface";
 import { stylesWithShadow } from "@/lib/helpers/scroll/stylesWithShadow";
@@ -23,8 +21,15 @@ export default function ArticlesScroller({
 }: ArticleScroller): JSX.Element | null {
   const virutuosoRef = useRef(null);
   const {
-    visible, loadMore, topKeyRef, topIndexRef, saveNow, scrollRef,
-    fullyLoaded, numSkeletons,
+    visible,
+    loadMore,
+    topKeyRef,
+    topIndexRef,
+    saveNow,
+    scrollRef,
+    fullyLoaded,
+    numSkeletons,
+    initialTopMostItemIndex,
   } = useVirtuoso(articles, "articles", restorePosition);
   const { fastScroll, clockScrollSpeed } = useSkeletons(200);
   const { boxShadow, onScrollHandler } = useScrollWithShadow();
@@ -37,10 +42,14 @@ export default function ArticlesScroller({
   const handleArticleSelection = useCallback(
     (article: ArticleSchemaType) => {
       return async () => {
-        dispatch(readSavedArticle(article));
-        dispatch(chooseTab("Review Article"));
-        await wait(200);
         saveNow();
+        dispatch(
+          changeTab({
+            kind: "articles",
+            display: "review",
+            articleId: article.id,
+          }),
+        );
       };
     },
     [dispatch, saveNow],
@@ -54,6 +63,7 @@ export default function ArticlesScroller({
       <ErrorBoundary>
         <Virtuoso
           ref={virutuosoRef}
+          initialTopMostItemIndex={initialTopMostItemIndex ?? undefined}
           scrollerRef={(el) => {
             scrollRef.current = el;
           }}
@@ -84,7 +94,7 @@ export default function ArticlesScroller({
           increaseViewportBy={200}
           isScrolling={clockScrollSpeed}
           rangeChanged={(r: ListRange) => {
-            topIndexRef.current = r.endIndex;
+            topIndexRef.current = r.startIndex;
             const item = visible[r.startIndex];
             topKeyRef.current = item ? (item as any).id : null;
           }}

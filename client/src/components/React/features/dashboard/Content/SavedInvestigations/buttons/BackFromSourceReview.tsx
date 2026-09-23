@@ -1,14 +1,15 @@
-import { useDispatch } from "react-redux"
-import { presentThisInvestigation } from "@/state/Reducers/Dashboard/UserContent/ProfileNavigationSlice";
-import { AppDispatch } from "@/state/store";
+import { useDispatch, useSelector } from "react-redux"
+import { changeTab } from "@/state/Reducers/Dashboard/DashboardSlice";
+import { AppDispatch, RootState } from "@/state/store";
 
 
 export default function BackFromSourceReview() {
     const dispatch = useDispatch<AppDispatch>();
+    const tab = useSelector((s: RootState) => s.dash.tab);
 
 
     return (
-        <button onClick={() => { dispatch(presentThisInvestigation()) }} className="absolute z-50 md:z-1 top-2 left-0 md:left-52 2xl:left-6 md:top-96 sm:left-12 xs:w-14 xs:h-8
+        <button onClick={() => { if (tab.kind === "investigations" && tab.display === "review") dispatch(changeTab({ kind: "investigations", display: "review", current: "investigation", investigationId: tab.investigationId })) }} className="absolute z-50 md:z-1 top-2 left-0 md:left-52 2xl:left-6 md:top-96 sm:left-12 xs:w-14 xs:h-8
         lg:w-16 lg:h-auto p-2 transition-all mx-auto flex
         duration-200 ease-in-out hover:bg-white/10 items-center group
         rounded-4xl">

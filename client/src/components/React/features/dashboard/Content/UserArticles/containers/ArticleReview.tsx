@@ -1,21 +1,24 @@
-import { AppDispatch, RootState } from "@/state/store";
-import { useDispatch, useSelector } from "react-redux";
-import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary";
+import { RootState } from "@/state/store";
+import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import { variants } from "@/motion/variants";
 import DetailView from "../../../ProfileNavigation/mobile/DetailView";
-import { chooseTab } from "@/state/Reducers/Dashboard/UserContent/DashboardTabs";
-import RenderSavedArticle from "./RenderSavedArticle";
+import AsyncStateRenderer from "@/components/React/pipelines/AsyncStateRenderer";
+import { Suspense } from "react";
+import ArticleLoader from "@/components/React/global/Articles/loaders/ArticleLoader";
+import Article from "@/components/React/global/Articles/SuccessFull/containers/Article";
+import { useHydrateOpenedArticle } from "@/lib/hooks/useHydrateOpenedArticle";
+import { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
 
-export default function ArticleReview() {
-  const article = useSelector(
-    (state: RootState) => state.userdata.ArticleToReview,
-  );
-  const dispatch = useDispatch<AppDispatch>();
-
-  const backTo = () => {
-    dispatch(chooseTab("Articles"));
-  };
+export default function ArticleReview({
+  articleId,
+  backTo,
+}: {
+  articleId: ArticleSchemaType["id"];
+  backTo: () => void;
+}) {
+  useHydrateOpenedArticle(articleId);
+  const article = useSelector((s: RootState) => s.dash.ArticleToReview);
 
   return (
     <motion.section
@@ -35,9 +38,13 @@ export default function ArticleReview() {
                  xl:px-24
                  "
       >
-        <ErrorBoundary>
-          <RenderSavedArticle state={article} />
-        </ErrorBoundary>
+        <AsyncStateRenderer state={article}>
+          {(state) => (
+            <Suspense fallback={<ArticleLoader />}>
+              <Article investigating={false} articleData={state} />
+            </Suspense>
+          )}
+        </AsyncStateRenderer>
       </main>
     </motion.section>
   );

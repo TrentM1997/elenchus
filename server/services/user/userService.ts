@@ -1,5 +1,5 @@
 import { IDbClient } from "../../db/access/client/dbClient.js";
-import { IAuthorization } from "../auth/authorization.js";
+import { AuthenticatedUserId, IAuthorization } from "../auth/authorization.js";
 import { ArticleSchemaType } from "../../schemas/ArticleSchema.js";
 import { LoginSchema } from "../../schemas/LoginSchema.js";
 import {
@@ -25,6 +25,10 @@ type BookmarkOperation = {
 };
 
 export interface IUserService {
+  articleById(params: {
+    user_id: string | null | undefined;
+    article_id: ArticleSchemaType["id"];
+  }): Promise<DbResult<ArticleSchemaType>>;
   changePassword(credentials: {
     email: string;
     password: string;
@@ -53,6 +57,13 @@ export class UserService implements IUserService {
     >,
     private readonly policy: IAuthorization,
   ) {}
+
+  public async articleById(params: {
+    user_id: string | null | undefined;
+    article_id: ArticleSchemaType["id"];
+  }): Promise<DbResult<ArticleSchemaType>> {
+    return await this.executeArticleById(params);
+  }
 
   public async changePassword(credentials: {
     email: string;
@@ -89,6 +100,22 @@ export class UserService implements IUserService {
     credentials: LoginSchema,
   ): Promise<AccountDeletionResult> {
     return await this.executeDeleteAccount(user_id, credentials);
+  }
+
+  private async executeArticleById(params: {
+    user_id: string | null | undefined;
+    article_id: ArticleSchemaType["id"];
+  }): Promise<DbResult<ArticleSchemaType>> {
+    const userId = this.policy.requireAuthenticated(params.user_id);
+    const bookmark = await this.db.bookmarks.getById(userId, params.article_id);
+    if (bookmark.ok === false) {
+      return bookmark;
+    }
+    return await this.fromArticleId(bookmark.data.article_id);
+  }
+
+  private async fromArticleId(article_id: BookmarkSchemaType["article_id"]) {
+    return await this.db.articles.byId(article_id);
   }
 
   private async executeDeleteAccount(

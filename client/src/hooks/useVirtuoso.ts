@@ -1,8 +1,8 @@
 import {
   storeResearchScrollPosition,
   storeScrollPosition,
-  VirtuosoScrollPos,
-} from "@/state/Reducers/Dashboard/UserContent/ProfileNavigationSlice";
+} from "@/state/Reducers/Dashboard/DashboardSlice";
+import type { VirtuosoScrollPos } from "@/state/Reducers/Dashboard/types";
 import { AppDispatch } from "@/state/store";
 import { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { useDispatch } from "react-redux";
@@ -84,8 +84,8 @@ export function useVirtuoso<T>(
     return Math.max(8, restoreInfo.targetIndex + buffer + 1);
   });
   const initialTopMostItemIndex = restoreInfo
-    ? restoreInfo?.targetIndex + 1
-    : null;
+    ? restoreInfo.targetIndex
+    : 0;
   const [fullyLoaded, setFullyLoaded] = useState<boolean>(false);
   const timeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pendingTimeoutRef = useRef<boolean>(false);

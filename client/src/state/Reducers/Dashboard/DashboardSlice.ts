@@ -1,8 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AsyncState } from "@/state/types";
-import { hydrateDashboard } from "./thunks";
+import {
+  hydrateDashboard,
+  hydrateOpenedArticle,
+  hydrateOpenInvestigation,
+} from "./thunks";
 import { InvestigationSchemaType } from "@/lib/schemas/investigations/InvestigationSchema";
 import { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
+import { DashboardTab, OpenInvestigation, VirtuosoScrollPos } from "./types";
 
 type SavedArticles = AsyncState<ArticleSchemaType[]>;
 
@@ -21,6 +26,10 @@ interface InitialState {
   investigations: SavedInvestigations;
   ArticleToReview: OpenedArticle;
   metrics: ResearchMetrics;
+  tab: DashboardTab;
+  articleScrollPosition: VirtuosoScrollPos;
+  researchScrollPosition: VirtuosoScrollPos;
+  openInvestigation: OpenInvestigation;
 }
 
 const initialState: InitialState = {
@@ -32,17 +41,32 @@ const initialState: InitialState = {
     outcomes: { status: "initial" },
   },
   ArticleToReview: { status: "initial" },
+  openInvestigation: { status: "initial" },
+  tab: { kind: "metrics" },
+  articleScrollPosition: { status: "initial" },
+  researchScrollPosition: { status: "initial" },
 };
 
 const DashboardSlice = createSlice({
   name: "dashboard",
   initialState: initialState,
   reducers: {
-    populateArticles: (state, action) => {
-      state.articles = action.payload.articles;
+    storeScrollPosition: (state, action: PayloadAction<VirtuosoScrollPos>) => {
+      state.articleScrollPosition = action.payload;
     },
-    readSavedArticle: (state, action) => {
-      state.ArticleToReview = action.payload;
+    storeResearchScrollPosition: (
+      state,
+      action: PayloadAction<VirtuosoScrollPos>,
+    ) => {
+      state.researchScrollPosition = action.payload;
+    },
+    resetDashboardNavigation: (state) => {
+      state.tab = { kind: "metrics" };
+      state.articleScrollPosition = { status: "initial" };
+      state.researchScrollPosition = { status: "initial" };
+    },
+    changeTab: (state: InitialState, action: PayloadAction<DashboardTab>) => {
+      state.tab = action.payload;
     },
     getIntegrityMetrics: (
       state: InitialState,
@@ -67,6 +91,22 @@ const DashboardSlice = createSlice({
       action: PayloadAction<ResearchMetrics["outcomes"]>,
     ) => {
       state.metrics.outcomes = action.payload;
+    },
+    openSavedArticle: (
+      state: InitialState,
+      action: PayloadAction<ArticleSchemaType["id"]>,
+    ) => {
+      state.tab = {
+        kind: "articles",
+        display: "review",
+        articleId: action.payload,
+      };
+    },
+    clearOpenedArticle: (state: InitialState) => {
+      state.ArticleToReview = { status: "initial" };
+    },
+    clearOpenedInvestigation: (state: InitialState) => {
+      state.openInvestigation = { status: "initial" };
     },
     clearDashboardSlice: () => initialState,
   },
@@ -106,16 +146,54 @@ const DashboardSlice = createSlice({
         }
       }
     });
+
+    builder.addCase(hydrateOpenInvestigation.pending, (state) => {
+      state.openInvestigation = { status: "pending" };
+    });
+
+    builder.addCase(hydrateOpenInvestigation.rejected, (state, action) => {
+      if (action.meta.aborted) return;
+      state.openInvestigation = {
+        status: "failed",
+        details: "Failed to hydrate investigation",
+      };
+    });
+
+    builder.addCase(hydrateOpenInvestigation.fulfilled, (state, action) => {
+      const investigation = action.payload.data;
+      state.openInvestigation = { status: "ready", data: investigation };
+    });
+
+    builder.addCase(hydrateOpenedArticle.pending, (state) => {
+      state.ArticleToReview = { status: "pending" };
+    });
+
+    builder.addCase(hydrateOpenedArticle.rejected, (state, action) => {
+      if (action.meta.aborted) return;
+      state.ArticleToReview = {
+        status: "failed",
+        details: "Failed to hydrate article",
+      };
+    });
+    builder.addCase(hydrateOpenedArticle.fulfilled, (state, action) => {
+      const article = action.payload.data;
+      state.ArticleToReview = { status: "ready", data: article };
+    });
   },
 });
 
 export const {
-  readSavedArticle,
-  populateArticles,
+  storeScrollPosition,
+  storeResearchScrollPosition,
+  resetDashboardNavigation,
   getOutcomesBreakdown,
   clearDashboardSlice,
   getBiasMetrics,
   getMetrics,
+  changeTab,
+  openSavedArticle,
+  clearOpenedArticle,
+  clearOpenedInvestigation,
 } = DashboardSlice.actions;
 
 export default DashboardSlice.reducer;

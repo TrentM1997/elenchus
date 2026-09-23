@@ -6,7 +6,6 @@ import {
   DeleteBookmarkResponseSchemaType,
 } from "@/lib/schemas/articles/BookmarkSchema";
 import { IHttpClient } from "@/lib/services/client/http/types";
-import { InvestigationSchemaType } from "../../../../../../../schemas/api/types/InvestigationSchema";
 import {
   InvestigationSaveResponse,
   InvestigationSaveResponseType,
@@ -44,7 +43,7 @@ export class PrivateUserWritesHandler implements IPrivateUserWritesHandler {
     investigation: PersistInvestigationInputSchemaType,
   ): Promise<InvestigationSaveResponseType> {
     return await this.http.post(
-      this.routes.investigations,
+      this.routes.investigations.post,
       InvestigationSaveResponse,
       investigation,
     );

@@ -10,12 +10,12 @@ export const useHandleDismissToast = (status: ActiveToast["status"]) => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    if (status === "success" || status === "failed") {
-      const timer = window.setTimeout(() => {
-        dispatch(renderToast({ status: "idle", kind: null }));
-      }, 2000);
+    if (status !== "success" && status !== "failed") return;
 
-      return () => clearTimeout(timer);
-    }
+    const executeDismissToast = window.setTimeout(() => {
+      dispatch(renderToast({ status: "idle", kind: null }));
+    }, 2000);
+
+    return () => clearTimeout(executeDismissToast);
   }, [status, dispatch]);
 };

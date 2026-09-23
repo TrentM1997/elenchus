@@ -1,5 +1,5 @@
 import { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
-import { VirtuosoScrollPos } from "@/state/Reducers/Dashboard/UserContent/ProfileNavigationSlice";
+import { VirtuosoScrollPos } from "@/state/Reducers/Dashboard/types";
 
 export interface ArticleScroller {
   articles: ArticleSchemaType[];

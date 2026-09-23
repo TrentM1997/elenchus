@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux"
-import { presentArticles } from "@/state/Reducers/Dashboard/UserContent/ProfileNavigationSlice";
+import { changeTab } from "@/state/Reducers/Dashboard/DashboardSlice";
 import { AppDispatch } from "@/state/store";
 
 
@@ -8,7 +8,7 @@ export default function BackToSavedArticles() {
 
 
     return (
-        <button onClick={() => { dispatch(presentArticles()) }}
+        <button onClick={() => { dispatch(changeTab({ kind: "articles", display: "main" })) }}
             className="absolute z-50 md:z-1 top-2 left-0 md:left-12 lg:left-16 xl:left-24 2xl:left-6 md:top-96 sm:left-12 xs:w-14 xs:h-8
         lg:w-16 lg:h-auto p-2 transition-all mx-auto flex
         duration-200 ease-in-out hover:bg-white/10 items-center group

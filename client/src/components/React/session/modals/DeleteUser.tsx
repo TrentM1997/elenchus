@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import Lottie from "lottie-react";
 import blueCheck from "@/lotties/blueCheck.json";
 import Loader from "../../global/Loaders/Loader";
-import { presentDeleteModal } from "@/state/Reducers/Dashboard/UserContent/ProfileNavigationSlice";
 import { useNavigate } from "react-router-dom";
 import { clearAuthSlice } from "@/state/Reducers/Athentication/Authentication";
 import {
@@ -25,7 +24,7 @@ export default function DeleteUserAccount({}) {
 
   const removeModal = () => {
     const timer = setTimeout(() => {
-      dispatch(presentDeleteModal(false));
+      dispatch(renderModal(null));
       navigate("/");
     }, 500);
 
