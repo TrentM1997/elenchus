@@ -8,7 +8,7 @@ import { Suspense } from "react";
 import ArticleLoader from "@/components/React/global/Articles/loaders/ArticleLoader";
 import Article from "@/components/React/global/Articles/SuccessFull/containers/Article";
 import { useHydrateOpenedArticle } from "@/lib/hooks/useHydrateOpenedArticle";
-import { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
+import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 
 export default function ArticleReview({
   articleId,

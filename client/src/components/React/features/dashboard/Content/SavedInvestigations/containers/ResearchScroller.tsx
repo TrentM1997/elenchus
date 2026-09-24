@@ -8,7 +8,7 @@ import { useRef, useCallback } from "react";
 import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";
 import { useSkeletons } from "@/hooks/useSkeletons";
 import { changeTab } from "@/state/Reducers/Dashboard/DashboardSlice";
-import { InvestigationSchemaType } from "@/lib/schemas/investigations/InvestigationSchema";
+import { InvestigationSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 
 interface ResearchScroller {
   timeline: InvestigationSchemaType[];

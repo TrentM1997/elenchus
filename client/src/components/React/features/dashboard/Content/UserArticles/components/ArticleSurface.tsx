@@ -2,7 +2,7 @@ import { BookmarkStates } from "@/hooks/dashboard/useBookmarkSavedArticles";
 import ArticleSaved from "./ArticleSaved";
 import ArticleThumbnail from "./ArticleThumbnail";
 import Title from "./Title";
-import { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
+import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 
 interface ArticleSurface {
   article: ArticleSchemaType;

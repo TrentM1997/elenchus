@@ -10,7 +10,7 @@ import { useCallback } from "react";
 import { softEase, variants } from "@/motion/variants";
 import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 import { wait } from "@/lib/helpers/formatting/Presentation";
-import { BlueSkyPostSchemaType } from "../../../../../../../schemas/api/types/BlueSkyPostSchema";
+import { BlueSkyPostSchemaType } from "@elenchus/contracts/schemas/integrations/BlueSkySchemas";
 
 export default function Scroller({
   posts,

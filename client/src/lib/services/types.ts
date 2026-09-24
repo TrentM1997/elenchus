@@ -1,6 +1,8 @@
 import { JobStatus, Prog } from "@/state/Reducers/Investigate/articles/types";
-import { ArticleSchemaType } from "../../../../schemas/api/types/ArticlesSchema";
-import { ExtractionJobResultSchemaType } from "../schemas/articles/ArticleSchema";
+import {
+  ArticleSchemaType,
+  ExtractionJobResultSchemaType,
+} from "@elenchus/contracts/schemas/articles/ArticleSchema";
 
 export interface FailedAttempt {
   title: string;

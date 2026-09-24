@@ -1,6 +1,6 @@
 import { IDbClient } from "../../db/access/client/dbClient.js";
 import { AuthenticatedUserId, IAuthorization } from "../auth/authorization.js";
-import { ArticleSchemaType } from "../../schemas/ArticleSchema.js";
+import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import { LoginSchema } from "../../schemas/LoginSchema.js";
 import {
   CreateUserResult,
@@ -12,10 +12,10 @@ import {
   BookmarkResponse,
 } from "../../db/access/repositories/bookmarks/bookmarksRepository.js";
 import { ServerError } from "../../core/errors/ServerError.js";
-import { BookmarkSchemaType } from "../../schemas/BookmarkSchema.js";
+import { BookmarkSchemaType } from "@elenchus/contracts/schemas/articles/BookmarkSchema";
 import { FeedbackReqSchemaType } from "../../schemas/FeedbackReqSchema.js";
 import { FeedbackSubmitResult } from "../../db/access/repositories/feedback/feedbackRespository.js";
-import { ResetPasswordResponseSchemaType } from "../../schemas/ChangePasswordSchema.ts";
+import { ResetPasswordResponseSchemaType } from "@elenchus/contracts/schemas/auth/ResetPasswordSchema";
 import { DbResult } from "../../db/types/types.ts";
 import { ArticlesFromBookmarks } from "../../db/access/repositories/articles/articlesRepository.ts";
 

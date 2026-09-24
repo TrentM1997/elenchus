@@ -1,6 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "../../../../types/databaseInterfaces.js";
-import type { BiasSchemaType } from "../../../../schemas/BiasSchema.js";
+import type { BiasSchemaType } from "@elenchus/contracts/schemas/articles/BiasSchema";
 import type { FcParam } from "../../../../types/types.js";
 
 interface NormalizedRatings {

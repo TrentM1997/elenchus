@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ArticleType } from "@/env";
 import { AsyncState } from "@/state/types";
 import { searchNewsApi } from "./thunks";
-import { SearchResultsResponseSchemaType } from "@/lib/schemas/articles/BrowsingOptionSchema";
+import { SearchResultsResponseSchemaType } from "@elenchus/contracts/schemas/articles/BrowsingOptionSchema";
 
 export type SearchResultsState = AsyncState<SearchResultsResponseSchemaType>;
 

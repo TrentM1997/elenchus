@@ -8,7 +8,7 @@ import {
 import type { ModalStages } from "@/state/Reducers/Investigate/wiki/WikiSlice";
 import { modalStages } from "@/state/Reducers/Investigate/wiki/WikiSlice";
 import { wait } from "@/lib/helpers/formatting/Presentation";
-import { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
+import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 
 export default function StoryPaginate({
   articles,

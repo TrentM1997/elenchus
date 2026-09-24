@@ -6,13 +6,13 @@ import type { Extracts } from "./state/Reducers/Investigate/research/types";
 import React, { ReactEventHandler, ReactNode, SetStateAction } from "react";
 import { User } from "@supabase/supabase-js";
 import { SigninStatus } from "./hooks/useSignIn";
-import { FactualReportingRatingSchemaType } from "../../schemas/api/types/ArticlesSchema";
+import { FactualReportingRatingSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import { BlueSkyPosts } from "./state/Reducers/BlueSky/types";
-import { BlueSkyPostSchemaType } from "../../schemas/api/types/BlueSkyPostSchema";
+import { BlueSkyPostSchemaType } from "@elenchus/contracts/schemas/integrations/BlueSkySchemas";
 import { ActiveToast } from "./state/Reducers/RenderingPipelines/PipelineSlice";
-import { BrowsingOptionSchemaType } from "./lib/schemas/articles/BrowsingOptionSchema";
+import { BrowsingOptionSchemaType } from "@elenchus/contracts/schemas/articles/BrowsingOptionSchema";
 import type { DashboardTab } from "./state/Reducers/Dashboard/types";
-import type { ArticleSchemaType } from "./lib/schemas/articles/ArticleSchema";
+import type { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 
 declare global {
   interface ImportMetaEnv {

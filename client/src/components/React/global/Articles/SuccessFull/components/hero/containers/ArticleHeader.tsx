@@ -7,7 +7,7 @@ import ArticleMetaData from "./ArticleMetaData";
 import ArticleImage from "../ArticleImage";
 import ArticleTitle from "../ArticleTitle";
 import PublishedBy from "../PublishedBy";
-import type { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
+import type { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 
 interface ArticleHeaderProps {
   articleData: ArticleSchemaType;

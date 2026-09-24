@@ -1,7 +1,5 @@
-import {
-  ArticleSchemaType,
-  InsertableArticleSchemaType,
-} from "../../../schemas/ArticleSchema.js";
+import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import { InsertableArticleSchemaType } from "../../../schemas/ArticleSchema.js";
 import {
   Article,
   Bias,

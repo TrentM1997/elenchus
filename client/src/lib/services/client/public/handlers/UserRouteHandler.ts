@@ -1,12 +1,10 @@
-import { PublicServerClientRoutes } from "@/infra/transport/types/routeDefinitions";
+import type { PublicApiContract } from "@elenchus/contracts";
 import {
-  FeedbackResponseSchema,
   FeedbackResponseSchemaType,
-} from "@/lib/schemas/auth/FeedbackSchema";
+} from "@elenchus/contracts/schemas/auth/FeedbackSchema";
 import {
-  ResetPasswordResponseSchema,
   ResetPasswordResponseSchemaType,
-} from "@/lib/schemas/auth/AuthSchemas";
+} from "@elenchus/contracts/schemas/auth/AuthSchemas";
 import { IHttpClient } from "../../http/types";
 
 type FeedbackInputType = {
@@ -23,27 +21,31 @@ export interface IUserRouteHandler {
 
 export class UserRouteHandler implements IUserRouteHandler {
   constructor(
-    private readonly routes: Pick<PublicServerClientRoutes, "user">,
-    private readonly http: Pick<IHttpClient, "post" | "get">,
+    private readonly routes: Pick<PublicApiContract, "user">,
+    private readonly http: Pick<IHttpClient, "request">,
   ) {}
 
   public async resetPassword(
     email: string,
   ): Promise<ResetPasswordResponseSchemaType> {
-    return await this.http.post(
-      this.routes.user.passwordReset,
-      ResetPasswordResponseSchema,
-      email,
+    const route = this.routes.user.passwordReset;
+
+    return await this.http.request(
+      route,
+      route.path,
+      { body: { email } },
     );
   }
 
   public async submitFeedback(
     feedback: FeedbackInputType,
   ): Promise<FeedbackResponseSchemaType> {
-    return await this.http.post(
-      this.routes.user.feedback,
-      FeedbackResponseSchema,
-      feedback,
+    const route = this.routes.user.feedback;
+
+    return await this.http.request(
+      route,
+      route.path,
+      { body: { feedback } },
     );
   }
 }

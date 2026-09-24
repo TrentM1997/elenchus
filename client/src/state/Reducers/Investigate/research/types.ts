@@ -1,7 +1,7 @@
 import {
   InvestigationSaveResponseType,
   PersistInvestigationInputSchemaType,
-} from "@/lib/schemas/investigations/InvestigationSchema";
+} from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import { WikiDisambigCandidate } from "@/lib/services/wiki/wiki";
 import { AsyncState } from "@/state/types";
 

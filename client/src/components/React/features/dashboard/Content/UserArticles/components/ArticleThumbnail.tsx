@@ -3,7 +3,7 @@ import React from "react";
 import SavedArticleThumbnail from "./SavedArticleThumbnail";
 import ThumbnailSwap from "./ThumbnailSwap";
 import { BookmarkState } from "@/hooks/dashboard/useBookmarkSavedArticles";
-import { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
+import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 
 interface SavedThumbnail {
   article: ArticleSchemaType;

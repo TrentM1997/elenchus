@@ -1,4 +1,4 @@
-import { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
+import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import { VirtuosoScrollPos } from "@/state/Reducers/Dashboard/types";
 
 export interface ArticleScroller {

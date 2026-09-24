@@ -1,4 +1,4 @@
-import { ArticleSchemaType } from "../schemas/articles/ArticleSchema";
+import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/state/store";
 import { useEffect } from "react";

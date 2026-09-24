@@ -1,5 +1,5 @@
-import { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
-import { InvestigationSchemaType } from "@/lib/schemas/investigations/InvestigationSchema";
+import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import { InvestigationSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import type { DashboardTab } from "@/state/Reducers/Dashboard/types";
 import ArticleReview from "@/components/React/features/dashboard/Content/UserArticles/containers/ArticleReview";
 import ResearchReview from "@/components/React/features/dashboard/Content/SavedInvestigations/containers/ResearchReview";

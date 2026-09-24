@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/state/store";
-import { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
+import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import { saveThisArticle } from "@/state/Reducers/Investigate/articles/thunks";
 
 interface SaveArticleHook {

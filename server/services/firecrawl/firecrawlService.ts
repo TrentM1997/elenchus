@@ -9,10 +9,8 @@ import {
   IFirecrawlScrapeHandler,
 } from "./scrape/firecrawlScrapeHandler.js";
 import { JobResult, RunFirecrawlJobParameters } from "./types.js";
-import {
-  ArticleSchemaType,
-  InsertableArticleSchemaType,
-} from "../../schemas/ArticleSchema.js";
+import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import { InsertableArticleSchemaType } from "../../schemas/ArticleSchema.js";
 
 export interface IFirecrawlService {
   runFirecrawlJob(

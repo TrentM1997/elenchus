@@ -1,4 +1,4 @@
-import type { BlueSkyPostSchemaType as BlueSkyPost } from "@/lib/schemas/integrations/BlueSkySchemas";
+import type { BlueSkyPostSchemaType as BlueSkyPost } from "@elenchus/contracts/schemas/integrations/BlueSkySchemas";
 import type { SelectedPost } from "@/state/Reducers/BlueSky/types";
 
 interface BSPostFooterProps {

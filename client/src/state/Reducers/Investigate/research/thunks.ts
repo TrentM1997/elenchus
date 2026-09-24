@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { serverClient } from "@/lib/services/client/serverClient";
 import { UserResearchType } from "./types";
-import { PersistInvestigationInputSchemaType } from "@/lib/schemas/investigations/InvestigationSchema";
+import { PersistInvestigationInputSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import { updateResearchPersistence } from "./ResearchSlice";
 
 export const saveInvgestigation = createAsyncThunk(

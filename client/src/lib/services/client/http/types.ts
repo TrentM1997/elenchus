@@ -1,30 +1,19 @@
-import { ValidServerRoute } from "@/infra/transport/types/routeDefinitions";
 import { Static, TSchema } from "@sinclair/typebox";
 import { RequestMethod } from "../errors/ServerRequestError";
+import { RequestOptions } from "./requestOptions";
+import { RouteConfigDefinition } from "@elenchus/contracts";
 
 export interface IHttpClient {
-  get<TResponse extends TSchema>(
-    url: ValidServerRoute,
-    schema: TResponse,
-    signal?: AbortSignal,
-  ): Promise<Static<TResponse>>;
-
-  post<TResponse extends TSchema, TBody>(
-    url: ValidServerRoute,
-    schema: TResponse,
-    body?: TBody,
-    signal?: AbortSignal,
-  ): Promise<Static<TResponse>>;
-
-  delete<TResponse extends TSchema>(
-    url: ValidServerRoute,
-    schema: TResponse,
-  ): Promise<Static<TResponse>>;
+  request<const R extends RouteConfigDefinition>(
+    route: R,
+    url: string,
+    options: RequestOptions<NoInfer<R>>,
+  ): Promise<Static<R["outputSchema"]>>;
 }
 
 export type ResponseContext = {
   method: RequestMethod;
-  url: ValidServerRoute;
+  url: string;
   signal?: AbortSignal;
 };
 

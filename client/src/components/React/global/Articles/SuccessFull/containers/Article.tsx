@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import ArticleHeader from "../components/hero/containers/ArticleHeader";
 import ArticleContent from "../components/text/ArticleContent";
 import { softEase } from "@/motion/variants";
-import { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
+import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 
 type ArticleProps = {
   articleData: ArticleSchemaType;

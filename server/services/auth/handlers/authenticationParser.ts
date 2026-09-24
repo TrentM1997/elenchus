@@ -1,7 +1,7 @@
 import { Request } from "express";
 import { validateOrThrow } from "../../../core/validation/validateOrThrow.js";
 import { LoginSchema } from "../../../schemas/LoginSchema.js";
-import { TokenSchema, TokenSchemaType } from "../../../schemas/SessionSchema.js";
+import { TokenSchema, TokenSchemaType } from "@elenchus/contracts/schemas/auth/SupabaseSchemas";
 
 export interface IAuthenticationParser {
   parseRequestForToken(req: Request): string;

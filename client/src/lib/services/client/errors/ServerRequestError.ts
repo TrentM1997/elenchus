@@ -1,4 +1,6 @@
-export type RequestMethod = "GET" | "POST" | "DELETE";
+import type { RouteConfigDefinition } from "@elenchus/contracts";
+
+export type RequestMethod = RouteConfigDefinition["method"];
 
 type RequestFailure =
   | {

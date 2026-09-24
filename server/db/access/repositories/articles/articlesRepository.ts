@@ -1,12 +1,12 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "../../../../types/databaseInterfaces.js";
-import { ArticleSchemaType } from "../../../../schemas/ArticleSchema.js";
+import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import {
   IArticlesDbParser,
   ArticlesDbParser,
   type InsertableArticleType,
 } from "./articlesParser.js";
-import { BookmarkSchemaType } from "../../../../schemas/BookmarkSchema.js";
+import { BookmarkSchemaType } from "@elenchus/contracts/schemas/articles/BookmarkSchema";
 import { DbResult } from "../../../types/types.ts";
 
 export type ArticlesFromBookmarks = DbResult<ArticleSchemaType[]>;

@@ -3,16 +3,7 @@ import {
   validateServerOrThrow,
 } from "../../core/validation/validateOrThrow.js";
 import { actionErrorValidator } from "../../schemas/WikipediaActionSchemas.js";
-import {
-  WikipediaLinksSchema,
-  WikipediaSummarySchema,
-  WikipediaTermSchema,
-  WikiResponseSchema,
-  type WikipediaLinks,
-  type WikipediaSummaryType,
-  type WikiDisambigCandidate,
-  type WikiResponse,
-} from "../../schemas/WikipediaSchemas.js";
+import { WikipediaLinksSchema, WikipediaSummarySchema, WikipediaTermSchema, WikiResponseSchema, type WikipediaLinks, type WikipediaSummaryType, type WikiDisambigCandidate, type WikiResponse } from "@elenchus/contracts/schemas/integrations/WikipediaExtractSchemas";
 
 export interface IWikipediaService {
   extract(query: string): Promise<WikiResponse>;

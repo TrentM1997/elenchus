@@ -1,7 +1,7 @@
 import { assertNever } from "@/lib/helpers/asserts/assertNever";
-import type { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
-import type { BiasSchemaType } from "@/lib/schemas/articles/BiasSchema";
-import type { InvestigationSchemaType } from "@/lib/schemas/investigations/InvestigationSchema";
+import type { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import type { BiasSchemaType } from "@elenchus/contracts/schemas/articles/BiasSchema";
+import type { InvestigationSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 
 export type MetricsRequest = {
   articles: ArticleSchemaType[];

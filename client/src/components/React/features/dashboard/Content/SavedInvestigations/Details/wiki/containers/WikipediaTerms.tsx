@@ -2,7 +2,7 @@ import { TermList } from "./TermList";
 import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary";
 import NoSavedExtracts from "../fallbacks/NoSavedExtracts";
 import { Extracts } from "@/state/Reducers/Investigate/research/types";
-import { InvestigationSchemaType } from "@/lib/schemas/investigations/InvestigationSchema";
+import { InvestigationSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 
 export interface TermsTypes {
   wikipedia_extracts: Extracts[];

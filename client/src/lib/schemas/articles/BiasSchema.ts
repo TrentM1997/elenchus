@@ -1,19 +1,2 @@
-import { Type } from "@sinclair/typebox";
-import { Static } from "@sinclair/typebox";
-
-export const BiasSchema = Type.Union([
-  Type.Literal("Left"),
-  Type.Literal("Left-Center"),
-  Type.Literal("Center"),
-  Type.Literal("Right-Center"),
-  Type.Literal("Right"),
-  Type.Literal("Conspiracy-Pseudoscience"),
-  Type.Literal("Questionable"),
-  Type.Literal("Least Biased"),
-  Type.Literal("Satire"),
-  Type.Literal("Pro-Science"),
-  Type.Literal("Unknown"),
-  Type.Null(),
-]);
-
-export type BiasSchemaType = Static<typeof BiasSchema>;
+// Compatibility path; schema definitions live in the shared contracts package.
+export * from "@elenchus/contracts/schemas/articles/BiasSchema";

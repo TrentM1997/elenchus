@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { RootState } from "@/state/store";
 import Scroller from "../../Containers/Scroller";
 import { variants } from "@/motion/variants";
-import type { SplitBlueSkyFeedSchemaType as SplitBlueSkyFeed } from "@/lib/schemas/integrations/BlueSkySchemas";
+import type { SplitBlueSkyFeedSchemaType as SplitBlueSkyFeed } from "@elenchus/contracts/schemas/integrations/BlueSkySchemas";
 
 type FeedProps = {
   posts: SplitBlueSkyFeed;

@@ -4,7 +4,7 @@ import { extractionProgressReceived } from "./actions";
 import {
   ArticleSchemaType,
   ExtractionResult,
-} from "@/lib/schemas/articles/ArticleSchema";
+} from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import {
   startEvidence,
   updateResearchSources,

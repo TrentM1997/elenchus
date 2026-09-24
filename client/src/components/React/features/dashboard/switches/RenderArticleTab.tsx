@@ -1,4 +1,4 @@
-import type { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
+import type { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import type { DashboardTab } from "@/state/Reducers/Dashboard/types";
 import type { AppDispatch } from "@/state/store";
 import { lazy, Suspense, type JSX } from "react";

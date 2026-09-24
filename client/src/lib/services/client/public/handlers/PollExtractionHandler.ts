@@ -1,5 +1,5 @@
 import type { ExtractArticlesRouteHandler } from "./ExtractArticlesRouteHandler";
-import type { ExtractionResult } from "@/lib/schemas/articles/ArticleSchema";
+import type { ExtractionResult } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import { ServerRequestError } from "../../errors/ServerRequestError";
 import { withTimeout, waitForNextPoll } from "../../../articles/pollingTiming";
 
@@ -30,9 +30,7 @@ export interface IPollExtractionHandler {
 export class PollExtractionHandler implements IPollExtractionHandler {
   constructor(private readonly client: ExtractionRequests) {}
 
-  public async runExtraction(
-    params: PollExtractionParams,
-  ): Promise<ExtractionResult> {
+  public async runExtraction(params: PollExtractionParams) {
     return await this.runExtractionAndPoll(params);
   }
 
@@ -53,7 +51,7 @@ export class PollExtractionHandler implements IPollExtractionHandler {
     articles,
     signal,
     onProgress,
-  }: PollExtractionParams): Promise<ExtractionResult> {
+  }: PollExtractionParams) {
     // Starting a job is never retried: the server may already have created it.
     const { jobId } = await withTimeout(
       (requestSignal) => this.client.extract(articles, requestSignal),

@@ -1,5 +1,5 @@
 import React from "react";
-import type { ArticleSchemaType as Article } from "@/lib/schemas/articles/ArticleSchema";
+import type { ArticleSchemaType as Article } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import type { ImgProps } from "@/components/React/features/investigate/phase2/results/components/links/LinkThumbnail";
 
 interface ArticleThumbnail {

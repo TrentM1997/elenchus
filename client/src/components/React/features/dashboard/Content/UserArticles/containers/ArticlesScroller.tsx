@@ -13,7 +13,7 @@ import { useHandleBookmark } from "@/hooks/dashboard/useBookmarkSavedArticles";
 import ArticleSurface from "../components/ArticleSurface";
 import { stylesWithShadow } from "@/lib/helpers/scroll/stylesWithShadow";
 import { ArticleScroller } from "./types";
-import { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
+import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 
 export default function ArticlesScroller({
   articles,

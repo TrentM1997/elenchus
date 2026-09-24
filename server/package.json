@@ -13,15 +13,17 @@
     "start": "node dist/src/app.js",
     "prebuild": "tsc -p tsconfig.build.json && node dist/scripts/generateLogoMap.js",
     "build": "tsc -p tsconfig.build.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "dev": "nodemon --watch src --watch core --watch services --watch schemas --watch integrations --watch db --ext ts,json --exec \"npm run build && npm start\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@atproto/api": "^0.15.5",
+    "@elenchus/contracts": "0.0.0",
     "@mendable/firecrawl-js": "^4.4.1",
-    "@sinclair/typebox": "^0.34.41",
+    "@sinclair/typebox": "0.34.41",
     "@supabase/supabase-js": "2.112.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -39,8 +41,5 @@
     "@types/sanitize-html": "^2.13.0",
     "nodemon": "^3.1.0",
     "typescript": "^5.9.3"
-  },
-  "overrides": {
-    "qs": "6.16.0"
   }
 }

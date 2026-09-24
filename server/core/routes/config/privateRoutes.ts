@@ -1,23 +1,18 @@
+import { PRIVATE_API_CONFIG } from "@elenchus/contracts";
 import { Router } from "express";
 import { IAppServices } from "../../../services/appServices.js";
 import { wrapAsync } from "../../async/wrapAsync.js";
 import { validateOrThrow } from "../../validation/validateOrThrow.js";
-import { BookmarkArticleIdSchema } from "../../../schemas/BookmarkSchema.js";
 import { ServerError } from "../../errors/ServerError.js";
-import {
-  GetInvestigationSchema,
-  InvestigationSchema,
-  PersistInvestigationInputSchema,
-} from "../../../schemas/InvestigationSchema.js";
-import { LoginSchema } from "../../../schemas/LoginSchema.js";
-import { PRIVATE_API_ROUTES } from "./routeConfig.js";
-import { SearchQuerySchema } from "../../../schemas/SearchQuerySchema.ts";
 
 export function protectedRoutes(app: IAppServices, router: Router) {
   router.post(
-    PRIVATE_API_ROUTES.account.delete,
+    PRIVATE_API_CONFIG.account.delete.path,
     wrapAsync(async (req, res) => {
-      const credentials = validateOrThrow(LoginSchema, req.body);
+      const credentials = validateOrThrow(
+        PRIVATE_API_CONFIG.account.delete.bodySchema,
+        req.body,
+      );
       const result = await app.services.api.user.deleteAccount(
         req.user?.userId,
         credentials,
@@ -33,7 +28,7 @@ export function protectedRoutes(app: IAppServices, router: Router) {
   );
 
   router.get(
-    PRIVATE_API_ROUTES.bookmarks.get.all,
+    PRIVATE_API_CONFIG.bookmarks.get.all.path,
     wrapAsync(async (req, res) => {
       const results = await app.services.api.user.articlesBookmarked(
         req.user?.userId,
@@ -48,13 +43,14 @@ export function protectedRoutes(app: IAppServices, router: Router) {
   );
 
   router.get(
-    PRIVATE_API_ROUTES.bookmarks.get.single,
+    PRIVATE_API_CONFIG.bookmarks.get.single.path,
     wrapAsync(async (req, res) => {
       const userId = req.user.userId;
-      const article_id = validateOrThrow(
-        BookmarkArticleIdSchema,
-        Number(req.params.articleId),
+      const { articleId } = validateOrThrow(
+        PRIVATE_API_CONFIG.bookmarks.get.single.paramsSchema,
+        req.params,
       );
+      const article_id = Number(articleId);
 
       const result = await app.services.api.user.articleById({
         user_id: userId,
@@ -70,12 +66,12 @@ export function protectedRoutes(app: IAppServices, router: Router) {
   );
 
   router.post(
-    PRIVATE_API_ROUTES.bookmarks.post,
+    PRIVATE_API_CONFIG.bookmarks.post.path,
     wrapAsync(async (req, res) => {
       const userId = req.user.userId;
-      const article_id = validateOrThrow(
-        BookmarkArticleIdSchema,
-        req.body?.article_id,
+      const { article_id } = validateOrThrow(
+        PRIVATE_API_CONFIG.bookmarks.post.bodySchema,
+        req.body,
       );
       const result = await app.services.api.user.bookmark({
         user_id: userId,
@@ -94,13 +90,14 @@ export function protectedRoutes(app: IAppServices, router: Router) {
   );
 
   router.delete(
-    PRIVATE_API_ROUTES.bookmarks.delete,
+    PRIVATE_API_CONFIG.bookmarks.delete.path,
     wrapAsync(async (req, res) => {
       const userId = req.user.userId;
-      const article_id = validateOrThrow(
-        BookmarkArticleIdSchema,
-        Number(req.params.articleId),
+      const { articleId } = validateOrThrow(
+        PRIVATE_API_CONFIG.bookmarks.delete.paramsSchema,
+        req.params,
       );
+      const article_id = Number(articleId);
 
       const result = await app.services.api.user.removeBookmark({
         user_id: userId,
@@ -116,11 +113,11 @@ export function protectedRoutes(app: IAppServices, router: Router) {
   );
 
   router.post(
-    PRIVATE_API_ROUTES.investigations.post,
+    PRIVATE_API_CONFIG.investigations.post.path,
     wrapAsync(async (req, res) => {
       const userId = req.user.userId;
       const investigation = validateOrThrow(
-        PersistInvestigationInputSchema,
+        PRIVATE_API_CONFIG.investigations.post.bodySchema,
         req.body,
       );
 
@@ -141,7 +138,7 @@ export function protectedRoutes(app: IAppServices, router: Router) {
   );
 
   router.get(
-    PRIVATE_API_ROUTES.investigations.get.all,
+    PRIVATE_API_CONFIG.investigations.get.all.path,
     wrapAsync(async (req, res) => {
       const userId = req.user.userId;
       const result =
@@ -160,18 +157,17 @@ export function protectedRoutes(app: IAppServices, router: Router) {
   );
 
   router.get(
-    PRIVATE_API_ROUTES.investigations.get.single,
+    PRIVATE_API_CONFIG.investigations.get.single.path,
     wrapAsync(async (req, res) => {
       const userId = req.user.userId;
-      const id = Number(req.params.investigationId);
-      const { user_id, investigation_id } = validateOrThrow(
-        GetInvestigationSchema,
-        { user_id: userId, investigation_id: id },
+      const { investigationId } = validateOrThrow(
+        PRIVATE_API_CONFIG.investigations.get.single.paramsSchema,
+        req.params,
       );
 
       const result = await app.services.api.investigations.getInvestigation({
-        user_id,
-        investigation_id,
+        user_id: userId,
+        investigation_id: Number(investigationId),
       });
 
       if (!result.ok) {

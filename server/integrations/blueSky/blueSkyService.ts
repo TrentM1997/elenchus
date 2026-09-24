@@ -1,8 +1,5 @@
 import { AtpAgent } from "@atproto/api";
-import {
-  BlueSkyPostSchemaType,
-  SplitBlueSkyFeedSchemaType,
-} from "../../schemas/BlueSkyPostSchema.js";
+import { BlueSkyPostSchemaType, SplitBlueSkyFeedSchemaType } from "@elenchus/contracts/schemas/integrations/BlueSkySchemas";
 import { ServerError } from "../../core/errors/ServerError.js";
 import { BlueSkyParser, IBlueSkyParser } from "./blueSkyParser.js";
 

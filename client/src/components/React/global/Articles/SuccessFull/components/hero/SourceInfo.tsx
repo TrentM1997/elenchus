@@ -1,4 +1,4 @@
-import type { ArticleSchemaType as Article } from "@/lib/schemas/articles/ArticleSchema";
+import type { ArticleSchemaType as Article } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import React from "react";
 
 function SourceInfo({ article }: { article: Article }): JSX.Element {

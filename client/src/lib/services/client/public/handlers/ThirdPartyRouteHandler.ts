@@ -1,21 +1,15 @@
 import {
-  BrowsingOptionSchemaArrayType,
-  BrowsingOptionSchemaArray,
   SearchResultsResponseSchemaType,
-  SearchResultsResponseSchema,
-} from "@/lib/schemas/articles/BrowsingOptionSchema";
+} from "@elenchus/contracts/schemas/articles/BrowsingOptionSchema";
 import {
-  BlueSkyPostSchemaArray,
   BlueSkyPostSchemaArrayType,
-  SplitBlueSkyFeedSchema,
   SplitBlueSkyFeedSchemaType,
-} from "@/lib/schemas/integrations/BlueSkySchemas";
-import { PublicServerClientRoutes } from "@/infra/transport/types/routeDefinitions";
+} from "@elenchus/contracts/schemas/integrations/BlueSkySchemas";
+import type { PublicApiContract } from "@elenchus/contracts";
 import { IHttpClient } from "../../http/types";
 import {
   WikiResponse,
-  WikiResponseSchema,
-} from "@/lib/schemas/integrations/WikipediaExtractSchemas";
+} from "@elenchus/contracts/schemas/integrations/WikipediaExtractSchemas";
 
 export type NewsApiSearchParams = {
   query: string;
@@ -30,16 +24,19 @@ export interface IThirdPartyRouteHandler {
 export class ThirdPartyRouteHandler implements IThirdPartyRouteHandler {
   public readonly search: IThirdPartyRouteSearchHandler;
   constructor(
-    private readonly routes: Pick<PublicServerClientRoutes, "integrations">,
-    private readonly http: IHttpClient,
+    private readonly routes: Pick<PublicApiContract, "integrations">,
+    private readonly http: Pick<IHttpClient, "request">,
   ) {
     this.search = new ThirdPartyRouteSearchHandler(this.routes, this.http);
   }
 
   public async blueSkyFeed(): Promise<SplitBlueSkyFeedSchemaType> {
-    return await this.http.get(
-      this.routes.integrations.blueSky.feed,
-      SplitBlueSkyFeedSchema,
+    const route = this.routes.integrations.blueSky.feed;
+
+    return await this.http.request(
+      route,
+      route.path,
+      {},
     );
   }
 }
@@ -54,14 +51,18 @@ export interface IThirdPartyRouteSearchHandler {
 
 class ThirdPartyRouteSearchHandler implements IThirdPartyRouteSearchHandler {
   constructor(
-    private readonly routes: Pick<PublicServerClientRoutes, "integrations">,
-    private readonly http: IHttpClient,
+    private readonly routes: Pick<PublicApiContract, "integrations">,
+    private readonly http: Pick<IHttpClient, "request">,
   ) {}
 
   public async blueSky(query: string): Promise<BlueSkyPostSchemaArrayType> {
-    return await this.http.get(
-      `${this.routes.integrations.blueSky.search}${query}`,
-      BlueSkyPostSchemaArray,
+    const encodedQuery = encodeURIComponent(query);
+    const route = this.routes.integrations.blueSky.search;
+
+    return await this.http.request(
+      route,
+      `${route.path}?q=${encodedQuery}`,
+      {},
     );
   }
 
@@ -71,19 +72,24 @@ class ThirdPartyRouteSearchHandler implements IThirdPartyRouteSearchHandler {
     const { query, signal } = params;
     const encodedQuery = encodeURIComponent(query);
 
-    return await this.http.get(
-      `${this.routes.integrations.newsApi}${encodedQuery}`,
-      SearchResultsResponseSchema,
-      signal,
+    const route = this.routes.integrations.newsApi;
+
+    return await this.http.request(
+      route,
+      `${route.path}?q=${encodedQuery}`,
+      { signal },
     );
   }
 
   public async wikipediaExtract(query: string): Promise<WikiResponse> {
     const encodedQuery = encodeURIComponent(query);
 
-    return await this.http.get(
-      `${this.routes.integrations.wiki}${encodedQuery}`,
-      WikiResponseSchema,
+    const route = this.routes.integrations.wiki;
+
+    return await this.http.request(
+      route,
+      `${route.path}?q=${encodedQuery}`,
+      {},
     );
   }
 }

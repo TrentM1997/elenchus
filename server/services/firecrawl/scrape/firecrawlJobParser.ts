@@ -1,13 +1,7 @@
 import { validateServerOrThrow } from "../../../core/validation/validateOrThrow.js";
-import {
-  ArticleSchema,
-  ArticleSchemaType,
-  FactualReportingRatingSchema,
-  FactualReportingRatingSchemaType,
-  InsertableArticleSchema,
-  InsertableArticleSchemaType,
-} from "../../../schemas/ArticleSchema.js";
-import { BiasSchemaType } from "../../../schemas/BiasSchema.js";
+import { ArticleSchema, ArticleSchemaType, FactualReportingRatingSchema, FactualReportingRatingSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import { InsertableArticleSchema, InsertableArticleSchemaType } from "../../../schemas/ArticleSchema.js";
+import { BiasSchemaType } from "@elenchus/contracts/schemas/articles/BiasSchema";
 import { validateSchema } from "../../../schemas/ValidateSchema.js";
 import {
   Article,

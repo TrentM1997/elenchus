@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import type { ArticleSchemaType as Article } from "@/lib/schemas/articles/ArticleSchema";
+import type { ArticleSchemaType as Article } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import fallback from "../../../../../../../../public/images/logos/fallback.svg";
 import { LOGOS } from "@/lib/helpers/lookup/logos";
 
