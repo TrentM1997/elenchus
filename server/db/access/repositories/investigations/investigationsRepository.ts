@@ -4,13 +4,7 @@ import {
   validateOrThrow,
   validateServerOrThrow,
 } from "../../../../core/validation/validateOrThrow.js";
-import {
-  InvestigationSchemaType,
-  InvestigationSchema,
-  PersistInvestigationInputSchema,
-  PersistInvestigationInputSchemaType,
-  InsertableInvestigationSchemaType,
-} from "../../../../schemas/InvestigationSchema.js";
+import { InvestigationSchemaType, InvestigationSchema, PersistInvestigationInputSchema, PersistInvestigationInputSchemaType, InsertableInvestigationSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import type { AuthenticatedUserId } from "../../../../services/auth/authorization.js";
 import { DbResult } from "../../../types/types.ts";
 

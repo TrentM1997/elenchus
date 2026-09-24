@@ -1,21 +1,15 @@
-import { PrivateServerClientRoutes } from "@/infra/transport/types/routeDefinitions";
 import {
   ArticleSchemaType,
-  GetArticleResponseSchema,
   GetArticleResponseSchemaType,
-} from "@/lib/schemas/articles/ArticleSchema";
+} from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import { BookmarkedArticlesResponseSchemaType } from "@elenchus/contracts/schemas/articles/BookmarkSchema";
 import {
-  BookmarkedArticlesResponseSchema,
-  BookmarkedArticlesResponseSchemaType,
-} from "@/lib/schemas/articles/BookmarkSchema";
-import {
-  InvestigationSaveResponse,
   InvestigationSaveResponseType,
   InvestigationSchemaType,
-  InvestigationsSavedReponseSchema,
   InvestigationsSavedReponseSchemaType,
-} from "@/lib/schemas/investigations/InvestigationSchema";
+} from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import { IHttpClient } from "@/lib/services/client/http/types";
+import { PrivateApiContract } from "@elenchus/contracts";
 
 export interface IPrivateUserSelectHandler {
   readonly investigations: IInvestigationSelectHander;
@@ -26,9 +20,9 @@ export class PrivateUserSelectHandler implements IPrivateUserSelectHandler {
   public readonly investigations: IInvestigationSelectHander;
   public readonly bookmarks: IBookmarkSelectHandler;
   constructor(
-    private readonly http: IHttpClient,
+    private readonly http: Pick<IHttpClient, "request">,
     private readonly routes: Pick<
-      PrivateServerClientRoutes,
+      PrivateApiContract,
       "bookmarks" | "investigations"
     >,
   ) {
@@ -46,23 +40,32 @@ interface IInvestigationSelectHander {
 
 class InvestigationSelectHander implements IInvestigationSelectHander {
   constructor(
-    private readonly http: IHttpClient,
-    private readonly routes: Pick<PrivateServerClientRoutes, "investigations">,
+    private readonly http: Pick<IHttpClient, "request">,
+    private readonly routes: Pick<PrivateApiContract, "investigations">,
   ) {}
 
   public async all(): Promise<InvestigationsSavedReponseSchemaType> {
-    return await this.http.get(
-      this.routes.investigations.get.all,
-      InvestigationsSavedReponseSchema,
+    const route = this.routes.investigations.get.all;
+
+    return await this.http.request(
+      route,
+      route.path,
+      {},
     );
   }
 
   public async byId(
     investigation_id: InvestigationSchemaType["id"],
   ): Promise<InvestigationSaveResponseType> {
-    return await this.http.get(
-      `${this.routes.investigations.get.single}${investigation_id}`,
-      InvestigationSaveResponse,
+    const route = this.routes.investigations.get.single;
+
+    return await this.http.request(
+      route,
+      route.path.replace(
+        ":investigationId",
+        String(investigation_id),
+      ),
+      {},
     );
   }
 }
@@ -76,23 +79,32 @@ interface IBookmarkSelectHandler {
 
 class BookmarkSelectHandler implements IBookmarkSelectHandler {
   constructor(
-    private readonly http: Pick<IHttpClient, "get">,
-    private readonly routes: Pick<PrivateServerClientRoutes, "bookmarks">,
+    private readonly http: Pick<IHttpClient, "request">,
+    private readonly routes: Pick<PrivateApiContract, "bookmarks">,
   ) {}
 
   public async all(): Promise<BookmarkedArticlesResponseSchemaType> {
-    return await this.http.get(
-      this.routes.bookmarks.get.all,
-      BookmarkedArticlesResponseSchema,
+    const route = this.routes.bookmarks.get.all;
+
+    return await this.http.request(
+      route,
+      route.path,
+      {},
     );
   }
 
   public async byId(
     article_id: ArticleSchemaType["id"],
   ): Promise<GetArticleResponseSchemaType> {
-    return await this.http.get(
-      `${this.routes.bookmarks.get.single}${article_id}`,
-      GetArticleResponseSchema,
+    const route = this.routes.bookmarks.get.single;
+
+    return await this.http.request(
+      route,
+      route.path.replace(
+        ":articleId",
+        String(article_id),
+      ),
+      {},
     );
   }
 }

@@ -1,9 +1,2 @@
-import { Type, Static } from "@sinclair/typebox";
-
-export const HttpSuccessSchema = Type.Object({
-  status: Type.Literal("success"),
-  message: Type.String(),
-  data: Type.Unknown(),
-});
-
-export type HttpSuccessSchemaType = Static<typeof HttpSuccessSchema>;
+// Compatibility path; schema definitions live in the shared contracts package.
+export * from "@elenchus/contracts/schemas/api/HttpSuccessSchema";

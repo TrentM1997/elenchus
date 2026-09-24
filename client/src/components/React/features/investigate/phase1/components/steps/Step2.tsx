@@ -10,7 +10,7 @@ import React from "react";
 import {
   ExpertiseSchemaType,
   PerspectiveSchemaType,
-} from "@/lib/schemas/investigations/InvestigationSchema";
+} from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 
 function Step2(): JSX.Element | null {
   const { perspective, expertise } = useSelector(selectPOVData);

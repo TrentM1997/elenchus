@@ -2,21 +2,25 @@
   "name": "elenchus-root",
   "private": true,
   "engines": {
-    "node": "20.x"
+    "node": "24.x",
+    "npm": "11.x"
   },
   "resolutions": {
     "**/@types/*": "latest"
   },
   "scripts": {
     "start": "node server/dist/src/app.js",
-    "heroku-postbuild": "cp -r client/public/images/logos server/public/images/logos && npm run build:server && npm run build:client",
-    "build:server": "cd server && npm install && npm run build",
-    "build:client": "cd client && npm install --include=dev && npm run build",
-    "dev:server": "npm --prefix server run dev",
-    "dev:client": "npm --prefix client run dev"
+    "heroku-postbuild": "node scripts/copy-logos.cjs && npm run build",
+    "build:server": "npm run build:contracts && npm run build --workspace=server",
+    "build:client": "npm run build:contracts && npm run build --workspace=elenchus",
+    "dev:server": "npm run build:contracts && npm run dev --workspace=server",
+    "dev:client": "npm run dev --workspace=elenchus",
+    "typecheck": "npm run build:contracts && npm run typecheck --workspaces",
+    "build": "npm run build:contracts && npm run build --workspace=server && npm run build --workspace=elenchus",
+    "build:contracts": "npm run build --workspace=@elenchus/contracts"
   },
   "dependencies": {
-    "@sinclair/typebox": "^0.34.41",
+    "@sinclair/typebox": "0.34.41",
     "@tabler/icons-react": "^3.34.1",
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.21",
@@ -29,5 +33,42 @@
     "@types/react-dom": "^18.3.7",
     "concurrently": "^9.1.2",
     "ts-node": "^10.9.2"
+  },
+  "workspaces": [
+    "packages/contracts",
+    "client",
+    "server"
+  ],
+  "overrides": {
+    "@tiptap/extension-bubble-menu": "3.30.4",
+    "@tiptap/extension-floating-menu": "3.30.4",
+    "qs": "6.16.0",
+    "@tiptap/core": "3.30.4",
+    "@tiptap/extension-blockquote": "3.30.4",
+    "@tiptap/extension-bold": "3.30.4",
+    "@tiptap/extension-bullet-list": "3.30.4",
+    "@tiptap/extension-code": "3.30.4",
+    "@tiptap/extension-code-block": "3.30.4",
+    "@tiptap/extension-document": "3.30.4",
+    "@tiptap/extension-dropcursor": "3.30.4",
+    "@tiptap/extension-gapcursor": "3.30.4",
+    "@tiptap/extension-hard-break": "3.30.4",
+    "@tiptap/extension-heading": "3.30.4",
+    "@tiptap/extension-horizontal-rule": "3.30.4",
+    "@tiptap/extension-italic": "3.30.4",
+    "@tiptap/extension-link": "3.30.4",
+    "@tiptap/extension-list": "3.30.4",
+    "@tiptap/extension-list-item": "3.30.4",
+    "@tiptap/extension-list-keymap": "3.30.4",
+    "@tiptap/extension-ordered-list": "3.30.4",
+    "@tiptap/extension-paragraph": "3.30.4",
+    "@tiptap/extension-placeholder": "3.30.4",
+    "@tiptap/extension-strike": "3.30.4",
+    "@tiptap/extension-text": "3.30.4",
+    "@tiptap/extension-underline": "3.30.4",
+    "@tiptap/extensions": "3.30.4",
+    "@tiptap/pm": "3.30.4",
+    "@tiptap/react": "3.30.4",
+    "@tiptap/starter-kit": "3.30.4"
   }
 }

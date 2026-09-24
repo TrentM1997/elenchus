@@ -1,0 +1,18 @@
+FROM node:24-bookworm-slim
+WORKDIR /app
+ENV NODE_ENV=development
+
+# concurrently/tree-kill needs ps to terminate child processes on Linux.
+RUN apt-get update && apt-get install -y --no-install-recommends procps \
+    && rm -rf /var/lib/apt/lists/*
+
+# Cache the full workspace install independently of source edits.
+COPY package.json package-lock.json ./
+COPY client/package.json ./client/package.json
+COPY server/package.json ./server/package.json
+COPY packages/contracts/package.json ./packages/contracts/package.json
+RUN npm ci --include=dev --no-audit --no-fund
+COPY . .
+RUN node scripts/copy-logos.cjs && npm run build:contracts
+EXPOSE 5173 5001
+CMD ["npm", "run", "dev", "--workspace=elenchus", "--", "--host", "0.0.0.0"]

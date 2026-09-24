@@ -1,6 +1,6 @@
 import FailedState from "@/components/React/global/fallbacks/FailedState";
 import { assertNever } from "@/lib/helpers/asserts/assertNever";
-import type { WikiResponseSchemaType } from "@/lib/schemas/integrations/WikipediaExtractSchemas";
+import type { WikiResponseSchemaType } from "@elenchus/contracts/schemas/integrations/WikipediaExtractSchemas";
 import DisambigExtract from "./disambig/DisambigExtract";
 import StandardExtract from "./standard/StandardExtract";
 import ExtractError from "./errors/ExtractError";

@@ -1,7 +1,7 @@
 import type { JSX } from "react";
 import { SelectedArticles } from "@/state/Reducers/Investigate/articles/ChosenArticles";
 import ArticleLink from "../features/investigate/phase2/results/components/links/ArticleLink";
-import { BrowsingOptionSchemaType } from "@/lib/schemas/articles/BrowsingOptionSchema";
+import { BrowsingOptionSchemaType } from "@elenchus/contracts/schemas/articles/BrowsingOptionSchema";
 
 type RenderSelectedArticlesProps = {
   state: SelectedArticles;

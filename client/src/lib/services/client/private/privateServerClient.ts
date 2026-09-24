@@ -1,4 +1,3 @@
-import type { ServerClientRoutes } from "@/infra/transport/types/routeDefinitions";
 import { IHttpClient } from "@/lib/services/client/http/types";
 import {
   AccountRouteHandler,
@@ -8,6 +7,7 @@ import {
   IPrivateUserRouteHandler,
   PrivateUserRouteHandler,
 } from "./handlers/PrivateUserRouteHandler";
+import { PrivateApiContract } from "@elenchus/contracts";
 
 export interface IPrivateServerClient {
   readonly account: IAccountRouteHandler;
@@ -18,7 +18,7 @@ export class PrivateServerClient implements IPrivateServerClient {
   public readonly account: IAccountRouteHandler;
   public readonly user: IPrivateUserRouteHandler;
   constructor(
-    private readonly routes: Pick<ServerClientRoutes, "private">["private"],
+    private readonly routes: PrivateApiContract,
     private readonly http: IHttpClient,
   ) {
     this.account = new AccountRouteHandler(this.routes, this.http);

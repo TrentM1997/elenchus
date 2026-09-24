@@ -104,9 +104,9 @@ Database: Stores user profiles, saved investigations, and article metadata.
 
 ## Prerequisites
 
-Node.js v16+
+Node.js 24.x
 
-npm or yarn
+npm 11.x
 
 Supabase project (for Auth and DB)
 
@@ -121,23 +121,18 @@ Clone the repo
 git clone https://github.com/yourusername/elenchus.git
 cd elenchus
 
-Install dependencies
+Install dependencies once from the repository root:
 
-Root (Frontend + Server)
+```sh
+npm ci
+```
 
-npm install
-
-# or
-
-yarn install
-
-Client
-
-cd client && npm install
-
-Server
-
-cd server && npm install
+The npm workspaces are `client` (package `elenchus`), `server`, and
+`packages/contracts` (package `@elenchus/contracts`). The root lockfile is
+authoritative. Use `npm install` to update dependencies; do not maintain nested lockfiles.
+Both applications import shared schemas from contracts. The old schema paths
+re-export shared definitions for compatibility; server-only schemas and validators
+remain local. A shared HTTP route registry is still a separate step.
 
 ## Configuration
 
@@ -157,16 +152,67 @@ Development
 
 ### From project root
 
-npm run dev
+Run these in separate terminals:
 
-Starts Astro dev server on http://localhost:3000
+```sh
+npm run dev:client
+npm run dev:server
+```
 
-Starts Express server on http://localhost:4000
+The client runs at http://localhost:5173. The server rebuilds and restarts on
+TypeScript changes, using its configured port (the client proxy expects 5001).
+After editing shared schemas, run `npm run build:contracts`.
 
 Production Build
 
 npm run build
 npm run start
+
+Use `npm run typecheck` to check all workspaces. Individual builds are
+`npm run build:contracts`, `npm run build:server`, and `npm run build:client`.
+Application build commands compile contracts first.
+
+## Docker development
+
+Use Docker Desktop with Linux containers and Docker Compose 2.32 or newer.
+Supabase remains hosted; this setup runs only the API and Astro dev server.
+
+1. Create `server/.env` from `server/.env.example` if it does not already exist,
+   and fill in all credentials required by the server. Existing `server/.env`
+   files can be reused. No secrets are copied into the image.
+2. If needed, place client settings in `client/.env`. Never put the Supabase
+   service key in client configuration.
+3. From the repository root, run:
+
+```sh
+docker compose up --build --watch
+```
+
+Open http://localhost:5173 once the API and client startup messages appear.
+The API is also available at http://localhost:5001. Stop any local development
+servers already using those ports first.
+
+Compose Watch copies source edits into the containers, where Astro and nodemon
+use native Linux file notifications. No Windows source bind mounts or polling
+are needed. Astro hot reloads, the API rebuilds contracts and restarts after a
+one-second debounce, and the client watches shared contracts separately.
+Dependencies and generated output stay inside the containers.
+Astro proxies API requests to `http://api:5001` on the Compose network; normal
+non-Docker development retains `http://localhost:5001`.
+
+Compose Watch rebuilds images when package manifests, the lockfile, or Dockerfile
+change. After changing Compose configuration or adding a new source directory
+outside the watch rules, restart with `docker compose up --build --watch`.
+Keep watch mode running for live edits; plain `docker compose up` starts the
+built snapshot without synchronizing later edits.
+After changing environment files, recreate the services with
+`docker compose up --force-recreate`. Stop them with `docker compose down`.
+Use `docker compose logs -f api` to inspect server startup errors.
+
+This uses the Supabase project specified in `server/.env`, including its real
+data. Auth redirect settings should include your localhost development URL.
+The old PostgreSQL, pgAdmin, and nginx services are no longer part of this setup.
+Production serving through Express remains separate from this development setup.
 
 ## Usage
 
@@ -191,24 +237,15 @@ heroku create your-app-name
 
 Monorepo Build Setup
 
-Option A: Heroku Monorepo Buildpack
-
-heroku buildpacks:clear
-heroku buildpacks:set heroku/nodejs
-heroku buildpacks:add https://github.com/lstoll/heroku-buildpack-monorepo
-heroku config:set PROJECT_PATH=server
-
-Option B: Root heroku-postbuild Script
-Add to your root package.json:
-
-"scripts": {
-"heroku-postbuild": "npm install --prefix client && npm run build --prefix client && npm install --prefix server"
-}
+Build from the repository root using the Node.js buildpack. Include development
+dependencies during the build for Astro and TypeScript. The root
+`heroku-postbuild` copies logo assets and runs the ordered workspace build.
+Do not scope deployment to only the server directory; all workspaces are needed.
 
 Procfile
 In the project root, create a file named Procfile containing:
 
-web: npm run start --prefix server
+web: npm start
 
 Environment Variables
 Set required keys via CLI or Heroku dashboard:

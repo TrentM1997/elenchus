@@ -1,7 +1,7 @@
 import { SupabaseClient, User, Session } from "@supabase/supabase-js";
-import { InvestigationSchema } from "../schemas/InvestigationSchema.js";
+import { InvestigationSchema } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import { Static, Type } from "@sinclair/typebox";
-import { ArticleSchema } from "../schemas/ArticleSchema.js";
+import { ArticleSchema } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 
 export interface ChangePasswordBody {
     email: string,

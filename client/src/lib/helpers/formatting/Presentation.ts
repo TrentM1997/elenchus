@@ -1,4 +1,4 @@
-import { BlueSkyPostSchemaType } from "../../../../../schemas/api/types/BlueSkyPostSchema";
+import { BlueSkyPostSchemaType } from "@elenchus/contracts/schemas/integrations/BlueSkySchemas";
 
 export const wait = (ms: number) => new Promise((res) => setTimeout(res, ms));
 

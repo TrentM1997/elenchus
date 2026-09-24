@@ -7,7 +7,7 @@ import DetailView from "../../../ProfileNavigation/mobile/DetailView";
 import { ScrollUp } from "@/lib/helpers/scroll/ScrollToTop";
 import { changeTab } from "@/state/Reducers/Dashboard/DashboardSlice";
 import { useHydrateOpenedInvestigation } from "@/lib/hooks/useHydrateOpenedInvestigaton";
-import { InvestigationSchemaType } from "@/lib/schemas/investigations/InvestigationSchema";
+import { InvestigationSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import { RootState } from "@/state/store";
 import AsyncStateRenderer from "@/components/React/pipelines/AsyncStateRenderer";
 

@@ -1,16 +1,13 @@
-import { PrivateServerClientRoutes } from "@/infra/transport/types/routeDefinitions";
 import {
-  BookmarkResponseSchema,
   BookmarkResponseSchemaType,
-  DeleteBookmarkResponseSchema,
   DeleteBookmarkResponseSchemaType,
-} from "@/lib/schemas/articles/BookmarkSchema";
+} from "@elenchus/contracts/schemas/articles/BookmarkSchema";
 import { IHttpClient } from "@/lib/services/client/http/types";
 import {
-  InvestigationSaveResponse,
   InvestigationSaveResponseType,
   PersistInvestigationInputSchemaType,
-} from "@/lib/schemas/investigations/InvestigationSchema";
+} from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
+import { PrivateApiContract } from "@elenchus/contracts";
 
 export interface IPrivateUserWritesHandler {
   bookmark(article_id: number): Promise<BookmarkResponseSchemaType>;
@@ -22,39 +19,43 @@ export interface IPrivateUserWritesHandler {
 
 export class PrivateUserWritesHandler implements IPrivateUserWritesHandler {
   constructor(
-    private readonly http: IHttpClient,
-    private readonly routes: Pick<
-      PrivateServerClientRoutes,
-      "bookmarks" | "investigations"
-    >,
+    private readonly http: Pick<IHttpClient, "request">,
+    private readonly routes: PrivateApiContract,
   ) {}
 
   public async bookmark(
     article_id: number,
   ): Promise<BookmarkResponseSchemaType> {
-    return await this.http.post(
-      this.routes.bookmarks.post,
-      BookmarkResponseSchema,
-      { article_id },
+    const route = this.routes.bookmarks.post;
+
+    return await this.http.request(
+      route,
+      route.path,
+      { body: { article_id } },
     );
   }
 
   public async investigation(
     investigation: PersistInvestigationInputSchemaType,
   ): Promise<InvestigationSaveResponseType> {
-    return await this.http.post(
-      this.routes.investigations.post,
-      InvestigationSaveResponse,
-      investigation,
+    const route = this.routes.investigations.post;
+
+    return await this.http.request(
+      route,
+      route.path,
+      { body: investigation },
     );
   }
 
   public async unBookmark(
     article_id: string,
   ): Promise<DeleteBookmarkResponseSchemaType> {
-    return await this.http.delete(
-      `${this.routes.bookmarks.delete}${article_id}`,
-      DeleteBookmarkResponseSchema,
+    const route = this.routes.bookmarks.delete;
+
+    return await this.http.request(
+      route,
+      route.path.replace(":articleId", article_id),
+      {},
     );
   }
 }

@@ -1,9 +1,4 @@
-import {
-  BlueSkyPostSchemaType,
-  PostValidator,
-  FeedItemValidator,
-  SplitBlueSkyFeedSchemaType,
-} from "../../schemas/BlueSkyPostSchema.js";
+import { BlueSkyPostSchemaType, PostValidator, FeedItemValidator, SplitBlueSkyFeedSchemaType } from "@elenchus/contracts/schemas/integrations/BlueSkySchemas";
 
 export interface BlueskyFeedItem {
   post: BlueSkyPostSchemaType;

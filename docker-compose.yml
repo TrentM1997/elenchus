@@ -1,82 +1,155 @@
-version: '3'
+# Development with hosted Supabase. Start with: docker compose up --build --watch
 services:
-  postgres:
-    container_name: postgres
-    image: 'postgres:latest'
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    init: true
+    working_dir: /app
+    env_file:
+      - ./server/.env
     environment:
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_DB=${POSTGRES_DB}
-    networks:
-      - 'elenchus-network'
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+      NODE_ENV: development
+      PORT: '5001'
     ports:
-      - '5432:5432'
-
-  nginx:
-    container_name: nginx
+      - 127.0.0.1:5001:5001
+    command:
+      - sh
+      - '-c'
+      - npm exec --workspace=server -- nodemon --delay 1 --watch src --watch core --watch services --watch schemas --watch integrations --watch db --watch types --watch scripts --watch tsconfig.json --watch tsconfig.build.json --watch ../packages/contracts/src --watch ../packages/contracts/tsconfig.json --ext ts,json --exec "npm run build:server --prefix .. && npm start"
+    develop:
+      watch:
+        - action: sync
+          path: ./server/src
+          target: /app/server/src
+          initial_sync: true
+        - action: sync
+          path: ./server/core
+          target: /app/server/core
+          initial_sync: true
+        - action: sync
+          path: ./server/services
+          target: /app/server/services
+          initial_sync: true
+        - action: sync
+          path: ./server/schemas
+          target: /app/server/schemas
+          initial_sync: true
+        - action: sync
+          path: ./server/integrations
+          target: /app/server/integrations
+          initial_sync: true
+        - action: sync
+          path: ./server/db
+          target: /app/server/db
+          initial_sync: true
+        - action: sync
+          path: ./server/types
+          target: /app/server/types
+          initial_sync: true
+        - action: sync
+          path: ./server/scripts
+          target: /app/server/scripts
+          initial_sync: true
+        - action: sync
+          path: ./server/tsconfig.json
+          target: /app/server/tsconfig.json
+          initial_sync: true
+        - action: sync
+          path: ./server/tsconfig.build.json
+          target: /app/server/tsconfig.build.json
+          initial_sync: true
+        - action: sync
+          path: ./packages/contracts/src
+          target: /app/packages/contracts/src
+          initial_sync: true
+        - action: sync
+          path: ./packages/contracts/tsconfig.json
+          target: /app/packages/contracts/tsconfig.json
+          initial_sync: true
+        - action: rebuild
+          path: ./package.json
+        - action: rebuild
+          path: ./package-lock.json
+        - action: rebuild
+          path: ./client/package.json
+        - action: rebuild
+          path: ./server/package.json
+        - action: rebuild
+          path: ./packages/contracts/package.json
+        - action: rebuild
+          path: ./Dockerfile.dev
+        - action: rebuild
+          path: ./.dockerignore
+        - action: rebuild
+          path: ./scripts/copy-logos.cjs
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    init: true
+    working_dir: /app
     depends_on:
       - api
-      - client
-    restart: always
-    build:
-      dockerfile: Dockerfile
-      context: './nginx'
-    ports:
-      - '3050:80'
-    networks:
-      - 'elenchus-network'
-
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    restart: always
     environment:
-      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
-      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
-    depends_on:
-      - postgres
+      NODE_ENV: development
+      API_PROXY_TARGET: http://api:5001
+    env_file:
+      - path: ./client/.env
+        required: false
     ports:
-      - '5050:80'
-    networks:
-      - 'elenchus-network'
-
-  api:
-    container_name: api
-    build:
-      dockerfile: Dockerfile
-      context: './server'
-    volumes:
-      - /app/node_modules
-      - ./server:/server
-    environment:
-      - PGUSER=${POSTGRES_USER}
-      - PGHOST=postgres
-      - PGDATABASE=${POSTGRES_DB}
-      - PGPASSWORD=${POSTGRES_PASSWORD}
-      - PGPORT=5432
-    ports:
-      - '5001:5001'
-    networks:
-      - 'elenchus-network'
-
-  client:
-    container_name: client
-    stdin_open: true
-    build:
-      context: ./client
-    volumes:
-      - /app/node_modules
-      - ./client:/app
-    ports:
-      - '5173:5173'
-    networks:
-      - 'elenchus-network'
-
-volumes:
-  pgdata:
-    driver: local
-networks:
-  elenchus-network:
-    driver: bridge
+      - 127.0.0.1:5173:5173
+    command:
+      - sh
+      - '-c'
+      - npm run build:contracts && npm exec -- concurrently --kill-others "npm run build --workspace=@elenchus/contracts -- --watch --preserveWatchOutput" "npm run dev --workspace=elenchus -- --host 0.0.0.0"
+    develop:
+      watch:
+        - action: sync
+          path: ./client/src
+          target: /app/client/src
+          initial_sync: true
+        - action: sync
+          path: ./client/public
+          target: /app/client/public
+          initial_sync: true
+        - action: sync
+          path: ./client/astro.config.mjs
+          target: /app/client/astro.config.mjs
+          initial_sync: true
+        - action: sync
+          path: ./client/tailwind.config.cjs
+          target: /app/client/tailwind.config.cjs
+          initial_sync: true
+        - action: sync
+          path: ./client/postcss.config.cjs
+          target: /app/client/postcss.config.cjs
+          initial_sync: true
+        - action: sync
+          path: ./client/tsconfig.json
+          target: /app/client/tsconfig.json
+          initial_sync: true
+        - action: sync
+          path: ./packages/contracts/src
+          target: /app/packages/contracts/src
+          initial_sync: true
+        - action: sync
+          path: ./packages/contracts/tsconfig.json
+          target: /app/packages/contracts/tsconfig.json
+          initial_sync: true
+        - action: rebuild
+          path: ./package.json
+        - action: rebuild
+          path: ./package-lock.json
+        - action: rebuild
+          path: ./client/package.json
+        - action: rebuild
+          path: ./server/package.json
+        - action: rebuild
+          path: ./packages/contracts/package.json
+        - action: rebuild
+          path: ./Dockerfile.dev
+        - action: rebuild
+          path: ./.dockerignore
+        - action: rebuild
+          path: ./scripts/copy-logos.cjs

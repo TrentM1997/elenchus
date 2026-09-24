@@ -1,21 +1,11 @@
 import React from "react";
 
-interface ArticleTitle {
-    title: string | null
-};
-
-function ArticleTitle({ title }) {
-
-    return (
-        <div className="p-4 w-full max-w-88 md:max-w-96">
-            <h3
-
-                className="text-sm md:text-base tracking-tight font-light xl:text-xl text-white/90 text-wrap z-10 opacity-100 relative transition-all duration-200 ease-in-out">
-                {title}
-            </h3>
-        </div>
-    );
-};
-
+function ArticleTitle({ title }: { title: string | null }): JSX.Element {
+  return (
+    <h1 className="text-pretty text-xl font-light leading-snug tracking-tight text-zinc-100 sm:text-2xl xl:text-3xl">
+      {title}
+    </h1>
+  );
+}
 
 export default React.memo(ArticleTitle);

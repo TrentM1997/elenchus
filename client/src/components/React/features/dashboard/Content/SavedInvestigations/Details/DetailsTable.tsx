@@ -5,7 +5,7 @@ import ProcessMap from "./ProcessMap";
 import { useEffect } from "react";
 import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary";
 import LostData from "@/components/React/global/ErrorBoundaries/messages/LostData";
-import { InvestigationSchemaType } from "@/lib/schemas/investigations/InvestigationSchema";
+import { InvestigationSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 
 interface InvestigationData {
   id: string;

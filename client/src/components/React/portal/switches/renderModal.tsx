@@ -8,6 +8,7 @@ import FeedBackForm from "@/components/React/session/forms/UserFeedback/Feedback
 import { PreviousWork } from "../../features/investigate/phase5/modals/PreviousWork";
 import type { ActiveModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 import ArticleExtractionToast from "../../global/modals/ArticleExtactionToast";
+import { assertNever } from "@/lib/helpers/asserts/assertNever";
 
 const renderModal = (modal: ActiveModal): JSX.Element | null => {
   switch (modal) {
@@ -25,7 +26,7 @@ const renderModal = (modal: ActiveModal): JSX.Element | null => {
       );
     case "Extract Confirmation":
       return (
-        <ModalLayer mountDelay={0.6} key="extract-layer">
+        <ModalLayer key="extract-layer">
           <GetTheseArticles />
         </ModalLayer>
       );
@@ -66,8 +67,7 @@ const renderModal = (modal: ActiveModal): JSX.Element | null => {
       return null;
 
     default: {
-      const exhaustive: never = modal;
-      return null;
+      return assertNever(modal);
     }
   }
 };

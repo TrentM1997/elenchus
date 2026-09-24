@@ -1,0 +1,55 @@
+import { Type, Static } from "@sinclair/typebox";
+import { PersistenceFailedResponseSchema } from "../auth/PersistenceFailedSchema.js";
+import { ArticleSchema } from "./ArticleSchema.js";
+
+export const BookmarkArticleIdSchema = Type.Number();
+
+export type BookmarkArticleIdSchemaType = Static<
+  typeof BookmarkArticleIdSchema
+>;
+
+export const BookmarkSchema = Type.Object({
+  article_id: BookmarkArticleIdSchema,
+  created_at: Type.String(),
+  id: Type.String(),
+  updated_at: Type.Union([Type.String(), Type.Null()]),
+  user_id: Type.String(),
+});
+
+const BookmarkSavedSchema = Type.Object({
+  ok: Type.Literal(true),
+  data: BookmarkSchema,
+});
+
+export const BookmarkResponseSchema = Type.Union([
+  BookmarkSavedSchema,
+  PersistenceFailedResponseSchema,
+]);
+
+export const BookmarkedArticlesResponseSchema = Type.Union([
+  Type.Object({
+    data: Type.Array(ArticleSchema),
+    ok: Type.Literal(true),
+  }),
+  PersistenceFailedResponseSchema,
+]);
+
+export type BookmarkedArticlesResponseSchemaType = Static<
+  typeof BookmarkedArticlesResponseSchema
+>;
+
+export const DeleteBookmarkResponseSchema = Type.Union([
+  Type.Object({
+    ok: Type.Literal(true),
+    data: Type.Array(BookmarkSchema),
+  }),
+  PersistenceFailedResponseSchema,
+]);
+
+export type DeleteBookmarkResponseSchemaType = Static<
+  typeof DeleteBookmarkResponseSchema
+>;
+
+export type BookmarkResponseSchemaType = Static<typeof BookmarkResponseSchema>;
+
+export type BookmarkSchemaType = Static<typeof BookmarkSchema>;

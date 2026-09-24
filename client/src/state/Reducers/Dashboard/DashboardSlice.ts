@@ -5,8 +5,8 @@ import {
   hydrateOpenedArticle,
   hydrateOpenInvestigation,
 } from "./thunks";
-import { InvestigationSchemaType } from "@/lib/schemas/investigations/InvestigationSchema";
-import { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
+import { InvestigationSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
+import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import { DashboardTab, OpenInvestigation, VirtuosoScrollPos } from "./types";
 
 export type SavedArticles = AsyncState<ArticleSchemaType[]>;

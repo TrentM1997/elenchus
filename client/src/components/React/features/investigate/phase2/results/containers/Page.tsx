@@ -1,6 +1,6 @@
 import type { JSX } from "react";
 import type { SelectedArticles } from "@/state/Reducers/Investigate/articles/ChosenArticles";
-import type { BrowsingOptionSchemaType } from "@/lib/schemas/articles/BrowsingOptionSchema";
+import type { BrowsingOptionSchemaType } from "@elenchus/contracts/schemas/articles/BrowsingOptionSchema";
 import { Fragment, lazy } from "react";
 import { Suspense } from "react";
 import DelayedFallback from "@/components/React/global/fallbacks/DelayedFallback";

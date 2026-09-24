@@ -3,19 +3,17 @@ import { IAppServices } from "../../../services/appServices.js";
 import { wrapAsync } from "../../async/wrapAsync.js";
 import { ServerError } from "../../errors/ServerError.js";
 import { validateOrThrow } from "../../validation/validateOrThrow.js";
-import { SearchQuerySchema } from "../../../schemas/SearchQuerySchema.js";
-import { LoginSchema } from "../../../schemas/LoginSchema.js";
-import { ScrapeRequestSchema } from "../../../schemas/ScrapeRequestSchema.js";
-import { PasswordResetRequestSchema } from "../../../schemas/PasswordResetRequestSchema.js";
-import { FeedbackReqSchema } from "../../../schemas/FeedbackReqSchema.js";
-import { PUBLIC_API_ROUTES } from "./routeConfig.js";
 import { ClientError } from "../../errors/ClientError.js";
+import { PUBLIC_API_CONFIG } from "@elenchus/contracts";
 
 export function publicRoutes(app: IAppServices, router: Router) {
   router.post(
-    PUBLIC_API_ROUTES.user.feedback,
+    PUBLIC_API_CONFIG.user.feedback.path,
     wrapAsync(async (req, res) => {
-      const feedback = validateOrThrow(FeedbackReqSchema, req.body.feedback);
+      const { feedback } = validateOrThrow(
+        PUBLIC_API_CONFIG.user.feedback.bodySchema,
+        req.body,
+      );
 
       const result = await app.services.api.user.submitFeedback(feedback);
 
@@ -28,9 +26,12 @@ export function publicRoutes(app: IAppServices, router: Router) {
   );
 
   router.post(
-    PUBLIC_API_ROUTES.user.passwordReset,
+    PUBLIC_API_CONFIG.user.passwordReset.path,
     wrapAsync(async (req, res) => {
-      const { email } = validateOrThrow(PasswordResetRequestSchema, req.body);
+      const { email } = validateOrThrow(
+        PUBLIC_API_CONFIG.user.passwordReset.bodySchema,
+        req.body,
+      );
       const result = await app.services.api.user.requestPasswordReset(email);
 
       if (!result.ok) {
@@ -46,7 +47,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
   );
 
   router.post(
-    PUBLIC_API_ROUTES.auth.recoverSession,
+    PUBLIC_API_CONFIG.auth.recover.path,
     wrapAsync(async (req, res) => {
       const result = await req.auth.recoverSession(req, res);
 
@@ -55,8 +56,12 @@ export function publicRoutes(app: IAppServices, router: Router) {
   );
 
   router.post(
-    PUBLIC_API_ROUTES.auth.login,
+    PUBLIC_API_CONFIG.auth.login.path,
     wrapAsync(async (req, res) => {
+      validateOrThrow(
+        PUBLIC_API_CONFIG.auth.login.bodySchema,
+        req.body,
+      );
       const { data, error } = await req.auth.login(req, res);
 
       if (error) {
@@ -68,7 +73,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
   );
 
   router.post(
-    PUBLIC_API_ROUTES.auth.logOut,
+    PUBLIC_API_CONFIG.auth.logOut.path,
     wrapAsync(async (req, res) => {
       const result = await req.auth.logOut(req, res);
 
@@ -81,9 +86,12 @@ export function publicRoutes(app: IAppServices, router: Router) {
   );
 
   router.post(
-    PUBLIC_API_ROUTES.auth.signUp,
+    PUBLIC_API_CONFIG.auth.signUp.path,
     wrapAsync(async (req, res) => {
-      const body = validateOrThrow(LoginSchema, req.body);
+      const body = validateOrThrow(
+        PUBLIC_API_CONFIG.auth.signUp.bodySchema,
+        req.body,
+      );
 
       const result = await app.services.api.user.signUp(body);
 
@@ -98,10 +106,12 @@ export function publicRoutes(app: IAppServices, router: Router) {
   );
 
   router.get(
-    PUBLIC_API_ROUTES.integrations.wiki,
+    PUBLIC_API_CONFIG.integrations.wiki.path,
     wrapAsync(async (req, res) => {
-      const query = req.query.q;
-      const term = validateOrThrow(SearchQuerySchema, query);
+      const { q: term } = validateOrThrow(
+        PUBLIC_API_CONFIG.integrations.wiki.querySchema,
+        req.query,
+      );
       const result = await app.integrations.wiki.extract(term);
 
       res.success("extracted term from wikipedia successfully", result, 200);
@@ -109,9 +119,12 @@ export function publicRoutes(app: IAppServices, router: Router) {
   );
 
   router.get(
-    PUBLIC_API_ROUTES.articles.poll,
+    PUBLIC_API_CONFIG.articles.poll.path,
     wrapAsync(async (req, res) => {
-      const { jobId } = req.params;
+      const { jobId } = validateOrThrow(
+        PUBLIC_API_CONFIG.articles.poll.paramsSchema,
+        req.params,
+      );
       const job = app.services.api.articles.getExtractionJob(jobId);
 
       if (!job) {
@@ -127,9 +140,12 @@ export function publicRoutes(app: IAppServices, router: Router) {
   );
 
   router.post(
-    PUBLIC_API_ROUTES.articles.extract,
+    PUBLIC_API_CONFIG.articles.extract.path,
     wrapAsync(async (req, res) => {
-      const { articles } = validateOrThrow(ScrapeRequestSchema, req.body);
+      const { articles } = validateOrThrow(
+        PUBLIC_API_CONFIG.articles.extract.bodySchema,
+        req.body,
+      );
       const result = app.services.api.articles.extract(articles);
 
       res.success("Extraction started", result, 202);
@@ -137,7 +153,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
   );
 
   router.get(
-    PUBLIC_API_ROUTES.integrations.blueSky.feed,
+    PUBLIC_API_CONFIG.integrations.blueSky.feed.path,
     wrapAsync(async (req, res) => {
       const result = await app.integrations.blueSky.feed();
 
@@ -146,9 +162,12 @@ export function publicRoutes(app: IAppServices, router: Router) {
   );
 
   router.get(
-    PUBLIC_API_ROUTES.integrations.blueSky.search,
+    PUBLIC_API_CONFIG.integrations.blueSky.search.path,
     wrapAsync(async (req, res) => {
-      const query = validateOrThrow(SearchQuerySchema, req.query.q);
+      const { q: query } = validateOrThrow(
+        PUBLIC_API_CONFIG.integrations.blueSky.search.querySchema,
+        req.query,
+      );
       const result = await app.integrations.blueSky.search(query);
 
       res.success("Blue Sky posts searched successfully", result, 200);
@@ -156,9 +175,12 @@ export function publicRoutes(app: IAppServices, router: Router) {
   );
 
   router.get(
-    PUBLIC_API_ROUTES.integrations.newsApi,
+    PUBLIC_API_CONFIG.integrations.newsApi.path,
     wrapAsync(async (req, res) => {
-      const query = validateOrThrow(SearchQuerySchema, req.query.q);
+      const { q: query } = validateOrThrow(
+        PUBLIC_API_CONFIG.integrations.newsApi.querySchema,
+        req.query,
+      );
 
       const result = await app.integrations.newsApi.search(query);
 

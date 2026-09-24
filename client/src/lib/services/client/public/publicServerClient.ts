@@ -1,4 +1,4 @@
-import type { PublicServerClientRoutes } from "@/infra/transport/types/routeDefinitions";
+import type { PublicApiContract } from "@elenchus/contracts";
 import { IHttpClient } from "@/lib/services/client/http/types";
 import { AuthRouteHandler, IAuthRouteHandler } from "./handlers/AuthHandler";
 import {
@@ -27,7 +27,7 @@ export class PublicServerClient implements IPublicServerClient {
   public readonly integrations: IThirdPartyRouteHandler;
   public readonly extraction: IExtractArticlesRouteHandler;
   constructor(
-    private readonly routes: PublicServerClientRoutes,
+    private readonly routes: PublicApiContract,
     private readonly http: IHttpClient,
   ) {
     this.auth = new AuthRouteHandler(this.routes, this.http);

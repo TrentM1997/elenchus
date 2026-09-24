@@ -1,17 +1,8 @@
-import {
-  ArticleSchema,
-  ArticleSchemaType,
-} from "../../../../schemas/ArticleSchema.js";
+import { ArticleSchema, ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import { validateServerOrThrow } from "../../../../core/validation/validateOrThrow.js";
-import { UserSchema, UserSchemaType } from "../../../../schemas/Users.js";
-import {
-  SupabaseSessionSchema,
-  SupabaseSessionSchemaType,
-} from "../../../../schemas/SessionSchema.js";
-import {
-  ResetPasswordResponseSchema,
-  ResetPasswordResponseSchemaType,
-} from "../../../../schemas/ChangePasswordSchema.ts";
+import { UserSchema, UserSchemaType } from "@elenchus/contracts/schemas/auth/UserSchema";
+import { SupabaseSessionSchema, SupabaseSessionSchemaType } from "@elenchus/contracts/schemas/auth/SupabaseSchemas";
+import { ResetPasswordResponseSchema, ResetPasswordResponseSchemaType } from "@elenchus/contracts/schemas/auth/ResetPasswordSchema";
 
 export class UserDataValidator {
   public validateArticles(articles: unknown[]): ArticleSchemaType[] {

@@ -3,12 +3,8 @@ import {
   validateOrThrow,
   validateServerOrThrow,
 } from "../../../../core/validation/validateOrThrow.js";
-import {
-  ArticleSchemaType,
-  ArticleSchema,
-  InsertableArticleSchema,
-  InsertableArticleSchemaType,
-} from "../../../../schemas/ArticleSchema.js";
+import { ArticleSchemaType, ArticleSchema } from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import { InsertableArticleSchema, InsertableArticleSchemaType } from "../../../../schemas/ArticleSchema.js";
 import type { AuthenticatedUserId } from "../../../../services/auth/authorization.js";
 
 export type InsertableArticleType =

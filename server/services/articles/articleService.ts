@@ -1,9 +1,7 @@
 import { IDbClient } from "../../db/access/client/dbClient.js";
 import { ServerError } from "../../core/errors/ServerError.js";
-import {
-  ArticleSchemaType,
-  InsertableArticleSchemaType,
-} from "../../schemas/ArticleSchema.js";
+import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import { InsertableArticleSchemaType } from "../../schemas/ArticleSchema.js";
 import { FcParam } from "../../types/types.js";
 import { IFirecrawlService } from "../firecrawl/firecrawlService.js";
 import { JobResult } from "../firecrawl/types.js";

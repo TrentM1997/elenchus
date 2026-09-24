@@ -1,11 +1,9 @@
-import { PublicServerClientRoutes } from "@/infra/transport/types/routeDefinitions";
+import type { PublicApiContract } from "@elenchus/contracts";
 import {
-  ExecuteExtractResponseSchema,
   ExecuteExtractResponseSchemaType,
-  ExtractionJobResultSchema,
   ExtractionJobResultSchemaType,
   ExtractionResult,
-} from "@/lib/schemas/articles/ArticleSchema";
+} from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import { IHttpClient } from "../../http/types";
 import {
   IPollExtractionHandler,
@@ -20,8 +18,8 @@ export interface IExtractArticlesRouteHandler {
 export class ExtractArticlesRouteHandler implements IExtractArticlesRouteHandler {
   private pollRunner: IPollExtractionHandler;
   constructor(
-    private readonly routes: Pick<PublicServerClientRoutes, "articles">,
-    private readonly http: Pick<IHttpClient, "post" | "get">,
+    private readonly routes: Pick<PublicApiContract, "articles">,
+    private readonly http: IHttpClient,
   ) {
     this.pollRunner = new PollExtractionHandler({
       poll: this.poll.bind(this),
@@ -29,9 +27,7 @@ export class ExtractArticlesRouteHandler implements IExtractArticlesRouteHandler
     });
   }
 
-  public async runExtractionJob(
-    params: PollExtractionParams,
-  ): Promise<ExtractionResult> {
+  public async runExtractionJob(params: PollExtractionParams) {
     return await this.pollRunner.runExtraction(params);
   }
 
@@ -41,23 +37,21 @@ export class ExtractArticlesRouteHandler implements IExtractArticlesRouteHandler
   }: {
     jobId: string;
     signal?: AbortSignal;
-  }): Promise<ExtractionJobResultSchemaType> {
-    return await this.http.get(
-      `${this.routes.articles.poll}${encodeURIComponent(jobId)}`,
-      ExtractionJobResultSchema,
-      signal,
+  }) {
+    const route = this.routes.articles.poll;
+    return await this.http.request(
+      route,
+      route.path.replace(":jobId", encodeURIComponent(jobId)),
+      { signal },
     );
   }
 
-  public async extract(
-    body: SelectedArticle[],
-    signal?: AbortSignal,
-  ): Promise<ExecuteExtractResponseSchemaType> {
-    return await this.http.post(
-      this.routes.articles.extract,
-      ExecuteExtractResponseSchema,
-      { articles: body },
+  public async extract(articles: SelectedArticle[], signal?: AbortSignal) {
+    const route = this.routes.articles.extract;
+
+    return await this.http.request(route, route.path, {
+      body: { articles },
       signal,
-    );
+    });
   }
 }

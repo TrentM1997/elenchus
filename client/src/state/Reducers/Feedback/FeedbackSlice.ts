@@ -1,4 +1,4 @@
-import { FeedbackResponseSchemaType } from "@/lib/schemas/auth/FeedbackSchema";
+import { FeedbackResponseSchemaType } from "@elenchus/contracts/schemas/auth/FeedbackSchema";
 import { AsyncState } from "@/state/types";
 import { createSlice } from "@reduxjs/toolkit";
 

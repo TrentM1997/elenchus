@@ -1,0 +1,15 @@
+.git
+**/node_modules
+**/dist
+**/.astro
+**/.env
+**/.env.*
+**/*.env
+**/*.env.*
+**/*.log
+**/*.tsbuildinfo
+**/coverage
+.codex
+.agents
+.idea
+.vscode

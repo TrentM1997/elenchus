@@ -8,7 +8,7 @@ import {
   SelectedArticles,
 } from "@/state/Reducers/Investigate/articles/ChosenArticles";
 import { useCallback } from "react";
-import { BrowsingOptionSchemaType } from "@/lib/schemas/articles/BrowsingOptionSchema";
+import { BrowsingOptionSchemaType } from "@elenchus/contracts/schemas/articles/BrowsingOptionSchema";
 
 export const useSelectForExtract = () => {
   const pages = useSelector(

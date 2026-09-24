@@ -5,7 +5,7 @@ export default function MoreButton({ articleData, open, setOpen }) {
     //TODO: change 'more' options from showing all authors, to displaying more about the source bias information
 
     return (
-        <div className='w-full h-full xs:self-start md:self-center xs:mt-2 md:mt-0 relative'>
+        <div className='relative flex h-full w-full items-center justify-center'>
             {open &&
                 <More
                     key={articleData.article_url}

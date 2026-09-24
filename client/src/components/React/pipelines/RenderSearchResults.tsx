@@ -3,7 +3,7 @@ import type { RootState } from "@/state/store";
 import { useSelector } from "react-redux";
 import { SearchResultsState } from "@/state/Reducers/Investigate/articles/SearchResults";
 import { SelectedArticles } from "@/state/Reducers/Investigate/articles/ChosenArticles";
-import { BrowsingOptionSchemaType } from "@/lib/schemas/articles/BrowsingOptionSchema";
+import { BrowsingOptionSchemaType } from "@elenchus/contracts/schemas/articles/BrowsingOptionSchema";
 import ResultsPending from "../features/investigate/phase2/results/pending/ResultsPending";
 import NoSearchResults from "../features/investigate/phase2/results/errors/SearchFailed";
 import Page from "../features/investigate/phase2/results/containers/Page";

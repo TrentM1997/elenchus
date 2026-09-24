@@ -1,6 +1,7 @@
-import { ValidServerRoute } from "@/infra/transport/types/routeDefinitions";
 import { Static, TSchema } from "@sinclair/typebox";
 import { ServerRequestError } from "../errors/ServerRequestError";
+import type { RouteConfigDefinition } from "@elenchus/contracts";
+import type { RequestOptions } from "./requestOptions";
 import {
   IConfigRequestHandler,
   IHttpClient,
@@ -14,117 +15,87 @@ export class HttpClient implements IHttpClient {
     private readonly configure: IConfigRequestHandler,
   ) {}
 
-  public async get<TResponse extends TSchema>(
-    url: ValidServerRoute,
+  public async request<const R extends RouteConfigDefinition>(
+    route: R,
+    url: string,
+    options: RequestOptions<NoInfer<R>>,
+  ): Promise<Static<R["outputSchema"]>> {
+    const { body, signal } = options;
+    signal?.throwIfAborted();
+    const { outputSchema: schema, method } = route;
+
+    switch (method) {
+      case "GET":
+        return this.get(url, schema, signal);
+      case "POST":
+        return this.post(url, schema, body, signal);
+      case "DELETE":
+        return this.delete(url, schema, signal);
+      default:
+        throw new TypeError(`Unsupported HTTP method: ${method}`);
+    }
+  }
+
+  private async get<TResponse extends TSchema>(
+    url: string,
     schema: TResponse,
     signal?: AbortSignal,
   ): Promise<Static<TResponse>> {
-    const options = this.configure.optionsGET(signal);
-
-    let response: Response;
-
-    try {
-      response = await fetch(url, options);
-    } catch (error) {
-      throw this.handleAndWrapError({
-        method: "GET",
-        url,
-        error,
-        signal,
-      });
-    }
-
-    if (!response.ok) {
-      throw new ServerRequestError(
-        `GET ${url} failed with status ${response.status}`,
-        {
-          kind: "http",
-          method: "GET",
-          url,
-          status: response.status,
-        },
-      );
-    }
-    return await this.parser.validateResponseOrThrow(schema, response, {
+    return this.sendRequest(url, schema, {
+      ...this.configure.optionsGET(signal),
       method: "GET",
-      url,
-      signal,
     });
   }
 
-  public async post<TResponse extends TSchema, TBody>(
-    url: ValidServerRoute,
+  private async post<TResponse extends TSchema, TBody>(
+    url: string,
     schema: TResponse,
     body?: TBody,
     signal?: AbortSignal,
   ): Promise<Static<TResponse>> {
-    const options = { ...this.configure.optionsPOST(body), signal };
-
-    let response: Response;
-
-    try {
-      response = await fetch(url, options);
-    } catch (error) {
-      throw this.handleAndWrapError({
-        method: "POST",
-        url,
-        error,
-        signal,
-      });
-    }
-
-    if (!response.ok) {
-      throw new ServerRequestError(
-        `POST ${url} failed with status ${response.status}`,
-        {
-          kind: "http",
-          method: "POST",
-          url,
-          status: response.status,
-        },
-      );
-    }
-
-    return await this.parser.validateResponseOrThrow(schema, response, {
+    return this.sendRequest(url, schema, {
+      ...this.configure.optionsPOST(body),
       method: "POST",
-      url,
       signal,
     });
   }
 
-  public async delete<TResponse extends TSchema>(
-    url: ValidServerRoute,
+  private async delete<TResponse extends TSchema>(
+    url: string,
     schema: TResponse,
+    signal?: AbortSignal,
   ): Promise<Static<TResponse>> {
     const options = this.configure.optionsDELETE();
-    let response: Response;
+    return this.sendRequest(url, schema, {
+      ...options,
+      method: "DELETE",
+      signal,
+    });
+  }
 
+  private async sendRequest<TResponse extends TSchema>(
+    url: string,
+    schema: TResponse,
+    options: RequestInit & { method: ResponseContext["method"] },
+  ): Promise<Static<TResponse>> {
+    const context: ResponseContext = {
+      method: options.method,
+      url,
+      signal: options.signal ?? undefined,
+    };
+    let response: Response;
     try {
       response = await fetch(url, options);
     } catch (error) {
-      throw this.handleAndWrapError({
-        method: "DELETE",
-        url,
-        error,
-      });
+      throw this.handleAndWrapError({ ...context, error });
     }
-
     if (!response.ok) {
       throw new ServerRequestError(
-        `DELETE ${url} failed with status ${response.status}`,
-        {
-          kind: "http",
-          method: "DELETE",
-          url,
-          status: response.status,
-        },
+        `${options.method} ${url} failed with status ${response.status}`,
+        { ...context, kind: "http", status: response.status },
       );
     }
-
-    return await this.parser.validateResponseOrThrow(schema, response, {
-      method: "DELETE",
-      url,
-    });
+    return this.parser.validateResponseOrThrow(schema, response, context);
   }
 
   private handleAndWrapError(

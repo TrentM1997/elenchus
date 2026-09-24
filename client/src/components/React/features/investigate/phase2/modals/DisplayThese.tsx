@@ -13,8 +13,7 @@ export default function DisplayThese() {
   return (
     <div
       aria-label="Chosen articles container"
-      className="flex items-center justify-center h-full w-full opacity-0 
-                animate-fade-clip animation-delay-700ms ease-soft"
+      className="flex items-center justify-center h-full w-full"
     >
       <div className="relative w-full h-[55dvh] sm:h-full mx-auto">
         <RenderSelectedArticles

@@ -1,5 +1,5 @@
-import { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
-import { InvestigationSchemaType } from "@/lib/schemas/investigations/InvestigationSchema";
+import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import { InvestigationSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import { AsyncState } from "@/state/types";
 
 export type OpenedArticle = AsyncState<ArticleSchemaType>;

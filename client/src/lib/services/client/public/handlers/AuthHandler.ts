@@ -1,18 +1,11 @@
-import { PublicServerClientRoutes } from "@/infra/transport/types/routeDefinitions";
+import type { PublicApiContract } from "@elenchus/contracts";
 import {
-  AuthTokenResponsePasswordSchema,
-  AuthTokenResponsePasswordType,
-  CreateUserResponseSchema,
   CreateUserResponseSchemaType,
-  LoginResponseSchema,
   LoginResponseSchemaType,
-  LogOutResultSchema,
   LogOutResultSchemaType,
-  RecoverSessionResponseSchema,
   RecoverSessionResponseSchemaType,
-  ResetPasswordResponseSchema,
   ResetPasswordResponseSchemaType,
-} from "@/lib/schemas/auth/AuthSchemas";
+} from "@elenchus/contracts/schemas/auth/AuthSchemas";
 import { IHttpClient } from "../../http/types";
 
 export type LoginCredentials = { email: string; password: string };
@@ -29,48 +22,37 @@ export interface IAuthRouteHandler {
 
 export class AuthRouteHandler implements IAuthRouteHandler {
   constructor(
-    private readonly routes: Pick<PublicServerClientRoutes, "auth" | "user">,
-    private readonly http: IHttpClient,
+    private readonly routes: Pick<PublicApiContract, "auth" | "user">,
+    private readonly http: Pick<IHttpClient, "request">,
   ) {}
 
-  public async login(
-    credentials: LoginCredentials,
-  ): Promise<LoginResponseSchemaType> {
-    return await this.http.post(
-      this.routes.auth.login,
-      LoginResponseSchema,
-      credentials,
-    );
+  public async login(credentials: LoginCredentials) {
+    const route = this.routes.auth.login;
+
+    return await this.http.request(route, route.path, { body: credentials });
   }
 
-  public async logOut(): Promise<LogOutResultSchemaType> {
-    return await this.http.post(this.routes.auth.logOut, LogOutResultSchema);
+  public async logOut() {
+    const route = this.routes.auth.logOut;
+
+    return await this.http.request(route, route.path, {});
   }
 
-  public async recover(): Promise<RecoverSessionResponseSchemaType> {
-    return await this.http.post(
-      this.routes.auth.recover,
-      RecoverSessionResponseSchema,
-    );
+  public async recover() {
+    const route = this.routes.auth.recover;
+
+    return await this.http.request(route, route.path, {});
   }
 
-  public async signup(
-    credentials: LoginCredentials,
-  ): Promise<CreateUserResponseSchemaType> {
-    return await this.http.post(
-      this.routes.auth.signUp,
-      CreateUserResponseSchema,
-      credentials,
-    );
+  public async signup(credentials: LoginCredentials) {
+    const route = this.routes.auth.signUp;
+
+    return await this.http.request(route, route.path, { body: credentials });
   }
 
-  public async resetPassword(
-    credentials: LoginCredentials,
-  ): Promise<ResetPasswordResponseSchemaType> {
-    return await this.http.post(
-      this.routes.user.passwordReset,
-      ResetPasswordResponseSchema,
-      credentials,
-    );
+  public async resetPassword(credentials: LoginCredentials) {
+    const route = this.routes.user.passwordReset;
+
+    return await this.http.request(route, route.path, { body: credentials });
   }
 }

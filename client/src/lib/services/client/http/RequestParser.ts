@@ -5,7 +5,7 @@ import { IRequestParser, ResponseContext } from "./types";
 import {
   HttpSuccessSchema,
   HttpSuccessSchemaType,
-} from "@/lib/schemas/api/HttpSuccessSchema";
+} from "@elenchus/contracts/schemas/api/HttpSuccessSchema";
 
 export class RequestParser implements IRequestParser {
   public async validateResponseOrThrow<TResponse extends TSchema>(

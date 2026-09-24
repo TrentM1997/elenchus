@@ -2,7 +2,7 @@ import { createSlice, PayloadAction, createSelector } from "@reduxjs/toolkit";
 import { RootState } from "@/state/store";
 import { getWikiExtract } from "./thunks";
 import { AsyncState } from "@/state/types";
-import { WikiResponseSchemaType } from "@/lib/schemas/integrations/WikipediaExtractSchemas";
+import { WikiResponseSchemaType } from "@elenchus/contracts/schemas/integrations/WikipediaExtractSchemas";
 
 interface modalXY {
   x: number;

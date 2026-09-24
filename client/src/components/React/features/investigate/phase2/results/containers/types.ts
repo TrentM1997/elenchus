@@ -1,4 +1,4 @@
-import { BrowsingOptionSchemaType } from "@/lib/schemas/articles/BrowsingOptionSchema";
+import { BrowsingOptionSchemaType } from "@elenchus/contracts/schemas/articles/BrowsingOptionSchema";
 
 export interface Page {
   index: number;

@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import DataTable from "./DataTable";
 import RenderFinalOptionsByUserKind from "@/components/React/pipelines/RenderFinalOptionsByUserKind";
-import { PersistInvestigationInputSchemaType } from "@/lib/schemas/investigations/InvestigationSchema";
+import { PersistInvestigationInputSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 
 export default function FinalResults({
   idea,

@@ -1,68 +1,51 @@
 import MoreButton from "../../../../buttons/MoreButton";
-import SaveArticle from '../../../../buttons/SaveArticle';
+import SaveArticle from "../../../../buttons/SaveArticle";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import ScrolltoTop from "@/lib/helpers/scroll/ScrollToTop";
 import ArticleMetaData from "./ArticleMetaData";
 import ArticleImage from "../ArticleImage";
+import ArticleTitle from "../ArticleTitle";
+import PublishedBy from "../PublishedBy";
+import type { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 
-export default function ArticleHeader({ articleData, investigating }): JSX.Element | null {
-    const [open, setOpen] = useState<boolean>(false)
+interface ArticleHeaderProps {
+  articleData: ArticleSchemaType;
+  investigating?: boolean;
+  animateEntrance?: boolean;
+}
 
-    return (
-        <motion.header
-            initial={{ opacity: 0 }}
-            animate={{
-                opacity: 1, transition: {
-                    delay: 0.2,
-                    type: 'tween',
-                    duration: 0.3
-                }
-            }}
-            exit={{
-                opacity: 0,
-                transition: {
-                    duration: 0.1
-                }
-            }}
-            className="border-b border-white/10"
-        >
-            <ScrolltoTop />
-            <section
-                className="flex flex-col gap-y-2 md:flex-row 
-            md:gap-x-4 items-stretch w-full h-full mx-auto mb-3"
-            >
-                <article
-                    className="w-full h-full flex flex-col gap-y-4 xl:flex-row items-start xl:items-center 2xl:items-end xl:gap-x-4 xl:gap-y-0
-                justify-between self-end"
-                >
-                    <ArticleImage article={articleData} />
-                    <ArticleMetaData article={articleData} />
+export default function ArticleHeader({ articleData, investigating, animateEntrance = true }: ArticleHeaderProps): JSX.Element {
+  const [open, setOpen] = useState(false);
 
-
-                    <div
-                        className="self-end w-auto h-full flex translate-y-1 xl:translate-y-0
-                        flex-col gap-y-0 md:gap-y-4 items-center"
-                    >
-                        <div
-                            className="w-auto h-auto flex justify-start"
-                        >
-                            {investigating && <SaveArticle
-                                open={open}
-                                article={articleData}
-
-                            />}
-                        </div>
-                        <div className="w-auto h-auto">
-                            <MoreButton
-                                open={open}
-                                setOpen={setOpen}
-                                articleData={articleData}
-                            />
-                        </div>
-                    </div>
-                </article>
-            </section>
-        </motion.header>
-    );
-};
+  return (
+    <motion.header
+      initial={animateEntrance ? { opacity: 0 } : false}
+      animate={{ opacity: 1, transition: { delay: 0.2, type: "tween", duration: 0.3 } }}
+      exit={{ opacity: 0, transition: { duration: 0.1 } }}
+      className="relative rounded-3xl border border-white/10 bg-white/[0.025] p-4 sm:p-6"
+    >
+      <ScrolltoTop />
+      <div className="grid items-center gap-6 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] md:gap-8">
+        <ArticleImage article={articleData} />
+        <div className="flex min-w-0 flex-col items-start gap-4 sm:gap-5">
+          <PublishedBy article={articleData} />
+          <ArticleTitle title={articleData.title} />
+        </div>
+      </div>
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-4 sm:mt-6">
+        <ArticleMetaData article={articleData} />
+        <div className="ml-auto flex shrink-0 items-center gap-2">
+          {investigating && (
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] p-2 transition-colors hover:bg-white/10 [&_svg]:h-6 [&_svg]:w-6">
+              <SaveArticle open={open} article={articleData} />
+            </div>
+          )}
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] transition-colors hover:bg-white/10">
+            <MoreButton open={open} setOpen={setOpen} articleData={articleData} />
+          </div>
+        </div>
+      </div>
+    </motion.header>
+  );
+}

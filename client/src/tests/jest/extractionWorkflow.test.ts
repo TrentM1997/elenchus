@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { TypeCompiler } from "@sinclair/typebox/compiler";
-import { ExtractionJobSchema } from "../../lib/schemas/articles/ArticleSchema";
-import type { ArticleSchemaType, ExtractionResult } from "../../lib/schemas/articles/ArticleSchema";
+import { ExtractionJobSchema } from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import type { ArticleSchemaType, ExtractionResult } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import { serverClient } from "../../lib/services/client/serverClient";
 import reducer, { closeNotification, resetReadingSlice, incrementStoryBy } from "../../state/Reducers/Investigate/articles/ExtractedArticles";
 import { extractionProgressReceived } from "../../state/Reducers/Investigate/articles/actions";
@@ -11,7 +11,7 @@ import { ExtractArticlesRouteHandler } from "../../lib/services/client/public/ha
 import { HttpClient } from "../../lib/services/client/http/httpClient";
 import { RequestParser } from "../../lib/services/client/http/RequestParser";
 import { ConfigRequestHandler } from "../../lib/services/client/http/ConfigRequestHandler";
-import { serverClientRoutes } from "../../infra/transport/types/routeDefinitions";
+import { PUBLIC_API_CONFIG } from "@elenchus/contracts";
 import { ServerRequestError } from "../../lib/services/client/errors/ServerRequestError";
 import { EXTRACTION_POLLING_POLICY, type ExtractionRequests } from "../../lib/services/client/public/handlers/PollExtractionHandler";
 
@@ -94,7 +94,7 @@ beforeEach(() => {
   jest.spyOn(ExtractArticlesRouteHandler.prototype, "extract").mockImplementation(client.extract);
   jest.spyOn(ExtractArticlesRouteHandler.prototype, "poll").mockImplementation(client.poll);
   const handler = new ExtractArticlesRouteHandler(
-    serverClientRoutes.public,
+    PUBLIC_API_CONFIG,
     new HttpClient(new RequestParser(), new ConfigRequestHandler()),
   );
   jest.mocked(serverClient.general.extraction.runExtractionJob)
@@ -252,7 +252,7 @@ test("the HTTP client sends the server's extraction body and polls its job route
     .mockResolvedValueOnce(new Response(JSON.stringify({ status: "success", message: "Extraction started", data: { jobId: "job-1" } }), { status: 202 }))
     .mockResolvedValueOnce(new Response(JSON.stringify({ status: "success", message: "Extraction progress", data: snapshot("pending") }), { status: 200 }));
   const handler = new ExtractArticlesRouteHandler(
-    serverClientRoutes.public,
+    PUBLIC_API_CONFIG,
     new HttpClient(new RequestParser(), new ConfigRequestHandler()),
   );
   const signal = new AbortController().signal;
@@ -275,7 +275,7 @@ test("the composed entry point starts, reports progress, and completes through H
     .mockResolvedValueOnce(response(snapshot("pending")))
     .mockResolvedValueOnce(response(snapshot("fulfilled")));
   const handler = new ExtractArticlesRouteHandler(
-    serverClientRoutes.public,
+    PUBLIC_API_CONFIG,
     new HttpClient(new RequestParser(), new ConfigRequestHandler()),
   );
   const onProgress = jest.fn();

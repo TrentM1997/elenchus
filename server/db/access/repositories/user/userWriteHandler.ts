@@ -1,12 +1,7 @@
-import {
-  AuthError,
-  createClient,
-  User,
-  UserAttributes,
-} from "@supabase/supabase-js";
+import { createClient, User } from "@supabase/supabase-js";
 import { Database } from "../../../../types/databaseInterfaces.js";
-import { CreatedUserSchemaType } from "../../../../schemas/Users.js";
-import { SupabaseSessionSchemaType } from "../../../../schemas/SessionSchema.js";
+import { CreatedUserSchemaType } from "@elenchus/contracts/schemas/auth/UserSchema";
+import { SupabaseSessionSchemaType } from "@elenchus/contracts/schemas/auth/SupabaseSchemas";
 import { UserDataValidator } from "./userDataValidator.js";
 import {
   SUPABASE_KEY,
@@ -15,7 +10,7 @@ import {
 } from "../../../../src/Config.js";
 import type { LoginSchema } from "../../../../schemas/LoginSchema.js";
 import type { AuthenticatedUserId } from "../../../../services/auth/authorization.js";
-import { ResetPasswordResponseSchemaType } from "../../../../schemas/ChangePasswordSchema.ts";
+import { ResetPasswordResponseSchemaType } from "@elenchus/contracts/schemas/auth/ResetPasswordSchema";
 import type { DbResult } from "../../../types/types.ts";
 
 type CreateUserSuccessPayload = {

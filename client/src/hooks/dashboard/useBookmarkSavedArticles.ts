@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { serverClient } from "@/lib/services/client/serverClient";
 import { wait } from "@/lib/helpers/formatting/Presentation";
 import { createInitialBookmarkStates } from "@/lib/helpers/createInitialBookmarkStates";
-import { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
+import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 const service = serverClient.privileged.user.write;
 
 export type BookmarkStatus =

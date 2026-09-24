@@ -1,9 +1,6 @@
-import { PrivateServerClientRoutes } from "@/infra/transport/types/routeDefinitions";
-import {
-  DeleteAccountResponseSchema,
-  DeleteAccountResponseSchemaType,
-} from "@/lib/schemas/auth/DeleteAccountResponseSchema";
+import { DeleteAccountResponseSchemaType } from "@elenchus/contracts/schemas/auth/DeleteAccountResponseSchema";
 import { IHttpClient } from "../../http/types";
+import { PrivateApiContract } from "@elenchus/contracts";
 
 type LoginCredentials = { email: string; password: string };
 
@@ -15,17 +12,19 @@ export interface IAccountRouteHandler {
 
 export class AccountRouteHandler implements IAccountRouteHandler {
   constructor(
-    private readonly routes: Pick<PrivateServerClientRoutes, "account">,
-    private readonly http: Pick<IHttpClient, "post">,
+    private readonly routes: Pick<PrivateApiContract, "account">,
+    private readonly http: Pick<IHttpClient, "request">,
   ) {}
 
   public async deleteAccount(
     credentials: LoginCredentials,
   ): Promise<DeleteAccountResponseSchemaType> {
-    return await this.http.post(
-      this.routes.account.delete,
-      DeleteAccountResponseSchema,
-      credentials,
+    const route = this.routes.account.delete;
+
+    return await this.http.request(
+      route,
+      route.path,
+      { body: credentials },
     );
   }
 }

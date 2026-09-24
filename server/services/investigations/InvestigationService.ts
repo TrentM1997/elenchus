@@ -1,9 +1,6 @@
 import { IDbClient } from "../../db/access/client/dbClient.js";
 import { IAuthorization } from "../auth/authorization.js";
-import {
-  InvestigationSchemaType,
-  PersistInvestigationInputSchemaType,
-} from "../../schemas/InvestigationSchema.js";
+import { InvestigationSchemaType, PersistInvestigationInputSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import {
   InvestigationSaveResult,
   SavedInvestigationsResult,

@@ -1,5 +1,5 @@
-import { ArticleSchemaType } from "@/lib/schemas/articles/ArticleSchema";
-import { InvestigationSchemaType } from "@/lib/schemas/investigations/InvestigationSchema";
+import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import { InvestigationSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import { serverClient } from "@/lib/services/client/serverClient";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 

@@ -1,11 +1,2 @@
-import { Type, Static } from "@sinclair/typebox";
-
-export const PersistenceFailedResponseSchema = Type.Object({
-  ok: Type.Literal(false),
-  message: Type.String(),
-  details: Type.Optional(Type.String()),
-});
-
-export type PersistenceFailedResponseSchemaType = Static<
-  typeof PersistenceFailedResponseSchema
->;
+// Compatibility path; schema definitions live in the shared contracts package.
+export * from "@elenchus/contracts/schemas/auth/PersistenceFailedSchema";
