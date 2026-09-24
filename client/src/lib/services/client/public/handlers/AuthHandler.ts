@@ -29,30 +29,30 @@ export class AuthRouteHandler implements IAuthRouteHandler {
   public async login(credentials: LoginCredentials) {
     const route = this.routes.auth.login;
 
-    return await this.http.request(route, route.path, { body: credentials });
+    return await this.http.request(route, { body: credentials });
   }
 
   public async logOut() {
     const route = this.routes.auth.logOut;
 
-    return await this.http.request(route, route.path, {});
+    return await this.http.request(route, {});
   }
 
   public async recover() {
     const route = this.routes.auth.recover;
 
-    return await this.http.request(route, route.path, {});
+    return await this.http.request(route, {});
   }
 
   public async signup(credentials: LoginCredentials) {
     const route = this.routes.auth.signUp;
 
-    return await this.http.request(route, route.path, { body: credentials });
+    return await this.http.request(route, { body: credentials });
   }
 
   public async resetPassword(credentials: LoginCredentials) {
     const route = this.routes.user.passwordReset;
 
-    return await this.http.request(route, route.path, { body: credentials });
+    return await this.http.request(route, { body: credentials });
   }
 }

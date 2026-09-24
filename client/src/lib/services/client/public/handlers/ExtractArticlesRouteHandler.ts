@@ -1,9 +1,5 @@
 import type { PublicApiContract } from "@elenchus/contracts";
-import {
-  ExecuteExtractResponseSchemaType,
-  ExtractionJobResultSchemaType,
-  ExtractionResult,
-} from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import { ExtractionResult } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import { IHttpClient } from "../../http/types";
 import {
   IPollExtractionHandler,
@@ -39,17 +35,13 @@ export class ExtractArticlesRouteHandler implements IExtractArticlesRouteHandler
     signal?: AbortSignal;
   }) {
     const route = this.routes.articles.poll;
-    return await this.http.request(
-      route,
-      route.path.replace(":jobId", encodeURIComponent(jobId)),
-      { signal },
-    );
+    return await this.http.request(route, { params: { jobId: jobId }, signal });
   }
 
   public async extract(articles: SelectedArticle[], signal?: AbortSignal) {
     const route = this.routes.articles.extract;
 
-    return await this.http.request(route, route.path, {
+    return await this.http.request(route, {
       body: { articles },
       signal,
     });

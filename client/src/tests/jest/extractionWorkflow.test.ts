@@ -11,6 +11,7 @@ import { ExtractArticlesRouteHandler } from "../../lib/services/client/public/ha
 import { HttpClient } from "../../lib/services/client/http/httpClient";
 import { RequestParser } from "../../lib/services/client/http/RequestParser";
 import { ConfigRequestHandler } from "../../lib/services/client/http/ConfigRequestHandler";
+import { RequestUrlBuilder } from "../../lib/services/client/http/requestUrlBuilder";
 import { PUBLIC_API_CONFIG } from "@elenchus/contracts";
 import { ServerRequestError } from "../../lib/services/client/errors/ServerRequestError";
 import { EXTRACTION_POLLING_POLICY, type ExtractionRequests } from "../../lib/services/client/public/handlers/PollExtractionHandler";
@@ -95,7 +96,7 @@ beforeEach(() => {
   jest.spyOn(ExtractArticlesRouteHandler.prototype, "poll").mockImplementation(client.poll);
   const handler = new ExtractArticlesRouteHandler(
     PUBLIC_API_CONFIG,
-    new HttpClient(new RequestParser(), new ConfigRequestHandler()),
+    new HttpClient(new RequestParser(), new ConfigRequestHandler(), new RequestUrlBuilder()),
   );
   jest.mocked(serverClient.general.extraction.runExtractionJob)
     .mockImplementation((params) => handler.runExtractionJob(params));
@@ -253,7 +254,7 @@ test("the HTTP client sends the server's extraction body and polls its job route
     .mockResolvedValueOnce(new Response(JSON.stringify({ status: "success", message: "Extraction progress", data: snapshot("pending") }), { status: 200 }));
   const handler = new ExtractArticlesRouteHandler(
     PUBLIC_API_CONFIG,
-    new HttpClient(new RequestParser(), new ConfigRequestHandler()),
+    new HttpClient(new RequestParser(), new ConfigRequestHandler(), new RequestUrlBuilder()),
   );
   const signal = new AbortController().signal;
   const started = await handler.extract(selected, signal);
@@ -276,7 +277,7 @@ test("the composed entry point starts, reports progress, and completes through H
     .mockResolvedValueOnce(response(snapshot("fulfilled")));
   const handler = new ExtractArticlesRouteHandler(
     PUBLIC_API_CONFIG,
-    new HttpClient(new RequestParser(), new ConfigRequestHandler()),
+    new HttpClient(new RequestParser(), new ConfigRequestHandler(), new RequestUrlBuilder()),
   );
   const onProgress = jest.fn();
   const task = handler.runExtractionJob({ articles: selected, signal: new AbortController().signal, onProgress });

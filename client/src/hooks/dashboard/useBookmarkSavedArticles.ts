@@ -57,7 +57,7 @@ export const useHandleBookmark = ({
         updateBookmark("unbookmarking", article.id);
 
         try {
-          const result = await service.unBookmark(String(article.id));
+          const result = await service.unBookmark(article.id);
 
           if (result.ok === false) {
             throw new Error(

@@ -11,6 +11,7 @@ import { RequestParser } from "./http/RequestParser";
 import { ConfigRequestHandler } from "./http/ConfigRequestHandler";
 import { IHttpClient } from "./http/types";
 import { apiContractConfig, type ApiContract } from "@elenchus/contracts";
+import { RequestUrlBuilder } from "./http/requestUrlBuilder";
 
 export interface IServerClient {
   readonly privileged: IPrivateServerClient;
@@ -31,5 +32,9 @@ export class ServerClient implements IServerClient {
 
 export const serverClient = new ServerClient(
   apiContractConfig,
-  new HttpClient(new RequestParser(), new ConfigRequestHandler()),
+  new HttpClient(
+    new RequestParser(),
+    new ConfigRequestHandler(),
+    new RequestUrlBuilder(),
+  ),
 );

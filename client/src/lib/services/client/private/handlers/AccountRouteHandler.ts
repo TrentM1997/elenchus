@@ -21,10 +21,6 @@ export class AccountRouteHandler implements IAccountRouteHandler {
   ): Promise<DeleteAccountResponseSchemaType> {
     const route = this.routes.account.delete;
 
-    return await this.http.request(
-      route,
-      route.path,
-      { body: credentials },
-    );
+    return await this.http.request(route, { body: credentials });
   }
 }

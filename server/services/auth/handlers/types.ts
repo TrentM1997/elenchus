@@ -1,4 +1,6 @@
-export type LogOutResult = { ok: false; message: string } | { ok: true };
+export type LogOutResult =
+  | { ok: false; message: string }
+  | { ok: true; data: "success" };
 
 export type AuthenticateUserResult =
   | { status: "anonymous" }

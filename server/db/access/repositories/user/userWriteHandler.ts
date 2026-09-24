@@ -8,7 +8,7 @@ import {
   SUPABASE_PUBLIC_KEY,
   SUPABASE_URL,
 } from "../../../../src/Config.js";
-import type { LoginSchema } from "../../../../schemas/LoginSchema.js";
+import type { LoginCredentialsSchemaType } from "@elenchus/contracts/schemas/auth/AuthSchemas";
 import type { AuthenticatedUserId } from "../../../../services/auth/authorization.js";
 import { ResetPasswordResponseSchemaType } from "@elenchus/contracts/schemas/auth/ResetPasswordSchema";
 import type { DbResult } from "../../../types/types.ts";
@@ -27,7 +27,7 @@ export type AccountDeletionResult = DbResult<User | null>;
 export interface IUserWriteHandler {
   deleteAccount(
     user_id: AuthenticatedUserId,
-    credentials: LoginSchema,
+    credentials: LoginCredentialsSchemaType,
   ): Promise<AccountDeletionResult>;
   requestPasswordReset(email: string): Promise<RequestPasswordResetResult>;
   createUser(credentials: {
@@ -65,14 +65,14 @@ export class UserWriteHandler implements IUserWriteHandler {
 
   public async deleteAccount(
     user_id: AuthenticatedUserId,
-    credentials: LoginSchema,
+    credentials: LoginCredentialsSchemaType,
   ): Promise<AccountDeletionResult> {
     return await this.executeDeleteAccount(user_id, credentials);
   }
 
   private async executeDeleteAccount(
     user_id: AuthenticatedUserId,
-    credentials: LoginSchema,
+    credentials: LoginCredentialsSchemaType,
   ): Promise<DbResult<User | null>> {
     const verificationClient = createClient<Database>(
       SUPABASE_URL,

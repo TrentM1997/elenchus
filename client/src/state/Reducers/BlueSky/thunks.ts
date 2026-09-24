@@ -25,16 +25,7 @@ export const searchBlueSky = createAsyncThunk(
     };
 
     try {
-      const response = await fetch(
-        `/searchBlueSky?q=${encodeURIComponent(query)}`,
-        options,
-      );
-      if (response.ok) {
-        const results = response.json();
-        return results;
-      } else {
-        return thunkAPI.rejectWithValue("Connection refused");
-      }
+      return await serverClient.general.integrations.search.blueSky(query);
     } catch (error) {
       if (error) {
         return thunkAPI.rejectWithValue(error);

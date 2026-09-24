@@ -1,82 +1,109 @@
+import type { Static } from "@sinclair/typebox";
 import { PRIVATE_API_CONFIG } from "@elenchus/contracts";
 import { Router } from "express";
 import { IAppServices } from "../../../services/appServices.js";
 import { wrapAsync } from "../../async/wrapAsync.js";
-import { validateOrThrow } from "../../validation/validateOrThrow.js";
+import { validateOrThrow, validateServerOrThrow } from "../../validation/validateOrThrow.js";
 import { ServerError } from "../../errors/ServerError.js";
 
+import { RouteRegistrar } from "./routeRegistrar.js";
+
+const registrar = new RouteRegistrar();
+
 export function protectedRoutes(app: IAppServices, router: Router) {
-  router.post(
-    PRIVATE_API_CONFIG.account.delete.path,
+  const deleteAccountRoute = PRIVATE_API_CONFIG.account.delete;
+
+  registrar.register(
+    router,
+    deleteAccountRoute,
     wrapAsync(async (req, res) => {
       const credentials = validateOrThrow(
-        PRIVATE_API_CONFIG.account.delete.bodySchema,
+        deleteAccountRoute.bodySchema,
         req.body,
       );
-      const result = await app.services.api.user.deleteAccount(
-        req.user?.userId,
-        credentials,
-      );
+      const result: Static<typeof deleteAccountRoute.outputSchema> =
+        await app.services.api.user.deleteAccount(
+          req.user?.userId,
+          credentials,
+        );
 
       if (!result.ok) {
         throw new ServerError(result.message, 401, result.details);
       }
 
       req.auth.clearSessionCookies(res);
-      res.success("User deleted successfully.", result, 200);
+      const data = validateServerOrThrow(deleteAccountRoute.outputSchema, result);
+
+      res.success("User deleted successfully.", data, 200);
     }),
   );
 
-  router.get(
-    PRIVATE_API_CONFIG.bookmarks.get.all.path,
+  const bookmarkedArticlesRoute = PRIVATE_API_CONFIG.bookmarks.get.all;
+
+  registrar.register(
+    router,
+    bookmarkedArticlesRoute,
     wrapAsync(async (req, res) => {
-      const results = await app.services.api.user.articlesBookmarked(
-        req.user?.userId,
-      );
+      const results: Static<typeof bookmarkedArticlesRoute.outputSchema> =
+        await app.services.api.user.articlesBookmarked(
+          req.user?.userId,
+        );
 
       if (results.ok === false) {
         throw new ServerError(results.message, 500, results.details);
       }
 
-      res.success("users saved articles retrieved successfully", results, 200);
+      const data = validateServerOrThrow(bookmarkedArticlesRoute.outputSchema, results);
+
+      res.success("users saved articles retrieved successfully", data, 200);
     }),
   );
 
-  router.get(
-    PRIVATE_API_CONFIG.bookmarks.get.single.path,
+  const bookmarkedArticleRoute = PRIVATE_API_CONFIG.bookmarks.get.single;
+
+  registrar.register(
+    router,
+    bookmarkedArticleRoute,
     wrapAsync(async (req, res) => {
       const userId = req.user.userId;
       const { articleId } = validateOrThrow(
-        PRIVATE_API_CONFIG.bookmarks.get.single.paramsSchema,
+        bookmarkedArticleRoute.paramsSchema,
         req.params,
       );
       const article_id = Number(articleId);
 
-      const result = await app.services.api.user.articleById({
-        user_id: userId,
-        article_id,
-      });
+      const result: Static<typeof bookmarkedArticleRoute.outputSchema> =
+        await app.services.api.user.articleById({
+          user_id: userId,
+          article_id,
+        });
 
       if (!result.ok) {
         throw new ServerError(result.message, 404, result.details);
       }
 
-      res.success("Article retrieved successfully", result, 200);
+      const data = validateServerOrThrow(bookmarkedArticleRoute.outputSchema, result);
+
+      res.success("Article retrieved successfully", data, 200);
     }),
   );
 
-  router.post(
-    PRIVATE_API_CONFIG.bookmarks.post.path,
+  const bookmarkRoute = PRIVATE_API_CONFIG.bookmarks.post;
+
+  registrar.register(
+    router,
+    bookmarkRoute,
     wrapAsync(async (req, res) => {
       const userId = req.user.userId;
       const { article_id } = validateOrThrow(
-        PRIVATE_API_CONFIG.bookmarks.post.bodySchema,
+        bookmarkRoute.bodySchema,
         req.body,
       );
-      const result = await app.services.api.user.bookmark({
-        user_id: userId,
-        article_id,
-      });
+      const result: Static<typeof bookmarkRoute.outputSchema> =
+        await app.services.api.user.bookmark({
+          user_id: userId,
+          article_id,
+        });
 
       if (!result.ok) {
         throw new ServerError(
@@ -85,46 +112,58 @@ export function protectedRoutes(app: IAppServices, router: Router) {
           result.details,
         );
       }
-      res.success("article saved successfully", result);
+      const data = validateServerOrThrow(bookmarkRoute.outputSchema, result);
+
+      res.success("article saved successfully", data);
     }),
   );
 
-  router.delete(
-    PRIVATE_API_CONFIG.bookmarks.delete.path,
+  const deleteBookmarkRoute = PRIVATE_API_CONFIG.bookmarks.delete;
+
+  registrar.register(
+    router,
+    deleteBookmarkRoute,
     wrapAsync(async (req, res) => {
       const userId = req.user.userId;
       const { articleId } = validateOrThrow(
-        PRIVATE_API_CONFIG.bookmarks.delete.paramsSchema,
+        deleteBookmarkRoute.paramsSchema,
         req.params,
       );
       const article_id = Number(articleId);
 
-      const result = await app.services.api.user.removeBookmark({
-        user_id: userId,
-        article_id,
-      });
+      const result: Static<typeof deleteBookmarkRoute.outputSchema> =
+        await app.services.api.user.removeBookmark({
+          user_id: userId,
+          article_id,
+        });
 
       if (!result.ok) {
         throw new ServerError("Failed to remove bookmark", 500, result.message);
       }
 
-      res.success("Bookmark deleted successfully", result, 200);
+      const data = validateServerOrThrow(deleteBookmarkRoute.outputSchema, result);
+
+      res.success("Bookmark deleted successfully", data, 200);
     }),
   );
 
-  router.post(
-    PRIVATE_API_CONFIG.investigations.post.path,
+  const saveInvestigationRoute = PRIVATE_API_CONFIG.investigations.post;
+
+  registrar.register(
+    router,
+    saveInvestigationRoute,
     wrapAsync(async (req, res) => {
       const userId = req.user.userId;
       const investigation = validateOrThrow(
-        PRIVATE_API_CONFIG.investigations.post.bodySchema,
+        saveInvestigationRoute.bodySchema,
         req.body,
       );
 
-      const result = await app.services.api.investigations.save(
-        userId,
-        investigation,
-      );
+      const result: Static<typeof saveInvestigationRoute.outputSchema> =
+        await app.services.api.investigations.save(
+          userId,
+          investigation,
+        );
 
       if (!result.ok) {
         throw new ServerError(
@@ -133,15 +172,20 @@ export function protectedRoutes(app: IAppServices, router: Router) {
           result.details,
         );
       }
-      res.success("Investigation saved successfully", result, 200);
+      const data = validateServerOrThrow(saveInvestigationRoute.outputSchema, result);
+
+      res.success("Investigation saved successfully", data, 200);
     }),
   );
 
-  router.get(
-    PRIVATE_API_CONFIG.investigations.get.all.path,
+  const savedInvestigationsRoute = PRIVATE_API_CONFIG.investigations.get.all;
+
+  registrar.register(
+    router,
+    savedInvestigationsRoute,
     wrapAsync(async (req, res) => {
       const userId = req.user.userId;
-      const result =
+      const result: Static<typeof savedInvestigationsRoute.outputSchema> =
         await app.services.api.investigations.getSavedResearch(userId);
 
       if (!result.ok) {
@@ -152,23 +196,29 @@ export function protectedRoutes(app: IAppServices, router: Router) {
         );
       }
 
-      res.success("Saved investigations retreived successfully", result, 200);
+      const data = validateServerOrThrow(savedInvestigationsRoute.outputSchema, result);
+
+      res.success("Saved investigations retreived successfully", data, 200);
     }),
   );
 
-  router.get(
-    PRIVATE_API_CONFIG.investigations.get.single.path,
+  const savedInvestigationRoute = PRIVATE_API_CONFIG.investigations.get.single;
+
+  registrar.register(
+    router,
+    savedInvestigationRoute,
     wrapAsync(async (req, res) => {
       const userId = req.user.userId;
       const { investigationId } = validateOrThrow(
-        PRIVATE_API_CONFIG.investigations.get.single.paramsSchema,
+        savedInvestigationRoute.paramsSchema,
         req.params,
       );
 
-      const result = await app.services.api.investigations.getInvestigation({
-        user_id: userId,
-        investigation_id: Number(investigationId),
-      });
+      const result: Static<typeof savedInvestigationRoute.outputSchema> =
+        await app.services.api.investigations.getInvestigation({
+          user_id: userId,
+          investigation_id: Number(investigationId),
+        });
 
       if (!result.ok) {
         throw new ServerError(
@@ -177,7 +227,9 @@ export function protectedRoutes(app: IAppServices, router: Router) {
           result.details,
         );
       }
-      res.success("Saved investigation retrieved", result, 200);
+      const data = validateServerOrThrow(savedInvestigationRoute.outputSchema, result);
+
+      res.success("Saved investigation retrieved", data, 200);
     }),
   );
 
