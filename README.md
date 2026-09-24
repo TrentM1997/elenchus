@@ -1,274 +1,118 @@
 # Elenchus
 
-Elenchus is a focused research platform that applies the Socratic method to modern media.  
-It guides users through structured questioning to challenge assumptions and biases,  
-then retrieves and summarizes relevant news articles with bias ratings and 
-metadata - all inside a performant, interactive interface optimized for large-scale content.
+Elenchus is a research application for examining assumptions, finding news articles, and saving investigations. It combines an Astro/React interface with an Express API and hosted Supabase for authentication and persistence.
 
-## Since launch, Elenchus has evolved into a **production-grade full-stack application** featuring:
+Features include article discovery through NewsAPI and Bluesky, article extraction through Firecrawl, Wikipedia context, saved investigations and bookmarks, and source-bias reporting.
 
-- Wikipedia Context Extraction - when relevant, automatically pulls concise Wikipedia summaries 
-for key people, events, or topics mentioned in articles, providing instant background context 
-without leaving the app.
+## Repository
 
-![Wikipedia lookup popover](client/public/images/assets/Wikipedia_extracting.png)
-![alt text](client/public/images/assets/Extract_pulled.png)
+| Directory             | Responsibility                                                                   |
+| --------------------- | -------------------------------------------------------------------------------- |
+| `client/`             | Astro pages, React UI, Redux state, and ServerClient                             |
+| `server/`             | Express routes, services, persistence, authentication, and integrations          |
+| `packages/contracts/` | Shared API contract between client + server, TypeBox schemas, and inferred types |
 
-- Bias & Integrity Tracking Dashboard - generates charts that visualize 
-trends in: 1. Political bias of sources you reference, 2. Journalistic integrity ratings over time, 
-and 3. How your perspecitves have been effected by your investigations over time.
+These are npm workspaces. Install dependencies from the repository root; the root lockfile is authoritative.
 
-- Topic Discovery via Bluesky Feed - Displays a curated feed of recent Bluesky posts, 
-allowing users to discover trending or thought-provoking topics. Users can search 
-for specific themes being discussed and launch investigations directly 
-from these posts — no need to start from scratch.
-
-- Virtualized infinite scrolling on large lists of data for performance at scale
-
-- Concurrent API request handling with fault tolerance
-
-- Integrated media bias and reliability ratings via MBFC API
-
-- Server-side Supabase operations for secure, efficient data handling
-
-## Table of Contents
-
-1. Features
-
-2. Tech Stack
-
-3. Architecture
-
-4. Prerequisites
-
-5. Installation
-
-6. Configuration
-
-7. Running the App
-
-8. Usage
-
-9. Deployment
-
-10. Contributing
-
-11. License
-
-## Features
-
-##### Socratic Reflection Workflow:
-
-Guide users to pinpoint a statement they’re unsure about, then prompt them to articulate underlying assumptions, biases, and questions before beginning their research.
-
-##### Article Search & Summarization:
-
-Fetch news via the Bing News API and scrape article content via TLDRThis API.
-
-##### Argument Mapping:
-
-Record your thought process and link evidence to claims.
-
-##### User Profiles:
-
-Secure authentication and data persistence with Supabase.
-
-##### Smooth Animations:
-
-Mount/unmount transitions and interactive elements via Framer Motion.
-
-## Tech Stack
-
-Frontend: Astro.js + React SPA
-
-Backend: Node.js + Express.js
-
-Database & Auth: Supabase
-
-Styling: Tailwind CSS
-
-Animations: Framer Motion + Lottie-React
-
-API Integration: Bing News API
-
-## Architecture
-
-[Client (Astro/React)] <--> [API Server (Express)] <--> [Supabase DB]
-\---> [Bing News API]
-
-Client: Renders interactive pages, handles routing(React-Router-Dom) and state (Redux Toolkit).
-
-Server: Exposes REST endpoints, handles user sessions, proxies news requests, and sanitizes responses.
-
-Database: Stores user profiles, saved investigations, and article metadata.
-
-## Prerequisites
-
-Node.js 24.x
-
-npm 11.x
-
-Supabase project (for Auth and DB)
-
-Bing News API key
-
-RapidAPI API key
-
-## Installation
-
-Clone the repo
-
-git clone https://github.com/yourusername/elenchus.git
-cd elenchus
-
-Install dependencies once from the repository root:
-
-```sh
-npm ci
-```
-
-The npm workspaces are `client` (package `elenchus`), `server`, and
-`packages/contracts` (package `@elenchus/contracts`). The root lockfile is
-authoritative. Use `npm install` to update dependencies; do not maintain nested lockfiles.
-Both applications import shared schemas from contracts. The old schema paths
-re-export shared definitions for compatibility; server-only schemas and validators
-remain local. A shared HTTP route registry is still a separate step.
+See the [architecture guide](docs/architecture.md) for request flow, validation boundaries, and an endpoint walkthrough. Workspace details are in the [client guide](client/README.md) and [contracts guide](packages/contracts/README.md).
 
 ## Configuration
 
-Environment Variables
+Local development requires Node.js 24.x and npm 11.x. Docker development requires Docker Desktop with Linux containers and Compose 2.32 or newer.
 
-Create a .env file in /server:
+Create `server/.env` with the values read by [server configuration](server/src/Config.ts):
 
-SUPABASE_URL=<your-supabase-url>
-SUPABASE_KEY=<your-supabase-key>
-NEWS_API_KEY=<your-bing-news-api-key>
-
-Optionally, create a .env in /client for client-specific configs.
-
-## Running the App
-
-Development
-
-### From project root
-
-Run these in separate terminals:
-
-```sh
-npm run dev:client
-npm run dev:server
+```dotenv
+NEWS_API_KEY=<NewsAPI key>
+FIRECRAWL_KEY=<Firecrawl key>
+SUPABASE_URL=<hosted Supabase project URL>
+SUPABASE_SERVICE_KEY=<server service key>
+SUPABASE_PUBLIC_KEY=<publishable or legacy anon key>
+BLUESKY_EMAIL=<Bluesky account email>
+BLUESKY_PASSWORD=<Bluesky account password>
+PORT=5001
 ```
 
-The client runs at http://localhost:5173. The server rebuilds and restarts on
-TypeScript changes, using its configured port (the client proxy expects 5001).
-After editing shared schemas, run `npm run build:contracts`.
-
-Production Build
-
-npm run build
-npm run start
-
-Use `npm run typecheck` to check all workspaces. Individual builds are
-`npm run build:contracts`, `npm run build:server`, and `npm run build:client`.
-Application build commands compile contracts first.
+All seven credentials are required at server startup. Use an existing Supabase project with the application's database tables and policies configured; starting the app does not provision them. Keep the service key on the server.
 
 ## Docker development
 
-Use Docker Desktop with Linux containers and Docker Compose 2.32 or newer.
-Supabase remains hosted; this setup runs only the API and Astro dev server.
-
-1. Create `server/.env` from `server/.env.example` if it does not already exist,
-   and fill in all credentials required by the server. Existing `server/.env`
-   files can be reused. No secrets are copied into the image.
-2. If needed, place client settings in `client/.env`. Never put the Supabase
-   service key in client configuration.
-3. From the repository root, run:
+From the repository root:
 
 ```sh
 docker compose up --build --watch
 ```
 
-Open http://localhost:5173 once the API and client startup messages appear.
-The API is also available at http://localhost:5001. Stop any local development
-servers already using those ports first.
+Open http://localhost:5173. The API listens at http://localhost:5001. Compose runs only the API and Astro dev server; both connect to hosted services, including the Supabase project in `server/.env`.
 
-Compose Watch copies source edits into the containers, where Astro and nodemon
-use native Linux file notifications. No Windows source bind mounts or polling
-are needed. Astro hot reloads, the API rebuilds contracts and restarts after a
-one-second debounce, and the client watches shared contracts separately.
-Dependencies and generated output stay inside the containers.
-Astro proxies API requests to `http://api:5001` on the Compose network; normal
-non-Docker development retains `http://localhost:5001`.
+Compose Watch synchronizes source changes into the containers. Astro hot reloads, the client recompiles shared contracts in watch mode, and the API rebuilds contracts and restarts through nodemon. Dependencies and build output stay inside the containers. Package manifest and lockfile changes trigger image rebuilds.
 
-Compose Watch rebuilds images when package manifests, the lockfile, or Dockerfile
-change. After changing Compose configuration or adding a new source directory
-outside the watch rules, restart with `docker compose up --build --watch`.
-Keep watch mode running for live edits; plain `docker compose up` starts the
-built snapshot without synchronizing later edits.
-After changing environment files, recreate the services with
-`docker compose up --force-recreate`. Stop them with `docker compose down`.
-Use `docker compose logs -f api` to inspect server startup errors.
+Astro proxies API requests to `http://api:5001` inside Docker. Optional client environment settings can go in `client/.env`. Plain `docker compose up --build` starts a snapshot without synchronizing subsequent edits.
 
-This uses the Supabase project specified in `server/.env`, including its real
-data. Auth redirect settings should include your localhost development URL.
-The old PostgreSQL, pgAdmin, and nginx services are no longer part of this setup.
-Production serving through Express remains separate from this development setup.
+After changing environment files, recreate the services:
 
-## Usage
+```sh
+docker compose up --build --force-recreate --watch
+```
 
-Register or log in via Supabase OAuth.
+Stop with `docker compose down`. Inspect startup with `docker compose logs --tail=80 client api`. Wait for server listening messages before opening the app.
 
-Enter a statement or belief in the investigation flow.
+## Development without Docker
 
-Answer guided reflection prompts.
+Install and build contracts first:
 
-Browse and select articles; view AI‑generated summaries.
+```sh
+npm ci
+npm run build:contracts
+```
 
-Save investigations to your profile or export data.
+Run these from the root in separate terminals:
 
-## Deployment
+```sh
+npm run dev:server
+```
 
-This project is organized as a monorepo with separate client and server folders and is deployed as a single Heroku app.
+```sh
+npm run dev:client
+```
 
-Create & Configure Heroku App
+The client uses port 5173 and proxies to localhost:5001. The server workspace command loads `server/.env` and rebuilds/restarts on its configured source watches.
 
-heroku login
-heroku create your-app-name
+After editing contracts, run `npm run build:contracts` and restart the local API. Alternatively, run the contracts compiler in another terminal:
 
-Monorepo Build Setup
+```sh
+npm run build --workspace=@elenchus/contracts -- --watch
+```
 
-Build from the repository root using the Node.js buildpack. Include development
-dependencies during the build for Astro and TypeScript. The root
-`heroku-postbuild` copies logo assets and runs the ordered workspace build.
-Do not scope deployment to only the server directory; all workspaces are needed.
+The local server watcher does not watch the contracts package; Docker's watcher does.
 
-Procfile
-In the project root, create a file named Procfile containing:
+Password-reset emails currently use the production redirect URL in `userWriteHandler.ts`. Running locally does not automatically change that URL or Supabase's redirect configuration.
 
-web: npm start
+## Build and verification
 
-Environment Variables
-Set required keys via CLI or Heroku dashboard:
+Run from the repository root:
 
-heroku config:set \
- SUPABASE_URL=<your-supabase-url> \
- SUPABASE_KEY=<your-supabase-key> \
- NEWS_API_KEY=<your-bing-news-api-key>
+```sh
+npm run typecheck
+npm run build
+npm exec --workspace=elenchus -- jest --runInBand
+node --test server/tests/routeContracts.test.mjs
+```
 
-Deploy
-Commit your changes and push to Heroku:
+The full build compiles contracts, then the server, then the client. Server route tests import compiled output, so build before running them. Client Jest maps contracts imports to shared TypeScript source.
 
-git push heroku main
+Individual build commands are `npm run build:contracts`, `npm run build:server`, and `npm run build:client`; application build commands compile contracts first.
 
-Heroku will install dependencies, build the client, and launch the server automatically.
+## Production serving
 
-Verify Deployment
-Visit https://your-app-name.herokuapp.com to confirm everything is running correctly.
+Express serves `client/dist` alongside the API. Build all workspaces with `npm run build`, then launch `npm start` from the root. Supply required environment variables through the host; root `npm start` resolves a dotenv file from the root working directory rather than `server/.env`.
+
+For Heroku, the existing `heroku-postbuild` script copies logo assets and runs the workspace build. Build from the repository root with development dependencies available for TypeScript and Astro. Docker Compose is configured for development.
 
 ## Contact
 
-Trent Irvin – trentirvin51@gmail.com
+Trent Irvin — trentirvin51@gmail.com
 
-Said Gadzhiev - saga080700@gmail.com
+Said Gadzhiev — saga080700@gmail.com
 
-Project Link: https://github.com/TrentM1997/ElenchusBackup
+[Project repository](https://github.com/TrentM1997/ElenchusBackup)

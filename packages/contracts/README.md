@@ -1,59 +1,43 @@
 # Elenchus contracts
 
-Private ESM package containing the shared schemas originally sourced from all
-15 modules in `client/src/lib/schemas`. Request schemas, response schemas,
-inferred types, and existing validators are preserved. Relative imports use
-`.js` extensions so TypeScript emits imports that Node can resolve.
+`@elenchus/contracts` is the private ESM workspace shared by the client and server. It owns HTTP paths, methods, request schemas, response-data schemas, and their inferred TypeScript types.
 
-## Current scope
+## Layout
 
-This package is an npm workspace and a dependency of both applications.
-Root builds compile it first. Both applications import shared schemas directly
-from this package; the old client schema modules and matching server modules
-re-export these definitions for compatibility. Edit shared definitions here.
+- `src/contract/apiContracts.ts`: endpoint entries grouped by feature.
+- `src/contract/apiContractConfig.ts`: public/private configuration and combined `apiContractConfig`.
+- `src/contract/types.ts`: contract structure definitions.
+- `src/schemas/`: reusable TypeBox schemas, inferred types, and validators.
+- `src/index.ts`: public configuration/type exports and schema namespaces.
 
-Server-only schemas and validators remain in `server/schemas`. In particular,
-article insertion validation omits the database ID, and legacy extraction job
-schemas differ from the client response schemas. Those differences are preserved.
-No route registry has been added yet.
-
-## Build
-
-From the repository root:
-
-```sh
-npm ci
-npm run typecheck --workspace=@elenchus/contracts
-npm run build:contracts
-```
-
-Build output is written to `dist/` and includes JavaScript, declarations, and
-source maps. Generated output is ignored by Git. TypeBox is pinned to 0.34.41,
-the root installation currently used by the client schemas; TypeScript is pinned
-to 5.9.3, matching the server compiler.
+Each entry declares `path`, `method`, and `outputSchema`, plus `bodySchema`, `querySchema`, or `paramsSchema` when applicable. The output schema describes the success envelope's **data**, not the entire HTTP response. Status codes and error handling remain in server handlers.
 
 ## Imports
 
-Once built, individual modules can be imported using subpaths:
-
 ```ts
+import { PUBLIC_API_CONFIG, type PublicApiContract } from "@elenchus/contracts";
 import {
   ArticleSchema,
   type ArticleSchemaType,
 } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 ```
 
-The package root exports a namespace for each source module:
+Schema modules are also exported as namespaces from the package root. Use these exports rather than importing another workspace's source files.
 
-```ts
-import { AuthSchemas } from "@elenchus/contracts";
+The old client and server compatibility re-export files have been removed. Active server-specific schemas and validators remain in `server/schemas`, including article insertion (which omits the database-generated ID), authenticated-ID validation, and upstream response validation.
 
-const schema = AuthSchemas.ResetPasswordResponseSchema;
+## Build
+
+From the repository root:
+
+```sh
+npm run build:contracts
+npm run typecheck --workspace=@elenchus/contracts
+npm run build --workspace=@elenchus/contracts -- --watch
 ```
 
-Namespaces preserve the existing duplicate names in `AuthSchemas` and
-`ResetPasswordSchema` without choosing one definition over the other.
+The compiler emits JavaScript and declarations into `dist/`. Package exports resolve there, so rebuild after changes. Relative imports inside this ESM package use `.js` extensions for Node-compatible emitted imports.
 
-The client Jest configuration maps package subpaths to this package's TypeScript
-sources so its CommonJS test runner can transform them. Application builds use
-the compiled ESM exports.
+Root application builds compile contracts first. Docker development watches contracts. Client Jest uses source mappings for its test runner.
+
+See [architecture and adding endpoints](../../docs/architecture.md) for how both applications consume these definitions.
