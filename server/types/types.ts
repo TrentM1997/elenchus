@@ -240,7 +240,7 @@ export interface FailedAttempt {
     summary: {
         denied: string;
         failedArticle: string;
-    }[] | null;
+    }[];
     logo: string;
     source: string;
     date: string;

@@ -8,21 +8,23 @@ import {
   IRequestParser,
   ResponseContext,
 } from "./types";
+import { IRequestUrlBuilder } from "./requestUrlBuilder";
 
 export class HttpClient implements IHttpClient {
   constructor(
     private readonly parser: IRequestParser,
     private readonly configure: IConfigRequestHandler,
+    private readonly urlBuilder: IRequestUrlBuilder,
   ) {}
 
   public async request<const R extends RouteConfigDefinition>(
     route: R,
-    url: string,
     options: RequestOptions<NoInfer<R>>,
   ): Promise<Static<R["outputSchema"]>> {
     const { body, signal } = options;
     signal?.throwIfAborted();
     const { outputSchema: schema, method } = route;
+    const url = this.urlBuilder.build(route, options);
 
     switch (method) {
       case "GET":

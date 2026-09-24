@@ -47,11 +47,7 @@ class InvestigationSelectHander implements IInvestigationSelectHander {
   public async all(): Promise<InvestigationsSavedReponseSchemaType> {
     const route = this.routes.investigations.get.all;
 
-    return await this.http.request(
-      route,
-      route.path,
-      {},
-    );
+    return await this.http.request(route, {});
   }
 
   public async byId(
@@ -59,14 +55,9 @@ class InvestigationSelectHander implements IInvestigationSelectHander {
   ): Promise<InvestigationSaveResponseType> {
     const route = this.routes.investigations.get.single;
 
-    return await this.http.request(
-      route,
-      route.path.replace(
-        ":investigationId",
-        String(investigation_id),
-      ),
-      {},
-    );
+    return await this.http.request(route, {
+      params: { investigationId: `${investigation_id}` },
+    });
   }
 }
 
@@ -86,11 +77,7 @@ class BookmarkSelectHandler implements IBookmarkSelectHandler {
   public async all(): Promise<BookmarkedArticlesResponseSchemaType> {
     const route = this.routes.bookmarks.get.all;
 
-    return await this.http.request(
-      route,
-      route.path,
-      {},
-    );
+    return await this.http.request(route, {});
   }
 
   public async byId(
@@ -98,13 +85,8 @@ class BookmarkSelectHandler implements IBookmarkSelectHandler {
   ): Promise<GetArticleResponseSchemaType> {
     const route = this.routes.bookmarks.get.single;
 
-    return await this.http.request(
-      route,
-      route.path.replace(
-        ":articleId",
-        String(article_id),
-      ),
-      {},
-    );
+    return await this.http.request(route, {
+      params: { articleId: String(article_id) },
+    });
   }
 }

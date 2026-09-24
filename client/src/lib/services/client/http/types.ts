@@ -6,7 +6,6 @@ import { RouteConfigDefinition } from "@elenchus/contracts";
 export interface IHttpClient {
   request<const R extends RouteConfigDefinition>(
     route: R,
-    url: string,
     options: RequestOptions<NoInfer<R>>,
   ): Promise<Static<R["outputSchema"]>>;
 }

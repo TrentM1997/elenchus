@@ -1,6 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "../../../../types/databaseInterfaces.js";
-import type { FeedbackReqSchemaType } from "../../../../schemas/FeedbackReqSchema.js";
+import type { FeedbackReqSchemaType } from "@elenchus/contracts/schemas/auth/FeedbackSchema";
 import { DbResult } from "../../../types/types.ts";
 
 export type FeedbackSubmitResult = DbResult<string>;

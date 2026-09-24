@@ -1,10 +1,6 @@
 import type { PublicApiContract } from "@elenchus/contracts";
-import {
-  FeedbackResponseSchemaType,
-} from "@elenchus/contracts/schemas/auth/FeedbackSchema";
-import {
-  ResetPasswordResponseSchemaType,
-} from "@elenchus/contracts/schemas/auth/AuthSchemas";
+import { FeedbackResponseSchemaType } from "@elenchus/contracts/schemas/auth/FeedbackSchema";
+import { ResetPasswordResponseSchemaType } from "@elenchus/contracts/schemas/auth/AuthSchemas";
 import { IHttpClient } from "../../http/types";
 
 type FeedbackInputType = {
@@ -30,11 +26,7 @@ export class UserRouteHandler implements IUserRouteHandler {
   ): Promise<ResetPasswordResponseSchemaType> {
     const route = this.routes.user.passwordReset;
 
-    return await this.http.request(
-      route,
-      route.path,
-      { body: { email } },
-    );
+    return await this.http.request(route, { body: { email } });
   }
 
   public async submitFeedback(
@@ -42,10 +34,6 @@ export class UserRouteHandler implements IUserRouteHandler {
   ): Promise<FeedbackResponseSchemaType> {
     const route = this.routes.user.feedback;
 
-    return await this.http.request(
-      route,
-      route.path,
-      { body: { feedback } },
-    );
+    return await this.http.request(route, { body: { feedback } });
   }
 }

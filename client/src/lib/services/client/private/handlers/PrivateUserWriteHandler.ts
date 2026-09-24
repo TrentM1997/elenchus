@@ -8,10 +8,15 @@ import {
   PersistInvestigationInputSchemaType,
 } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import { PrivateApiContract } from "@elenchus/contracts";
+import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 
 export interface IPrivateUserWritesHandler {
-  bookmark(article_id: number): Promise<BookmarkResponseSchemaType>;
-  unBookmark(article_id: string): Promise<DeleteBookmarkResponseSchemaType>;
+  bookmark(
+    article_id: ArticleSchemaType["id"],
+  ): Promise<BookmarkResponseSchemaType>;
+  unBookmark(
+    article_id: ArticleSchemaType["id"],
+  ): Promise<DeleteBookmarkResponseSchemaType>;
   investigation(
     investigation: PersistInvestigationInputSchemaType,
   ): Promise<InvestigationSaveResponseType>;
@@ -28,11 +33,7 @@ export class PrivateUserWritesHandler implements IPrivateUserWritesHandler {
   ): Promise<BookmarkResponseSchemaType> {
     const route = this.routes.bookmarks.post;
 
-    return await this.http.request(
-      route,
-      route.path,
-      { body: { article_id } },
-    );
+    return await this.http.request(route, { body: { article_id } });
   }
 
   public async investigation(
@@ -40,22 +41,16 @@ export class PrivateUserWritesHandler implements IPrivateUserWritesHandler {
   ): Promise<InvestigationSaveResponseType> {
     const route = this.routes.investigations.post;
 
-    return await this.http.request(
-      route,
-      route.path,
-      { body: investigation },
-    );
+    return await this.http.request(route, { body: investigation });
   }
 
   public async unBookmark(
-    article_id: string,
+    article_id: ArticleSchemaType["id"],
   ): Promise<DeleteBookmarkResponseSchemaType> {
     const route = this.routes.bookmarks.delete;
 
-    return await this.http.request(
-      route,
-      route.path.replace(":articleId", article_id),
-      {},
-    );
+    return await this.http.request(route, {
+      params: { articleId: String(article_id) },
+    });
   }
 }

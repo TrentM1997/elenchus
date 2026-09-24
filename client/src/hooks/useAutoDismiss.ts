@@ -4,35 +4,37 @@ import type { AppDispatch, RootState } from "@/state/store";
 import { populateTooltip } from "@/state/Reducers/Investigate/Rendering";
 import type { TooltipDisplayed } from "@/state/Reducers/Investigate/Rendering";
 
-type UseMaxSelectedToast = { count: number, limit?: number, timeout?: number };
+type UseMaxSelectedToast = { count: number; limit?: number; timeout?: number };
 
-export function useMaxSelectedToast({ count, limit = 3, timeout = 3000 }: UseMaxSelectedToast): void {
-    const tooltip: TooltipDisplayed = useSelector((s: RootState) => s.investigation.rendering.tooltip);
-    const dispatch = useDispatch<AppDispatch>();
-    const prevCountRef = useRef<number | null>(null);
+export function useMaxSelectedToast({
+  count,
+  limit = 3,
+  timeout = 3000,
+}: UseMaxSelectedToast): void {
+  const tooltip: TooltipDisplayed = useSelector(
+    (s: RootState) => s.investigation.rendering.tooltip,
+  );
+  const dispatch = useDispatch<AppDispatch>();
+  const prevCountRef = useRef<number>(0);
 
-    useEffect(() => {
+  useEffect(() => {
+    const prev = prevCountRef.current;
 
-        const prev = prevCountRef.current;
+    const justReachedLimit: boolean = prev < limit && count === limit;
 
-        const justReachedLimit: boolean = prev < limit && (count === limit);
+    if (justReachedLimit) dispatch(populateTooltip("Max Toast"));
 
-        if (justReachedLimit) dispatch(populateTooltip('Max Toast'));
+    prevCountRef.current = count;
+  }, [count, dispatch]);
 
-        prevCountRef.current = count;
+  useEffect(() => {
+    if (tooltip === null) return;
+    const timer = window.setTimeout(() => {
+      dispatch(populateTooltip(null));
+    }, timeout);
 
-    }, [count, dispatch]);
-
-    useEffect(() => {
-        if (tooltip === null) return;
-        const timer = window.setTimeout(() => {
-            dispatch(populateTooltip(null));
-
-        }, timeout);
-
-        return () => {
-            clearTimeout(timer);
-        };
-    }, [tooltip, dispatch]);
-
-};
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [tooltip, dispatch]);
+}

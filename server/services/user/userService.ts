@@ -1,7 +1,7 @@
 import { IDbClient } from "../../db/access/client/dbClient.js";
 import { AuthenticatedUserId, IAuthorization } from "../auth/authorization.js";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
-import { LoginSchema } from "../../schemas/LoginSchema.js";
+import type { LoginCredentialsSchemaType } from "@elenchus/contracts/schemas/auth/AuthSchemas";
 import {
   CreateUserResult,
   RequestPasswordResetResult,
@@ -13,7 +13,7 @@ import {
 } from "../../db/access/repositories/bookmarks/bookmarksRepository.js";
 import { ServerError } from "../../core/errors/ServerError.js";
 import { BookmarkSchemaType } from "@elenchus/contracts/schemas/articles/BookmarkSchema";
-import { FeedbackReqSchemaType } from "../../schemas/FeedbackReqSchema.js";
+import type { FeedbackReqSchemaType } from "@elenchus/contracts/schemas/auth/FeedbackSchema";
 import { FeedbackSubmitResult } from "../../db/access/repositories/feedback/feedbackRespository.js";
 import { ResetPasswordResponseSchemaType } from "@elenchus/contracts/schemas/auth/ResetPasswordSchema";
 import { DbResult } from "../../db/types/types.ts";
@@ -35,9 +35,9 @@ export interface IUserService {
   }): Promise<ResetPasswordResponseSchemaType>;
   deleteAccount(
     user_id: string | null | undefined,
-    credentials: LoginSchema,
+    credentials: LoginCredentialsSchemaType,
   ): Promise<AccountDeletionResult>;
-  signUp(credentials: LoginSchema): Promise<CreateUserResult>;
+  signUp(credentials: LoginCredentialsSchemaType): Promise<CreateUserResult>;
   requestPasswordReset(email: string): Promise<RequestPasswordResetResult>;
   bookmark(params: BookmarkOperation): Promise<BookmarkResponse>;
   removeBookmark(params: BookmarkOperation): Promise<BookmarkDeleteResponse>;
@@ -91,13 +91,13 @@ export class UserService implements IUserService {
     return await this.db.feedback.submit(feedback);
   }
 
-  public async signUp(credentials: LoginSchema): Promise<CreateUserResult> {
+  public async signUp(credentials: LoginCredentialsSchemaType): Promise<CreateUserResult> {
     return await this.db.user.write.createUser(credentials);
   }
 
   public async deleteAccount(
     user_id: string | null | undefined,
-    credentials: LoginSchema,
+    credentials: LoginCredentialsSchemaType,
   ): Promise<AccountDeletionResult> {
     return await this.executeDeleteAccount(user_id, credentials);
   }
@@ -120,7 +120,7 @@ export class UserService implements IUserService {
 
   private async executeDeleteAccount(
     user_id: string | null | undefined,
-    credentials: LoginSchema,
+    credentials: LoginCredentialsSchemaType,
   ): Promise<AccountDeletionResult> {
     const userId = this.policy.requireAuthenticated(user_id);
     return await this.db.user.write.deleteAccount(userId, credentials);

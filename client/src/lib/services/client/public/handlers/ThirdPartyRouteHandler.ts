@@ -1,15 +1,11 @@
-import {
-  SearchResultsResponseSchemaType,
-} from "@elenchus/contracts/schemas/articles/BrowsingOptionSchema";
+import { SearchResultsResponseSchemaType } from "@elenchus/contracts/schemas/articles/BrowsingOptionSchema";
 import {
   BlueSkyPostSchemaArrayType,
   SplitBlueSkyFeedSchemaType,
 } from "@elenchus/contracts/schemas/integrations/BlueSkySchemas";
 import type { PublicApiContract } from "@elenchus/contracts";
 import { IHttpClient } from "../../http/types";
-import {
-  WikiResponse,
-} from "@elenchus/contracts/schemas/integrations/WikipediaExtractSchemas";
+import { WikiResponse } from "@elenchus/contracts/schemas/integrations/WikipediaExtractSchemas";
 
 export type NewsApiSearchParams = {
   query: string;
@@ -33,11 +29,7 @@ export class ThirdPartyRouteHandler implements IThirdPartyRouteHandler {
   public async blueSkyFeed(): Promise<SplitBlueSkyFeedSchemaType> {
     const route = this.routes.integrations.blueSky.feed;
 
-    return await this.http.request(
-      route,
-      route.path,
-      {},
-    );
+    return await this.http.request(route, {});
   }
 }
 
@@ -56,40 +48,29 @@ class ThirdPartyRouteSearchHandler implements IThirdPartyRouteSearchHandler {
   ) {}
 
   public async blueSky(query: string): Promise<BlueSkyPostSchemaArrayType> {
-    const encodedQuery = encodeURIComponent(query);
     const route = this.routes.integrations.blueSky.search;
 
-    return await this.http.request(
-      route,
-      `${route.path}?q=${encodedQuery}`,
-      {},
-    );
+    return await this.http.request(route, { query: { q: query } });
   }
 
   public async articles(
     params: NewsApiSearchParams,
   ): Promise<SearchResultsResponseSchemaType> {
     const { query, signal } = params;
-    const encodedQuery = encodeURIComponent(query);
 
     const route = this.routes.integrations.newsApi;
 
-    return await this.http.request(
-      route,
-      `${route.path}?q=${encodedQuery}`,
-      { signal },
-    );
+    return await this.http.request(route, {
+      query: { q: query },
+      signal,
+    });
   }
 
   public async wikipediaExtract(query: string): Promise<WikiResponse> {
-    const encodedQuery = encodeURIComponent(query);
-
     const route = this.routes.integrations.wiki;
 
-    return await this.http.request(
-      route,
-      `${route.path}?q=${encodedQuery}`,
-      {},
-    );
+    return await this.http.request(route, {
+      query: { q: query },
+    });
   }
 }

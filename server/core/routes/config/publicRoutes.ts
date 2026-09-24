@@ -2,37 +2,51 @@ import { Router } from "express";
 import { IAppServices } from "../../../services/appServices.js";
 import { wrapAsync } from "../../async/wrapAsync.js";
 import { ServerError } from "../../errors/ServerError.js";
-import { validateOrThrow } from "../../validation/validateOrThrow.js";
+import {
+  validateOrThrow,
+  validateServerOrThrow,
+} from "../../validation/validateOrThrow.js";
 import { ClientError } from "../../errors/ClientError.js";
 import { PUBLIC_API_CONFIG } from "@elenchus/contracts";
+import { RouteRegistrar } from "./routeRegistrar.js";
+import type { Static } from "@sinclair/typebox";
+
+const registrar = new RouteRegistrar();
 
 export function publicRoutes(app: IAppServices, router: Router) {
-  router.post(
-    PUBLIC_API_CONFIG.user.feedback.path,
-    wrapAsync(async (req, res) => {
-      const { feedback } = validateOrThrow(
-        PUBLIC_API_CONFIG.user.feedback.bodySchema,
-        req.body,
-      );
+  const feedbackRoute = PUBLIC_API_CONFIG.user.feedback;
 
-      const result = await app.services.api.user.submitFeedback(feedback);
+  registrar.register(
+    router,
+    feedbackRoute,
+    wrapAsync(async (req, res) => {
+      const { feedback } = validateOrThrow(feedbackRoute.bodySchema, req.body);
+
+      const result: Static<typeof feedbackRoute.outputSchema> =
+        await app.services.api.user.submitFeedback(feedback);
 
       if (!result.ok) {
         throw new ServerError("Failed to submit feedback", 500, result.details);
       }
 
-      res.success("Feedback submitted successfully", result, 200);
+      const data = validateServerOrThrow(feedbackRoute.outputSchema, result);
+
+      res.success("Feedback submitted successfully", data, 200);
     }),
   );
 
-  router.post(
-    PUBLIC_API_CONFIG.user.passwordReset.path,
+  const passwordResetRoute = PUBLIC_API_CONFIG.user.passwordReset;
+
+  registrar.register(
+    router,
+    passwordResetRoute,
     wrapAsync(async (req, res) => {
       const { email } = validateOrThrow(
-        PUBLIC_API_CONFIG.user.passwordReset.bodySchema,
+        passwordResetRoute.bodySchema,
         req.body,
       );
-      const result = await app.services.api.user.requestPasswordReset(email);
+      const result: Static<typeof passwordResetRoute.outputSchema> =
+        await app.services.api.user.requestPasswordReset(email);
 
       if (!result.ok) {
         throw new ServerError(
@@ -42,56 +56,79 @@ export function publicRoutes(app: IAppServices, router: Router) {
         );
       }
 
-      res.success("Reset email sent.", result, 200);
-    }),
-  );
-
-  router.post(
-    PUBLIC_API_CONFIG.auth.recover.path,
-    wrapAsync(async (req, res) => {
-      const result = await req.auth.recoverSession(req, res);
-
-      res.success("Session checked", result, 200);
-    }),
-  );
-
-  router.post(
-    PUBLIC_API_CONFIG.auth.login.path,
-    wrapAsync(async (req, res) => {
-      validateOrThrow(
-        PUBLIC_API_CONFIG.auth.login.bodySchema,
-        req.body,
+      const data = validateServerOrThrow(
+        passwordResetRoute.outputSchema,
+        result,
       );
-      const { data, error } = await req.auth.login(req, res);
+
+      res.success("Reset email sent.", data, 200);
+    }),
+  );
+
+  const recoverRoute = PUBLIC_API_CONFIG.auth.recover;
+
+  registrar.register(
+    router,
+    recoverRoute,
+    wrapAsync(async (req, res) => {
+      const result: Static<typeof recoverRoute.outputSchema> =
+        await req.auth.recoverSession(req, res);
+
+      const data = validateServerOrThrow(recoverRoute.outputSchema, result);
+
+      res.success("Session checked", data, 200);
+    }),
+  );
+
+  const loginRoute = PUBLIC_API_CONFIG.auth.login;
+
+  registrar.register(
+    router,
+    loginRoute,
+    wrapAsync(async (req, res) => {
+      validateOrThrow(loginRoute.bodySchema, req.body);
+      const { data: loginData, error } = await req.auth.login(req, res);
 
       if (error) {
         throw new ServerError("Failed to authenticate user", 401, error.cause);
       }
 
-      res.success("Login successful", { ok: true, data }, 200);
+      const result: Static<typeof loginRoute.outputSchema> = {
+        ok: true,
+        data: loginData,
+      };
+      const data = validateServerOrThrow(loginRoute.outputSchema, result);
+
+      res.success("Login successful", data, 200);
     }),
   );
 
-  router.post(
-    PUBLIC_API_CONFIG.auth.logOut.path,
+  const logOutRoute = PUBLIC_API_CONFIG.auth.logOut;
+
+  registrar.register(
+    router,
+    logOutRoute,
     wrapAsync(async (req, res) => {
-      const result = await req.auth.logOut(req, res);
+      const result: Static<typeof logOutRoute.outputSchema> =
+        await req.auth.logOut(req, res);
 
       if (!result.ok) {
         throw new ServerError("Failed to sign out user", 500, result.message);
       }
 
-      res.success("signed out successfully", result, 200);
+      const data = validateServerOrThrow(logOutRoute.outputSchema, result);
+
+      res.success("signed out successfully", data, 200);
     }),
   );
 
-  router.post(
-    PUBLIC_API_CONFIG.auth.signUp.path,
+  const signUpRoute = PUBLIC_API_CONFIG.auth.signUp;
+
+  registrar.register(
+    router,
+    signUpRoute,
     wrapAsync(async (req, res) => {
-      const body = validateOrThrow(
-        PUBLIC_API_CONFIG.auth.signUp.bodySchema,
-        req.body,
-      );
+      const body = validateOrThrow(signUpRoute.bodySchema, req.body);
 
       const result = await app.services.api.user.signUp(body);
 
@@ -101,30 +138,36 @@ export function publicRoutes(app: IAppServices, router: Router) {
 
       req.auth.establishSession(result.data.session, res);
 
-      res.success("signup completed successfully", result, 200);
+      const response: Static<typeof signUpRoute.outputSchema> = result;
+      const data = validateServerOrThrow(signUpRoute.outputSchema, response);
+
+      res.success("signup completed successfully", data, 200);
     }),
   );
 
-  router.get(
-    PUBLIC_API_CONFIG.integrations.wiki.path,
-    wrapAsync(async (req, res) => {
-      const { q: term } = validateOrThrow(
-        PUBLIC_API_CONFIG.integrations.wiki.querySchema,
-        req.query,
-      );
-      const result = await app.integrations.wiki.extract(term);
+  const wikiRoute = PUBLIC_API_CONFIG.integrations.wiki;
 
-      res.success("extracted term from wikipedia successfully", result, 200);
+  registrar.register(
+    router,
+    wikiRoute,
+    wrapAsync(async (req, res) => {
+      const { q: term } = validateOrThrow(wikiRoute.querySchema, req.query);
+      const result: Static<typeof wikiRoute.outputSchema> =
+        await app.integrations.wiki.extract(term);
+
+      const data = validateServerOrThrow(wikiRoute.outputSchema, result);
+
+      res.success("extracted term from wikipedia successfully", data, 200);
     }),
   );
 
-  router.get(
-    PUBLIC_API_CONFIG.articles.poll.path,
+  const pollRoute = PUBLIC_API_CONFIG.articles.poll;
+
+  registrar.register(
+    router,
+    pollRoute,
     wrapAsync(async (req, res) => {
-      const { jobId } = validateOrThrow(
-        PUBLIC_API_CONFIG.articles.poll.paramsSchema,
-        req.params,
-      );
+      const { jobId } = validateOrThrow(pollRoute.paramsSchema, req.params);
       const job = app.services.api.articles.getExtractionJob(jobId);
 
       if (!job) {
@@ -135,56 +178,83 @@ export function publicRoutes(app: IAppServices, router: Router) {
         "Cache-Control",
         "no-store, no-cache, must-revalidate, max-age=0",
       );
-      res.success("Extraction status retrieved", job, 200);
+      const response: Static<typeof pollRoute.outputSchema> = job;
+      const data = validateServerOrThrow(pollRoute.outputSchema, response);
+
+      res.success("Extraction status retrieved", data, 200);
     }),
   );
 
-  router.post(
-    PUBLIC_API_CONFIG.articles.extract.path,
+  const extractRoute = PUBLIC_API_CONFIG.articles.extract;
+
+  registrar.register(
+    router,
+    extractRoute,
     wrapAsync(async (req, res) => {
-      const { articles } = validateOrThrow(
-        PUBLIC_API_CONFIG.articles.extract.bodySchema,
-        req.body,
-      );
-      const result = app.services.api.articles.extract(articles);
+      const { articles } = validateOrThrow(extractRoute.bodySchema, req.body);
+      const result: Static<typeof extractRoute.outputSchema> =
+        app.services.api.articles.extract(articles);
 
-      res.success("Extraction started", result, 202);
+      const data = validateServerOrThrow(extractRoute.outputSchema, result);
+
+      res.success("Extraction started", data, 202);
     }),
   );
 
-  router.get(
-    PUBLIC_API_CONFIG.integrations.blueSky.feed.path,
+  const blueSkyFeedRoute = PUBLIC_API_CONFIG.integrations.blueSky.feed;
+
+  registrar.register(
+    router,
+    blueSkyFeedRoute,
     wrapAsync(async (req, res) => {
-      const result = await app.integrations.blueSky.feed();
+      const result: Static<typeof blueSkyFeedRoute.outputSchema> =
+        await app.integrations.blueSky.feed();
 
-      res.success("Blue Sky feed retrieved successfully", result, 200);
+      const data = validateServerOrThrow(blueSkyFeedRoute.outputSchema, result);
+
+      res.success("Blue Sky feed retrieved successfully", data, 200);
     }),
   );
 
-  router.get(
-    PUBLIC_API_CONFIG.integrations.blueSky.search.path,
+  const blueSkySearchRoute = PUBLIC_API_CONFIG.integrations.blueSky.search;
+
+  registrar.register(
+    router,
+    blueSkySearchRoute,
     wrapAsync(async (req, res) => {
       const { q: query } = validateOrThrow(
-        PUBLIC_API_CONFIG.integrations.blueSky.search.querySchema,
+        blueSkySearchRoute.querySchema,
         req.query,
       );
-      const result = await app.integrations.blueSky.search(query);
+      const result: Static<typeof blueSkySearchRoute.outputSchema> =
+        await app.integrations.blueSky.search(query);
 
-      res.success("Blue Sky posts searched successfully", result, 200);
+      const data = validateServerOrThrow(
+        blueSkySearchRoute.outputSchema,
+        result,
+      );
+
+      res.success("Blue Sky posts searched successfully", data, 200);
     }),
   );
 
-  router.get(
-    PUBLIC_API_CONFIG.integrations.newsApi.path,
+  const newsSearchRoute = PUBLIC_API_CONFIG.integrations.newsApi;
+
+  registrar.register(
+    router,
+    newsSearchRoute,
     wrapAsync(async (req, res) => {
       const { q: query } = validateOrThrow(
-        PUBLIC_API_CONFIG.integrations.newsApi.querySchema,
+        newsSearchRoute.querySchema,
         req.query,
       );
 
-      const result = await app.integrations.newsApi.search(query);
+      const result: Static<typeof newsSearchRoute.outputSchema> =
+        await app.integrations.newsApi.search(query);
 
-      res.success("successful search", result, 200);
+      const data = validateServerOrThrow(newsSearchRoute.outputSchema, result);
+
+      res.success("successful search", data, 200);
     }),
   );
 

@@ -19,6 +19,8 @@ export const LoginCredentialsSchema = Type.Object({
   password: Type.String({ minLength: 1 }),
 });
 
+export type LoginCredentialsSchemaType = Static<typeof LoginCredentialsSchema>;
+
 // Nested User Metadata / Identity Schemas
 const UserIdentitySchema = Type.Object({
   id: Type.String(),
