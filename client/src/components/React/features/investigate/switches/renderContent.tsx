@@ -4,11 +4,17 @@ import SearchResults from "../phase2/results/containers/SearchResults";
 import ArticleContainer from "@/components/React/global/Articles/containers/ArticleContainer";
 import ScrolltoTop from "@/lib/helpers/scroll/ScrollToTop";
 import { articleContent } from "@/motion/variants";
+import { assertNever } from "@/lib/helpers/asserts/assertNever";
 
-export const renderContent = (
-  phase: UserResearchType["phase"],
-): JSX.Element | null => {
-  switch (phase) {
+export default function RenderInvestigationPhase({
+  research,
+}: {
+  research: Extract<
+    UserResearchType,
+    { phase: "searching" } | { phase: "evidence" }
+  >;
+}): JSX.Element {
+  switch (research.phase) {
     case "searching":
       return (
         <motion.div
@@ -39,7 +45,7 @@ export const renderContent = (
       );
 
     default: {
-      return null;
+      return assertNever(research);
     }
   }
-};
+}

@@ -20,6 +20,7 @@ export default function RenderHero({ state }: { state: UserResearchType }) {
     case "framing":
       return (
         <HeroWrapper key="gather-pov-hero">
+          <ScrolltoTop />
           <InvestigateHero />
         </HeroWrapper>
       );
@@ -36,7 +37,7 @@ export default function RenderHero({ state }: { state: UserResearchType }) {
       return (
         <HeroWrapper key="review-hero">
           <ScrolltoTop />
-          <ReviewContainer />
+          <ReviewContainer research={state} />
         </HeroWrapper>
       );
 
