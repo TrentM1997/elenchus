@@ -4,6 +4,14 @@ import { useState } from "react";
 import type { AppDispatch } from "@/state/store";
 import RenderStanceOption from "./containers/RenderStanceOption";
 import { UserResearchType } from "@/state/Reducers/Investigate/research/types";
+import { motion } from "framer-motion";
+
+const motionProps = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+  transition: { duration: 0.2 },
+};
 
 export type Opt = "initial" | "Opt-in" | "Opt-out";
 
@@ -26,12 +34,15 @@ export default function Stance({
   };
 
   return (
-    <section className="w-full h-full xs:px-6 flex flex-col gap-y-1 items-center content-center mx-auto">
+    <motion.section
+      {...motionProps}
+      className="w-full h-full xs:px-6 flex flex-col gap-y-1 items-center content-center mx-auto"
+    >
       <RenderStanceOption
         option={option}
         research={research}
         chooseOption={chooseOption}
       />
-    </section>
+    </motion.section>
   );
 }

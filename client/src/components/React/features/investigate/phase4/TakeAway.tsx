@@ -1,4 +1,5 @@
 import StepsEditor from "@/components/React/global/TipTap/StepsEditor";
+import EndInvestigateButton from "./buttons/FinishInvestigation";
 
 interface TakeAway {
   newPOV: any;
@@ -30,6 +31,7 @@ export function TakeAway({
             setterFunction={getTakeAways}
           />
         </div>
+        <EndInvestigateButton />
       </main>
     </>
   );

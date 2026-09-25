@@ -6,7 +6,7 @@ import ScrolltoTop from "@/lib/helpers/scroll/ScrollToTop";
 import { articleContent } from "@/motion/variants";
 import { assertNever } from "@/lib/helpers/asserts/assertNever";
 
-export default function RenderInvestigationPhase({
+export default function RenderInvestigationContentPhase({
   research,
 }: {
   research: Extract<
@@ -25,7 +25,8 @@ export default function RenderInvestigationPhase({
           exit="exit"
           className="w-full min-h-screen mx-auto relative"
         >
-          <SearchResults />
+          <ScrolltoTop key={`${research.phase}: scrollToTop`} />
+          <SearchResults key={`${research.phase}: child-motion.div`} />
         </motion.div>
       );
 
@@ -39,8 +40,8 @@ export default function RenderInvestigationPhase({
           exit="exit"
           className="min-h-screen w-full mx-auto px-2"
         >
-          <ScrolltoTop />
-          <ArticleContainer />
+          <ScrolltoTop key={`${research.phase}: scrollToTop`} />
+          <ArticleContainer key={`${research.phase}: child-motion.div`} />
         </motion.div>
       );
 

@@ -26,7 +26,11 @@ export default function ReviewQuestions({
       </header>
       <main className="w-full h-full mx-auto flex flex-col items-center justify-center">
         <AnimatePresence mode="wait">
-          <RenderReviewQuestions research={research} reviewStep={step} />
+          <RenderReviewQuestions
+            research={research}
+            reviewStep={step}
+            key={step.checkPoint}
+          />
         </AnimatePresence>
       </main>
     </div>

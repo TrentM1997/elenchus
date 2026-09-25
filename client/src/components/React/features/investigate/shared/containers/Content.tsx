@@ -2,8 +2,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import type { ModalStages } from "@/state/Reducers/Investigate/wiki/WikiSlice";
-import RenderInvestigationPhase from "../../switches/renderContent";
 import { UserResearchType } from "@/state/Reducers/Investigate/research/types";
+import RenderInvestigationContentPhase from "../../switches/RenderInvestigationContentPhase";
 
 export default function Content({ research }: { research: UserResearchType }) {
   const wikiModalStages: ModalStages = useSelector(
@@ -15,6 +15,7 @@ export default function Content({ research }: { research: UserResearchType }) {
 
   return (
     <motion.div
+      key={"investigation-content-container"}
       initial={{ opacity: 1 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -26,7 +27,10 @@ export default function Content({ research }: { research: UserResearchType }) {
     >
       <div className="relative w-full min-h-full box-border">
         <AnimatePresence mode="wait">
-          <RenderInvestigationPhase research={research} />
+          <RenderInvestigationContentPhase
+            research={research}
+            key={research.phase}
+          />
         </AnimatePresence>
       </div>
     </motion.div>

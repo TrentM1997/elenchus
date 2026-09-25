@@ -17,13 +17,23 @@ export default function RenderReviewQuestions({
 }) {
   switch (reviewStep.checkPoint) {
     case "decide-takeaway": {
-      return <Stance research={research} />;
+      return (
+        <Stance
+          research={research}
+          key={`${reviewStep.checkPoint}/${research.phase}`}
+        />
+      );
     }
     case "idea-merit": {
-      return <IdeaMerit research={research} />;
+      return (
+        <IdeaMerit
+          research={research}
+          key={`${reviewStep.checkPoint}/${research.phase}`}
+        />
+      );
     }
     case "ending-perspective": {
-      return <Retrospect />;
+      return <Retrospect key={`${reviewStep.checkPoint}/${research.phase}`} />;
     }
 
     default: {
