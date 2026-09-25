@@ -5,7 +5,7 @@ import { AppDispatch } from "@/state/store";
 import {
   PaginationStatus,
   updatePaginateStatus,
-} from "@/state/Reducers/Investigate/pov/Steps";
+} from "@/state/Reducers/Investigate/pov/StepSlice";
 
 export function useCheckFirstStep() {
   const dispatch = useDispatch<AppDispatch>();

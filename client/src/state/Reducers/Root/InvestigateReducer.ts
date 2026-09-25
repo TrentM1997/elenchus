@@ -1,6 +1,6 @@
 import { combineReducers } from "@reduxjs/toolkit";
 import type { UnknownAction } from "@reduxjs/toolkit";
-import StepsReducer from "../Investigate/pov/Steps";
+import StepsReducer from "../Investigate/pov/StepSlice";
 import NoteReducer from "../Investigate/articles/NoteTaking";
 import ReadingReducer from "../Investigate/articles/ExtractedArticles";
 import SelectingArticles from "../Investigate/articles/ChosenArticles";

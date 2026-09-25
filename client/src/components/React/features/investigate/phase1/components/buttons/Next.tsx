@@ -4,14 +4,17 @@ import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import {
   increment,
   denyIncrement,
-} from "@/state/Reducers/Investigate/pov/Steps";
+} from "@/state/Reducers/Investigate/pov/StepSlice";
 import { motion } from "framer-motion";
 import { selectPost } from "@/state/Reducers/BlueSky/BlueSkySlice";
 import { useEffect, useMemo } from "react";
 import React from "react";
 
 function NextButton({}): JSX.Element | null {
-  const { wizardStep: { num: step }, status } = useSelector(
+  const {
+    wizardStep: { current: step },
+    status,
+  } = useSelector(
     (state: RootState) => state.investigation.stepper,
     shallowEqual,
   );
@@ -27,6 +30,7 @@ function NextButton({}): JSX.Element | null {
   }, [idea]);
 
   const handleStep = () => {
+    if (step === "final" || gettingHelp) return;
     window.dispatchEvent(new CustomEvent("nextStepClick"));
     if (status === "active" && idea !== "") {
       dispatch(increment());
@@ -47,9 +51,10 @@ function NextButton({}): JSX.Element | null {
       exit={{ opacity: 0, scale: 0 }}
       whileHover={{ scale: 1.1 }}
       transition={{ type: "tween", duration: 0.2 }}
-      className={`relative ease-soft h-auto w-auto justify-self-end self-center ${step >= 4 || gettingHelp ? "pointer-events-none" : "pointer-events-auto"}`}
+      className={`relative ease-soft h-auto w-auto justify-self-end self-center ${step === "final" || gettingHelp ? "pointer-events-none" : "pointer-events-auto"}`}
     >
       <button
+        disabled={step === "final" || gettingHelp}
         onClick={handleStep}
         className="text-slate-300 text-md font-light w-14 h-10
           lg:w-14 lg:h-12 p-1.5 transition-all mx-auto flex
@@ -58,7 +63,7 @@ function NextButton({}): JSX.Element | null {
       >
         <span className="mx-auto flex items-center justify-center">
           <svg
-            className={`p-3 ${step >= 4 ? "text-zinc-400" : "text-white md:group-hover:text-white"}`}
+            className={`p-3 ${step === "final" ? "text-zinc-400" : "text-white md:group-hover:text-white"}`}
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 48 48"
             width="100%"

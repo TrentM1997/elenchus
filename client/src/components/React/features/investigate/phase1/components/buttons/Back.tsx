@@ -1,12 +1,12 @@
 import { motion } from "framer-motion";
 import type { RootState } from "@/state/store";
 import { useSelector, useDispatch } from "react-redux";
-import { decrement } from "@/state/Reducers/Investigate/pov/Steps";
+import { decrement } from "@/state/Reducers/Investigate/pov/StepSlice";
 import React from "react";
 
 function BackButton({}): JSX.Element | null {
   const step = useSelector(
-    (state: RootState) => state.investigation.stepper.wizardStep.num,
+    (state: RootState) => state.investigation.stepper.wizardStep.current,
   );
   const dispatch = useDispatch();
 
@@ -24,16 +24,17 @@ function BackButton({}): JSX.Element | null {
         transition={{ type: "tween", duration: 0.2 }}
       >
         <button
+          disabled={step === "idea"}
           onClick={() => dispatch(decrement())}
           className={`xs:w-14 h-10 shadow-material_2
                     lg:w-14 mx-auto lg:h-12 p-1.5 transition-all 
                     duration-200 bg-ebony/70 md:hover:bg-white/10 
                     flex items-center group rounded-2xl
-                    ${step !== 0 ? "pointer-events-auto opacity-100" : " pointer-events-none bg-white/5 opacity-50"}`}
+                    ${step !== "idea" ? "pointer-events-auto opacity-100" : " pointer-events-none bg-white/5 opacity-50"}`}
         >
           <span className="mx-auto">
             <svg
-              className={`p-3 ${step === 0 ? "text-zinc-400" : "text-white md:group-hover:text-white"}`}
+              className={`p-3 ${step === "idea" ? "text-zinc-400" : "text-white md:group-hover:text-white"}`}
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 48 48"
               width="100%"

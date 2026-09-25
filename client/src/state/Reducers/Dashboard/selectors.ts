@@ -16,3 +16,24 @@ export const selectReviewedSources = createSelector(
   (investigation, articles) => investigation.status === "ready" && articles.status === "ready"
     ? articles.data.filter(article => investigation.data.sources?.includes(article.article_url)) : [],
 );
+
+
+// Keep saved content mounted while refreshing it. A previous article's detail
+// must never be used as the initial frame for a newly selected article.
+export const selectArticleReviewState = createSelector(
+  [
+    (state: RootState) => state.dash.ArticleToReview,
+    (state: RootState, articleId: number) => state.dash.articles.status === "ready"
+      ? state.dash.articles.data.find(article => article.id === articleId)
+      : undefined,
+    (_state: RootState, articleId: number) => articleId,
+  ],
+  (detail, saved, articleId): RootState["dash"]["ArticleToReview"] => {
+    if (detail.status === "ready" && detail.data.id === articleId) return detail;
+    if (saved) return { status: "ready", data: saved };
+    if (detail.status === "initial" || detail.status === "ready") {
+      return { status: "pending" };
+    }
+    return detail;
+  },
+);

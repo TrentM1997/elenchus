@@ -1,3 +1,4 @@
+import { selectWizardStepIndex } from "@/state/Reducers/Investigate/pov/selectors";
 import { SidebarItemData } from "@/env";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
@@ -8,7 +9,7 @@ import ItemText from "./ItemText";
 
 function SidebarItem({ item }: { item: SidebarItemData }) {
     const state: InvestigateState = useSelector((state: RootState) => state.investigation);
-    const { num: step } = state.stepper.wizardStep;
+    const step = useSelector(selectWizardStepIndex);
     const [hasInput, setHasInput] = useState<boolean>(item.data ? true : false);
     const active = useMemo(() => {
         const isActive: boolean = (item.step - 1) === step;

@@ -18,6 +18,14 @@ export const useCalculateMetrics = () => {
       return;
     }
 
+    dispatch(
+      getMetrics({
+        bias: { status: "pending" },
+        integrity: { status: "pending" },
+        outcomes: { status: "pending" },
+      }),
+    );
+
     let worker: Worker | undefined;
     let active = true;
     let raf = 0;
@@ -38,14 +46,6 @@ export const useCalculateMetrics = () => {
 
       worker?.terminate();
     };
-
-    dispatch(
-      getMetrics({
-        bias: { status: "pending" },
-        integrity: { status: "pending" },
-        outcomes: { status: "pending" },
-      }),
-    );
 
     try {
       worker = new MetricsCalculator();

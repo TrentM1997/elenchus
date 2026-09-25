@@ -1,3 +1,4 @@
+import { selectWizardStepIndex } from "@/state/Reducers/Investigate/pov/selectors";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
@@ -10,7 +11,7 @@ interface Track {
 export default function WizardTrack({ thisStep }: Track): JSX.Element {
     const investigateState = useSelector((state: RootState) => state.investigation);
     const { stepper } = investigateState;
-    const { num: step } = stepper.wizardStep;
+    const step = useSelector(selectWizardStepIndex);
     const animateTrack: boolean = useMemo(() => {
         const show: boolean = (thisStep < step);
         return show;

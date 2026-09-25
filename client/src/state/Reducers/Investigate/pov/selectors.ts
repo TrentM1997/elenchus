@@ -1,3 +1,4 @@
+import { stepOrder } from "./types";
 import type { RootState } from "@/state/store";
 import { createSelector } from "@reduxjs/toolkit";
 import type { PerspectiveDraft } from "./types";
@@ -25,3 +26,11 @@ export const selectPOVData = createSelector(
     };
   },
 );
+
+
+export const selectWizardStep = (state: RootState) =>
+  state.investigation.stepper.wizardStep.current;
+
+// Ordinals are presentation data, not the wizard's stored identity.
+export const selectWizardStepIndex = (state: RootState) =>
+  stepOrder.indexOf(selectWizardStep(state));

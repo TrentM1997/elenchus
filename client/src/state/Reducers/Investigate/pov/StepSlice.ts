@@ -1,20 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { stepOrder, type WizardStep, type WizardStepType } from "./types";
 
 export type PaginationStatus = "active" | "idle";
 
-type StepProgress = "initial" | "proceed" | "halt";
-
-export type WizardStep = { num: number; status: StepProgress };
-
 export interface StepState {
-  wizardStep: WizardStep;
+  wizardStep: WizardStepType;
   status: PaginationStatus | null;
   acceptInput: boolean | null;
 }
 
 const initialState: StepState = {
-  wizardStep: { num: 0, status: "initial" },
+  wizardStep: { current: "idea", status: "initial" },
   status: "idle",
   acceptInput: null,
 };
@@ -23,16 +20,21 @@ export const StepSlice = createSlice({
   name: "StepsCounter",
   initialState: initialState,
   reducers: {
-    updatePaginateStatus: (state, action: PayloadAction<PaginationStatus | null>) => {
+    updatePaginateStatus: (
+      state,
+      action: PayloadAction<PaginationStatus | null>,
+    ) => {
       state.status = action.payload;
     },
     increment: (state) => {
-      const next = state.wizardStep.num + 1;
-      state.wizardStep = { num: next, status: "initial" };
+      const index = stepOrder.indexOf(state.wizardStep.current);
+      const next = stepOrder[index + 1];
+      if (next) state.wizardStep = { current: next, status: "initial" };
     },
     decrement: (state) => {
-      const prev = state.wizardStep.num - 1;
-      state.wizardStep = { num: prev, status: "proceed" };
+      const index = stepOrder.indexOf(state.wizardStep.current);
+      const previous = stepOrder[index - 1];
+      if (previous) state.wizardStep = { current: previous, status: "proceed" };
     },
     denyIncrement: (state) => {
       state.wizardStep.status = "halt";
@@ -40,11 +42,11 @@ export const StepSlice = createSlice({
     allowIncrement: (state) => {
       state.wizardStep.status = "proceed";
     },
-    goToStep: (state, action: PayloadAction<number>) => {
-      state.wizardStep = { status: "proceed", num: action.payload };
+    goToStep: (state, action: PayloadAction<WizardStep>) => {
+      state.wizardStep = { status: "proceed", current: action.payload };
     },
     backToStart: (state) => {
-      state.wizardStep = { num: 0, status: "initial" };
+      state.wizardStep = { current: "idea", status: "initial" };
     },
   },
 });

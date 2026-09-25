@@ -8,6 +8,7 @@ import AsyncStateRenderer from "@/components/React/pipelines/AsyncStateRenderer"
 import { ResearchMetrics } from "@/state/Reducers/Dashboard/DashboardSlice";
 import StatsSkeleton from "../../../charts/skeletons/StatsSkeleton";
 import StatsSection from "../../../charts/ResearchStats/StatsSection";
+import ChartSuspenseSkeleton from "../../../charts/skeletons/ChartSectionSkeleton";
 const BiasChart = lazy(
   () => import("@/components/React/features/charts/DonutChart/BiasChart"),
 );
@@ -29,17 +30,18 @@ export default function RenderMetricsCharts({
 }: RenderMetricsCharts): JSX.Element | null {
   return (
     <Fragment>
-      <AsyncStateRenderer state={metrics.bias}>
+      <AsyncStateRenderer
+        state={metrics.bias}
+        pending={() => (
+          <DelayedFallback key={"delay-skeleton"}>
+            <ChartJsSkeleton key={"skeleton-wrapper"}>
+              <DonutSkeletonChart key={"skeleton-donut"} />
+            </ChartJsSkeleton>
+          </DelayedFallback>
+        )}
+      >
         {(state) => (
-          <Suspense
-            fallback={
-              <DelayedFallback key={"delay-skeleton"}>
-                <ChartJsSkeleton key={"skeleton-wrapper"}>
-                  <DonutSkeletonChart key={"skeleton-donut"} />
-                </ChartJsSkeleton>
-              </DelayedFallback>
-            }
-          >
+          <Suspense>
             {priority1 === "complete" && (
               <BiasChart biasRatings={state} key={"bias-chart"} />
             )}
@@ -47,33 +49,34 @@ export default function RenderMetricsCharts({
         )}
       </AsyncStateRenderer>
 
-      <AsyncStateRenderer state={metrics.integrity}>
+      <AsyncStateRenderer
+        state={metrics.integrity}
+        pending={() => (
+          <DelayedFallback key={"delay-pie-skeleton"}>
+            <ChartJsSkeleton key={"wrapper-skeleton"}>
+              <PieSkeleton key={"pie-skeleton"} />
+            </ChartJsSkeleton>
+          </DelayedFallback>
+        )}
+      >
         {(state) => (
-          <Suspense
-            fallback={
-              <DelayedFallback key={"delay-pie-skeleton"}>
-                <ChartJsSkeleton key={"wrapper-skeleton"}>
-                  <PieSkeleton key={"pie-skeleton"} />
-                </ChartJsSkeleton>
-              </DelayedFallback>
-            }
-          >
+          <Suspense>
             (
             <IntegrityChart integrityRatings={state} key={"integrity-chart"} />)
           </Suspense>
         )}
       </AsyncStateRenderer>
 
-      <AsyncStateRenderer state={metrics.outcomes}>
+      <AsyncStateRenderer
+        state={metrics.outcomes}
+        pending={() => (
+          <DelayedFallback key={"delay-stats-fallback"}>
+            <StatsSkeleton key={"stats-skeleton"} />
+          </DelayedFallback>
+        )}
+      >
         {(state) => (
-          <Suspense
-            key={"stats-suspense"}
-            fallback={
-              <DelayedFallback key={"delay-stats-fallback"}>
-                <StatsSkeleton key={"stats-skeleton"} />
-              </DelayedFallback>
-            }
-          >
+          <Suspense key={"stats-suspense"}>
             (<StatsSection outcomes={state} key={"investigation-stats"} />)
           </Suspense>
         )}

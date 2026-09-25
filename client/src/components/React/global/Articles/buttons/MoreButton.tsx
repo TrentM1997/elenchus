@@ -13,23 +13,21 @@ export default function MoreButton({ articleData, open, setOpen }) {
                     articleData={articleData}
                 />
             }
-            <div className="group relative">
+            <div className="group/more relative flex h-full w-full items-center justify-center">
 
-                {!open &&
-                    <div className="relative">
-                        <div className="rounded-md xl:h-fit xl:w-16 flex xs:hidden md:block 
-                  mx-auto group-hover:bg-white bg-white opacity-0 absolute md:right-11 xl:right-11
-                  border border-black/20 md:group-hover:opacity-100 transition-all duration-200 ease-in-out">
-
-                            <h1 className="text-black xl:text-sm xl:p-1 font-light tracking-tight text-center w-full">
-                                More
-                            </h1>
-
-                            <div className="absolute top-1/2 -right-2 transform -translate-y-1/2 w-0 h-0 
-                    border-t-4 border-b-6 border-l-8 border-transparent 
-                    border-l-white"/>
-                        </div>
-                    </div>}
+                {!open && (
+                    <div
+                        role="tooltip"
+                        className="pointer-events-none invisible absolute bottom-full right-0 z-50 mb-2
+                            w-max whitespace-nowrap rounded-md border border-black/20 bg-white px-2 py-1
+                            text-center text-sm font-light tracking-tight text-black opacity-0 shadow-lg
+                            transition-opacity duration-150 md:group-hover/more:visible md:group-hover/more:opacity-100
+                            group-focus-within/more:visible group-focus-within/more:opacity-100"
+                    >
+                        More
+                        <span className="absolute right-3 top-full h-0 w-0 border-x-4 border-t-4 border-x-transparent border-t-white" />
+                    </div>
+                )}
 
                 <div
                     onMouseUp={() => { setOpen(prev => !prev) }}

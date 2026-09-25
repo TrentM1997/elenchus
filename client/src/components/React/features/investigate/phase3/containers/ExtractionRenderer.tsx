@@ -48,7 +48,6 @@ export default function ExtractionRenderer({
               key={article.article_url}
               articleData={article}
               investigating={true}
-              animateEntrance={false}
             />
           </Suspense>
         </>

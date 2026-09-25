@@ -1,3 +1,4 @@
+import { selectWizardStepIndex } from "@/state/Reducers/Investigate/pov/selectors";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
@@ -13,7 +14,7 @@ interface TrackProps {
 };
 
 export default function StepNode({ thisStep, caption }: TrackProps): JSX.Element {
-    const step = useSelector((state: RootState) => state.investigation.stepper.wizardStep.num);
+    const step = useSelector(selectWizardStepIndex);
     const animateNode: boolean = useMemo(() => {
         const show: boolean = (thisStep > step);
         return show;

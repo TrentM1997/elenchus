@@ -16,20 +16,17 @@ export const hydrateFeed = createAsyncThunk(
 export const searchBlueSky = createAsyncThunk(
   "investigate/getBlueSkyPosts",
   async (query: string, thunkAPI) => {
-    const options: OptionsTypes = {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    };
-
     try {
-      return await serverClient.general.integrations.search.blueSky(query);
-    } catch (error) {
-      if (error) {
-        return thunkAPI.rejectWithValue(error);
+      const result =
+        await serverClient.general.integrations.search.blueSky(query);
+
+      if (!result) {
+        throw new Error("Failed to fetch posts on BlueSky");
       }
+
+      return result;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
     }
   },
 );

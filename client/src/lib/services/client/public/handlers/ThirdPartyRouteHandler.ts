@@ -34,7 +34,7 @@ export class ThirdPartyRouteHandler implements IThirdPartyRouteHandler {
 }
 
 export interface IThirdPartyRouteSearchHandler {
-  blueSky(query: string): Promise<BlueSkyPostSchemaArrayType>;
+  blueSky(query: string): Promise<SplitBlueSkyFeedSchemaType>;
   articles(
     params: NewsApiSearchParams,
   ): Promise<SearchResultsResponseSchemaType>;
@@ -47,7 +47,7 @@ class ThirdPartyRouteSearchHandler implements IThirdPartyRouteSearchHandler {
     private readonly http: Pick<IHttpClient, "request">,
   ) {}
 
-  public async blueSky(query: string): Promise<BlueSkyPostSchemaArrayType> {
+  public async blueSky(query: string): Promise<SplitBlueSkyFeedSchemaType> {
     const route = this.routes.integrations.blueSky.search;
 
     return await this.http.request(route, { query: { q: query } });

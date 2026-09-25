@@ -1,7 +1,6 @@
 import type { AppDispatch, RootState } from "@/state/store";
 import { useSelector, useDispatch } from "react-redux";
 import { saveInvgestigation } from "@/state/Reducers/Investigate/research/thunks";
-import { hydrateDashboard } from "@/state/Reducers/Dashboard/thunks";
 import type { SaveInvestigationState } from "@/state/Reducers/Investigate/research/types";
 
 type SaveInvestigationHook = {
@@ -10,7 +9,9 @@ type SaveInvestigationHook = {
 };
 
 export const useSaveInvestigation = (): SaveInvestigationHook => {
-  const status = useSelector((state: RootState) => state.investigation.research.persistence.status);
+  const status = useSelector(
+    (state: RootState) => state.investigation.research.persistence.status,
+  );
   const research = useSelector(
     (state: RootState) => state.investigation.research.research,
   );
@@ -18,10 +19,7 @@ export const useSaveInvestigation = (): SaveInvestigationHook => {
 
   const handleSave = async () => {
     if (research.phase !== "end") return;
-    const result = await dispatch(saveInvgestigation(research.data));
-    if (saveInvgestigation.fulfilled.match(result)) {
-      dispatch(hydrateDashboard());
-    }
+    await dispatch(saveInvgestigation(research.data));
   };
 
   return {

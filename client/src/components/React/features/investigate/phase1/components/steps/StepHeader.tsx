@@ -7,66 +7,71 @@ import { RootState } from "@/state/store";
 import React from "react";
 
 interface StepHeader {
-    title: string,
-    subheader?: string | null,
-    info: Help[],
-};
+  title: string;
+  subheader?: string | null;
+  info: Help[];
+}
 
 function StepHeader({ title, subheader, info }: StepHeader) {
-    const step = useSelector((state: RootState) => state.investigation.stepper.wizardStep.num);
-    const [display, setDisplay] = useState({
+  const step = useSelector(
+    (state: RootState) => state.investigation.stepper.wizardStep.current,
+  );
+  const [display, setDisplay] = useState({
+    title: title,
+    subheader: subheader,
+  });
+  const [propsChanging, setPropsChanging] = useState<boolean>(false);
+
+  useEffect(() => {
+    setPropsChanging(true);
+
+    const timer = setTimeout(() => {
+      setDisplay({
         title: title,
-        subheader: subheader
-    });
-    const [propsChanging, setPropsChanging] = useState<boolean>(false);
+        subheader: subheader,
+      });
+      setPropsChanging(false);
+    }, 20);
 
-    useEffect(() => {
+    return () => clearTimeout(timer);
+  }, [step]);
 
-        setPropsChanging(true);
-
-        const timer = setTimeout(() => {
-            setDisplay({
-                title: title,
-                subheader: subheader
-            });
-            setPropsChanging(false);
-        }, 20);
-
-        return () => clearTimeout(timer);
-
-    }, [step]);
-
-    return (
-        <div
-            className='w-full h-12 lg:h-20 shrink-0 basis-3 sm:basis-4 relative
-            text-center mx-auto box-border flex'>
-            <div
-                className="w-full box-border border-b h-7 md:h-8 lg:h-9 border-white/10 mb-2 
-            flex flex-row justify-between items-center">
-                <AnimatePresence mode="wait">
-                    {!propsChanging &&
-                        <motion.div
-                            key={title}
-                            variants={headerTransitions}
-                            initial='initial'
-                            animate='open'
-                            exit='closed'
-                            className="w-full h-full flex justify-items-start flex-nowrap">
-                            <h1 className="2xl:text-2xl md:text-2xl sm:text-xl text-sm 
+  return (
+    <div
+      className="w-full h-12 lg:h-20 shrink-0 basis-3 sm:basis-4 relative
+            text-center mx-auto box-border flex"
+    >
+      <div
+        className="w-full box-border border-b h-7 md:h-8 lg:h-9 border-white/10 mb-2 
+            flex flex-row justify-between items-center"
+      >
+        <AnimatePresence mode="wait">
+          {!propsChanging && (
+            <motion.div
+              key={title}
+              variants={headerTransitions}
+              initial={false}
+              animate="open"
+              exit="closed"
+              className="w-full h-full flex justify-items-start flex-nowrap"
+            >
+              <h1
+                className="2xl:text-2xl md:text-2xl sm:text-xl text-sm 
                      tracking-tight font-light text-nowrap text-zinc-300 pb-1"
-                            >{display.title} <span className="text-zinc-500"
-                            >{subheader ? display.subheader : null}
-                                </span>
-                            </h1>
-                        </motion.div>}
-                </AnimatePresence>
+              >
+                {display.title}{" "}
+                <span className="text-zinc-500">
+                  {subheader ? display.subheader : null}
+                </span>
+              </h1>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-                <HelpButton info={info} />
-            </div>
-        </div>
-
-    );
-};
-
+        <HelpButton info={info} />
+      </div>
+    </div>
+  );
+}
 
 export default React.memo(StepHeader);

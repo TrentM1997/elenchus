@@ -1,17 +1,22 @@
 import { updatePOVDraft } from "@/state/Reducers/Investigate/pov/thunks";
 import { selectPOVData } from "@/state/Reducers/Investigate/pov/selectors";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch } from "@/state/store";
+import { AppDispatch, RootState } from "@/state/store";
 import Biases from "../inputs/interactive/Biases";
 import { motion } from "framer-motion";
 import { stepVariants } from "@/motion/variants";
 import React from "react";
 
+export type BiasKind =
+  | "Inclined to believe the idea"
+  | "Inclined to not believe/disprove the idea"
+  | "Don't have an opinion on the idea";
+
 function Step3(): JSX.Element | null {
-  const { biases } = useSelector(selectPOVData);
+  const research = useSelector(selectPOVData);
   const dispatch = useDispatch<AppDispatch>();
 
-  const opinions: string[] = [
+  const opinions: BiasKind[] = [
     "Inclined to believe the idea",
     "Inclined to not believe/disprove the idea",
     "Don't have an opinion on the idea",
@@ -37,12 +42,12 @@ function Step3(): JSX.Element | null {
                 I would describe my feelings towards the idea as ...
               </h1>
             </header>
-            {opinions.map((opinion) => (
+            {opinions.map((bias) => (
               <Biases
-                key={opinion}
-                opinion={opinion}
-                biases={biases}
-                getPOV={() => dispatch(updatePOVDraft({ biases: opinion }))}
+                key={bias}
+                bias={bias}
+                research={research}
+                getPOV={() => dispatch(updatePOVDraft({ biases: bias }))}
               />
             ))}
           </div>

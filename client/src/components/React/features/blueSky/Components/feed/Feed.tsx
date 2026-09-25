@@ -15,8 +15,7 @@ export default function Feed({
   shouldAnimate = true,
 }: FeedProps): JSX.Element {
   const selected = useSelector((state: RootState) => state.bluesky.selected);
-  const postForPopover = useSelector((s: RootState) => s.bluesky.popoverPost);
-  const playAnimation = shouldAnimate && postForPopover.status === "initial";
+  const playAnimation = shouldAnimate && selected.status === "initial";
 
   return (
     <motion.div

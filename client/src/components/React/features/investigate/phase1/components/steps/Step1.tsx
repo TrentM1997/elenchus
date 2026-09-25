@@ -17,7 +17,7 @@ function Step1() {
   return (
     <motion.div
       variants={stepVariants}
-      initial="closed"
+      initial={false}
       animate="open"
       exit="exit"
       className="flex justify-center items-start gap-2 z-10 

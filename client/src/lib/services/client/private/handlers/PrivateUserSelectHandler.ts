@@ -32,7 +32,7 @@ export class PrivateUserSelectHandler implements IPrivateUserSelectHandler {
 }
 
 interface IInvestigationSelectHander {
-  all(): Promise<InvestigationsSavedReponseSchemaType>;
+  all(signal: AbortSignal): Promise<InvestigationsSavedReponseSchemaType>;
   byId(
     investigation_id: InvestigationSchemaType["id"],
   ): Promise<InvestigationSaveResponseType>;
@@ -44,10 +44,12 @@ class InvestigationSelectHander implements IInvestigationSelectHander {
     private readonly routes: Pick<PrivateApiContract, "investigations">,
   ) {}
 
-  public async all(): Promise<InvestigationsSavedReponseSchemaType> {
+  public async all(
+    signal: AbortSignal,
+  ): Promise<InvestigationsSavedReponseSchemaType> {
     const route = this.routes.investigations.get.all;
 
-    return await this.http.request(route, {});
+    return await this.http.request(route, { signal });
   }
 
   public async byId(
@@ -62,7 +64,7 @@ class InvestigationSelectHander implements IInvestigationSelectHander {
 }
 
 interface IBookmarkSelectHandler {
-  all(): Promise<BookmarkedArticlesResponseSchemaType>;
+  all(signal: AbortSignal): Promise<BookmarkedArticlesResponseSchemaType>;
   byId(
     article_id: ArticleSchemaType["id"],
   ): Promise<GetArticleResponseSchemaType>;
@@ -74,10 +76,10 @@ class BookmarkSelectHandler implements IBookmarkSelectHandler {
     private readonly routes: Pick<PrivateApiContract, "bookmarks">,
   ) {}
 
-  public async all(): Promise<BookmarkedArticlesResponseSchemaType> {
+  public async all(signal: AbortSignal) {
     const route = this.routes.bookmarks.get.all;
 
-    return await this.http.request(route, {});
+    return await this.http.request(route, { signal });
   }
 
   public async byId(
