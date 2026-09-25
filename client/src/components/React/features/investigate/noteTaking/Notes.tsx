@@ -6,7 +6,10 @@ import {
   saveNote,
 } from "@/state/Reducers/Investigate/articles/NoteTaking";
 import NotesEditor from "@/components/React/global/TipTap/NotesEditor";
-import type { DragConstraints, NotePosition } from "@/hooks/useNoteConstraints";
+import type {
+  DragConstraints,
+  NotePosition,
+} from "@/lib/hooks/rendering/useNoteConstraints";
 import { NotesWrapperProps } from "../shared/wrappers/NotesWrapper";
 
 interface Notes {

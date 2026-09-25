@@ -1,4 +1,4 @@
-import { useRecoverSession } from "@/hooks/recovery/useRecoverSession";
+import { useRecoverSession } from "@/lib/hooks/recovery/useRecoverSession";
 import React from "react";
 
 function RecoverSession({

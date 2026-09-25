@@ -1,7 +1,7 @@
 import { AnimatePresence } from "framer-motion";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/state/store";
-import type { NotePosition } from "@/hooks/useNoteConstraints";
+import type { NotePosition } from "@/lib/hooks/rendering/useNoteConstraints";
 import React, { SetStateAction } from "react";
 import Notes from "../../noteTaking/Notes";
 

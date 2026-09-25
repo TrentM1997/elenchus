@@ -9,7 +9,7 @@ import {
   confirmFirstPassword,
   emailValidation,
 } from "@/lib/helpers/formatting/validation";
-import { SigninStatus } from "@/hooks/useSignIn";
+import { SigninStatus } from "@/lib/hooks/auth/useSignIn";
 import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 import { serverClient } from "@/lib/services/client/serverClient";
 

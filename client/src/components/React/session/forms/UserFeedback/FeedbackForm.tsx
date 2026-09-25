@@ -6,7 +6,7 @@ import {
 } from "@/state/Reducers/Feedback/FeedbackSlice";
 import React, { useEffect, useState } from "react";
 import { RootState } from "@/state/store";
-import type { SigninStatus } from "@/hooks/useSignIn";
+import type { SigninStatus } from "@/lib/hooks/auth/useSignIn";
 import { wait } from "@/lib/helpers/formatting/Presentation";
 import { populateModal } from "@/state/Reducers/Investigate/Rendering";
 import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";

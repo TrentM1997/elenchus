@@ -1,4 +1,4 @@
-import { ValidStatus } from "@/hooks/useCheckCredentials";
+import { ValidStatus } from "@/lib/hooks/validation/useCheckCredentials";
 
 const checkSpecialChars = (arr: string[]) => {
   const checkChars = /[!@#$%^&*(),.?":{}|<>]/;

@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { useScrollTrap } from "@/hooks/useOverScrollTrap";
+import { useScrollTrap } from "@/lib/hooks/rendering/useOverScrollTrap";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import RenderWikiExtractByKind from "./RenderWikiExtractByKind";

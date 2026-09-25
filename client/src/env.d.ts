@@ -5,7 +5,7 @@ import { Session } from "@supabase/supabase-js";
 import type { Extracts } from "./state/Reducers/Investigate/research/types";
 import React, { ReactEventHandler, ReactNode, SetStateAction } from "react";
 import { User } from "@supabase/supabase-js";
-import { SigninStatus } from "./hooks/useSignIn";
+import { SigninStatus } from "./lib/hooks/auth/useSignIn";
 import { FactualReportingRatingSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import { BlueSkyPosts } from "./state/Reducers/BlueSky/types";
 import { BlueSkyPostSchemaType } from "@elenchus/contracts/schemas/integrations/BlueSkySchemas";

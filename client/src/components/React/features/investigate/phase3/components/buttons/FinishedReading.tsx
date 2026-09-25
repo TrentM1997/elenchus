@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import GuideDoneReading from "../tooltips/GuideDoneReading";
 import { RootState } from "@/state/store";
 import { useEffect, useRef } from "react";
-import { useTooltipFlags } from "@/hooks/useTooltipFlags";
+import { useTooltipFlags } from "@/lib/hooks/rendering/useTooltipFlags";
 import PanelLabel from "./PanelLabel";
 import {
   populateTooltip,
@@ -46,13 +46,15 @@ export function FinishedReading() {
   const handleClick = async (): Promise<void> => {
     smoothScrollUp();
     await wait(500);
-    dispatch(startReflection({
-      ending_perspective: null,
-      changed_opinion: null,
-      had_merit: null,
-      new_concepts: null,
-      takeaway: null,
-    }));
+    dispatch(
+      startReflection({
+        ending_perspective: null,
+        changed_opinion: null,
+        had_merit: null,
+        new_concepts: null,
+        takeaway: null,
+      }),
+    );
   };
 
   return (
@@ -110,4 +112,3 @@ function ForwardArrow(): JSX.Element {
 //        </svg>
 //    )
 //};
-

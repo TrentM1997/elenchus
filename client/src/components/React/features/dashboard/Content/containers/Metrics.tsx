@@ -4,8 +4,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { variants } from "@/motion/variants";
 import RenderMetricsCharts from "../UserCharts/ChartJsWrapper";
-import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";
-import { useRenderMetrics } from "@/hooks/useRenderMetrics";
+import { useScrollWithShadow } from "@/lib/hooks/rendering/useScrollWithShadow";
+import { useRenderMetrics } from "@/lib/hooks/dashboard/rendering/useRenderMetrics";
 
 export default function Metrics(): JSX.Element | null {
   const metrics = useSelector((s: RootState) => s.dash.metrics);

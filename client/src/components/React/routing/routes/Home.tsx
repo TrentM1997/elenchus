@@ -1,10 +1,10 @@
 import HeroImage from "@/components/React/features/landing/components/HeroImage";
 import Challenge from "@/components/React/features/landing/components/Challenge";
 import ChartingFeatures from "@/components/React/features/landing/components/ChartingFeatures";
-import { useBodyLock } from "@/hooks/useBodyLock";
+import { useBodyLock } from "@/lib/hooks/rendering/useBodyLock";
 import LazyHydrationSection from "@/components/React/features/landing/containers/LazyHydrationSection";
-import { useExtractionFlag } from "@/hooks/flags/useExtractonFlag";
 import { useHydrateBlueSkyFeed } from "@/lib/hooks/blueSky/useHydrateBlueSkyFeed";
+import { useExtractionFlag } from "@/lib/hooks/flags/useExtractonFlag";
 
 export default function Home({}) {
   useHydrateBlueSkyFeed();

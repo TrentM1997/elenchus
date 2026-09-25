@@ -1,21 +1,24 @@
 import { ListRange, Virtuoso } from "react-virtuoso";
 import { useDispatch } from "react-redux";
 import SkeletonMap from "../skeletons/SkeletonMap";
-import { useProgressiveList } from "@/hooks/useProgressiveList";
+import { useProgressiveList } from "@/lib/hooks/dashboard/rendering/useProgressiveList";
 import { resolveRestoreIndex } from "@/lib/helpers/scroll/resolveRestoreIndex";
 import { useCallback, useState } from "react";
-import { useSkeletons } from "@/hooks/useSkeletons";
-import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";
+import { useSkeletons } from "@/lib/hooks/dashboard/rendering/useSkeletons";
+import { useScrollWithShadow } from "@/lib/hooks/rendering/useScrollWithShadow";
 import type { CSSProperties } from "react";
 import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary";
 import type { AppDispatch } from "@/state/store";
-import { changeTab, storeScrollPosition } from "@/state/Reducers/Dashboard/DashboardSlice";
-import { useHandleBookmark } from "@/hooks/dashboard/useBookmarkSavedArticles";
+import {
+  changeTab,
+  storeScrollPosition,
+} from "@/state/Reducers/Dashboard/DashboardSlice";
+import { useHandleBookmark } from "@/lib/hooks/dashboard/events/useBookmarkSavedArticles";
 import ArticleSurface from "../components/ArticleSurface";
 import { stylesWithShadow } from "@/lib/helpers/scroll/stylesWithShadow";
 import { ArticleScroller } from "./types";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
-import { useListScrollPosition } from "@/lib/hooks/dashboard/useListScrollPosition";
+import { useListScrollPosition } from "@/lib/hooks/dashboard/rendering/useListScrollPosition";
 
 export default function ArticlesScroller({
   articles,
@@ -30,21 +33,31 @@ export default function ArticlesScroller({
     articles,
   });
   // Restore once per mount, using the same target to seed list disclosure.
-  const [restoreIndex] = useState(() => resolveRestoreIndex({
-    items: articles,
-    listId: "articles",
-    restorePosition,
-    getKey: article => article.id,
-  }));
-  const { visible, loadMore, fullyLoaded, nextBatchCount } = useProgressiveList(articles, {
-    initialCount: restoreIndex === null ? 8 : Math.max(8, restoreIndex + 11),
-  });
+  const [restoreIndex] = useState(() =>
+    resolveRestoreIndex({
+      items: articles,
+      listId: "articles",
+      restorePosition,
+      getKey: (article) => article.id,
+    }),
+  );
+  const { visible, loadMore, fullyLoaded, nextBatchCount } = useProgressiveList(
+    articles,
+    {
+      initialCount: restoreIndex === null ? 8 : Math.max(8, restoreIndex + 11),
+    },
+  );
   const dispatch = useDispatch<AppDispatch>();
 
   const handleArticleSelection = useCallback(
     (article: ArticleSchemaType) => {
       return async () => {
-        dispatch(storeScrollPosition({ status: "ready", position: getScrollSnapshot() }));
+        dispatch(
+          storeScrollPosition({
+            status: "ready",
+            position: getScrollSnapshot(),
+          }),
+        );
         dispatch(
           changeTab({
             kind: "articles",

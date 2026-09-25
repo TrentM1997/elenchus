@@ -6,7 +6,7 @@ import { RootState } from "@/state/store";
 import { motion } from "framer-motion";
 import { stepVariants } from "@/motion/variants";
 import Requirements from "../inputs/interactive/Requirements";
-import { useCheckFirstStep } from "@/hooks/useCheckFirstStep";
+import { useCheckFirstStep } from "@/lib/hooks/validation/useCheckFirstStep";
 import React from "react";
 
 function Step1() {

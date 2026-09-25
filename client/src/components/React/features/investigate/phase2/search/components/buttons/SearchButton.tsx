@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import Loader from "@/components/React/global/Loaders/Loader";
-import { useMinTimeVisible } from "@/hooks/useMinTimeVisible";
+import { useMinTimeVisible } from "@/lib/hooks/rendering/useMinTimeVisible";
 
 export default function SearchButton() {
   const status = useSelector(

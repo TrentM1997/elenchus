@@ -1,6 +1,6 @@
 import NotifySavedArticle from "../notifications/NotifySaved";
 import SaveArticleTooltip from "../tooltips/SaveArticleTooltip";
-import { useSaveArticle } from "@/hooks/useSaveArticle";
+import { useSaveArticle } from "@/lib/hooks/auth/useSaveArticle";
 import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 

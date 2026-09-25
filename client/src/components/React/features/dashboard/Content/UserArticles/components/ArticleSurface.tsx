@@ -1,4 +1,4 @@
-import { BookmarkStates } from "@/hooks/dashboard/useBookmarkSavedArticles";
+import { BookmarkStates } from "@/lib/hooks/dashboard/events/useBookmarkSavedArticles";
 import ArticleSaved from "./ArticleSaved";
 import ArticleThumbnail from "./ArticleThumbnail";
 import Title from "./Title";

@@ -1,6 +1,6 @@
 import React from "react";
 import { SelectedArticles } from "@/state/Reducers/Investigate/articles/ChosenArticles";
-import { useShimmerChosenText } from "@/lib/hooks/useShimmerChosenText";
+import { useShimmerChosenText } from "@/lib/hooks/rendering/useShimmerChosenText";
 
 interface CurrentChosen {
   chosenArticles: SelectedArticles;

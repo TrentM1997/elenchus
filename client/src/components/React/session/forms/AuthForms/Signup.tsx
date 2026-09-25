@@ -10,8 +10,8 @@ import {
   ConfirmSignupPassword,
 } from "@/components/React/session/forms/InputFields";
 import NewPasswordGuide from "../InputGuides/NewPasswordGuide";
-import type { SigninStatus } from "@/hooks/useSignIn";
-import { useSignupValidation } from "@/hooks/auth/useSignupValidation";
+import type { SigninStatus } from "@/lib/hooks/auth/useSignIn";
+import { useSignupValidation } from "@/lib/hooks/auth/useSignupValidation";
 import { serverClient } from "@/lib/services/client/serverClient";
 import { authenticated } from "@/state/Reducers/Athentication/Authentication";
 

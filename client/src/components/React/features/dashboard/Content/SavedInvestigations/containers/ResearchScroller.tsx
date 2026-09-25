@@ -1,14 +1,14 @@
 import { Virtuoso, ListRange } from "react-virtuoso";
-import { useProgressiveList } from "@/hooks/useProgressiveList";
+import { useProgressiveList } from "@/lib/hooks/dashboard/rendering/useProgressiveList";
 import { resolveRestoreIndex } from "@/lib/helpers/scroll/resolveRestoreIndex";
-import { useListScrollPosition } from "@/lib/hooks/dashboard/useListScrollPosition";
+import { useListScrollPosition } from "@/lib/hooks/dashboard/rendering/useListScrollPosition";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/state/store";
 import PriorInvestigation from "../components/InvestigationSaved";
 import InvestigationSkeletons from "../skeletons/InvestigationSkeletons";
 import { useState, useCallback } from "react";
-import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";
-import { useSkeletons } from "@/hooks/useSkeletons";
+import { useScrollWithShadow } from "@/lib/hooks/rendering/useScrollWithShadow";
+import { useSkeletons } from "@/lib/hooks/dashboard/rendering/useSkeletons";
 import {
   changeTab,
   storeResearchScrollPosition,
