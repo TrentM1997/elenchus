@@ -4,11 +4,11 @@ import type { RootState } from "@/state/store";
 import SelectionRequired from "../../../../../notifications/SelectionRequired";
 import GuideSelectingArticles from "@/components/React/features/investigate/phase2/results/tooltips/GuideSelectingArticles";
 import { useEffect, useMemo } from "react";
-import { useTooltipFlags } from "@/hooks/useTooltipFlags";
+import { useTooltipFlags } from "@/lib/hooks/rendering/useTooltipFlags";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/state/store";
 import MaxChosen from "./MaxChosen";
-import { useMaxSelectedToast } from "@/hooks/useAutoDismiss";
+import { useMaxSelectedToast } from "@/lib/hooks/rendering/useAutoDismiss";
 import {
   populateTooltip,
   TooltipDisplayed,

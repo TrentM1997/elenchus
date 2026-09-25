@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { emailValidation } from "@/lib/helpers/formatting/validation";
 import { Link } from "react-router-dom";
 import { serverClient } from "@/lib/services/client/serverClient";
-import { SigninStatus } from "@/hooks/useSignIn";
+import { SigninStatus } from "@/lib/hooks/auth/useSignIn";
 
 export default function GetLink({}) {
   const [emailToReset, setEmailToReset] = useState<string>("");

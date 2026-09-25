@@ -1,8 +1,8 @@
 import Content from "@/components/React/features/investigate/shared/containers/Content";
-import { useNoteConstraints } from "@/hooks/useNoteConstraints";
+import { useNoteConstraints } from "@/lib/hooks/rendering/useNoteConstraints";
 import WorkspaceHeaders from "./WorkspaceHeaders";
 import NotesWrapper from "../wrappers/NotesWrapper";
-import type { UseNoteConstraintsReturn } from "@/hooks/useNoteConstraints";
+import type { UseNoteConstraintsReturn } from "@/lib/hooks/rendering/useNoteConstraints";
 import { UserResearchType } from "@/state/Reducers/Investigate/research/types";
 
 function InvestigationWorkSpace({ research }: { research: UserResearchType }) {

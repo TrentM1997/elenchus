@@ -1,7 +1,7 @@
 import {
   BookmarkState,
   InitialBookmarkStatus,
-} from "@/hooks/dashboard/useBookmarkSavedArticles";
+} from "@/lib/hooks/dashboard/events/useBookmarkSavedArticles";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 
 export function createInitialBookmarkStates({

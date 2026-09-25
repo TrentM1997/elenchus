@@ -3,7 +3,7 @@ import { Provider } from "react-redux";
 import { RouterProvider } from "react-router-dom";
 import { router } from "@/components/React/routing/router/Router";
 import { useEffect } from "react";
-import { useTooltipFlags } from "@/hooks/useTooltipFlags";
+import { useTooltipFlags } from "@/lib/hooks/rendering/useTooltipFlags";
 
 export interface ExtractionToast {
   shownToast: boolean;

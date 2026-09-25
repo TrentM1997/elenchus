@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import type { DragConstraints } from "@/hooks/useNoteConstraints";
+import type { DragConstraints } from "@/lib/hooks/rendering/useNoteConstraints";
 
 export type CanMeasureStatus = "idle" | "available";
 

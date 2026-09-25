@@ -3,7 +3,7 @@ import { RootState, AppDispatch } from "@/state/store";
 import { useEffect } from "react";
 import { getMetrics } from "@/state/Reducers/Dashboard/DashboardSlice";
 import MetricsCalculator from "@/lib/services/workers/metricsCalculator.js?worker";
-import { MetricsPayload } from "../services/workers/metricsCalculator";
+import { MetricsPayload } from "@/lib/services/workers/metricsCalculator";
 
 export const useCalculateMetrics = () => {
   const { investigations, articles } = useSelector(

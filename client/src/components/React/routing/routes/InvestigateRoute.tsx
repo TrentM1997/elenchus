@@ -1,9 +1,9 @@
 import { RootState } from "@/state/store";
 import { useSelector } from "react-redux";
 import InvestigationWorkSpace from "@/components/React/features/investigate/shared/containers/InvestigationWorkSpace";
-import { useBodyLock } from "@/hooks/useBodyLock";
+import { useBodyLock } from "@/lib/hooks/rendering/useBodyLock";
 import type { TooltipDisplayed } from "@/state/Reducers/Investigate/Rendering";
-import { useClearInvestigation } from "@/hooks/flags/useClearInvestigation";
+import { useClearInvestigation } from "@/lib/hooks/flags/useClearInvestigation";
 
 export default function InvestigateContainer() {
   const research = useSelector(

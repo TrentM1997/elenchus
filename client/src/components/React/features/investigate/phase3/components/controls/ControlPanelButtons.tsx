@@ -2,7 +2,7 @@ import TakeNotes from "../buttons/TakeNotes";
 import { FinishedReading } from "../buttons/FinishedReading";
 import ReturnToSearch from "../buttons/ReturnToSearch";
 import GetInfo from "../buttons/GetInfo";
-import { useIsMobile } from "@/hooks/useIsMobile";
+import { useIsMobile } from "@/lib/hooks/rendering/useIsMobile";
 import { ArticleExtractionState } from "@/state/Reducers/Investigate/articles/types";
 import { JSX, Fragment } from "react";
 

@@ -4,8 +4,8 @@ import {
   ConfirmNewPassword,
 } from "@/components/React/session/forms/InputFields";
 import { Link, useNavigate } from "react-router-dom";
-import { SigninStatus } from "@/hooks/useSignIn";
-import { useValidateNewPassword } from "@/hooks/auth/useValidateNewPassword";
+import { SigninStatus } from "@/lib/hooks/auth/useSignIn";
+import { useValidateNewPassword } from "@/lib/hooks/auth/useValidateNewPassword";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/state/store";
 import { resetPassword } from "@/state/Reducers/Athentication/thunks";

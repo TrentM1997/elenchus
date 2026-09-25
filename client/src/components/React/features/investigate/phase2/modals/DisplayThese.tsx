@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
-import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";
+import { useScrollWithShadow } from "@/lib/hooks/rendering/useScrollWithShadow";
 import RenderSelectedArticles from "@/components/React/pipelines/RenderSelectedArticles";
 
 export default function DisplayThese() {

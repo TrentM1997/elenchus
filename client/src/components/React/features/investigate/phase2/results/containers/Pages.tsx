@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
 import { pagesVariants, searchResultsMotionProps } from "@/motion/variants";
-import { useTransitionedIndex } from "@/hooks/useTransitionedIndex";
-import { useSelectForExtract } from "@/lib/hooks/useSelectForExtract";
+import { useSelectForExtract } from "@/lib/hooks/articles/useSelectForExtract";
 import RenderSearchResultsPagination from "./RenderSearchResultsPagination";
 import { searchResultsPagesCSS } from "./styles";
 import PageContainer from "./PageContainer";
+import { useTransitionedIndex } from "@/lib/hooks/rendering/useTransitionedIndex";
 
 export default function Pages(): JSX.Element | null {
   const { select, urlHash, pages } = useSelectForExtract();

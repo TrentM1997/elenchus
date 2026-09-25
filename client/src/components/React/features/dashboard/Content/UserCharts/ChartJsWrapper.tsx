@@ -3,7 +3,7 @@ import PieSkeleton from "@/components/React/features/charts/skeletons/PieSkeleto
 import { DonutSkeletonChart } from "@/components/React/features/charts/skeletons/ChartJsSkeleton";
 import ChartJsSkeleton from "@/components/React/features/charts/skeletons/ChartJsSkeleton";
 import DelayedFallback from "@/components/React/global/fallbacks/DelayedFallback";
-import { Priority } from "@/hooks/useRenderMetrics";
+import { Priority } from "@/lib/hooks/dashboard/rendering/useRenderMetrics";
 import AsyncStateRenderer from "@/components/React/pipelines/AsyncStateRenderer";
 import { ResearchMetrics } from "@/state/Reducers/Dashboard/DashboardSlice";
 import StatsSkeleton from "../../../charts/skeletons/StatsSkeleton";

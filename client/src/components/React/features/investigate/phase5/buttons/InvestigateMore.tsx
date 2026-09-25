@@ -1,15 +1,17 @@
 import { RootState } from "@/state/store";
 import { useDispatch, useSelector } from "react-redux";
+import { CLEAR_INVESTIGATION } from "@/state/Reducers/Root/InvestigateReducer";
+import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 import {
   clearCachedPlayStates,
   PLAYSTATE_KEYS,
-} from "@/hooks/flags/useClearInvestigation";
-import { CLEAR_INVESTIGATION } from "@/state/Reducers/Root/InvestigateReducer";
-import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+} from "@/lib/hooks/flags/useClearInvestigation";
 
 export default function InvestigateMore() {
   const userKind = useSelector((state: RootState) => state.auth.userKind);
-  const persistence = useSelector((s: RootState) => s.investigation.research.persistence);
+  const persistence = useSelector(
+    (s: RootState) => s.investigation.research.persistence,
+  );
   const dispatch = useDispatch();
 
   const showModal = () => {

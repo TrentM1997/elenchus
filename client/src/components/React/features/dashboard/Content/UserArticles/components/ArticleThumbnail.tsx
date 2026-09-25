@@ -2,7 +2,7 @@ import Trash from "@/components/React/global/IconComponents/Trash";
 import React from "react";
 import SavedArticleThumbnail from "./SavedArticleThumbnail";
 import ThumbnailSwap from "./ThumbnailSwap";
-import { BookmarkState } from "@/hooks/dashboard/useBookmarkSavedArticles";
+import { BookmarkState } from "@/lib/hooks/dashboard/events/useBookmarkSavedArticles";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 
 interface SavedThumbnail {
