@@ -1,3 +1,4 @@
+import { selectWizardStepIndex } from "@/state/Reducers/Investigate/pov/selectors";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
@@ -10,7 +11,7 @@ interface Caption {
 }
 
 export default function NodeCaption({ caption, thisStep }: Caption): JSX.Element {
-    const step: number = useSelector((state: RootState) => state.investigation.stepper.wizardStep.num);
+    const step: number = useSelector(selectWizardStepIndex);
     const showCaption: boolean = (thisStep === step) || (thisStep < step);
 
 

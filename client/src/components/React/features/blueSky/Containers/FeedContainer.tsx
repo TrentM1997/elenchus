@@ -5,10 +5,7 @@ import { PostsProps } from "@/env";
 import Feed from "../Components/feed/Feed";
 import AsyncStateRenderer from "@/components/React/pipelines/AsyncStateRenderer";
 
-export default function FeedContainer({
-  posts,
-  shouldAnimate = true,
-}: PostsProps) {
+export default function FeedContainer({ posts }: PostsProps) {
   return (
     <motion.div
       key="postfeed"

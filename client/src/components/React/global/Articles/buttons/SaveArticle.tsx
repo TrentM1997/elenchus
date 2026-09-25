@@ -15,7 +15,7 @@ export default function Bookmark({ article, open }: SaveArticleButton) {
       onClick={handleSaveArticle}
       className={`${open ? "pointer-events-none" : "pointer-events-auto"} 
             w-full h-full self-start flex items-center justify-start 
-            group relative cursor-pointer`}
+            group/bookmark relative cursor-pointer`}
     >
       {!notification && (
         <SaveArticleTooltip isSaved={status === "bookmarked"} />

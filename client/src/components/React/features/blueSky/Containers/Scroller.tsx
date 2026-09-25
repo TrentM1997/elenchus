@@ -1,15 +1,11 @@
 import { motion, AnimatePresence } from "framer-motion";
 import BSPost from "../Components/Post/BSPost";
-import {
-  getPopoverPost,
-  selectPost,
-} from "@/state/Reducers/BlueSky/BlueSkySlice";
-import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "@/state/store";
+import { selectPost } from "@/state/Reducers/BlueSky/BlueSkySlice";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "@/state/store";
 import { useCallback } from "react";
 import { softEase, variants } from "@/motion/variants";
 import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
-import { wait } from "@/lib/helpers/formatting/Presentation";
 import { BlueSkyPostSchemaType } from "@elenchus/contracts/schemas/integrations/BlueSkySchemas";
 
 export default function Scroller({
@@ -17,20 +13,16 @@ export default function Scroller({
 }: {
   posts: BlueSkyPostSchemaType[];
 }) {
-  const postForPopover = useSelector((s: RootState) => s.bluesky.popoverPost);
   const dispatch = useDispatch<AppDispatch>();
 
   const choosePost = useCallback(
     (post: BlueSkyPostSchemaType) => {
       return async () => {
-        if (postForPopover.status === "ready") return;
-        dispatch(getPopoverPost({ status: "ready", data: post.record.text }));
         dispatch(selectPost({ status: "ready", data: post }));
-        await wait(400);
         dispatch(renderModal("Bluesky Post Selected"));
       };
     },
-    [postForPopover],
+    [dispatch],
   );
 
   return (

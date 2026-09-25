@@ -3,8 +3,9 @@ import { useNoteConstraints } from "@/hooks/useNoteConstraints";
 import WorkspaceHeaders from "./WorkspaceHeaders";
 import NotesWrapper from "../wrappers/NotesWrapper";
 import type { UseNoteConstraintsReturn } from "@/hooks/useNoteConstraints";
+import { UserResearchType } from "@/state/Reducers/Investigate/research/types";
 
-function InvestigationWorkSpace() {
+function InvestigationWorkSpace({ research }: { research: UserResearchType }) {
   const {
     notePosition,
     setNotePosition,
@@ -24,7 +25,7 @@ function InvestigationWorkSpace() {
         notesRef={notesRef}
       />
       <WorkspaceHeaders />
-      <Content />
+      <Content research={research} />
     </section>
   );
 }

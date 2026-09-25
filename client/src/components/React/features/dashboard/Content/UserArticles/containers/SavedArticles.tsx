@@ -1,7 +1,5 @@
 import { useSelector } from "react-redux";
 import type { RootState } from "@/state/store";
-import { motion } from "framer-motion";
-import { delays } from "@/motion/variants";
 import ScrolltoTop from "@/lib/helpers/scroll/ScrollToTop";
 import NoSavedArticles from "../fallbacks/NoSavedArticles";
 import ArticlesScroller from "./ArticlesScroller";
@@ -14,13 +12,7 @@ export default function SavedArticles() {
   );
 
   return (
-    <motion.section
-      variants={delays}
-      initial="closed"
-      animate="open"
-      exit="closed"
-      className="w-auto  md:w-full h-fit lg:px-10 xl:px-12 2xl:px-16 mx-auto"
-    >
+    <section className="w-auto  md:w-full h-fit lg:px-10 xl:px-12 2xl:px-16 mx-auto opacity-0 animate-fade-in duration-200 delay-200 ease-soft">
       <ScrolltoTop />
 
       <div className="w-full md:px-0 2xl:px-2 gap-3 h-full md:mt-12 xl:mt-4 flex justify-center md:justify-end">
@@ -37,6 +29,6 @@ export default function SavedArticles() {
           )}
         </AsyncStateRenderer>
       </div>
-    </motion.section>
+    </section>
   );
 }

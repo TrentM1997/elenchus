@@ -1,48 +1,50 @@
 import { ListRange, Virtuoso } from "react-virtuoso";
 import { useDispatch } from "react-redux";
 import SkeletonMap from "../skeletons/SkeletonMap";
-import { useVirtuoso } from "@/hooks/useVirtuoso";
-import { useCallback, useRef } from "react";
+import { useProgressiveList } from "@/hooks/useProgressiveList";
+import { resolveRestoreIndex } from "@/lib/helpers/scroll/resolveRestoreIndex";
+import { useCallback, useState } from "react";
 import { useSkeletons } from "@/hooks/useSkeletons";
 import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";
 import type { CSSProperties } from "react";
 import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary";
 import type { AppDispatch } from "@/state/store";
-import { changeTab } from "@/state/Reducers/Dashboard/DashboardSlice";
+import { changeTab, storeScrollPosition } from "@/state/Reducers/Dashboard/DashboardSlice";
 import { useHandleBookmark } from "@/hooks/dashboard/useBookmarkSavedArticles";
 import ArticleSurface from "../components/ArticleSurface";
 import { stylesWithShadow } from "@/lib/helpers/scroll/stylesWithShadow";
 import { ArticleScroller } from "./types";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import { useListScrollPosition } from "@/lib/hooks/dashboard/useListScrollPosition";
 
 export default function ArticlesScroller({
   articles,
   restorePosition,
 }: ArticleScroller): JSX.Element | null {
-  const virutuosoRef = useRef(null);
-  const {
-    visible,
-    loadMore,
-    topKeyRef,
-    topIndexRef,
-    saveNow,
-    scrollRef,
-    fullyLoaded,
-    numSkeletons,
-    initialTopMostItemIndex,
-  } = useVirtuoso(articles, "articles", restorePosition);
+  const { getScrollSnapshot, scrollRef, topIndexRef, topKeyRef } =
+    useListScrollPosition(articles.length, "articles");
   const { fastScroll, clockScrollSpeed } = useSkeletons(200);
   const { boxShadow, onScrollHandler } = useScrollWithShadow();
   const articleScrollerStyles: CSSProperties = stylesWithShadow(boxShadow);
   const { deleteBookmark, bookmarks } = useHandleBookmark({
     articles,
   });
+  // Restore once per mount, using the same target to seed list disclosure.
+  const [restoreIndex] = useState(() => resolveRestoreIndex({
+    items: articles,
+    listId: "articles",
+    restorePosition,
+    getKey: article => article.id,
+  }));
+  const { visible, loadMore, fullyLoaded, nextBatchCount } = useProgressiveList(articles, {
+    initialCount: restoreIndex === null ? 8 : Math.max(8, restoreIndex + 11),
+  });
   const dispatch = useDispatch<AppDispatch>();
 
   const handleArticleSelection = useCallback(
     (article: ArticleSchemaType) => {
       return async () => {
-        saveNow();
+        dispatch(storeScrollPosition({ status: "ready", position: getScrollSnapshot() }));
         dispatch(
           changeTab({
             kind: "articles",
@@ -52,7 +54,7 @@ export default function ArticlesScroller({
         );
       };
     },
-    [dispatch, saveNow],
+    [dispatch, getScrollSnapshot],
   );
 
   return (
@@ -62,8 +64,7 @@ export default function ArticlesScroller({
     >
       <ErrorBoundary>
         <Virtuoso
-          ref={virutuosoRef}
-          initialTopMostItemIndex={initialTopMostItemIndex ?? undefined}
+          initialTopMostItemIndex={restoreIndex ?? 0}
           scrollerRef={(el) => {
             scrollRef.current = el;
           }}
@@ -71,8 +72,8 @@ export default function ArticlesScroller({
           defaultItemHeight={240}
           components={{ Footer: SkeletonMap }}
           context={{
-            fullyLoaded: fullyLoaded || visible.length >= articles.length,
-            numSkeletons: Math.max(0, numSkeletons),
+            fullyLoaded,
+            numSkeletons: nextBatchCount,
           }}
           computeItemKey={(_, article) => article.id}
           itemContent={(index, article) => {
@@ -96,7 +97,7 @@ export default function ArticlesScroller({
           rangeChanged={(r: ListRange) => {
             topIndexRef.current = r.startIndex;
             const item = visible[r.startIndex];
-            topKeyRef.current = item ? (item as any).id : null;
+            topKeyRef.current = item?.id ?? null;
           }}
         />
       </ErrorBoundary>

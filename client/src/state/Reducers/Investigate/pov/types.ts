@@ -21,3 +21,22 @@ export type UserPointOfView = {
   biases: string;
   premises: string;
 };
+
+export const stepOrder: readonly WizardStep[] = [
+  "idea",
+  "approach",
+  "biases",
+  "premises",
+  "final",
+];
+
+export type PaginationStatus = "active" | "idle";
+
+type StepProgress = "initial" | "proceed" | "halt";
+
+export type WizardStep = "idea" | "approach" | "biases" | "premises" | "final";
+
+export type WizardStepType = {
+  current: WizardStep;
+  status: StepProgress;
+};

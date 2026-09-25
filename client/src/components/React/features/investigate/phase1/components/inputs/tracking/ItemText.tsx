@@ -1,3 +1,4 @@
+import { selectWizardStepIndex } from "@/state/Reducers/Investigate/pov/selectors";
 import { RootState } from "@/state/store";
 import React from "react";
 import { useSelector } from "react-redux";
@@ -15,7 +16,7 @@ function ItemText({
   itemStep,
 }: ItemTextProps): JSX.Element | null {
   const step = useSelector(
-    (state: RootState) => state.investigation.stepper.wizardStep.num,
+    selectWizardStepIndex,
   );
   const formatted: string =
     data && data.length > 50 ? limitString(data, 100) : data || "";

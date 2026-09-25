@@ -1,13 +1,18 @@
 import { Virtuoso, ListRange } from "react-virtuoso";
-import { useVirtuoso } from "@/hooks/useVirtuoso";
+import { useProgressiveList } from "@/hooks/useProgressiveList";
+import { resolveRestoreIndex } from "@/lib/helpers/scroll/resolveRestoreIndex";
+import { useListScrollPosition } from "@/lib/hooks/dashboard/useListScrollPosition";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/state/store";
 import PriorInvestigation from "../components/InvestigationSaved";
 import InvestigationSkeletons from "../skeletons/InvestigationSkeletons";
-import { useRef, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";
 import { useSkeletons } from "@/hooks/useSkeletons";
-import { changeTab } from "@/state/Reducers/Dashboard/DashboardSlice";
+import {
+  changeTab,
+  storeResearchScrollPosition,
+} from "@/state/Reducers/Dashboard/DashboardSlice";
 import { InvestigationSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 
 interface ResearchScroller {
@@ -18,42 +23,61 @@ export default function ResearchScroller({ timeline }: ResearchScroller) {
   const restorePosition = useSelector(
     (state: RootState) => state.dash.researchScrollPosition,
   );
-  const {
-    visible,
-    fullyLoaded,
-    loadMore,
-    numSkeletons,
-    topKeyRef,
-    topIndexRef,
-    saveNow,
-    scrollRef,
-    initialTopMostItemIndex,
-  } = useVirtuoso(
+  const { getScrollSnapshot, scrollRef, topIndexRef, topKeyRef } =
+    useListScrollPosition(timeline.length, "investigations");
+  const [restoreIndex] = useState(() =>
+    resolveRestoreIndex({
+      items: timeline,
+      listId: "investigations",
+      restorePosition:
+        restorePosition.status === "ready"
+          ? restorePosition.position
+          : undefined,
+      getKey: (investigation) => investigation.id,
+    }),
+  );
+  const { visible, fullyLoaded, loadMore, nextBatchCount } = useProgressiveList(
     timeline,
-    "investigations",
-    restorePosition?.status === "ready" ? restorePosition.position : undefined,
+    {
+      initialCount: restoreIndex === null ? 8 : Math.max(8, restoreIndex + 11),
+    },
   );
   const { boxShadow, onScrollHandler } = useScrollWithShadow();
   const dispatch = useDispatch<AppDispatch>();
   const { fastScroll, clockScrollSpeed } = useSkeletons(180);
-  const virtuosoRef = useRef();
 
-  const review = useCallback((investigation: any) => {
-    return async () => {
-      saveNow();
-      dispatch(changeTab({ kind: "investigations", display: "review", current: "investigation", investigationId: investigation.id }));
-    };
-  }, [dispatch, saveNow]);
+  const review = useCallback(
+    (investigation: InvestigationSchemaType) => {
+      return async () => {
+        dispatch(
+          storeResearchScrollPosition({
+            status: "ready",
+            position: getScrollSnapshot(),
+          }),
+        );
+        dispatch(
+          changeTab({
+            kind: "investigations",
+            display: "review",
+            current: "investigation",
+            investigationId: investigation.id,
+          }),
+        );
+      };
+    },
+    [dispatch, getScrollSnapshot],
+  );
 
   return (
     <div
-      className="relative px-6 no-scrollbar md:px-0 w-dvw md:w-full xl:w-[1100px] 2xl:w-[1250px] flex items-stretch justify-center h-svh pt-2.5 md:pt-1.5
+      className="relative px-6 no-scrollbar md:px-0 w-dvw md:w-full xl:w-[1100px] 2xl:w-[1250px] flex items-stretch justify-center h-svh pt-2.5 md:pt-1.5 mt-6
             overflow-x-hidden hover:shadow-[0_0_10px_rgba(255,255,255,0.03)] ease-[cubic-bezier(.2,.6,.2,1)] transition-shadow duration-200"
     >
       <Virtuoso
-        ref={virtuosoRef}
-        scrollerRef={(el: HTMLDivElement) => (scrollRef.current = el)}
-        initialTopMostItemIndex={initialTopMostItemIndex}
+        scrollerRef={(el) => {
+          scrollRef.current = el;
+        }}
+        initialTopMostItemIndex={restoreIndex ?? 0}
         style={{
           height: "94%",
           width: "100%",
@@ -68,7 +92,7 @@ export default function ResearchScroller({ timeline }: ResearchScroller) {
         rangeChanged={(r: ListRange) => {
           topIndexRef.current = r.startIndex;
           const item = visible[r.startIndex];
-          topKeyRef.current = item ? (item as any).id : null;
+          topKeyRef.current = item?.id ?? null;
         }}
         className="no-scrollbar"
         onScroll={onScrollHandler}
@@ -78,7 +102,7 @@ export default function ResearchScroller({ timeline }: ResearchScroller) {
         endReached={loadMore}
         increaseViewportBy={200}
         computeItemKey={(_, investigation) => investigation.id}
-        context={{ fullyLoaded: fullyLoaded || visible.length >= timeline.length, numSkeletons: Math.max(0, numSkeletons) }}
+        context={{ fullyLoaded, numSkeletons: nextBatchCount }}
         components={{ Footer: InvestigationSkeletons }}
         itemContent={(_, investigation) => {
           return (

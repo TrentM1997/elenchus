@@ -1,57 +1,101 @@
-import { useEffect } from "react"
+import { SetStateAction } from "react";
+import { ReviewStep } from "../containers/ReviewContainer";
+import { assertNever } from "@/lib/helpers/asserts/assertNever";
 
+interface ReviewPagination {
+  setReviewStep: React.Dispatch<SetStateAction<ReviewStep>>;
+  reviewStep: ReviewStep;
+}
 
+export default function ReviewPagination({
+  reviewStep,
+  setReviewStep,
+}: ReviewPagination) {
+  const handleBackStep = (step: ReviewStep) => {
+    switch (step.number) {
+      case 3: {
+        setReviewStep({ number: 2, checkPoint: "ending-perspective" });
+        return;
+      }
 
-export default function ReviewPagination({ setStep, step }) {
+      case 2: {
+        setReviewStep({ number: 1, checkPoint: "idea-merit" });
+        return;
+      }
+      case 1: {
+        return;
+      }
 
-
-    const handleBackStep = () => {
-
-
-        if (step > 1) {
-            setStep(step - 1)
-        } else {
-            ;
-        }
+      default: {
+        return assertNever(step);
+      }
     }
+  };
 
-    const handleForwardStep = () => {
+  const handleForwardStep = (step: ReviewStep) => {
+    switch (step.number) {
+      case 3: {
+        return;
+      }
+      case 2: {
+        setReviewStep({ checkPoint: "decide-takeaway", number: 3 });
+        return;
+      }
+      case 1: {
+        setReviewStep({ number: 2, checkPoint: "ending-perspective" });
+        return;
+      }
 
-        if (step < 3) {
-            setStep(step + 1)
-        }
+      default: {
+        return assertNever(step);
+      }
     }
+  };
 
-
-    return (
-        <section className="w-full flex items-center mx-auto justify-center gap-x-2 md:gap-x-6">
-
-            <button
-                type="button"
-                onClick={handleBackStep}
-                className="rounded-xl md:rounded-2xl group bg-white w-12 h-10 p-2 2xl:h-12 2xl:w-16
+  return (
+    <section className="w-full flex items-center mx-auto justify-center gap-x-2 md:gap-x-6">
+      <button
+        type="button"
+        onClick={() => handleBackStep(reviewStep)}
+        className="rounded-xl md:rounded-2xl group bg-white w-12 h-10 p-2 2xl:h-12 2xl:w-16
                  2xl:p-3 xs:text-sm hover:bg-white/20 transition-all duration-200
-                ease-in-out text-white font-light">
-                <svg className="p-1 text-black group-hover:text-white transition-all duration-200 ease-in-out" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="100%" height="100%">
-                    <path d="M 33.960938 2.9804688 A 2.0002 2.0002 0 0 0 32.585938 3.5859375 L 13.585938 22.585938 A 2.0002 2.0002 0 0 0 13.585938 25.414062 L 32.585938 44.414062 A 2.0002 2.0002 0 1 0 35.414062 41.585938 L 17.828125 24 L 35.414062 6.4140625 A 2.0002 2.0002 0 0 0 33.960938 2.9804688 z" fill="currentColor" />
-                </svg>
+                ease-in-out text-white font-light"
+      >
+        <svg
+          className="p-1 text-black group-hover:text-white transition-all duration-200 ease-in-out"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 48 48"
+          width="100%"
+          height="100%"
+        >
+          <path
+            d="M 33.960938 2.9804688 A 2.0002 2.0002 0 0 0 32.585938 3.5859375 L 13.585938 22.585938 A 2.0002 2.0002 0 0 0 13.585938 25.414062 L 32.585938 44.414062 A 2.0002 2.0002 0 1 0 35.414062 41.585938 L 17.828125 24 L 35.414062 6.4140625 A 2.0002 2.0002 0 0 0 33.960938 2.9804688 z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
 
-            </button>
-
-            <button
-                type="button"
-                onClick={handleForwardStep}
-                className={`${(step >= 3) ? 'opacity-5 pointer-events-none' : 'opacity-100 pointer-events-auto'} rounded-xl md:rounded-2xl group bg-white
+      <button
+        type="button"
+        onClick={() => handleForwardStep(reviewStep)}
+        className={`${reviewStep.number >= 3 ? "opacity-5 pointer-events-none" : "opacity-100 pointer-events-auto"} rounded-xl md:rounded-2xl group bg-white
                  p-2 w-12 h-10 2xl:h-12 2xl:w-16 xs:text-sm 2xl:p-3
                  hover:bg-white/20 transition-all duration-200 ease-soft
                   text-white font-light`}
-            >
-                <svg className="text-black group-hover:text-white transition-all duration-200 ease-in-out p-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="100%" height="100%">
-                    <path d="M17.586,44.414C17.977,44.805,18.488,45,19,45s1.023-0.195,1.414-0.586l19-19c0.781-0.781,0.781-2.047,0-2.828l-19-19 c-0.781-0.781-2.047-0.781-2.828,0s-0.781,2.047,0,2.828L35.172,24L17.586,41.586C16.805,42.367,16.805,43.633,17.586,44.414z" fill="currentColor" />
-                </svg>
-
-            </button>
-
-        </section>
-    )
+      >
+        <svg
+          className="text-black group-hover:text-white transition-all duration-200 ease-in-out p-1"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 48 48"
+          width="100%"
+          height="100%"
+        >
+          <path
+            d="M17.586,44.414C17.977,44.805,18.488,45,19,45s1.023-0.195,1.414-0.586l19-19c0.781-0.781,0.781-2.047,0-2.828l-19-19 c-0.781-0.781-2.047-0.781-2.828,0s-0.781,2.047,0,2.828L35.172,24L17.586,41.586C16.805,42.367,16.805,43.633,17.586,44.414z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
+    </section>
+  );
 }

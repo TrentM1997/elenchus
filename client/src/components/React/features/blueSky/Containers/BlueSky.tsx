@@ -19,22 +19,12 @@ export default function BlueSky({
   context,
   shouldAnimate = true,
 }: BlueSkyProps) {
-  const { posts } = useSelector(
-    (state: RootState) => state.bluesky,
-    shallowEqual,
-  );
+  const posts = useSelector((state: RootState) => state.bluesky.posts);
   const navigate = useNavigate();
   const { idea } = useSelector(selectPOVData);
   const dispatch = useDispatch();
   const shouldRedirect: boolean = context === "home";
   const redirectTimer = useRef<number | null>(null);
-
-  useLayoutEffect(() => {
-    if (posts) {
-      const storeThese = { bsPosts: posts };
-      localStorage.setItem("bsPosts", JSON.stringify(storeThese));
-    }
-  }, [posts]);
 
   useEffect(() => {
     if (!idea) return;

@@ -22,4 +22,7 @@ export type PopoverPost =
   | { status: "initial" }
   | { status: "ready"; data: BlueSkyPostSchemaType["record"]["text"] };
 
-export type BlueSkyPosts = AsyncState<SplitBlueSkyFeedSchemaType>;
+export type BlueSkyPosts = AsyncState<
+  SplitBlueSkyFeedSchemaType,
+  "Search yielded 0 results"
+>;

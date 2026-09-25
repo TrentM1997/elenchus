@@ -6,8 +6,9 @@ import Display from "../../features/dashboard/Content/containers/Display";
 import FooterBarLoader from "../../features/dashboard/ProfileNavigation/skeletons/FooterBarSkeleton";
 import SidebarLoader from "../../features/dashboard/ProfileNavigation/skeletons/SidebarSkeleton";
 import DelayedFallback from "../../global/fallbacks/DelayedFallback";
-import { resetDashboardNavigation } from "@/state/Reducers/Dashboard/DashboardSlice";
+import { clearDashboardSlice } from "@/state/Reducers/Dashboard/DashboardSlice";
 import { useHydrateDashboard } from "@/lib/hooks/useHydrateDashboard";
+import { useCalculateMetrics } from "@/lib/hooks/useCalculateMetrics";
 const MobileProfileNav = lazy(
   () => import("../../features/dashboard/ProfileNavigation/mobile/ProfileMenu"),
 );
@@ -18,11 +19,12 @@ const SideBar = lazy(
 export default function Dashboard(): JSX.Element {
   const isMobile = useIsMobile();
   const dispatch = useDispatch<AppDispatch>();
+  useCalculateMetrics();
   useHydrateDashboard();
 
   useEffect(() => {
     return () => {
-      dispatch(resetDashboardNavigation());
+      dispatch(clearDashboardSlice());
     };
   }, []);
 

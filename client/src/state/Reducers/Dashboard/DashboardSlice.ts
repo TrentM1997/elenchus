@@ -80,18 +80,6 @@ const DashboardSlice = createSlice({
     ) => {
       state.metrics = action.payload;
     },
-    getBiasMetrics: (
-      state: InitialState,
-      action: PayloadAction<ResearchMetrics["integrity"]>,
-    ) => {
-      state.metrics.bias = action.payload;
-    },
-    getOutcomesBreakdown: (
-      state: InitialState,
-      action: PayloadAction<ResearchMetrics["outcomes"]>,
-    ) => {
-      state.metrics.outcomes = action.payload;
-    },
     openSavedArticle: (
       state: InitialState,
       action: PayloadAction<ArticleSchemaType["id"]>,
@@ -118,6 +106,8 @@ const DashboardSlice = createSlice({
     });
 
     builder.addCase(hydrateDashboard.rejected, (state, action) => {
+      if (action.meta.aborted) return;
+
       state.investigations = {
         status: "failed",
         details: "Hydration of investigations failed",
@@ -186,9 +176,7 @@ export const {
   storeScrollPosition,
   storeResearchScrollPosition,
   resetDashboardNavigation,
-  getOutcomesBreakdown,
   clearDashboardSlice,
-  getBiasMetrics,
   getMetrics,
   changeTab,
   openSavedArticle,

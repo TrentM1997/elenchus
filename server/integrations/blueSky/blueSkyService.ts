@@ -1,10 +1,13 @@
 import { AtpAgent } from "@atproto/api";
-import { BlueSkyPostSchemaType, SplitBlueSkyFeedSchemaType } from "@elenchus/contracts/schemas/integrations/BlueSkySchemas";
+import {
+  BlueSkyPostSchemaType,
+  SplitBlueSkyFeedSchemaType,
+} from "@elenchus/contracts/schemas/integrations/BlueSkySchemas";
 import { ServerError } from "../../core/errors/ServerError.js";
 import { BlueSkyParser, IBlueSkyParser } from "./blueSkyParser.js";
 
 export interface IBlueSkyService {
-  search(query: string): Promise<BlueSkyPostSchemaType[]>;
+  search(query: string): Promise<SplitBlueSkyFeedSchemaType>;
   feed(): Promise<SplitBlueSkyFeedSchemaType>;
 }
 
@@ -18,7 +21,7 @@ export class BlueSkyService implements IBlueSkyService {
     this.parser = new BlueSkyParser();
   }
 
-  public async search(query: string): Promise<BlueSkyPostSchemaType[]> {
+  public async search(query: string): Promise<SplitBlueSkyFeedSchemaType> {
     return await this.executeSearch(query);
   }
 
@@ -50,7 +53,9 @@ export class BlueSkyService implements IBlueSkyService {
     return gens.find((g) => g.uri.includes("verified-news"))?.uri;
   }
 
-  private async executeSearch(query: string): Promise<BlueSkyPostSchemaType[]> {
+  private async executeSearch(
+    query: string,
+  ): Promise<SplitBlueSkyFeedSchemaType> {
     const session = await this.agentLogin();
     const result = await this.agent.api.app.bsky.feed.searchPosts(
       { q: query },
@@ -60,7 +65,8 @@ export class BlueSkyService implements IBlueSkyService {
         },
       },
     );
-    return this.parser.validateSearchResults(result.data.posts);
+    const posts = this.parser.validateSearchResults(result.data.posts);
+    return this.parser.splitFeed(posts);
   }
 
   private async agentLogin() {

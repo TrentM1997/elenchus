@@ -1,42 +1,38 @@
 import { useDispatch } from "react-redux";
-import {
-  getPopoverPost,
-  selectPost,
-} from "@/state/Reducers/BlueSky/BlueSkySlice";
 import { updatePOVDraft } from "@/state/Reducers/Investigate/pov/thunks";
-import { useEffect } from "react";
 import { smoothScrollUp } from "@/lib/helpers/scroll/ScrollToTop";
 import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 import { AppDispatch } from "@/state/store";
+import { BlueSkyPostSchemaType } from "@elenchus/contracts/schemas/integrations/BlueSkySchemas";
+import { useEffect } from "react";
+import { selectPost } from "@/state/Reducers/BlueSky/BlueSkySlice";
 
 interface UseThis {
-  post: any;
-  shouldRedirect?: boolean;
+  post: BlueSkyPostSchemaType;
 }
 
-export default function UseThisPost({ post, shouldRedirect }: UseThis) {
+export default function UseThisPost({ post }: UseThis) {
   const dispatch = useDispatch<AppDispatch>();
 
-  const investigateThis = async () => {
+  const investigateThis = () => {
     dispatch(updatePOVDraft({ idea: post.record.text }));
     dispatch(renderModal(null));
     smoothScrollUp();
   };
 
-  const unselect = async () => {
+  const unselect = () => {
     dispatch(renderModal(null));
   };
 
   useEffect(() => {
     return () => {
       dispatch(selectPost({ status: "initial" }));
-      dispatch(getPopoverPost({ status: "initial" }));
     };
-  }, []);
+  }, [dispatch]);
 
   return (
     <div
-      key={post.record.createdAt}
+      key={post.author.handle}
       className="bg-transparent relative h-auto w-auto flex justify-center items-center gap-x-8 rounded-3xl
         lg:col-span-2 lg:flex-row lg:items-center
         text-center"
@@ -45,7 +41,7 @@ export default function UseThisPost({ post, shouldRedirect }: UseThis) {
         <div className="inline-flex flex-no-wrap gap-x-4 items-center mt-8 w-full">
           <button
             aria-label="confirm post to investigate"
-            onClick={investigateThis}
+            onClick={() => investigateThis()}
             type="button"
             className="text-lg font-light py-2 w-32 px-4 border focus:ring-2 rounded-full border-transparent
                      bg-white lg:hover:bg-blue-500 text-black focus:ring-offset-2 focus:ring-white 
@@ -56,7 +52,7 @@ export default function UseThisPost({ post, shouldRedirect }: UseThis) {
           </button>
           <button
             aria-label="unselect BlueSky post"
-            onClick={unselect}
+            onClick={() => unselect()}
             type="button"
             className="text-lg font-light py-2 w-32 px-4 border focus:ring-2 rounded-full border-transparent
                      bg-white lg:hover:bg-mirage text-black focus:ring-offset-2 focus:ring-white 

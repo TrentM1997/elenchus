@@ -12,19 +12,16 @@ import type { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/Art
 interface ArticleHeaderProps {
   articleData: ArticleSchemaType;
   investigating?: boolean;
-  animateEntrance?: boolean;
 }
 
-export default function ArticleHeader({ articleData, investigating, animateEntrance = true }: ArticleHeaderProps): JSX.Element {
+export default function ArticleHeader({
+  articleData,
+  investigating,
+}: ArticleHeaderProps): JSX.Element {
   const [open, setOpen] = useState(false);
 
   return (
-    <motion.header
-      initial={animateEntrance ? { opacity: 0 } : false}
-      animate={{ opacity: 1, transition: { delay: 0.2, type: "tween", duration: 0.3 } }}
-      exit={{ opacity: 0, transition: { duration: 0.1 } }}
-      className="relative rounded-3xl border border-white/10 bg-white/[0.025] p-4 sm:p-6"
-    >
+    <header className="relative rounded-3xl border border-white/10 bg-white/[0.025] p-4 sm:p-6">
       <ScrolltoTop />
       <div className="grid items-center gap-6 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] md:gap-8">
         <ArticleImage article={articleData} />
@@ -42,10 +39,14 @@ export default function ArticleHeader({ articleData, investigating, animateEntra
             </div>
           )}
           <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] transition-colors hover:bg-white/10">
-            <MoreButton open={open} setOpen={setOpen} articleData={articleData} />
+            <MoreButton
+              open={open}
+              setOpen={setOpen}
+              articleData={articleData}
+            />
           </div>
         </div>
       </div>
-    </motion.header>
+    </header>
   );
 }

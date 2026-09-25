@@ -7,10 +7,10 @@ export const useHydrateDashboard = (): void => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    const executeHydrateDashboard = async () => {
-      await dispatch(hydrateDashboard());
-    };
+    const request = dispatch(hydrateDashboard());
 
-    void executeHydrateDashboard();
+    return () => {
+      request.abort();
+    };
   }, [dispatch]);
 };

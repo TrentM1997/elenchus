@@ -3,18 +3,32 @@ import { updateReflection } from "@/state/Reducers/Investigate/research/Research
 import Lottie from "lottie-react";
 import blueCheck from "@/lotties/blueCheck.json";
 import { RootState } from "@/state/store";
+import { motion } from "framer-motion";
+
+const motionProps = {
+  initial: false,
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+  transition: { duration: 0.2 },
+};
 
 const opinions = ["Agree", "Disagree", "Neutral"] as const;
 
 export default function Retrospect() {
-  const research = useSelector((state: RootState) => state.investigation.research.research);
+  const research = useSelector(
+    (state: RootState) => state.investigation.research.research,
+  );
   const dispatch = useDispatch();
-  if (research.phase !== "reflection" && research.phase !== "completed") return null;
+  if (research.phase !== "reflection" && research.phase !== "completed")
+    return null;
   const reflection = research.data.reflection;
   const endingPerspective = reflection.ending_perspective;
 
   return (
-    <div className="w-full h-full flex flex-col mx-auto gap-y-2">
+    <motion.div
+      {...motionProps}
+      className="w-full h-full flex flex-col mx-auto gap-y-2"
+    >
       <header className="w-auto mx-auto mb-4">
         <h1 className="text-white font-light text-sm 2xl:text-xl">
           What's your perspective now?
@@ -24,7 +38,14 @@ export default function Retrospect() {
         <div key={index} className="relative">
           <div
             key={opinion}
-            onClick={() => dispatch(updateReflection({ ...reflection, ending_perspective: opinion }))}
+            onClick={() =>
+              dispatch(
+                updateReflection({
+                  ...reflection,
+                  ending_perspective: opinion,
+                }),
+              )
+            }
             className="bg-white text-black xl:text-lg lg:text-[0.8rem] xs:text-[0.6rem]
               rounded-lg xl:w-52 xl:h-12 lg:w-[12rem] md:w-[12rem] md:h-12 xs:w-28 xs:h-9 relative
                cursor-pointer hover:bg-white/10 hover:text-white transition-all duration-200 ease-in-out
@@ -58,7 +79,6 @@ export default function Retrospect() {
           </div>
         </div>
       ))}
-    </div>
+    </motion.div>
   );
 }
-

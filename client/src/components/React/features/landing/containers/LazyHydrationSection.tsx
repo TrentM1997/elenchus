@@ -1,95 +1,45 @@
-import { lazy, Suspense, useEffect } from 'react'
-import { useState, useRef } from 'react';
-import BlueSkySkeleton from '../../blueSky/skeletons/BlueSkySkeleton';
-import WikiAndNotes from '../components/WikiAndNotes';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/state/store';
-const BlueSkyPosts = lazy(() => import('@/components/React/features/blueSky/Containers/BlueSky'));
-import { startTransition } from 'react';
-import DelayedFallback from '@/components/React/global/fallbacks/DelayedFallback';
+import { lazy, Suspense } from "react";
+import BlueSkySkeleton from "../../blueSky/skeletons/BlueSkySkeleton";
+import WikiAndNotes from "../components/WikiAndNotes";
+import { useSelector } from "react-redux";
+import { RootState } from "@/state/store";
+const BlueSkyPosts = lazy(
+  () => import("@/components/React/features/blueSky/Containers/BlueSky"),
+);
+import DelayedFallback from "@/components/React/global/fallbacks/DelayedFallback";
+import { useObserveAnimationState } from "@/lib/hooks/blueSky/useObserveAnimationState";
 
 export default function LazyHydrationSection() {
-    const [showBlueSky, setShowBlueSky] = useState<boolean>(false);
-    const [shouldAnimate, setShouldAnimate] = useState<boolean>(false);
-    const popoverPost = useSelector((state: RootState) => state.bluesky.popoverPost);
-    const sentinelRef = useRef(null);
-    const feedRef = useRef(null);
+  const selected = useSelector((state: RootState) => state.bluesky.selected);
+  const { sentinelRef, feedRef, shouldAnimate, showBlueSky } =
+    useObserveAnimationState();
 
+  return (
+    <section
+      aria-label="animated components"
+      className={`w-full h-auto z-20
+        ${selected.status === "ready" ? "overflow-y-hidden" : ""}
+        `}
+    >
+      <div ref={sentinelRef} className="h-1 w-full" />
 
-    useEffect(() => {
-        if ((showBlueSky) || (!sentinelRef.current)) return;
+      <WikiAndNotes />
 
-        const observer = new IntersectionObserver(([entry]) => {
+      <div ref={feedRef} className="h-1 w-full" />
 
-            if (entry.isIntersecting) {
-                startTransition(() => {
-                    setShowBlueSky(true);
-                });
-                setShowBlueSky(true);
-                observer.disconnect();
-            }
-        },
-            { rootMargin: '400px' }
-        );
-        observer.observe(sentinelRef.current);
-
-        return () => {
-            observer.disconnect();
-        };
-    }, [showBlueSky]);
-
-    useEffect(() => {
-        if (!feedRef.current) return;
-
-        const startObserver = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    startTransition(() => {
-                        setShouldAnimate(true)
-                    })
-                }
-            },
-            { rootMargin: '300px' }
-        );
-
-        const stopObserver = new IntersectionObserver(
-            ([entry]) => {
-                if (!entry.isIntersecting) {
-                    startTransition(() => {
-                        setShouldAnimate(false)
-                    })
-                }
-            },
-            { rootMargin: '0px' }
-        );
-
-        startObserver.observe(feedRef.current);
-
-        return () => {
-            startObserver.disconnect();
-            stopObserver.disconnect();
-        };
-    }, []);
-
-    return (
-        <section
-            aria-label='animated components'
-            className={`w-full h-auto z-20
-        ${popoverPost.status === 'ready' ? 'overflow-y-hidden' : ''}
-        `}>
-            <div ref={sentinelRef} className='h-1 w-full' />
-
-
-            <WikiAndNotes />
-
-            <div ref={feedRef} className='h-1 w-full' />
-
-            {showBlueSky &&
-                <Suspense fallback={<DelayedFallback><BlueSkySkeleton context='home' /></DelayedFallback>}>
-                    {showBlueSky && <BlueSkyPosts shouldAnimate={shouldAnimate} context='home' />}
-                </Suspense>
-            }
-
-        </section>
-    )
-};
+      {showBlueSky && (
+        <Suspense
+          fallback={
+            <DelayedFallback>
+              <BlueSkySkeleton context="home" />
+            </DelayedFallback>
+          }
+        >
+          {showBlueSky && (
+            <BlueSkyPosts shouldAnimate={shouldAnimate} context="home" />
+          )}
+        </Suspense>
+      )}
+    </section>
+  );
+}

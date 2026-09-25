@@ -8,8 +8,8 @@ export const hydrateDashboard = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const [articles, investigations] = await Promise.all([
-        serverClient.privileged.user.select.bookmarks.all(),
-        serverClient.privileged.user.select.investigations.all(),
+        serverClient.privileged.user.select.bookmarks.all(thunkAPI.signal),
+        serverClient.privileged.user.select.investigations.all(thunkAPI.signal),
       ]);
 
       return {
@@ -17,10 +17,14 @@ export const hydrateDashboard = createAsyncThunk(
         investigations,
       };
     } catch (err) {
-      console.error(err);
-      return thunkAPI.rejectWithValue(
-        err instanceof Error ? err.message : "Failed to load dashboard",
-      );
+      if (thunkAPI.signal.aborted) {
+        console.log("Dashboard hydration aborted");
+      } else {
+        console.error(err);
+        return thunkAPI.rejectWithValue(
+          err instanceof Error ? err.message : "Failed to load dashboard",
+        );
+      }
     }
   },
 );

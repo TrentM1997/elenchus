@@ -110,7 +110,7 @@ export const INTEGRATIONS_API_CONTRACT = {
       path: "/blueSky/search",
       method: "GET",
       querySchema: Type.Object({ q: SearchQuerySchema }),
-      outputSchema: BlueSkyPostSchemaArray,
+      outputSchema: SplitBlueSkyFeedSchema,
     },
   },
 } as const satisfies IntegrationsApiContract;

@@ -10,7 +10,11 @@ import type { ActiveModal } from "@/state/Reducers/RenderingPipelines/PipelineSl
 import ArticleExtractionToast from "../../global/modals/ArticleExtactionToast";
 import { assertNever } from "@/lib/helpers/asserts/assertNever";
 
-const renderModal = (modal: ActiveModal): JSX.Element | null => {
+export default function RenderModal({
+  modal,
+}: {
+  modal: ActiveModal;
+}): JSX.Element | null {
   switch (modal) {
     case "Sign Out":
       return (
@@ -70,6 +74,4 @@ const renderModal = (modal: ActiveModal): JSX.Element | null => {
       return assertNever(modal);
     }
   }
-};
-
-export default renderModal;
+}

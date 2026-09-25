@@ -6,10 +6,8 @@ import { variants } from "@/motion/variants";
 import RenderMetricsCharts from "../UserCharts/ChartJsWrapper";
 import { useScrollWithShadow } from "@/hooks/useScrollWithShadow";
 import { useRenderMetrics } from "@/hooks/useRenderMetrics";
-import { useCalculateMetrics } from "@/lib/hooks/useCalculateMetrics";
 
 export default function Metrics(): JSX.Element | null {
-  useCalculateMetrics();
   const metrics = useSelector((s: RootState) => s.dash.metrics);
   const { priority1, priority2, priority3 } = useRenderMetrics();
   const { boxShadow, onScrollHandler } = useScrollWithShadow();
@@ -17,7 +15,7 @@ export default function Metrics(): JSX.Element | null {
   return (
     <motion.section
       variants={variants}
-      initial="closed"
+      initial={false}
       animate="open"
       exit="closed"
       transition={{ type: "tween", duration: 0.2 }}

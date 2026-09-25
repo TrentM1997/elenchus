@@ -4,7 +4,13 @@ import {
   validateOrThrow,
   validateServerOrThrow,
 } from "../../../../core/validation/validateOrThrow.js";
-import { InvestigationSchemaType, InvestigationSchema, PersistInvestigationInputSchema, PersistInvestigationInputSchemaType, InsertableInvestigationSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
+import {
+  InvestigationSchemaType,
+  InvestigationSchema,
+  PersistInvestigationInputSchema,
+  PersistInvestigationInputSchemaType,
+  InsertableInvestigationSchemaType,
+} from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import type { AuthenticatedUserId } from "../../../../services/auth/authorization.js";
 import { DbResult } from "../../../types/types.ts";
 
@@ -91,7 +97,7 @@ export class InvestigationsRepository implements IInvestigationsRepository {
       .from("investigations")
       .select()
       .eq("user_id", user_id)
-      .order("created_at");
+      .order("created_at", { ascending: false });
 
     if (error) {
       return {
