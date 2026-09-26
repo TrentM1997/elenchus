@@ -23,7 +23,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
       const { feedback } = validateOrThrow(feedbackRoute.bodySchema, req.body);
 
       const result: Static<typeof feedbackRoute.outputSchema> =
-        await app.services.api.user.submitFeedback(feedback);
+        await app.services.api.user.account.submitFeedback(feedback);
 
       if (!result.ok) {
         throw new ServerError("Failed to submit feedback", 500, result.details);
@@ -46,7 +46,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
         req.body,
       );
       const result: Static<typeof passwordResetRoute.outputSchema> =
-        await app.services.api.user.requestPasswordReset(email);
+        await app.services.api.user.account.requestPasswordReset(email);
 
       if (!result.ok) {
         throw new ServerError(
@@ -130,7 +130,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
     wrapAsync(async (req, res) => {
       const body = validateOrThrow(signUpRoute.bodySchema, req.body);
 
-      const result = await app.services.api.user.signUp(body);
+      const result = await app.services.api.user.account.signUp(body);
 
       if (!result.ok || !result.data.session) {
         throw new ServerError("Failed to create new user", 400);

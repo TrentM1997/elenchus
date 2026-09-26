@@ -1,30 +1,21 @@
-import type { WikiDisambigCandidate } from "@/lib/services/wiki/wiki";
+import type { SavedExtractSchemaType } from "@elenchus/contracts/schemas/integrations/InvestigationExtractRowSchema";
 import DisambigSaved from "../disambig/DisambigSaved";
-import { Extracts } from "@/state/Reducers/Investigate/research/types";
 
-interface SavedWikiDescription {
-  extract: Extracts;
-  isDisambig: boolean;
-  terms?: WikiDisambigCandidate[];
-  page?: number;
+interface SavedWikiDescriptionProps {
+  extract: SavedExtractSchemaType;
+  page: number;
 }
 
-export function SavedWikiDescription({
-  extract,
-  page,
-  terms,
-}: SavedWikiDescription) {
+export function SavedWikiDescription({ extract, page }: SavedWikiDescriptionProps) {
   return (
-    <div className="h-52 w-full border-b border-white/20 mt-4 overflow-y-hidden relative">
-      <div className="absolute inset-0 text-white 2xl:text-sm overflow-y-scroll no-scrollbar lg:text-sm text-xs font-light tracking-tight">
-        {terms && page ? (
-          <DisambigSaved page={page} terms={terms} />
-        ) : (
-          <p className="text-xs 2xl:text-sm font-light mt-2 text-zinc-300 overflow-y-scroll no-scrollbar">
-            {extract.extract}
-          </p>
-        )}
-      </div>
+    <div className="h-52 w-full border-b border-white/20 mt-4 overflow-y-auto relative no-scrollbar">
+      {extract.kind === "disambiguation" ? (
+        <DisambigSaved page={page} terms={extract.candidates} />
+      ) : (
+        <p className="text-xs 2xl:text-sm font-light mt-2 text-zinc-300">
+          {extract.extract}
+        </p>
+      )}
     </div>
   );
 }

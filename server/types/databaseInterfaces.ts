@@ -127,6 +127,156 @@ export type Database = {
           },
         ]
       }
+      investigation_extract_candidates: {
+        Row: {
+          extract: string
+          extract_id: string
+          extract_kind: string
+          id: string
+          last_updated: string | null
+          page_id: number
+          position: number
+          thumbnail: string | null
+          title: string
+          url: string
+        }
+        Insert: {
+          extract: string
+          extract_id: string
+          extract_kind?: string
+          id?: string
+          last_updated?: string | null
+          page_id: number
+          position: number
+          thumbnail?: string | null
+          title: string
+          url: string
+        }
+        Update: {
+          extract?: string
+          extract_id?: string
+          extract_kind?: string
+          id?: string
+          last_updated?: string | null
+          page_id?: number
+          position?: number
+          thumbnail?: string | null
+          title?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "investigation_extract_candidate_parent_fkey"
+            columns: ["extract_id", "extract_kind"]
+            isOneToOne: false
+            referencedRelation: "investigation_extracts"
+            referencedColumns: ["id", "kind"]
+          },
+        ]
+      }
+      investigation_extracts: {
+        Row: {
+          captured_at: string
+          description: string | null
+          extract: string | null
+          id: string
+          investigation_id: number
+          kind: string
+          last_updated: string | null
+          page_url: string
+          thumbnail: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          captured_at?: string
+          description?: string | null
+          extract?: string | null
+          id?: string
+          investigation_id: number
+          kind: string
+          last_updated?: string | null
+          page_url: string
+          thumbnail?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          captured_at?: string
+          description?: string | null
+          extract?: string | null
+          id?: string
+          investigation_id?: number
+          kind?: string
+          last_updated?: string | null
+          page_url?: string
+          thumbnail?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "investigation_extracts_investigation_id_fkey"
+            columns: ["investigation_id"]
+            isOneToOne: false
+            referencedRelation: "investigations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "investigation_extracts_user_id_investigation_id_fkey"
+            columns: ["user_id", "investigation_id"]
+            isOneToOne: false
+            referencedRelation: "investigations"
+            referencedColumns: ["user_id", "id"]
+          },
+        ]
+      }
+      investigation_sources: {
+        Row: {
+          article_id: number
+          created_at: string
+          id: string
+          investigation_id: number
+          user_id: string
+        }
+        Insert: {
+          article_id: number
+          created_at?: string
+          id?: string
+          investigation_id: number
+          user_id: string
+        }
+        Update: {
+          article_id?: number
+          created_at?: string
+          id?: string
+          investigation_id?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "investigation_sources_article_id_fkey"
+            columns: ["article_id"]
+            isOneToOne: false
+            referencedRelation: "articles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "investigation_sources_investigation_id_fkey"
+            columns: ["investigation_id"]
+            isOneToOne: false
+            referencedRelation: "investigations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "investigation_sources_investigation_owner_fkey"
+            columns: ["investigation_id", "user_id"]
+            isOneToOne: false
+            referencedRelation: "investigations"
+            referencedColumns: ["id", "user_id"]
+          },
+        ]
+      }
       investigations: {
         Row: {
           biases: string | null
@@ -140,10 +290,8 @@ export type Database = {
           initial_perspective: string | null
           new_concepts: boolean | null
           premises: string | null
-          sources: string[] | null
           takeaway: string | null
           user_id: string | null
-          wikipedia_extracts: Json[] | null
         }
         Insert: {
           biases?: string | null
@@ -157,10 +305,8 @@ export type Database = {
           initial_perspective?: string | null
           new_concepts?: boolean | null
           premises?: string | null
-          sources?: string[] | null
           takeaway?: string | null
           user_id?: string | null
-          wikipedia_extracts?: Json[] | null
         }
         Update: {
           biases?: string | null
@@ -174,10 +320,8 @@ export type Database = {
           initial_perspective?: string | null
           new_concepts?: boolean | null
           premises?: string | null
-          sources?: string[] | null
           takeaway?: string | null
           user_id?: string | null
-          wikipedia_extracts?: Json[] | null
         }
         Relationships: []
       }

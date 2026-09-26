@@ -1,12 +1,11 @@
-import type { WikiDisambigCandidate } from "@/lib/services/wiki/wiki";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { SavedWikiDescription } from "../descriptions/SavedWikiDescription";
 import NavCandidates from "@/components/React/features/wiki/components/disambig/buttons/NavDisambig";
-import { Extracts } from "@/state/Reducers/Investigate/research/types";
+import type { SavedExtractSchemaType } from "@elenchus/contracts/schemas/integrations/InvestigationExtractRowSchema";
 
 interface TermListItemProps {
   index: number;
-  extract: Extracts;
+  extract: SavedExtractSchemaType;
   numItems: number;
 }
 
@@ -16,16 +15,8 @@ export default function TermListItem({
   numItems,
 }: TermListItemProps) {
   const [page, setPage] = useState<number>(0);
-  const isDisambig = extract?.candidates ? true : false;
-  const terms = useMemo(() => {
-    return extract?.candidates
-      ? extract.candidates?.filter(
-          (term: WikiDisambigCandidate) => term.extract !== "",
-        )
-      : [];
-  }, [extract?.candidates]);
 
-  const snapPoint = (index && index % 4) === 0 ? "snapPoint" : null;
+  const snapPoint = index % 4 === 0 ? "snapPoint" : null;
 
   const widthClass =
     numItems && numItems < 2
@@ -38,7 +29,6 @@ export default function TermListItem({
 
   return (
     <li
-      key={`item-${extract}`}
       data-value={snapPoint}
       className={`w-full sm:w-[calc((100%-2rem)/2)] ${widthClass} bg-ebony shadow-inset rounded-3xl p-4 grow-0 shrink-0`}
     >
@@ -65,16 +55,16 @@ export default function TermListItem({
           </p>
           <SavedWikiDescription
             page={page}
-            terms={terms}
-            isDisambig={isDisambig}
             extract={extract}
           />
         </div>
       </figure>
 
-      {extract?.candidates && (
-        <NavCandidates setPage={setPage} candidates={terms} page={page} />
+      {extract.kind === "disambiguation" && (
+        <NavCandidates setPage={setPage} candidates={extract.candidates} page={page} />
       )}
     </li>
   );
 }
+
+

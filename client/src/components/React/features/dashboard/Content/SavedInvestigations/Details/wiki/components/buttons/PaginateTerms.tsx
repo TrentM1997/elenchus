@@ -4,7 +4,7 @@ import { useIsMobile } from "@/lib/hooks/rendering/useIsMobile";
 interface TermPaginate {
   page: number;
   setPage: React.Dispatch<SetStateAction<number>>;
-  excess: any;
+  excess: boolean;
 }
 
 export default function PaginateTerms({
@@ -14,7 +14,7 @@ export default function PaginateTerms({
 }: TermPaginate): JSX.Element | null {
   const isMobile = useIsMobile();
 
-  const scrollToNext = (index: number, snapPoints) => {
+  const scrollToNext = (index: number, snapPoints: NodeListOf<HTMLElement>) => {
     const target = snapPoints[index] as HTMLElement | null;
     if (target && index < snapPoints.length) {
       target.scrollIntoView({
@@ -25,7 +25,7 @@ export default function PaginateTerms({
     }
   };
 
-  const scrollBack = (index, snapPoints) => {
+  const scrollBack = (index: number, snapPoints: NodeListOf<HTMLElement>) => {
     const target = snapPoints[index] as HTMLElement | null;
     if (target) {
       target.scrollIntoView({
@@ -37,7 +37,7 @@ export default function PaginateTerms({
   };
 
   const handleBackClick = () => {
-    const snapPoints = document.querySelectorAll('[data-value="snapPoint"]');
+    const snapPoints = document.querySelectorAll<HTMLElement>('[data-value="snapPoint"]');
     if (page - 1 >= 0) {
       const prevPage = page - 1;
       scrollBack(prevPage, snapPoints);
@@ -46,7 +46,7 @@ export default function PaginateTerms({
   };
 
   const handleNextClick = () => {
-    const snapPoints = document.querySelectorAll('[data-value="snapPoint"]');
+    const snapPoints = document.querySelectorAll<HTMLElement>('[data-value="snapPoint"]');
     const max = snapPoints.length - 1;
     if (page + 1 <= max) {
       const nextPage = page + 1;

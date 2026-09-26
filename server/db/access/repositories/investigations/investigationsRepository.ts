@@ -155,8 +155,6 @@ export class InvestigationsRepository implements IInvestigationsRepository {
       new_concepts,
       takeaway,
       had_merit,
-      sources,
-      wikipedia_extracts,
       biases,
       expertise,
     } = investigation;
@@ -173,8 +171,6 @@ export class InvestigationsRepository implements IInvestigationsRepository {
       takeaway: takeaway,
       had_merit: had_merit,
       user_id: user_id,
-      sources: sources,
-      wikipedia_extracts: wikipedia_extracts,
     };
   }
 

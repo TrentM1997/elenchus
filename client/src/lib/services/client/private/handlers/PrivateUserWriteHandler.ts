@@ -4,6 +4,7 @@ import {
 } from "@elenchus/contracts/schemas/articles/BookmarkSchema";
 import { IHttpClient } from "@/lib/services/client/http/types";
 import {
+  ExtractsToPersistSchemaType,
   InvestigationSaveResponseType,
   PersistInvestigationInputSchemaType,
 } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
@@ -17,9 +18,11 @@ export interface IPrivateUserWritesHandler {
   unBookmark(
     article_id: ArticleSchemaType["id"],
   ): Promise<DeleteBookmarkResponseSchemaType>;
-  investigation(
-    investigation: PersistInvestigationInputSchemaType,
-  ): Promise<InvestigationSaveResponseType>;
+  investigation(body: {
+    investigation: PersistInvestigationInputSchemaType;
+    articleIds: ArticleSchemaType["id"][];
+    extracts: ExtractsToPersistSchemaType;
+  }): Promise<InvestigationSaveResponseType>;
 }
 
 export class PrivateUserWritesHandler implements IPrivateUserWritesHandler {
@@ -36,12 +39,14 @@ export class PrivateUserWritesHandler implements IPrivateUserWritesHandler {
     return await this.http.request(route, { body: { article_id } });
   }
 
-  public async investigation(
-    investigation: PersistInvestigationInputSchemaType,
-  ): Promise<InvestigationSaveResponseType> {
+  public async investigation(body: {
+    investigation: PersistInvestigationInputSchemaType;
+    articleIds: ArticleSchemaType["id"][];
+    extracts: ExtractsToPersistSchemaType;
+  }): Promise<InvestigationSaveResponseType> {
     const route = this.routes.investigations.post;
 
-    return await this.http.request(route, { body: investigation });
+    return await this.http.request(route, { body });
   }
 
   public async unBookmark(

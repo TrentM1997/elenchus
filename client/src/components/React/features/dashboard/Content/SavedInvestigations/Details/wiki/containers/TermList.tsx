@@ -1,10 +1,14 @@
-import type { TermsTypes } from "./WikipediaTerms";
-import type { Extracts } from "@/state/Reducers/Investigate/research/types";
 import { useState } from "react";
 import PaginateTerms from "../components/buttons/PaginateTerms";
 import TermListItem from "../components/extract/items/TermListItem";
+import { WikipediaExtractsSaved } from "@/state/Reducers/Dashboard/types";
 
-export function TermList({ wikipedia_extracts, excess }: TermsTypes) {
+export interface TermsTypes {
+  extracts: WikipediaExtractsSaved;
+  excess: boolean;
+}
+
+export function TermList({ extracts, excess }: TermsTypes) {
   const [page, setPage] = useState<number>(0);
 
   return (
@@ -17,12 +21,12 @@ export function TermList({ wikipedia_extracts, excess }: TermsTypes) {
         <ul
           className={`flex flex-wrap gap-1 sm:gap-2 lg:gap-3 lg:flex-nowrap group h-full`}
         >
-          {wikipedia_extracts?.map((extract: Extracts, index: number) => (
+          {extracts.map((extract, index) => (
             <TermListItem
-              key={index}
+              key={extract.id}
               extract={extract}
               index={index}
-              numItems={wikipedia_extracts.length}
+              numItems={extracts.length}
             />
           ))}
         </ul>

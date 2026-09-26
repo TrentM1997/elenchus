@@ -7,10 +7,8 @@ import {
   IFirecrawlService,
 } from "../firecrawl/firecrawlService.js";
 import { firecrawlClient } from "../firecrawl/client/firecrawlClient.js";
-import {
-  IInvestigationService,
-  InvestionService,
-} from "../investigations/InvestigationService.js";
+import { InvestionService } from "../investigations/InvestigationService.js";
+import { IInvestigationService } from "../investigations/types.ts";
 
 export interface IDomains {
   readonly user: IUserService;

@@ -4,6 +4,8 @@ import {
 } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import { WikiDisambigCandidate } from "@/lib/services/wiki/wiki";
 import { AsyncState } from "@/state/types";
+import { WikiResponseSchemaType } from "@elenchus/contracts/schemas/integrations/WikipediaExtractSchemas";
+import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 
 export interface Extracts {
   title: string;
@@ -28,10 +30,10 @@ export type ResearchReflection = Pick<
   | "takeaway"
 >;
 
-export type SourcesAndExtracts = Pick<
-  PersistInvestigationInputSchemaType,
-  "sources" | "wikipedia_extracts"
->;
+export type ExtractsAndSources = {
+  extracts: Exclude<WikiResponseSchemaType, { kind: "error" }>[];
+  sources: ArticleSchemaType["id"][];
+};
 
 export type UserResearchType =
   | { phase: "initial" }
@@ -51,14 +53,14 @@ export type UserResearchType =
       phase: "evidence";
       data: {
         framing: PerspectiveFraming;
-        context: SourcesAndExtracts;
+        context: ExtractsAndSources;
       };
     }
   | {
       phase: "reflection";
       data: {
         framing: PerspectiveFraming;
-        context: SourcesAndExtracts;
+        context: ExtractsAndSources;
         reflection: ResearchReflection;
       };
     }
@@ -66,7 +68,7 @@ export type UserResearchType =
       phase: "completed";
       data: {
         framing: PerspectiveFraming;
-        context: SourcesAndExtracts;
+        context: ExtractsAndSources;
         reflection: ResearchReflection;
       };
     }
@@ -74,7 +76,7 @@ export type UserResearchType =
       phase: "end";
       data: {
         framing: PerspectiveFraming;
-        context: SourcesAndExtracts;
+        context: ExtractsAndSources;
         reflection: ResearchReflection;
       };
     };

@@ -12,19 +12,28 @@ export const hydrateDashboard = createAsyncThunk(
         serverClient.privileged.user.select.investigations.all(thunkAPI.signal),
       ]);
 
+      if (!articles.ok) {
+        throw new Error("Failed to hydrate articles");
+      }
+
+      if (!investigations.ok) {
+        throw new Error("Failed to hydrate investigations");
+      }
+
       return {
-        articles,
-        investigations,
+        articles: articles.data,
+        investigations: investigations.data,
       };
     } catch (err) {
       if (thunkAPI.signal.aborted) {
         console.log("Dashboard hydration aborted");
       } else {
         console.error(err);
-        return thunkAPI.rejectWithValue(
-          err instanceof Error ? err.message : "Failed to load dashboard",
-        );
       }
+
+      return thunkAPI.rejectWithValue(
+        err instanceof Error ? err.message : "Failed to load dashboard",
+      );
     }
   },
 );
@@ -38,9 +47,9 @@ export const hydrateOpenInvestigation = createAsyncThunk(
           investigation_id,
         );
 
-      if (result.ok === false) {
+      if (result.investigation.ok === false) {
         throw new Error(
-          `Message: ${result.message} — Detials: ${result.details}`,
+          `Message: ${result.investigation.message} — Detials: ${result.investigation.details}`,
         );
       }
       return result;

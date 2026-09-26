@@ -25,7 +25,7 @@ export const extractArticles = createAsyncThunk<
     articles,
     { signal, dispatch, rejectWithValue, requestId, getState },
   ) => {
-    dispatch(startEvidence({ sources: [], wikipedia_extracts: [] }));
+    dispatch(startEvidence({ sources: [], extracts: [] }));
 
     try {
       const result = await serverClient.general.extraction.runExtractionJob({
@@ -39,7 +39,7 @@ export const extractArticles = createAsyncThunk<
             dispatch(extractionProgressReceived({ requestId, result }));
             dispatch(
               updateResearchSources(
-                result.retrieved.map((article) => article.article_url),
+                result.retrieved.map((article) => article.id),
               ),
             );
           }
@@ -50,9 +50,7 @@ export const extractArticles = createAsyncThunk<
         getState().investigation.read.activeRequestId === requestId
       ) {
         dispatch(
-          updateResearchSources(
-            result.retrieved.map((article) => article.article_url),
-          ),
+          updateResearchSources(result.retrieved.map((article) => article.id)),
         );
       }
       return result;

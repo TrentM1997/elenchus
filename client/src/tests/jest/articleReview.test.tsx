@@ -2,23 +2,21 @@ import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import { renderToStaticMarkup } from "react-dom/server";
 import reducer from "../../state/Reducers/Dashboard/DashboardSlice";
-import { selectArticleReviewState } from "../../state/Reducers/Dashboard/selectors";
 import ArticleReview from "../../components/React/features/dashboard/Content/UserArticles/containers/ArticleReview";
 import type { RootState } from "../../state/store";
 import type { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 
 jest.mock("../../lib/services/client/serverClient", () => ({ serverClient: {} }));
-jest.mock("../../lib/hooks/useHydrateOpenedArticle", () => ({ useHydrateOpenedArticle: jest.fn() }));
 jest.mock("../../components/React/global/fallbacks/DelayedFallback", () => ({
-  __esModule: true, default: () => null,
+  __esModule: true, default: ({ children }: { children: React.ReactNode }) => children,
 }));
 jest.mock("../../components/React/features/dashboard/ProfileNavigation/mobile/DetailView", () => ({
   __esModule: true, default: () => null,
 }));
 jest.mock("../../components/React/global/Articles/SuccessFull/containers/Article", () => ({
   __esModule: true,
-  default: ({ articleData, animateEntrance }: { articleData: ArticleSchemaType; animateEntrance: boolean }) => (
-    <article data-animate={String(animateEntrance)}>{articleData.full_text}</article>
+  default: ({ articleData, investigating }: { articleData: ArticleSchemaType; investigating?: boolean }) => (
+    <article data-investigating={String(investigating)}>{articleData.full_text}</article>
   ),
 }));
 
@@ -34,37 +32,40 @@ const state = (detail: RootState["dash"]["ArticleToReview"], articles = [saved])
   },
 }) as RootState;
 
-test.each(["initial", "pending", "failed"] as const)(
-  "saved article stays available during %s refresh state", status => {
-    const detail = status === "failed" ? { status, details: "Offline" } : { status };
-    expect(selectArticleReviewState(state(detail), saved.id)).toEqual({ status: "ready", data: saved });
-  },
-);
-
-test("a matching refresh replaces cached data without leaving the ready state", () => {
-  const updated = { ...saved, full_text: "Updated body" };
-  const detail = { status: "ready" as const, data: updated };
-  expect(selectArticleReviewState(state(detail), saved.id)).toBe(detail);
-});
-
-test("does not render the previous article when the next article is uncached", () => {
-  expect(selectArticleReviewState(state({ status: "ready", data: saved }), 99))
-    .toEqual({ status: "pending" });
-});
-
-test("uncached articles preserve loading and error states", () => {
-  expect(selectArticleReviewState(state({ status: "initial" }, []), 99))
-    .toEqual({ status: "pending" });
-  const failed = { status: "failed" as const, details: "Unavailable" };
-  expect(selectArticleReviewState(state(failed, []), 99)).toBe(failed);
-});
-
-test("dashboard review renders cached content immediately without the entrance fade", () => {
-  const store = configureStore({ reducer: () => state({ status: "pending" }) });
-  const markup = renderToStaticMarkup(
+// Server rendering reads the real hydration hook's Redux state without running
+// effects. Request cancellation and cleanup are covered in dashboardDetailCancellation.
+function renderReview(detail: RootState["dash"]["ArticleToReview"], articles = [saved]) {
+  const store = configureStore({ reducer: () => state(detail, articles) });
+  return renderToStaticMarkup(
     <Provider store={store}><ArticleReview articleId={saved.id} backTo={() => {}} /></Provider>,
   );
-  expect(markup).toContain('data-animate="false"');
+}
+
+test("initial detail does not render bookmarked content before hydration", () => {
+  expect(renderReview({ status: "initial" })).not.toContain("Saved body");
+});
+
+test("pending detail shows loading even when the article is bookmarked", () => {
+  const markup = renderReview({ status: "pending" });
+  expect(markup).toContain("Loading article");
+  expect(markup).not.toContain("Saved body");
+});
+
+test("failed detail shows the hydration error instead of bookmarked content", () => {
+  const markup = renderReview({ status: "failed", details: "Unavailable" });
+  expect(markup).toContain("Unavailable");
+  expect(markup).not.toContain("Saved body");
+});
+
+test("hydrated detail takes precedence over the bookmarked copy", () => {
+  const markup = renderReview({ status: "ready", data: { ...saved, full_text: "Updated body" } });
+  expect(markup).toContain("Updated body");
+  expect(markup).not.toContain("Saved body");
+});
+
+test("dashboard review renders a hydrated article without a bookmark", () => {
+  const markup = renderReview({ status: "ready", data: saved }, []);
+  expect(markup).toContain('data-investigating="false"');
   expect(markup).toContain("Saved body");
   expect(markup).not.toContain("Loading article");
 });

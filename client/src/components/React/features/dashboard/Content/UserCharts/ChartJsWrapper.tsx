@@ -1,4 +1,4 @@
-import { Fragment, lazy, Suspense, useEffect } from "react";
+import { Fragment, lazy, Suspense } from "react";
 import PieSkeleton from "@/components/React/features/charts/skeletons/PieSkeleton";
 import { DonutSkeletonChart } from "@/components/React/features/charts/skeletons/ChartJsSkeleton";
 import ChartJsSkeleton from "@/components/React/features/charts/skeletons/ChartJsSkeleton";
@@ -8,7 +8,6 @@ import AsyncStateRenderer from "@/components/React/pipelines/AsyncStateRenderer"
 import { ResearchMetrics } from "@/state/Reducers/Dashboard/DashboardSlice";
 import StatsSkeleton from "../../../charts/skeletons/StatsSkeleton";
 import StatsSection from "../../../charts/ResearchStats/StatsSection";
-import ChartSuspenseSkeleton from "../../../charts/skeletons/ChartSectionSkeleton";
 const BiasChart = lazy(
   () => import("@/components/React/features/charts/DonutChart/BiasChart"),
 );
@@ -26,6 +25,7 @@ interface RenderMetricsCharts {
 export default function RenderMetricsCharts({
   priority1,
   priority2,
+  priority3,
   metrics,
 }: RenderMetricsCharts): JSX.Element | null {
   return (
@@ -62,7 +62,13 @@ export default function RenderMetricsCharts({
         {(state) => (
           <Suspense>
             (
-            <IntegrityChart integrityRatings={state} key={"integrity-chart"} />)
+            {priority2 === "complete" && (
+              <IntegrityChart
+                integrityRatings={state}
+                key={"integrity-chart"}
+              />
+            )}
+            )
           </Suspense>
         )}
       </AsyncStateRenderer>

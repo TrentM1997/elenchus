@@ -1,10 +1,22 @@
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
-import { InvestigationSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
+import {
+  ExtractsSelectedResponseSchemaType,
+  InvestigationSchemaType,
+} from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import { AsyncState } from "@/state/types";
+
+export type WikipediaExtractsSaved = Extract<
+  ExtractsSelectedResponseSchemaType,
+  { ok: true }
+>["data"];
 
 export type OpenedArticle = AsyncState<ArticleSchemaType>;
 
 export type OpenInvestigation = AsyncState<InvestigationSchemaType>;
+
+export type OpenInvestigationExtracts = AsyncState<
+  Extract<ExtractsSelectedResponseSchemaType, { ok: true }>["data"]
+>;
 
 export type DashboardTab =
   | { kind: "metrics" }

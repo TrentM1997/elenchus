@@ -21,7 +21,7 @@ test("feedback validates the complete body and passes the inner feedback to the 
   const feedback = { email: "reader@example.com", message: "Hello" };
   const calls = [];
   const router = publicRoutes({ services: { api: { user: {
-    submitFeedback: async input => { calls.push(input); return { ok: true, data: "sent" }; },
+    account: { submitFeedback: async input => { calls.push(input); return { ok: true, data: "sent" }; } },
   } } } }, Router());
   await invoke(router, "post", "/user/feedback", { body: { feedback } });
   await assert.rejects(invoke(router, "post", "/user/feedback", { body: feedback }),
@@ -61,7 +61,7 @@ test(`each ${name} contract is registered once with its declared method`, () => 
 
 test("invalid success payloads become server errors", async () => {
   const router = publicRoutes({ services: { api: { user: {
-    submitFeedback: async () => ({ ok: true, data: 123 }),
+    account: { submitFeedback: async () => ({ ok: true, data: 123 }) },
   } } } }, Router());
   await assert.rejects(invoke(router, "post", "/user/feedback", {
     body: { feedback: { email: "reader@example.com", message: "Hello" } },
@@ -104,8 +104,14 @@ test("private routes convert validated path IDs and retain the authenticated use
   };
   const record = data => async input => { calls.push(input); return { ok: true, data }; };
   const router = protectedRoutes({ services: { api: {
-    user: { articleById: record(article), removeBookmark: record([bookmark]), bookmark: record(bookmark) },
-    investigations: { getInvestigation: record(investigation) },
+    user: { articles: { articleById: record(article), removeBookmark: record([bookmark]), bookmark: record(bookmark) } },
+    investigations: { hydrateInvestigation: async input => {
+      calls.push(input);
+      return {
+        investigation: { ok: true, data: investigation },
+        sources: { ok: true, data: [article] },
+      };
+    } },
   } } }, Router());
   const user = { userId: "authenticated-user" };
   for (const method of ["get", "delete"]) {
@@ -117,8 +123,15 @@ test("private routes convert validated path IDs and retain the authenticated use
     }), error => error.statusCode === 400);
   }
   await invoke(router, "post", "/user/bookmarks", { user, body: { article_id: 42 } });
-  await invoke(router, "get", "/user/investigations/:investigationId", {
+  const hydrated = await invoke(router, "get", "/user/investigations/:investigationId", {
     user, params: { investigationId: "73" },
+  });
+  assert.deepEqual(hydrated, {
+    data: {
+      investigation: { ok: true, data: investigation },
+      sources: { ok: true, data: [article] },
+    },
+    status: 200,
   });
   assert.deepEqual(calls, [
     ...Array.from({ length: 3 }, () => ({ user_id: user.userId, article_id: 42 })),
@@ -128,7 +141,7 @@ test("private routes convert validated path IDs and retain the authenticated use
 
 test("private routes reject malformed service results before sending success", async () => {
   const router = protectedRoutes({ services: { api: { user: {
-    articlesBookmarked: async () => ({ ok: true, data: {} }),
+    articles: { articlesBookmarked: async () => ({ ok: true, data: {} }) },
   } } } }, Router());
   await assert.rejects(invoke(router, "get", "/user/bookmarks", {
     user: { userId: "authenticated-user" },

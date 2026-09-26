@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { ArticleService } from "../dist/services/articles/articleService.js";
 import { FirecrawlService } from "../dist/services/firecrawl/firecrawlService.js";
+import { ArticlesRepository } from "../dist/db/access/repositories/articles/articlesRepository.js";
 
 const selected = {
   url: "https://example.com/article", title: "Article", source: "Source",
@@ -28,7 +29,7 @@ test("snapshots wait for persistence and publish the returned database row", asy
   });
   const { jobId } = service.extract([selected]);
   await flush();
-  assert.equal(input.id, null);
+  assert.equal(Object.hasOwn(input, "id"), false);
   assert.equal(service.getExtractionJob(jobId).status, "pending");
   assert.deepEqual(service.getExtractionJob(jobId).result.retrieved, []);
   const saved = { ...input, id: 1948, title: "Database returned title" };
@@ -53,7 +54,19 @@ test("a failed save is reported without publishing the unsaved article", async (
 
 test("mixed results retain saved articles and reject rows without a database ID", async () => {
   let count = 0;
-  const service = setup(async article => ({ ok: true, data: { ...article, id: count++ === 0 ? 42 : null } }));
+  // Mock the database response, preserving the repository's real row validation.
+  const repository = new ArticlesRepository({
+    from(table) {
+      assert.equal(table, "articles");
+      return {
+        insert([article]) {
+          const id = count++ === 0 ? 42 : null;
+          return { select: () => ({ single: async () => ({ data: { ...article, id }, error: null }) }) };
+        },
+      };
+    },
+  });
+  const service = setup(article => repository.saveArticle(article));
   const { jobId } = service.extract([selected, { ...selected, url: "https://example.com/other" }]);
   await flush();
   const job = service.getExtractionJob(jobId);
