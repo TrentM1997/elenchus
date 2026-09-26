@@ -1,39 +1,23 @@
 import { IDbClient } from "../../db/access/client/dbClient.js";
-import { IAuthorization } from "../auth/authorization.js";
-import {
-  InvestigationSchemaType,
-  InvestigationsSavedReponseSchemaType,
-  PersistInvestigationInputSchemaType,
-} from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
+import { AuthenticatedUserId, IAuthorization } from "../auth/authorization.js";
+import { InvestigationSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import {
   InvestigationSaveResult,
   SavedInvestigationsResult,
 } from "../../db/access/repositories/investigations/investigationsRepository.js";
 import { DbResult } from "../../db/types/types.ts";
+import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import {
+  HydrateInvestigationParams,
+  HydrateInvestigationResult,
+  IInvestigationService,
+  SaveInvestigationParams,
+  SaveSourcesParams,
+} from "./types.ts";
 import {
   IInvestigationSourceHandler,
   InvestigationSourceHandler,
-} from "./handlers/InvestigationSourceHandler.ts";
-import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
-
-export interface IInvestigationService {
-  save(params: {
-    user_id: string | undefined | null;
-    investigation: PersistInvestigationInputSchemaType;
-    articleIds: ArticleSchemaType["id"][];
-  }): Promise<InvestigationSaveResult>;
-
-  getSavedResearch(
-    user_id: string | undefined | null,
-  ): Promise<InvestigationsSavedReponseSchemaType>;
-  hydrateInvestigation(params: {
-    user_id: string | undefined | null;
-    investigation_id: InvestigationSchemaType["id"];
-  }): Promise<{
-    investigation: DbResult<InvestigationSchemaType>;
-    sources: DbResult<ArticleSchemaType[]>;
-  }>;
-}
+} from "./sources/InvestigationSourceHandler.ts";
 
 export class InvestionService implements IInvestigationService {
   private readonly sources: IInvestigationSourceHandler;
@@ -47,27 +31,24 @@ export class InvestionService implements IInvestigationService {
     this.sources = new InvestigationSourceHandler(this.db);
   }
 
-  public async save(params: {
-    user_id: string | undefined | null;
-    investigation: PersistInvestigationInputSchemaType;
-    articleIds: ArticleSchemaType["id"][];
-  }): Promise<InvestigationSaveResult> {
+  public async save(
+    params: SaveInvestigationParams,
+  ): Promise<InvestigationSaveResult> {
     return await this.executeSaveInvestigationAndSources(params);
   }
 
-  private async executeSaveInvestigationAndSources(params: {
-    user_id: string | undefined | null;
-    investigation: PersistInvestigationInputSchemaType;
-    articleIds: ArticleSchemaType["id"][];
-  }): Promise<InvestigationSaveResult> {
+  private async executeSaveInvestigationAndSources(
+    params: SaveInvestigationParams,
+  ): Promise<InvestigationSaveResult> {
     const userId = this.policy.requireAuthenticated(params.user_id);
-
     const investigationResult = await this.db.investigations.save(
       params.investigation,
       userId,
     );
     if (investigationResult.ok) {
-      await this.saveSources(investigationResult, params.articleIds);
+      const articleIds = params.articleIds;
+      const investigation_id = investigationResult.data.id;
+      await this.saveSources({ userId, investigation_id, articleIds });
     }
     return investigationResult;
   }
@@ -76,24 +57,18 @@ export class InvestionService implements IInvestigationService {
     return await this.executeGetSavedResearch(user_id);
   }
 
-  public async hydrateInvestigation(params: {
-    user_id: string | undefined | null;
-    investigation_id: InvestigationSchemaType["id"];
-  }): Promise<{
-    investigation: DbResult<InvestigationSchemaType>;
-    sources: DbResult<ArticleSchemaType[]>;
-  }> {
+  public async hydrateInvestigation(
+    params: HydrateInvestigationParams,
+  ): Promise<HydrateInvestigationResult> {
     const { user_id, investigation_id } = params;
     return await this.executeGetInvestigation(user_id, investigation_id);
   }
 
-  private async saveSources(
-    result: Extract<InvestigationSaveResult, { ok: true }>,
-    articleIds: ArticleSchemaType["id"][],
-  ) {
+  private async saveSources(params: SaveSourcesParams) {
     const sourceResult = await this.sources.write.saveSources(
-      articleIds,
-      result.data.id,
+      params.userId,
+      params.articleIds,
+      params.investigation_id,
     );
     if (sourceResult.ok === false) {
       console.error(sourceResult.message);
@@ -103,14 +78,11 @@ export class InvestionService implements IInvestigationService {
   private async executeGetInvestigation(
     user_id: string | undefined | null,
     investigation_id: InvestigationSchemaType["id"],
-  ): Promise<{
-    investigation: DbResult<InvestigationSchemaType>;
-    sources: DbResult<ArticleSchemaType[]>;
-  }> {
+  ): Promise<HydrateInvestigationResult> {
     const userId = this.policy.requireAuthenticated(user_id);
     const [investigation, sources] = await Promise.all([
       this.db.investigations.selectById(userId, investigation_id),
-      this.sources.select.byInvestigationId(investigation_id),
+      this.sources.select.byInvestigationId(userId, investigation_id),
     ]);
 
     return { investigation, sources };

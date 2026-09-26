@@ -2,11 +2,11 @@ import { IDbClient } from "../../../db/access/client/dbClient.ts";
 import {
   IInvestigationSourceSelectHandler,
   InvestigationSourceSelectHandler,
-} from "./InvestigateSourceSelectHandler.ts";
+} from "./handlers/InvestigateSourceSelectHandler.ts";
 import {
   IInvestigationSourceWriteHandler,
   InvestigationSourceWriteHandler,
-} from "./InvestigationSourceWriteHandler.ts";
+} from "./handlers/InvestigationSourceWriteHandler.ts";
 
 export interface IInvestigationSourceHandler {
   readonly select: IInvestigationSourceSelectHandler;

@@ -1,10 +1,12 @@
 import { InvestigationSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
-import { IDbClient } from "../../../db/access/client/dbClient.ts";
-import { DbResult } from "../../../db/types/types.ts";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import { DbResult } from "../../../../db/types/types.ts";
+import { IDbClient } from "../../../../db/access/client/dbClient.ts";
+import { AuthenticatedUserId } from "../../../auth/authorization.ts";
 
 export interface IInvestigationSourceSelectHandler {
   byInvestigationId(
+    userId: AuthenticatedUserId,
     id: InvestigationSchemaType["id"],
   ): Promise<DbResult<ArticleSchemaType[]>>;
 }
@@ -15,16 +17,20 @@ export class InvestigationSourceSelectHandler implements IInvestigationSourceSel
   ) {}
 
   public async byInvestigationId(
+    userId: AuthenticatedUserId,
     id: InvestigationSchemaType["id"],
   ): Promise<DbResult<ArticleSchemaType[]>> {
-    return await this.executeGetSources(id);
+    return await this.executeGetSources(userId, id);
   }
 
   private async executeGetSources(
+    userId: AuthenticatedUserId,
     id: InvestigationSchemaType["id"],
   ): Promise<DbResult<ArticleSchemaType[]>> {
-    const sources =
-      await this.db.investigationSources.select.byInvestigationId(id);
+    const sources = await this.db.investigationSources.select.byInvestigationId(
+      userId,
+      id,
+    );
     if (!sources.ok) {
       throw new Error("Failed to fetch sources by investigation id");
     }

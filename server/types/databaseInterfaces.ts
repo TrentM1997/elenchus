@@ -133,18 +133,21 @@ export type Database = {
           created_at: string
           id: string
           investigation_id: number
+          user_id: string
         }
         Insert: {
           article_id: number
           created_at?: string
           id?: string
           investigation_id: number
+          user_id: string
         }
         Update: {
           article_id?: number
           created_at?: string
           id?: string
           investigation_id?: number
+          user_id?: string
         }
         Relationships: [
           {
@@ -161,6 +164,13 @@ export type Database = {
             referencedRelation: "investigations"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "investigation_sources_investigation_owner_fkey"
+            columns: ["investigation_id", "user_id"]
+            isOneToOne: false
+            referencedRelation: "investigations"
+            referencedColumns: ["id", "user_id"]
+          },
         ]
       }
       investigations: {
@@ -176,7 +186,6 @@ export type Database = {
           initial_perspective: string | null
           new_concepts: boolean | null
           premises: string | null
-          sources: string[] | null
           takeaway: string | null
           user_id: string | null
           wikipedia_extracts: Json[] | null
@@ -193,7 +202,6 @@ export type Database = {
           initial_perspective?: string | null
           new_concepts?: boolean | null
           premises?: string | null
-          sources?: string[] | null
           takeaway?: string | null
           user_id?: string | null
           wikipedia_extracts?: Json[] | null
@@ -210,7 +218,6 @@ export type Database = {
           initial_perspective?: string | null
           new_concepts?: boolean | null
           premises?: string | null
-          sources?: string[] | null
           takeaway?: string | null
           user_id?: string | null
           wikipedia_extracts?: Json[] | null

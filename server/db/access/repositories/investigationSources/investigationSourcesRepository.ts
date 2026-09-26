@@ -7,7 +7,12 @@ import {
 } from "@elenchus/contracts/schemas/investigations/InvestigationSourceSchema";
 import { validateServerOrThrow } from "../../../../core/validation/validateOrThrow.js";
 import { DbResult } from "../../../types/types.ts";
-import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import { AuthenticatedUserId } from "../../../../services/auth/authorization.ts";
+
+export type InsertableInvestigationSources = Pick<
+  Database["public"]["Tables"]["investigation_sources"]["Insert"],
+  "user_id" | "article_id" | "investigation_id"
+>[];
 
 export interface IInvestigationSourcesRepository {
   readonly select: IInvestigationSourceSelector;
@@ -27,10 +32,7 @@ export class InvestigationSourcesRepository implements IInvestigationSourcesRepo
 
 interface IInvestigationSourcesWriter {
   saveInvestigationSources(
-    payload: Array<{
-      article_id: ArticleSchemaType["id"];
-      investigation_id: InvestigationSchemaType["id"];
-    }>,
+    sources: InsertableInvestigationSources,
   ): Promise<DbResult<InvestigationSourceSchemaType[]>>;
 }
 
@@ -41,23 +43,17 @@ class InvestigationSourcesWriter implements IInvestigationSourcesWriter {
   ) {}
 
   public async saveInvestigationSources(
-    payload: Array<{
-      article_id: ArticleSchemaType["id"];
-      investigation_id: InvestigationSchemaType["id"];
-    }>,
+    sources: InsertableInvestigationSources,
   ): Promise<DbResult<InvestigationSourceSchemaType[]>> {
-    return this.executeSaveSources(payload);
+    return this.executeSaveSources(sources);
   }
 
   private async executeSaveSources(
-    payload: Array<{
-      article_id: ArticleSchemaType["id"];
-      investigation_id: InvestigationSchemaType["id"];
-    }>,
+    sources: InsertableInvestigationSources,
   ): Promise<DbResult<InvestigationSourceSchemaType[]>> {
     const { data, error } = await this.db
       .from("investigation_sources")
-      .insert(payload)
+      .insert(sources)
       .select();
 
     if (error) {
@@ -77,6 +73,7 @@ class InvestigationSourcesWriter implements IInvestigationSourcesWriter {
 
 interface IInvestigationSourceSelector {
   byInvestigationId(
+    userId: AuthenticatedUserId,
     id: InvestigationSchemaType["id"],
   ): Promise<DbResult<InvestigationSourceSchemaType[]>>;
 }
@@ -88,18 +85,21 @@ class InvestigationSourceSelector implements IInvestigationSourceSelector {
   ) {}
 
   public async byInvestigationId(
+    userId: AuthenticatedUserId,
     id: InvestigationSchemaType["id"],
   ): Promise<DbResult<InvestigationSourceSchemaType[]>> {
-    return await this.executeByInvestigationId(id);
+    return await this.executeByInvestigationId(userId, id);
   }
 
   private async executeByInvestigationId(
+    userId: AuthenticatedUserId,
     id: InvestigationSchemaType["id"],
   ): Promise<DbResult<InvestigationSourceSchemaType[]>> {
     const { data, error } = await this.db
       .from("investigation_sources")
       .select()
-      .eq("investigation_id", id);
+      .eq("investigation_id", id)
+      .eq("user_id", userId);
 
     if (error) {
       return {

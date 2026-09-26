@@ -7,6 +7,7 @@ export const InvestigationSourceSchema = Type.Object({
   created_at: Type.String({ minLength: 1 }),
   article_id: Type.Number(),
   investigation_id: Type.Number(),
+  user_id: Type.String({ minLength: 1 }),
 });
 
 export const InvestigationSourcesResponseSchema = Type.Union([
