@@ -16,7 +16,6 @@ import {
   InvestigationAndSourcesResponseSchema,
   InvestigationSaveResponse,
   InvestigationsSavedReponseSchema,
-  PersistInvestigationInputSchema,
   SaveInvestigationInputSchema,
 } from "../schemas/investigations/InvestigationSchema.js";
 import { SearchResultsResponseSchema } from "../schemas/articles/BrowsingOptionSchema.js";
@@ -33,10 +32,7 @@ import {
   FeedbackReqSchema,
   FeedbackResponseSchema,
 } from "../schemas/auth/FeedbackSchema.js";
-import {
-  BlueSkyPostSchemaArray,
-  SplitBlueSkyFeedSchema,
-} from "../schemas/integrations/BlueSkySchemas.js";
+import { SplitBlueSkyFeedSchema } from "../schemas/integrations/BlueSkySchemas.js";
 import { SearchQuerySchema } from "../schemas/integrations/SearchQuerySchema.js";
 import { WikiResponseSchema } from "../schemas/integrations/WikipediaExtractSchemas.js";
 import {

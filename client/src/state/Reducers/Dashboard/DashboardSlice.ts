@@ -7,8 +7,12 @@ import {
 } from "./thunks";
 import { InvestigationSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
-import { DashboardTab, OpenInvestigation, VirtuosoScrollPos } from "./types";
-import { BookmarkedArticlesResponseSchemaType } from "@elenchus/contracts/schemas/articles/BookmarkSchema";
+import {
+  DashboardTab,
+  OpenInvestigation,
+  OpenInvestigationExtracts,
+  VirtuosoScrollPos,
+} from "./types";
 
 export type SavedArticles = AsyncState<ArticleSchemaType[]>;
 
@@ -19,6 +23,7 @@ export type OpenedArticle = AsyncState<ArticleSchemaType>;
 export type ResearchToReviewState = {
   investigation: OpenInvestigation;
   sources: AsyncState<ArticleSchemaType[]>;
+  extracts: OpenInvestigationExtracts;
 };
 
 export type ResearchMetrics = {
@@ -50,6 +55,7 @@ const initialState: InitialState = {
   openInvestigation: {
     investigation: { status: "initial" },
     sources: { status: "initial" },
+    extracts: { status: "initial" },
   },
   tab: { kind: "metrics" },
   articleScrollPosition: { status: "initial" },
@@ -106,6 +112,7 @@ const DashboardSlice = createSlice({
       state.openInvestigation = {
         investigation: { status: "initial" },
         sources: { status: "initial" },
+        extracts: { status: "initial" },
       };
     },
     clearDashboardSlice: () => initialState,
@@ -164,6 +171,7 @@ const DashboardSlice = createSlice({
       state.openInvestigation = {
         investigation: { status: "pending" },
         sources: { status: "pending" },
+        extracts: { status: "pending" },
       };
     });
 
@@ -178,11 +186,15 @@ const DashboardSlice = createSlice({
           status: "failed",
           details: "Failed to hydrate sources of investigation",
         },
+        extracts: {
+          status: "failed",
+          details: "Failed to hydrate extracted terms from wikipedia",
+        },
       };
     });
 
     builder.addCase(hydrateOpenInvestigation.fulfilled, (state, action) => {
-      const { investigation, sources } = action.payload;
+      const { investigation, sources, extracts } = action.payload;
 
       if (investigation.ok === false) {
         state.openInvestigation.investigation = {
@@ -193,6 +205,18 @@ const DashboardSlice = createSlice({
         state.openInvestigation.investigation = {
           status: "ready",
           data: investigation.data,
+        };
+      }
+
+      if (extracts.ok === false) {
+        state.openInvestigation.extracts = {
+          status: "failed",
+          details: extracts.message,
+        };
+      } else {
+        state.openInvestigation.extracts = {
+          status: "ready",
+          data: extracts.data,
         };
       }
 

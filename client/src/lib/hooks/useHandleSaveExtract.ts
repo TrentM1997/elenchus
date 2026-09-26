@@ -7,22 +7,10 @@ import {
   selectWikiSummary,
 } from "@/state/Reducers/Investigate/wiki/WikiSlice";
 import { updateResearchExtracts } from "@/state/Reducers/Investigate/research/ResearchSlice";
-import { WikiDisambigResponse } from "../services/wiki/wiki";
+import type { ExtractsAndSources } from "@/state/Reducers/Investigate/research/types";
 import { wait } from "../helpers/formatting/Presentation";
 
-type SavePayload =
-  | {
-      kind: "summary";
-      title: string;
-      extract: string;
-      associatedArticle: string;
-    }
-  | {
-      kind: "disambig";
-      title: string;
-      candidates: WikiDisambigResponse["candidates"];
-      associatedArticle: string;
-    };
+type SavePayload = ExtractsAndSources["extracts"][number] & { associatedArticle: string };
 
 type SaveExtractionStatus = "initial" | "saved" | "pending" | "failed";
 
@@ -41,17 +29,13 @@ export const useHandleSaveExtract = ({
   const payload: SavePayload | null = useMemo(() => {
     if (summary) {
       return {
-        kind: "summary",
-        title: summary.title,
-        extract: summary.extract,
+        ...summary,
         associatedArticle: article_url,
       };
     }
     if (disambig) {
       return {
-        kind: "disambig",
-        title: disambig.title,
-        candidates: disambig.candidates,
+        ...disambig,
         associatedArticle: article_url,
       };
     }
@@ -70,7 +54,7 @@ export const useHandleSaveExtract = ({
     if (research.phase === "initial" || !("context" in research.data)) return;
     const version = ++saveVersion.current;
     setStatus("pending");
-    const extracts = research.data.context.wikipedia_extracts ?? [];
+    const extracts = research.data.context.extracts;
     const exists = extracts.some(extract => extract.title === payload.title);
     dispatch(updateResearchExtracts(exists
       ? extracts.filter(extract => extract.title !== payload.title)

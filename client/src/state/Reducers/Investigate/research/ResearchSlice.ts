@@ -3,7 +3,7 @@ import {
   PerspectiveFraming,
   ResearchReflection,
   SaveInvestigationState,
-  WikipediaTermsExtracted,
+  ExtractsAndSources,
   UserResearchType,
 } from "./types";
 
@@ -54,7 +54,7 @@ const ResearchSlice = createSlice({
 
     startEvidence: (
       state: ResearchState,
-      action: PayloadAction<WikipediaTermsExtracted>,
+      action: PayloadAction<ExtractsAndSources>,
     ) => {
       const research = state.research;
       if (research.phase !== "searching") return;
@@ -117,23 +117,23 @@ const ResearchSlice = createSlice({
     },
     updateResearchSources: (
       state: ResearchState,
-      action: PayloadAction<WikipediaTermsExtracted>,
+      action: PayloadAction<ExtractsAndSources["sources"]>,
     ) => {
       const research = state.research;
 
       if (research.phase === "initial" || !("context" in research.data)) return;
 
-      research.data.context = action.payload;
+      research.data.context.sources = action.payload;
     },
     updateResearchExtracts: (
       state: ResearchState,
-      action: PayloadAction<WikipediaTermsExtracted>,
+      action: PayloadAction<ExtractsAndSources["extracts"]>,
     ) => {
       const research = state.research;
 
       if (research.phase === "initial" || !("context" in research.data)) return;
 
-      research.data.context = action.payload;
+      research.data.context.extracts = action.payload;
     },
   },
 });

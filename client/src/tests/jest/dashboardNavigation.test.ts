@@ -49,6 +49,7 @@ const investigation = {
 };
 const openedInvestigation = {
   investigation: { ok: true as const, data: investigation },
+  extracts: { ok: true as const, data: [] },
   sources: { ok: true as const, data: [article] },
 };
 const setup = () => {
@@ -141,6 +142,7 @@ test("investigation sources are independent of bookmarked articles", () => {
     hydrateOpenInvestigation.fulfilled(
       {
         investigation: { ok: true, data: investigation },
+        extracts: { ok: true as const, data: [] },
         sources: { ok: true, data: [unbookmarkedSource] },
       },
       "open",
@@ -156,6 +158,7 @@ test("investigation sources are independent of bookmarked articles", () => {
     hydrateOpenInvestigation.fulfilled(
       {
         investigation: { ok: true, data: investigation },
+        extracts: { ok: true as const, data: [] },
         sources: { ok: true, data: [] },
       },
       "reopen",

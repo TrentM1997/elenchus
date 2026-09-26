@@ -78,8 +78,13 @@ test("extraction progress preserves Wikipedia context instead of replacing it wi
   client.poll.mockResolvedValueOnce(snapshot("pending"))
     .mockResolvedValueOnce(snapshot("fulfilled"));
   const task = store.dispatch(extractArticles(selected));
-  const context = { wikipedia_extracts: [{ title: "Existing research term" }] };
-  store.dispatch(updateResearchExtracts(context));
+  const extracts = [{
+    kind: "summary" as const, title: "Existing research term", extract: "Summary",
+    description: "A term", thumbnail: null,
+    pageUrl: "https://en.wikipedia.org/wiki/Term", lastUpdated: null,
+  }];
+  const context = { extracts, sources: [article.id] };
+  store.dispatch(updateResearchExtracts(extracts));
   await jest.advanceTimersByTimeAsync(0);
   const partialResearch = store.getState().investigation.research.research;
   await jest.advanceTimersByTimeAsync(1000);

@@ -22,7 +22,7 @@ export const useSaveInvestigation = (): SaveInvestigationHook => {
   const handleSave = async () => {
     if (research.phase !== "end" || articles.status !== "ready") return;
     const articleIds = articles.data.retrieved.map((article) => article.id);
-    await dispatch(saveInvgestigation({ research: research.data, articleIds }));
+    await dispatch(saveInvgestigation({ research: research.data, articleIds, extracts: research.data.context.extracts }));
   };
 
   return {

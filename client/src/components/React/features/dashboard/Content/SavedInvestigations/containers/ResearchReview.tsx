@@ -23,6 +23,9 @@ export default function ResearchReview({
   const sources = useSelector(
     (s: RootState) => s.dash.openInvestigation.sources,
   );
+  const extracts = useSelector(
+    (s: RootState) => s.dash.openInvestigation.extracts,
+  );
   const dispatch = useDispatch();
 
   const backTo = (): void => {
@@ -42,7 +45,7 @@ export default function ResearchReview({
             <ErrorBoundary>
               <DetailsTable investigation={state} />
               <SourcesFromResearch sources={sources} />
-              <Terms research={state} />
+              <Terms extracts={extracts} />
             </ErrorBoundary>
           </div>
         )}

@@ -148,6 +148,31 @@ export const WikiResponseSchema = Type.Union([
   WikiErrorResponseSchema,
 ]);
 
+export type WikiSummaryResponseSchemaType = Static<
+  typeof WikiSummaryResponseSchema
+>;
+
+export type WikiDisambigResponseSchemaType = Static<
+  typeof WikiDisambigResponseSchema
+>;
+
 export type WikiResponse = Static<typeof WikiResponseSchema>;
 export type WikiResponseSchemaType = Static<typeof WikiResponseSchema>;
 export type WikiDisambigCandidate = Static<typeof WikiDisambigCandidateSchema>;
+
+const CandidateRowSchema = Type.Object({
+  id: Type.String(),
+  extract_id: Type.String(),
+  extract_kind: Type.Literal("disambiguation"),
+  page_id: Type.Integer(),
+  title: Type.String(),
+  extract: Type.String(),
+  url: Type.String(),
+  thumbnail: Type.Union([Type.String(), Type.Null()]),
+  last_updated: Type.Union([Type.String(), Type.Null()]),
+  position: Type.Integer({ minimum: 0 }),
+});
+
+export const CandidateRowsSchema = Type.Array(CandidateRowSchema);
+
+export type ValidatedCandidateRow = Static<typeof CandidateRowsSchema>;

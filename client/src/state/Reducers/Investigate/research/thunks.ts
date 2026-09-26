@@ -1,7 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { serverClient } from "@/lib/services/client/serverClient";
 import { UserResearchType } from "./types";
-import { PersistInvestigationInputSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
+import {
+  ExtractsToPersistSchemaType,
+  PersistInvestigationInputSchemaType,
+} from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import { updateResearchPersistence } from "./ResearchSlice";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 
@@ -11,15 +14,15 @@ export const saveInvgestigation = createAsyncThunk(
     args: {
       research: Extract<UserResearchType, { phase: "completed" }>["data"];
       articleIds: ArticleSchemaType["id"][];
+      extracts: ExtractsToPersistSchemaType;
     },
     thunkAPI,
   ) => {
     thunkAPI.dispatch(updateResearchPersistence({ status: "pending" }));
-    const { articleIds } = args;
-    const { framing, context, reflection } = args.research;
+    const { articleIds, extracts } = args;
+    const { framing, reflection } = args.research;
     const input = {
       ...framing,
-      ...context,
       ...reflection,
     } satisfies PersistInvestigationInputSchemaType;
 
@@ -27,6 +30,7 @@ export const saveInvgestigation = createAsyncThunk(
       const result = await serverClient.privileged.user.write.investigation({
         investigation: input,
         articleIds,
+        extracts,
       });
       if (result.ok === false) {
         thunkAPI.dispatch(

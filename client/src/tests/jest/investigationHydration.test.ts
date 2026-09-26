@@ -22,6 +22,7 @@ test("a source failure leaves the investigation readable and ends source loading
     hydrateOpenInvestigation.fulfilled(
       {
         investigation: { ok: true, data: investigation },
+        extracts: { ok: true as const, data: [] },
         sources: { ok: false, message: "Could not load sources" },
       },
       "open",
@@ -31,11 +32,12 @@ test("a source failure leaves the investigation readable and ends source loading
 
   expect(state.openInvestigation).toEqual({
     investigation: { status: "ready", data: investigation },
+    extracts: { status: "ready", data: [] },
     sources: { status: "failed", details: "Could not load sources" },
   });
 });
 
-test("successful hydration still makes both sections ready", () => {
+test("successful hydration still makes all three sections ready", () => {
   const pending = reducer(
     undefined,
     hydrateOpenInvestigation.pending("open", investigation.id),
@@ -45,6 +47,7 @@ test("successful hydration still makes both sections ready", () => {
     hydrateOpenInvestigation.fulfilled(
       {
         investigation: { ok: true, data: investigation },
+        extracts: { ok: true as const, data: [] },
         sources: { ok: true, data: [] },
       },
       "open",
@@ -54,6 +57,22 @@ test("successful hydration still makes both sections ready", () => {
 
   expect(state.openInvestigation).toEqual({
     investigation: { status: "ready", data: investigation },
+    extracts: { status: "ready", data: [] },
     sources: { status: "ready", data: [] },
+  });
+});
+
+
+test("an extract failure ends extract loading while preserving the other sections", () => {
+  const pending = reducer(undefined, hydrateOpenInvestigation.pending("open", investigation.id));
+  const state = reducer(pending, hydrateOpenInvestigation.fulfilled({
+    investigation: { ok: true, data: investigation },
+    sources: { ok: true, data: [] },
+    extracts: { ok: false, message: "Could not load extracts" },
+  }, "open", investigation.id));
+  expect(state.openInvestigation).toEqual({
+    investigation: { status: "ready", data: investigation },
+    sources: { status: "ready", data: [] },
+    extracts: { status: "failed", details: "Could not load extracts" },
   });
 });

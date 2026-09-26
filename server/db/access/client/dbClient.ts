@@ -25,6 +25,10 @@ import {
   IInvestigationSourcesRepository,
   InvestigationSourcesRepository,
 } from "../repositories/investigationSources/investigationSourcesRepository.js";
+import {
+  IWikipediaExtractsRepository,
+  WikipediaExtractsRepository,
+} from "../repositories/wikipediaExtracts/wikipediaExtractsRepository.js";
 
 export interface IDbClient {
   readonly user: IUserRepository;
@@ -34,9 +38,11 @@ export interface IDbClient {
   readonly bookmarks: IBookmarksRepository;
   readonly feedback: IFeedbackRespository;
   readonly investigationSources: IInvestigationSourcesRepository;
+  readonly wikiExtracts: IWikipediaExtractsRepository;
 }
 
 export class DbClient implements IDbClient {
+  public readonly wikiExtracts: IWikipediaExtractsRepository;
   public readonly feedback: IFeedbackRespository;
   public readonly user: IUserRepository;
   public readonly articles: IArticlesRepository;
@@ -52,5 +58,6 @@ export class DbClient implements IDbClient {
     this.sources = new SourcesRepository(this.db);
     this.bookmarks = new BookmarksRepository(this.db);
     this.investigationSources = new InvestigationSourcesRepository(this.db);
+    this.wikiExtracts = new WikipediaExtractsRepository(this.db);
   }
 }

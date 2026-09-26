@@ -1,5 +1,6 @@
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import {
+  InvestigationAndSourcesResponseSchemaType,
   InvestigationSchemaType,
   InvestigationsSavedReponseSchemaType,
   PersistInvestigationInputSchemaType,
@@ -7,11 +8,26 @@ import {
 import { DbResult } from "../../db/types/types.ts";
 import { InvestigationSaveResult } from "../../db/access/repositories/investigations/investigationsRepository.ts";
 import { AuthenticatedUserId } from "../auth/authorization.ts";
+import { SavedExtractSchemaType } from "@elenchus/contracts/schemas/integrations/InvestigationExtractRowSchema";
+import { WikiResponseSchemaType } from "@elenchus/contracts/schemas/integrations/WikipediaExtractSchemas";
+
+export type SaveSourcesAndExtractsArgs = {
+  userId: AuthenticatedUserId;
+  extracts: SaveInvestigationParams["extracts"];
+  investigation_id: InvestigationSchemaType["id"];
+  articleIds: ArticleSchemaType["id"][];
+  result: Extract<InvestigationSaveResult, { ok: true }>["data"];
+};
+
+export type InvestigationExtractsToPersist =
+  | Extract<WikiResponseSchemaType, { kind: "summary" }>
+  | Extract<WikiResponseSchemaType, { kind: "disambiguation" }>;
 
 export type SaveInvestigationParams = {
   user_id: string | undefined | null;
   investigation: PersistInvestigationInputSchemaType;
   articleIds: ArticleSchemaType["id"][];
+  extracts: InvestigationExtractsToPersist[];
 };
 
 export type HydrateInvestigationParams = {
@@ -22,6 +38,7 @@ export type HydrateInvestigationParams = {
 export type HydrateInvestigationResult = {
   investigation: DbResult<InvestigationSchemaType>;
   sources: DbResult<ArticleSchemaType[]>;
+  extracts: DbResult<SavedExtractSchemaType[]>;
 };
 
 export type SaveSourcesParams = {
@@ -38,5 +55,5 @@ export interface IInvestigationService {
   ): Promise<InvestigationsSavedReponseSchemaType>;
   hydrateInvestigation(
     params: HydrateInvestigationParams,
-  ): Promise<HydrateInvestigationResult>;
+  ): Promise<InvestigationAndSourcesResponseSchemaType>;
 }

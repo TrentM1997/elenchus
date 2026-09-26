@@ -169,16 +169,18 @@ export function protectedRoutes(app: IAppServices, router: Router) {
     saveInvestigationRoute,
     wrapAsync(async (req, res) => {
       const userId = req.user.userId;
-      const { investigation, articleIds } = validateOrThrow(
-        saveInvestigationRoute.bodySchema,
-        req.body,
-      );
+      const {
+        investigation,
+        articleIds,
+        extracts = [],
+      } = validateOrThrow(saveInvestigationRoute.bodySchema, req.body);
 
       const result: Static<typeof saveInvestigationRoute.outputSchema> =
         await app.services.api.investigations.save({
           user_id: userId,
           investigation,
           articleIds,
+          extracts,
         });
 
       if (!result.ok) {

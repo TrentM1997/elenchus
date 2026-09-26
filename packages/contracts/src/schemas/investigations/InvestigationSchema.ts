@@ -3,6 +3,11 @@ import type { Static } from "@sinclair/typebox";
 import { PersistenceFailedResponseSchema } from "../auth/PersistenceFailedSchema.js";
 import { ArticleSchema } from "../articles/ArticleSchema.js";
 import { InvestigationSourcesResponseSchema } from "./InvestigationSourceSchema.js";
+import {
+  WikiSummaryResponseSchema,
+  WikiDisambigResponseSchema,
+} from "../integrations/WikipediaExtractSchemas.js";
+import { SavedExtractArraySchema } from "../integrations/InvestigationExtractRowSchema.js";
 
 export const PerspectiveSchema = Type.Union([
   Type.Literal("Neutral"),
@@ -36,9 +41,6 @@ export const InvestigationSchema = Type.Object({
   premises: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   takeaway: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   user_id: Type.Optional(Type.Union([Type.String(), Type.Null()])),
-  wikipedia_extracts: Type.Optional(
-    Type.Union([Type.Array(Type.Any()), Type.Null()]),
-  ),
 });
 
 export const InsertableInvestigationSchema = Type.Omit(InvestigationSchema, [
@@ -54,7 +56,22 @@ export const PersistInvestigationInputSchema = Type.Omit(
 export const SaveInvestigationInputSchema = Type.Object({
   investigation: PersistInvestigationInputSchema,
   articleIds: Type.Array(Type.Number()),
+  extracts: Type.Optional(
+    Type.Array(
+      Type.Union([WikiSummaryResponseSchema, WikiDisambigResponseSchema]),
+    ),
+  ),
 });
+
+export const ExtractsToPersistSchema = Type.Optional(
+  Type.Array(
+    Type.Union([WikiSummaryResponseSchema, WikiDisambigResponseSchema]),
+  ),
+);
+
+export type ExtractsToPersistSchemaType = Static<
+  typeof ExtractsToPersistSchema
+>;
 
 export type PersistInvestigationInputSchemaType = Static<
   typeof PersistInvestigationInputSchema
@@ -76,6 +93,18 @@ const InvestigationsSavedSchema = Type.Object({
   data: Type.Array(InvestigationSchema),
 });
 
+const ExtractsSelectedResponseSchema = Type.Union([
+  Type.Object({
+    ok: Type.Literal(true),
+    data: SavedExtractArraySchema,
+  }),
+  PersistenceFailedResponseSchema,
+]);
+
+export type ExtractsSelectedResponseSchemaType = Static<
+  typeof ExtractsSelectedResponseSchema
+>;
+
 export const InvestigationSaveResponse = Type.Union([
   InvestigationSavedSchema,
   PersistenceFailedResponseSchema,
@@ -84,6 +113,7 @@ export const InvestigationSaveResponse = Type.Union([
 export const InvestigationAndSourcesResponseSchema = Type.Object({
   investigation: InvestigationSaveResponse,
   sources: InvestigationSourcesResponseSchema,
+  extracts: ExtractsSelectedResponseSchema,
 });
 
 export type InvestigationAndSourcesResponseSchemaType = Static<
