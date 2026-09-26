@@ -5,10 +5,7 @@ import {
   hydrateOpenedArticle,
   hydrateOpenInvestigation,
 } from "./thunks";
-import {
-  InvestigationSchemaType,
-  InvestigationsSavedReponseSchemaType,
-} from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
+import { InvestigationSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import { DashboardTab, OpenInvestigation, VirtuosoScrollPos } from "./types";
 import { BookmarkedArticlesResponseSchemaType } from "@elenchus/contracts/schemas/articles/BookmarkSchema";
@@ -185,14 +182,29 @@ const DashboardSlice = createSlice({
     });
 
     builder.addCase(hydrateOpenInvestigation.fulfilled, (state, action) => {
-      const prev = state.openInvestigation;
+      const { investigation, sources } = action.payload;
 
-      if (action.payload.investigation.ok && action.payload.sources.ok) {
-        const sources = action.payload.sources.data;
-        const investigation = action.payload.investigation.data;
-        state.openInvestigation = {
-          investigation: { status: "ready", data: investigation },
-          sources: { status: "ready", data: sources },
+      if (investigation.ok === false) {
+        state.openInvestigation.investigation = {
+          status: "failed",
+          details: investigation.message,
+        };
+      } else {
+        state.openInvestigation.investigation = {
+          status: "ready",
+          data: investigation.data,
+        };
+      }
+
+      if (sources.ok === false) {
+        state.openInvestigation.sources = {
+          status: "failed",
+          details: sources.message,
+        };
+      } else {
+        state.openInvestigation.sources = {
+          status: "ready",
+          data: sources.data,
         };
       }
     });

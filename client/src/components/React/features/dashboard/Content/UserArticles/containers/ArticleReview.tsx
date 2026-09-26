@@ -5,7 +5,6 @@ import AsyncStateRenderer from "@/components/React/pipelines/AsyncStateRenderer"
 import { Suspense } from "react";
 import DelayedFallback from "@/components/React/global/fallbacks/DelayedFallback";
 import PendingState from "@/components/React/global/fallbacks/PendingState";
-import { selectArticleReviewState } from "@/state/Reducers/Dashboard/selectors";
 import Article from "@/components/React/global/Articles/SuccessFull/containers/Article";
 import { useHydrateOpenedArticle } from "@/lib/hooks/dashboard/hydration/useHydrateOpenedArticle";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
@@ -17,10 +16,7 @@ export default function ArticleReview({
   articleId: ArticleSchemaType["id"];
   backTo: () => void;
 }) {
-  useHydrateOpenedArticle(articleId);
-  const article = useSelector((s: RootState) =>
-    selectArticleReviewState(s, articleId),
-  );
+  const { article } = useHydrateOpenedArticle(articleId);
 
   return (
     <section

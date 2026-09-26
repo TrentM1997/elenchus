@@ -28,9 +28,9 @@ export type ResearchReflection = Pick<
   | "takeaway"
 >;
 
-export type SourcesAndExtracts = Pick<
+export type WikipediaTermsExtracted = Pick<
   PersistInvestigationInputSchemaType,
-  "sources" | "wikipedia_extracts"
+  "wikipedia_extracts"
 >;
 
 export type UserResearchType =
@@ -51,14 +51,14 @@ export type UserResearchType =
       phase: "evidence";
       data: {
         framing: PerspectiveFraming;
-        context: SourcesAndExtracts;
+        context: WikipediaTermsExtracted;
       };
     }
   | {
       phase: "reflection";
       data: {
         framing: PerspectiveFraming;
-        context: SourcesAndExtracts;
+        context: WikipediaTermsExtracted;
         reflection: ResearchReflection;
       };
     }
@@ -66,7 +66,7 @@ export type UserResearchType =
       phase: "completed";
       data: {
         framing: PerspectiveFraming;
-        context: SourcesAndExtracts;
+        context: WikipediaTermsExtracted;
         reflection: ResearchReflection;
       };
     }
@@ -74,7 +74,7 @@ export type UserResearchType =
       phase: "end";
       data: {
         framing: PerspectiveFraming;
-        context: SourcesAndExtracts;
+        context: WikipediaTermsExtracted;
         reflection: ResearchReflection;
       };
     };

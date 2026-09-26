@@ -6,7 +6,7 @@ import { serverClient } from "../../lib/services/client/serverClient";
 import reducer, { closeNotification, resetReadingSlice, incrementStoryBy } from "../../state/Reducers/Investigate/articles/ExtractedArticles";
 import { extractionProgressReceived } from "../../state/Reducers/Investigate/articles/actions";
 import { extractArticles } from "../../state/Reducers/Investigate/articles/thunks";
-import researchReducer, { startFraming, startSearching } from "../../state/Reducers/Investigate/research/ResearchSlice";
+import researchReducer, { startFraming, startSearching, updateResearchExtracts } from "../../state/Reducers/Investigate/research/ResearchSlice";
 import { ExtractArticlesRouteHandler } from "../../lib/services/client/public/handlers/ExtractArticlesRouteHandler";
 import { HttpClient } from "../../lib/services/client/http/httpClient";
 import { RequestParser } from "../../lib/services/client/http/RequestParser";
@@ -51,7 +51,7 @@ const makeStore = () => {
   return store;
 };
 
-test("research sources follow partial and final persisted results", async () => {
+test("reading state receives partial and final persisted source articles", async () => {
   const store = makeStore();
   client.poll.mockResolvedValueOnce(snapshot("pending"))
     .mockResolvedValueOnce(snapshot("fulfilled", {
@@ -59,13 +59,34 @@ test("research sources follow partial and final persisted results", async () => 
     }));
   const task = store.dispatch(extractArticles(selected));
   await jest.advanceTimersByTimeAsync(0);
-  expect(store.getState().investigation.research.research).toMatchObject({
-    phase: "evidence", data: { context: { sources: [article.article_url], wikipedia_extracts: [] } },
+  expect(store.getState().investigation.research.research.phase).toBe("evidence");
+  expect(store.getState().investigation.read.articles).toEqual({
+    status: "partial", data: { retrieved: [article], failed: [failure] },
   });
   await jest.advanceTimersByTimeAsync(1000);
   await task;
+  expect(store.getState().investigation.read.articles).toEqual({
+    status: "ready", data: {
+      retrieved: [article, { ...article, id: 2, article_url: "https://example.com/c" }],
+      failed: [failure],
+    },
+  });
+});
+
+test("extraction progress preserves Wikipedia context instead of replacing it with source URLs", async () => {
+  const store = makeStore();
+  client.poll.mockResolvedValueOnce(snapshot("pending"))
+    .mockResolvedValueOnce(snapshot("fulfilled"));
+  const task = store.dispatch(extractArticles(selected));
+  const context = { wikipedia_extracts: [{ title: "Existing research term" }] };
+  store.dispatch(updateResearchExtracts(context));
+  await jest.advanceTimersByTimeAsync(0);
+  const partialResearch = store.getState().investigation.research.research;
+  await jest.advanceTimersByTimeAsync(1000);
+  await task;
+  expect(partialResearch).toMatchObject({ phase: "evidence", data: { context } });
   expect(store.getState().investigation.research.research).toMatchObject({
-    data: { context: { sources: [article.article_url, "https://example.com/c"] } },
+    phase: "evidence", data: { context },
   });
 });
 
