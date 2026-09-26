@@ -21,6 +21,7 @@ export interface IArticlesRepository {
   byId(
     article_id: ArticleSchemaType["id"],
   ): Promise<DbResult<ArticleSchemaType>>;
+  byIds(ids: ArticleSchemaType["id"][]): Promise<DbResult<ArticleSchemaType[]>>;
 }
 
 export class ArticlesRepository implements IArticlesRepository {
@@ -33,6 +34,12 @@ export class ArticlesRepository implements IArticlesRepository {
     return await this.executeSaveArticle(article);
   }
 
+  public async byIds(
+    ids: ArticleSchemaType["id"][],
+  ): Promise<DbResult<ArticleSchemaType[]>> {
+    return await this.executeByIds(ids);
+  }
+
   public async fromBookmarkIds(
     ids: BookmarkSchemaType["article_id"][],
   ): Promise<ArticlesFromBookmarks> {
@@ -43,6 +50,28 @@ export class ArticlesRepository implements IArticlesRepository {
     article_id: ArticleSchemaType["id"],
   ): Promise<DbResult<ArticleSchemaType>> {
     return await this.executeById(article_id);
+  }
+
+  private async executeByIds(
+    ids: ArticleSchemaType["id"][],
+  ): Promise<DbResult<ArticleSchemaType[]>> {
+    const { data, error } = await this.db
+      .from("articles")
+      .select()
+      .in("id", ids);
+
+    if (error) {
+      return {
+        ok: false,
+        message: error.message,
+        details: error.details,
+      };
+    }
+
+    return {
+      ok: true,
+      data: this.parser.validateArticles(data),
+    };
   }
 
   private async executeById(

@@ -14,6 +14,7 @@
     "prebuild": "tsc -p tsconfig.build.json && node dist/scripts/generateLogoMap.js",
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
+    "db:codegen": "npx supabase gen types typescript --project-id ovpngiqjmjwqsjgwrrph --schema public | Set-Content -Encoding utf8 types/databaseInterfaces.ts",
     "dev": "nodemon --watch src --watch core --watch services --watch schemas --watch integrations --watch db --ext ts,json --exec \"npm run build && npm start\""
   },
   "keywords": [],

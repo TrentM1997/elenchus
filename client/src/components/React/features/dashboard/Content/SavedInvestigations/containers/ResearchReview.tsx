@@ -17,7 +17,12 @@ export default function ResearchReview({
   investigationId: InvestigationSchemaType["id"];
 }) {
   useHydrateOpenedInvestigation(investigationId);
-  const investigation = useSelector((s: RootState) => s.dash.openInvestigation);
+  const investigation = useSelector(
+    (s: RootState) => s.dash.openInvestigation.investigation,
+  );
+  const sources = useSelector(
+    (s: RootState) => s.dash.openInvestigation.sources,
+  );
   const dispatch = useDispatch();
 
   const backTo = (): void => {
@@ -36,7 +41,7 @@ export default function ResearchReview({
           <div className="w-full h-full pb-20 overscroll-contain overflow-y-scroll no-scrollbar grow flex flex-col gap-y-24 items-center justify-start">
             <ErrorBoundary>
               <DetailsTable investigation={state} />
-              <SourcesFromResearch />
+              <SourcesFromResearch sources={sources} />
               <Terms research={state} />
             </ErrorBoundary>
           </div>

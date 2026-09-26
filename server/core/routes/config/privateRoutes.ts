@@ -3,7 +3,10 @@ import { PRIVATE_API_CONFIG } from "@elenchus/contracts";
 import { Router } from "express";
 import { IAppServices } from "../../../services/appServices.js";
 import { wrapAsync } from "../../async/wrapAsync.js";
-import { validateOrThrow, validateServerOrThrow } from "../../validation/validateOrThrow.js";
+import {
+  validateOrThrow,
+  validateServerOrThrow,
+} from "../../validation/validateOrThrow.js";
 import { ServerError } from "../../errors/ServerError.js";
 
 import { RouteRegistrar } from "./routeRegistrar.js";
@@ -22,7 +25,7 @@ export function protectedRoutes(app: IAppServices, router: Router) {
         req.body,
       );
       const result: Static<typeof deleteAccountRoute.outputSchema> =
-        await app.services.api.user.deleteAccount(
+        await app.services.api.user.account.deleteAccount(
           req.user?.userId,
           credentials,
         );
@@ -32,7 +35,10 @@ export function protectedRoutes(app: IAppServices, router: Router) {
       }
 
       req.auth.clearSessionCookies(res);
-      const data = validateServerOrThrow(deleteAccountRoute.outputSchema, result);
+      const data = validateServerOrThrow(
+        deleteAccountRoute.outputSchema,
+        result,
+      );
 
       res.success("User deleted successfully.", data, 200);
     }),
@@ -45,7 +51,7 @@ export function protectedRoutes(app: IAppServices, router: Router) {
     bookmarkedArticlesRoute,
     wrapAsync(async (req, res) => {
       const results: Static<typeof bookmarkedArticlesRoute.outputSchema> =
-        await app.services.api.user.articlesBookmarked(
+        await app.services.api.user.articles.articlesBookmarked(
           req.user?.userId,
         );
 
@@ -53,7 +59,10 @@ export function protectedRoutes(app: IAppServices, router: Router) {
         throw new ServerError(results.message, 500, results.details);
       }
 
-      const data = validateServerOrThrow(bookmarkedArticlesRoute.outputSchema, results);
+      const data = validateServerOrThrow(
+        bookmarkedArticlesRoute.outputSchema,
+        results,
+      );
 
       res.success("users saved articles retrieved successfully", data, 200);
     }),
@@ -73,7 +82,7 @@ export function protectedRoutes(app: IAppServices, router: Router) {
       const article_id = Number(articleId);
 
       const result: Static<typeof bookmarkedArticleRoute.outputSchema> =
-        await app.services.api.user.articleById({
+        await app.services.api.user.articles.articleById({
           user_id: userId,
           article_id,
         });
@@ -82,7 +91,10 @@ export function protectedRoutes(app: IAppServices, router: Router) {
         throw new ServerError(result.message, 404, result.details);
       }
 
-      const data = validateServerOrThrow(bookmarkedArticleRoute.outputSchema, result);
+      const data = validateServerOrThrow(
+        bookmarkedArticleRoute.outputSchema,
+        result,
+      );
 
       res.success("Article retrieved successfully", data, 200);
     }),
@@ -100,7 +112,7 @@ export function protectedRoutes(app: IAppServices, router: Router) {
         req.body,
       );
       const result: Static<typeof bookmarkRoute.outputSchema> =
-        await app.services.api.user.bookmark({
+        await app.services.api.user.articles.bookmark({
           user_id: userId,
           article_id,
         });
@@ -132,7 +144,7 @@ export function protectedRoutes(app: IAppServices, router: Router) {
       const article_id = Number(articleId);
 
       const result: Static<typeof deleteBookmarkRoute.outputSchema> =
-        await app.services.api.user.removeBookmark({
+        await app.services.api.user.articles.removeBookmark({
           user_id: userId,
           article_id,
         });
@@ -141,7 +153,10 @@ export function protectedRoutes(app: IAppServices, router: Router) {
         throw new ServerError("Failed to remove bookmark", 500, result.message);
       }
 
-      const data = validateServerOrThrow(deleteBookmarkRoute.outputSchema, result);
+      const data = validateServerOrThrow(
+        deleteBookmarkRoute.outputSchema,
+        result,
+      );
 
       res.success("Bookmark deleted successfully", data, 200);
     }),
@@ -154,16 +169,17 @@ export function protectedRoutes(app: IAppServices, router: Router) {
     saveInvestigationRoute,
     wrapAsync(async (req, res) => {
       const userId = req.user.userId;
-      const investigation = validateOrThrow(
+      const { investigation, articleIds } = validateOrThrow(
         saveInvestigationRoute.bodySchema,
         req.body,
       );
 
       const result: Static<typeof saveInvestigationRoute.outputSchema> =
-        await app.services.api.investigations.save(
-          userId,
+        await app.services.api.investigations.save({
+          user_id: userId,
           investigation,
-        );
+          articleIds,
+        });
 
       if (!result.ok) {
         throw new ServerError(
@@ -172,7 +188,10 @@ export function protectedRoutes(app: IAppServices, router: Router) {
           result.details,
         );
       }
-      const data = validateServerOrThrow(saveInvestigationRoute.outputSchema, result);
+      const data = validateServerOrThrow(
+        saveInvestigationRoute.outputSchema,
+        result,
+      );
 
       res.success("Investigation saved successfully", data, 200);
     }),
@@ -196,7 +215,10 @@ export function protectedRoutes(app: IAppServices, router: Router) {
         );
       }
 
-      const data = validateServerOrThrow(savedInvestigationsRoute.outputSchema, result);
+      const data = validateServerOrThrow(
+        savedInvestigationsRoute.outputSchema,
+        result,
+      );
 
       res.success("Saved investigations retreived successfully", data, 200);
     }),
@@ -215,19 +237,22 @@ export function protectedRoutes(app: IAppServices, router: Router) {
       );
 
       const result: Static<typeof savedInvestigationRoute.outputSchema> =
-        await app.services.api.investigations.getInvestigation({
+        await app.services.api.investigations.hydrateInvestigation({
           user_id: userId,
           investigation_id: Number(investigationId),
         });
 
-      if (!result.ok) {
+      if (!result.investigation.ok) {
         throw new ServerError(
           "Failed to retrieve investigation",
           404,
-          result.details,
+          result.investigation.details,
         );
       }
-      const data = validateServerOrThrow(savedInvestigationRoute.outputSchema, result);
+      const data = validateServerOrThrow(
+        savedInvestigationRoute.outputSchema,
+        result,
+      );
 
       res.success("Saved investigation retrieved", data, 200);
     }),

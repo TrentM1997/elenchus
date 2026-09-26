@@ -1,6 +1,8 @@
 import { Type } from "@sinclair/typebox";
 import type { Static } from "@sinclair/typebox";
 import { PersistenceFailedResponseSchema } from "../auth/PersistenceFailedSchema.js";
+import { ArticleSchema } from "../articles/ArticleSchema.js";
+import { InvestigationSourcesResponseSchema } from "./InvestigationSourceSchema.js";
 
 export const PerspectiveSchema = Type.Union([
   Type.Literal("Neutral"),
@@ -32,7 +34,6 @@ export const InvestigationSchema = Type.Object({
   expertise: ExpertiseSchema,
   new_concepts: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
   premises: Type.Optional(Type.Union([Type.String(), Type.Null()])),
-  sources: Type.Optional(Type.Union([Type.Array(Type.String()), Type.Null()])),
   takeaway: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   user_id: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   wikipedia_extracts: Type.Optional(
@@ -49,6 +50,11 @@ export const PersistInvestigationInputSchema = Type.Omit(
   InsertableInvestigationSchema,
   ["user_id"],
 );
+
+export const SaveInvestigationInputSchema = Type.Object({
+  investigation: PersistInvestigationInputSchema,
+  articleIds: Type.Array(Type.Number()),
+});
 
 export type PersistInvestigationInputSchemaType = Static<
   typeof PersistInvestigationInputSchema
@@ -74,6 +80,15 @@ export const InvestigationSaveResponse = Type.Union([
   InvestigationSavedSchema,
   PersistenceFailedResponseSchema,
 ]);
+
+export const InvestigationAndSourcesResponseSchema = Type.Object({
+  investigation: InvestigationSaveResponse,
+  sources: InvestigationSourcesResponseSchema,
+});
+
+export type InvestigationAndSourcesResponseSchemaType = Static<
+  typeof InvestigationAndSourcesResponseSchema
+>;
 
 export const InvestigationsSavedReponseSchema = Type.Union([
   InvestigationsSavedSchema,

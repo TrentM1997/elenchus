@@ -127,6 +127,42 @@ export type Database = {
           },
         ]
       }
+      investigation_sources: {
+        Row: {
+          article_id: number
+          created_at: string
+          id: string
+          investigation_id: number
+        }
+        Insert: {
+          article_id: number
+          created_at?: string
+          id?: string
+          investigation_id: number
+        }
+        Update: {
+          article_id?: number
+          created_at?: string
+          id?: string
+          investigation_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "investigation_sources_article_id_fkey"
+            columns: ["article_id"]
+            isOneToOne: false
+            referencedRelation: "articles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "investigation_sources_investigation_id_fkey"
+            columns: ["investigation_id"]
+            isOneToOne: false
+            referencedRelation: "investigations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       investigations: {
         Row: {
           biases: string | null

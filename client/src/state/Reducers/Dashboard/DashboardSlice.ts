@@ -5,15 +5,24 @@ import {
   hydrateOpenedArticle,
   hydrateOpenInvestigation,
 } from "./thunks";
-import { InvestigationSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
+import {
+  InvestigationSchemaType,
+  InvestigationsSavedReponseSchemaType,
+} from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import { DashboardTab, OpenInvestigation, VirtuosoScrollPos } from "./types";
+import { BookmarkedArticlesResponseSchemaType } from "@elenchus/contracts/schemas/articles/BookmarkSchema";
 
 export type SavedArticles = AsyncState<ArticleSchemaType[]>;
 
 type SavedInvestigations = AsyncState<InvestigationSchemaType[]>;
 
 export type OpenedArticle = AsyncState<ArticleSchemaType>;
+
+export type ResearchToReviewState = {
+  investigation: OpenInvestigation;
+  sources: AsyncState<ArticleSchemaType[]>;
+};
 
 export type ResearchMetrics = {
   bias: AsyncState<number[]>;
@@ -29,7 +38,7 @@ interface InitialState {
   tab: DashboardTab;
   articleScrollPosition: VirtuosoScrollPos;
   researchScrollPosition: VirtuosoScrollPos;
-  openInvestigation: OpenInvestigation;
+  openInvestigation: ResearchToReviewState;
 }
 
 const initialState: InitialState = {
@@ -41,7 +50,10 @@ const initialState: InitialState = {
     outcomes: { status: "initial" },
   },
   ArticleToReview: { status: "initial" },
-  openInvestigation: { status: "initial" },
+  openInvestigation: {
+    investigation: { status: "initial" },
+    sources: { status: "initial" },
+  },
   tab: { kind: "metrics" },
   articleScrollPosition: { status: "initial" },
   researchScrollPosition: { status: "initial" },
@@ -94,7 +106,10 @@ const DashboardSlice = createSlice({
       state.ArticleToReview = { status: "initial" };
     },
     clearOpenedInvestigation: (state: InitialState) => {
-      state.openInvestigation = { status: "initial" };
+      state.openInvestigation = {
+        investigation: { status: "initial" },
+        sources: { status: "initial" },
+      };
     },
     clearDashboardSlice: () => initialState,
   },
@@ -118,40 +133,68 @@ const DashboardSlice = createSlice({
       };
     });
 
-    builder.addCase(hydrateDashboard.fulfilled, (state, action) => {
-      const { articles, investigations } = action.payload;
-      if (articles.ok) {
-        if (articles.data.length > 0) {
-          state.articles = { status: "ready", data: articles.data };
+    builder.addCase(
+      hydrateDashboard.fulfilled,
+      (
+        state: InitialState,
+        action: PayloadAction<{
+          articles: ArticleSchemaType[];
+          investigations: InvestigationSchemaType[];
+        }>,
+      ) => {
+        const { articles, investigations } = action.payload;
+        if (articles.length > 0) {
+          state.articles = { status: "ready", data: articles };
         } else {
           state.articles = { status: "empty", message: "No data found" };
         }
-      }
 
-      if (investigations.ok) {
-        if (investigations.data.length > 0) {
-          state.investigations = { status: "ready", data: investigations.data };
+        if (investigations.length > 0) {
+          state.investigations = {
+            status: "ready",
+            data: investigations,
+          };
         } else {
-          state.investigations = { status: "empty", message: "No data found" };
+          state.investigations = {
+            status: "empty",
+            message: "No data found",
+          };
         }
-      }
-    });
+      },
+    );
 
     builder.addCase(hydrateOpenInvestigation.pending, (state) => {
-      state.openInvestigation = { status: "pending" };
+      state.openInvestigation = {
+        investigation: { status: "pending" },
+        sources: { status: "pending" },
+      };
     });
 
     builder.addCase(hydrateOpenInvestigation.rejected, (state, action) => {
       if (action.meta.aborted) return;
       state.openInvestigation = {
-        status: "failed",
-        details: "Failed to hydrate investigation",
+        investigation: {
+          status: "failed",
+          details: "Failed to hydrate investigation",
+        },
+        sources: {
+          status: "failed",
+          details: "Failed to hydrate sources of investigation",
+        },
       };
     });
 
     builder.addCase(hydrateOpenInvestigation.fulfilled, (state, action) => {
-      const investigation = action.payload.data;
-      state.openInvestigation = { status: "ready", data: investigation };
+      const prev = state.openInvestigation;
+
+      if (action.payload.investigation.ok && action.payload.sources.ok) {
+        const sources = action.payload.sources.data;
+        const investigation = action.payload.investigation.data;
+        state.openInvestigation = {
+          investigation: { status: "ready", data: investigation },
+          sources: { status: "ready", data: sources },
+        };
+      }
     });
 
     builder.addCase(hydrateOpenedArticle.pending, (state) => {

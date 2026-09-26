@@ -15,11 +15,14 @@ export const useSaveInvestigation = (): SaveInvestigationHook => {
   const research = useSelector(
     (state: RootState) => state.investigation.research.research,
   );
+  const articles = useSelector((s: RootState) => s.investigation.read.articles);
+
   const dispatch = useDispatch<AppDispatch>();
 
   const handleSave = async () => {
-    if (research.phase !== "end") return;
-    await dispatch(saveInvgestigation(research.data));
+    if (research.phase !== "end" || articles.status !== "ready") return;
+    const articleIds = articles.data.retrieved.map((article) => article.id);
+    await dispatch(saveInvgestigation({ research: research.data, articleIds }));
   };
 
   return {

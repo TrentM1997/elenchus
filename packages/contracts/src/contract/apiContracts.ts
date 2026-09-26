@@ -13,9 +13,11 @@ import {
 } from "../schemas/articles/BookmarkSchema.js";
 import { DeleteAccountResponseSchema } from "../schemas/auth/DeleteAccountResponseSchema.js";
 import {
+  InvestigationAndSourcesResponseSchema,
   InvestigationSaveResponse,
   InvestigationsSavedReponseSchema,
   PersistInvestigationInputSchema,
+  SaveInvestigationInputSchema,
 } from "../schemas/investigations/InvestigationSchema.js";
 import { SearchResultsResponseSchema } from "../schemas/articles/BrowsingOptionSchema.js";
 import {
@@ -153,13 +155,13 @@ export const PRIVATE_INVESTIGATIONS_API_CONTRACT = {
       path: "/user/investigations/:investigationId",
       method: "GET",
       paramsSchema: Type.Object({ investigationId: IdPathParamSchema }),
-      outputSchema: InvestigationSaveResponse,
+      outputSchema: InvestigationAndSourcesResponseSchema,
     },
   },
   post: {
     path: "/user/investigations",
     method: "POST",
-    bodySchema: PersistInvestigationInputSchema,
+    bodySchema: SaveInvestigationInputSchema,
     outputSchema: InvestigationSaveResponse,
   },
 } as const satisfies PrivateInvestigationsApiContract;

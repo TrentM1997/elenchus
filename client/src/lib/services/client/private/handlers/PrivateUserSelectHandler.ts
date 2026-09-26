@@ -4,6 +4,7 @@ import {
 } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import { BookmarkedArticlesResponseSchemaType } from "@elenchus/contracts/schemas/articles/BookmarkSchema";
 import {
+  InvestigationAndSourcesResponseSchemaType,
   InvestigationSaveResponseType,
   InvestigationSchemaType,
   InvestigationsSavedReponseSchemaType,
@@ -35,7 +36,7 @@ interface IInvestigationSelectHander {
   all(signal: AbortSignal): Promise<InvestigationsSavedReponseSchemaType>;
   byId(
     investigation_id: InvestigationSchemaType["id"],
-  ): Promise<InvestigationSaveResponseType>;
+  ): Promise<InvestigationAndSourcesResponseSchemaType>;
 }
 
 class InvestigationSelectHander implements IInvestigationSelectHander {
@@ -54,7 +55,7 @@ class InvestigationSelectHander implements IInvestigationSelectHander {
 
   public async byId(
     investigation_id: InvestigationSchemaType["id"],
-  ): Promise<InvestigationSaveResponseType> {
+  ): Promise<InvestigationAndSourcesResponseSchemaType> {
     const route = this.routes.investigations.get.single;
 
     return await this.http.request(route, {
