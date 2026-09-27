@@ -50,6 +50,7 @@ test.each(["article", "investigation"] as const)(
       : {
           investigation: { ok: true, data: investigation(id) },
           sources: { ok: true, data: [article(id)] },
+          extracts: { ok: true, data: [] },
         };
     byId.mockResolvedValueOnce(response(2));
     const nextRequest = isArticle
@@ -66,6 +67,7 @@ test.each(["article", "investigation"] as const)(
         : {
             investigation: { status: "ready", data: investigation(2) },
             sources: { status: "ready", data: [article(2)] },
+            extracts: { status: "ready", data: [] },
           });
   },
 );

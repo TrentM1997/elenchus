@@ -4,6 +4,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import reducer from "../../state/Reducers/Dashboard/DashboardSlice";
 import ArticleReview from "../../components/React/features/dashboard/Content/UserArticles/containers/ArticleReview";
 import type { RootState } from "../../state/store";
+import type { UserKind } from "../../state/Reducers/Athentication/Authentication";
 import type { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 
 jest.mock("../../lib/services/client/serverClient", () => ({ serverClient: {} }));
@@ -15,8 +16,8 @@ jest.mock("../../components/React/features/dashboard/ProfileNavigation/mobile/De
 }));
 jest.mock("../../components/React/global/Articles/SuccessFull/containers/Article", () => ({
   __esModule: true,
-  default: ({ articleData, investigating }: { articleData: ArticleSchemaType; investigating?: boolean }) => (
-    <article data-investigating={String(investigating)}>{articleData.full_text}</article>
+  default: ({ articleData, userKind }: { articleData: ArticleSchemaType; userKind: UserKind }) => (
+    <article data-user-kind={userKind}>{articleData.full_text}</article>
   ),
 }));
 
@@ -65,7 +66,7 @@ test("hydrated detail takes precedence over the bookmarked copy", () => {
 
 test("dashboard review renders a hydrated article without a bookmark", () => {
   const markup = renderReview({ status: "ready", data: saved }, []);
-  expect(markup).toContain('data-investigating="false"');
+  expect(markup).toContain('data-user-kind="authenticated"');
   expect(markup).toContain("Saved body");
   expect(markup).not.toContain("Loading article");
 });

@@ -53,3 +53,15 @@ export type DeleteBookmarkResponseSchemaType = Static<
 export type BookmarkResponseSchemaType = Static<typeof BookmarkResponseSchema>;
 
 export type BookmarkSchemaType = Static<typeof BookmarkSchema>;
+
+export const BookmarkRecordsResponseSchema = Type.Union([
+  Type.Object({
+    ok: Type.Literal(true),
+    data: Type.Array(BookmarkSchema),
+  }),
+  PersistenceFailedResponseSchema,
+]);
+
+export type BookmarkRecordsResponseSchemaType = Static<
+  typeof BookmarkRecordsResponseSchema
+>;

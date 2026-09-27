@@ -13,6 +13,7 @@ import { ActiveToast } from "./state/Reducers/RenderingPipelines/PipelineSlice";
 import { BrowsingOptionSchemaType } from "@elenchus/contracts/schemas/articles/BrowsingOptionSchema";
 import type { DashboardTab } from "./state/Reducers/Dashboard/types";
 import type { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import { BookmarkState } from "./lib/hooks/dashboard/events/useBookmarkSavedArticles";
 
 declare global {
   interface ImportMetaEnv {
@@ -259,6 +260,7 @@ declare global {
   interface SaveArticleButton {
     article: ArticleSchemaType;
     open: boolean;
+    bookmarked: boolean;
     reviewing?: boolean;
   }
 
@@ -372,11 +374,6 @@ declare global {
   interface SavedArticleRes {
     articles: SavedArticle[];
     articleMap: Map<string, SavedArticle>;
-  }
-
-  interface NotifySaved {
-    setNotification: React.Dispatch<React.SetStateAction<string | null>>;
-    message: string | null;
   }
 
   interface WikiTypes {

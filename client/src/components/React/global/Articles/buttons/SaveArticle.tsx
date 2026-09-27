@@ -2,13 +2,16 @@ import NotifySavedArticle from "../notifications/NotifySaved";
 import SaveArticleTooltip from "../tooltips/SaveArticleTooltip";
 import { useSaveArticle } from "@/lib/hooks/auth/useSaveArticle";
 import { AnimatePresence } from "framer-motion";
-import { useState } from "react";
 
-export default function Bookmark({ article, open }: SaveArticleButton) {
-  const { handleSaveArticle, status } = useSaveArticle({
-    article,
+export default function Bookmark({
+  article,
+  open,
+  bookmarked,
+}: SaveArticleButton) {
+  const { handleSaveArticle, setNotification, notification } = useSaveArticle({
+    articleId: article.id,
+    bookmarked,
   });
-  const [notification, setNotification] = useState<string | null>(null);
 
   return (
     <div
@@ -17,19 +20,17 @@ export default function Bookmark({ article, open }: SaveArticleButton) {
             w-full h-full self-start flex items-center justify-start 
             group/bookmark relative cursor-pointer`}
     >
-      {!notification && (
-        <SaveArticleTooltip isSaved={status === "bookmarked"} />
-      )}
+      {notification === "idle" && <SaveArticleTooltip isSaved={bookmarked} />}
       <AnimatePresence>
-        {notification && (
+        {notification !== "idle" && (
           <NotifySavedArticle
-            message={status}
+            message={notification}
             setNotification={setNotification}
           />
         )}
       </AnimatePresence>
 
-      <BookmarkSVG isSaved={status === "bookmarked"} />
+      <BookmarkSVG isSaved={bookmarked} />
     </div>
   );
 }

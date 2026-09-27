@@ -52,6 +52,7 @@ test(`each ${name} contract is registered once with its declared method`, () => 
   }
   const expected = routes(config)
     .map(route => `${route.method} ${route.path}`).sort();
+  assert.equal(new Set(expected).size, expected.length, "contract method/path pairs must be unique");
   const actual = router.stack.flatMap(layer => layer.route
     ? Object.keys(layer.route.methods).map(method => `${method.toUpperCase()} ${layer.route.path}`)
     : []).sort();
@@ -110,6 +111,7 @@ test("private routes convert validated path IDs and retain the authenticated use
       return {
         investigation: { ok: true, data: investigation },
         sources: { ok: true, data: [article] },
+        extracts: { ok: true, data: [] },
       };
     } },
   } } }, Router());
@@ -130,6 +132,7 @@ test("private routes convert validated path IDs and retain the authenticated use
     data: {
       investigation: { ok: true, data: investigation },
       sources: { ok: true, data: [article] },
+      extracts: { ok: true, data: [] },
     },
     status: 200,
   });

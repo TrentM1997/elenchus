@@ -57,6 +57,7 @@ export const ExtractedArticleSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+
       .addCase(extractArticles.pending, (state, action) => {
         state.articles = { status: "pending" };
         state.activeRequestId = action.meta.requestId;

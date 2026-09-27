@@ -9,6 +9,7 @@ import {
 } from "../../../db/access/repositories/bookmarks/bookmarksRepository.ts";
 import { BookmarkSchemaType } from "@elenchus/contracts/schemas/articles/BookmarkSchema";
 import { ServerError } from "../../../core/errors/ServerError.ts";
+import { BookmarkedArticlesResponse } from "../../../db/access/repositories/bookmarks/bookmarkSelectHandler.ts";
 
 type BookmarkOperation = {
   user_id: string | null | undefined;
@@ -16,6 +17,9 @@ type BookmarkOperation = {
 };
 
 export interface IUserArticleHandler {
+  bookmarkRecords(
+    user_id: string | undefined | null,
+  ): Promise<BookmarkedArticlesResponse>;
   bookmarkByArticleId(params: {
     user_id: string | null | undefined;
     article_id: ArticleSchemaType["id"];
@@ -28,7 +32,6 @@ export interface IUserArticleHandler {
     article_id: ArticleSchemaType["id"];
   }): Promise<DbResult<ArticleSchemaType>>;
   bookmark(params: BookmarkOperation): Promise<BookmarkResponse>;
-
   removeBookmark(params: BookmarkOperation): Promise<BookmarkDeleteResponse>;
 }
 
@@ -37,6 +40,12 @@ export class UserArticleHandler implements IUserArticleHandler {
     private readonly db: Pick<IDbClient, "articles" | "bookmarks">,
     private readonly policy: IAuthorization,
   ) {}
+
+  public async bookmarkRecords(
+    user_id: string | undefined | null,
+  ): Promise<BookmarkedArticlesResponse> {
+    return await this.getBookmarkRecords(user_id);
+  }
 
   public async articlesBookmarked(
     user_id: string | undefined | null,
@@ -71,12 +80,22 @@ export class UserArticleHandler implements IUserArticleHandler {
     return await this.executeBookmarkByArticleId(params);
   }
 
+  private async getBookmarkRecords(
+    user_id: string | undefined | null,
+  ): Promise<BookmarkedArticlesResponse> {
+    const userId = this.policy.requireAuthenticated(user_id);
+    return await this.db.bookmarks.select.all(userId);
+  }
+
   private async executeBookmarkByArticleId(params: {
     user_id: string | null | undefined;
     article_id: ArticleSchemaType["id"];
   }): Promise<DbResult<ArticleSchemaType>> {
     const userId = this.policy.requireAuthenticated(params.user_id);
-    const bookmark = await this.db.bookmarks.getById(userId, params.article_id);
+    const bookmark = await this.db.bookmarks.select.single(
+      userId,
+      params.article_id,
+    );
     if (bookmark.ok === false) {
       return bookmark;
     }
@@ -100,7 +119,7 @@ export class UserArticleHandler implements IUserArticleHandler {
     user_id: string | null | undefined,
   ): Promise<ArticlesFromBookmarks> {
     const userId = this.policy.requireAuthenticated(user_id);
-    const bookmarks = await this.db.bookmarks.getBookmarks(userId);
+    const bookmarks = await this.db.bookmarks.select.all(userId);
 
     if (!bookmarks.ok) {
       throw new ServerError(
@@ -157,7 +176,7 @@ export class UserArticleHandler implements IUserArticleHandler {
     article_id: number,
   ) {
     const userId = this.policy.requireAuthenticated(user_id);
-    return await this.db.bookmarks.deleteBookmark(userId, article_id);
+    return await this.db.bookmarks.write.delete(userId, article_id);
   }
 
   private async executeBookmark(
@@ -165,6 +184,6 @@ export class UserArticleHandler implements IUserArticleHandler {
     article_id: number,
   ): Promise<BookmarkResponse> {
     const userId = this.policy.requireAuthenticated(user_id);
-    return await this.db.bookmarks.bookmarkArticle(userId, article_id);
+    return await this.db.bookmarks.write.bookmark(userId, article_id);
   }
 }

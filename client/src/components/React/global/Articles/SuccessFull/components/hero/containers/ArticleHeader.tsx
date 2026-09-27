@@ -8,15 +8,18 @@ import ArticleImage from "../ArticleImage";
 import ArticleTitle from "../ArticleTitle";
 import PublishedBy from "../PublishedBy";
 import type { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import { UserKind } from "@/state/Reducers/Athentication/Authentication";
 
 interface ArticleHeaderProps {
   articleData: ArticleSchemaType;
-  investigating?: boolean;
+  userKind: UserKind;
+  bookmarked: boolean;
 }
 
 export default function ArticleHeader({
   articleData,
-  investigating,
+  userKind,
+  bookmarked,
 }: ArticleHeaderProps): JSX.Element {
   const [open, setOpen] = useState(false);
 
@@ -33,9 +36,13 @@ export default function ArticleHeader({
       <div className="mt-5 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-4 sm:mt-6">
         <ArticleMetaData article={articleData} />
         <div className="ml-auto flex shrink-0 items-center gap-2">
-          {investigating && (
+          {userKind === "authenticated" && (
             <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] p-2 transition-colors hover:bg-white/10 [&_svg]:h-6 [&_svg]:w-6">
-              <SaveArticle open={open} article={articleData} />
+              <SaveArticle
+                open={open}
+                article={articleData}
+                bookmarked={bookmarked}
+              />
             </div>
           )}
           <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] transition-colors hover:bg-white/10">

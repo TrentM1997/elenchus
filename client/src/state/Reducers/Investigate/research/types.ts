@@ -2,17 +2,9 @@ import {
   InvestigationSaveResponseType,
   PersistInvestigationInputSchemaType,
 } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
-import { WikiDisambigCandidate } from "@/lib/services/wiki/wiki";
 import { AsyncState } from "@/state/types";
 import { WikiResponseSchemaType } from "@elenchus/contracts/schemas/integrations/WikipediaExtractSchemas";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
-
-export interface Extracts {
-  title: string;
-  extract?: string;
-  associatedArticle: string;
-  candidates?: WikiDisambigCandidate[];
-}
 
 export type SaveInvestigationState = AsyncState<InvestigationSaveResponseType>;
 

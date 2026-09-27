@@ -57,7 +57,7 @@ export type PrivateInvestigationsApiContract = {
 };
 
 export type PrivateBookmarksApiContract = {
-  get: Record<"all" | "single", RouteConfigDefinition>;
+  get: Record<"all" | "single" | "records", RouteConfigDefinition>;
   post: RouteConfigDefinition;
   delete: RouteConfigDefinition;
 };

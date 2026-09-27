@@ -12,7 +12,10 @@ import {
   IInvestigationsRepository,
   InvestigationsRepository,
 } from "../repositories/investigations/investigationsRepository.js";
-import { SourcesRepository } from "../repositories/sources/sourcesRepository.js";
+import {
+  SourcesRepository,
+  ISourcesRepository,
+} from "../repositories/sources/sourcesRepository.js";
 import {
   IBookmarksRepository,
   BookmarksRepository,
@@ -34,7 +37,7 @@ export interface IDbClient {
   readonly user: IUserRepository;
   readonly articles: IArticlesRepository;
   readonly investigations: IInvestigationsRepository;
-  readonly sources: SourcesRepository;
+  readonly sources: ISourcesRepository;
   readonly bookmarks: IBookmarksRepository;
   readonly feedback: IFeedbackRespository;
   readonly investigationSources: IInvestigationSourcesRepository;
@@ -47,7 +50,7 @@ export class DbClient implements IDbClient {
   public readonly user: IUserRepository;
   public readonly articles: IArticlesRepository;
   public readonly investigations: IInvestigationsRepository;
-  public readonly sources: SourcesRepository;
+  public readonly sources: ISourcesRepository;
   public readonly bookmarks: IBookmarksRepository;
   public readonly investigationSources: IInvestigationSourcesRepository;
   constructor(private readonly db: SupabaseClient<Database>) {

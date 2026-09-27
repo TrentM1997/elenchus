@@ -100,3 +100,16 @@ export const saveThisArticle = createAsyncThunk(
     }
   },
 );
+
+export const deleteSavedArticle = createAsyncThunk(
+  "ExtractedArticles/deleteSavedArticle",
+  async (article_id: ArticleSchemaType["id"], thunkAPI) => {
+    try {
+      return await serverClient.privileged.user.write.unBookmark(article_id);
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err instanceof Error ? err.message : "Failed to save article",
+      );
+    }
+  },
+);

@@ -4,6 +4,12 @@ import {
   InvestigationSchemaType,
 } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import { AsyncState } from "@/state/types";
+import { BookmarkSchemaType } from "@elenchus/contracts/schemas/articles/BookmarkSchema";
+
+export type DashboardBookmarkState = AsyncState<
+  BookmarkSchemaType[],
+  "No bookmark records found"
+>;
 
 export type WikipediaExtractsSaved = Extract<
   ExtractsSelectedResponseSchemaType,

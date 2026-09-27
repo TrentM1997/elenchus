@@ -1,5 +1,3 @@
-import { RootState } from "@/state/store";
-import { useSelector } from "react-redux";
 import DetailView from "../../../ProfileNavigation/mobile/DetailView";
 import AsyncStateRenderer from "@/components/React/pipelines/AsyncStateRenderer";
 import { Suspense } from "react";
@@ -8,6 +6,7 @@ import PendingState from "@/components/React/global/fallbacks/PendingState";
 import Article from "@/components/React/global/Articles/SuccessFull/containers/Article";
 import { useHydrateOpenedArticle } from "@/lib/hooks/dashboard/hydration/useHydrateOpenedArticle";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import { useBookmarkRecords } from "@/lib/hooks/articles/useBookmarkRecords";
 
 export default function ArticleReview({
   articleId,
@@ -16,6 +15,7 @@ export default function ArticleReview({
   articleId: ArticleSchemaType["id"];
   backTo: () => void;
 }) {
+  const { articlesBookmarked } = useBookmarkRecords();
   const { article } = useHydrateOpenedArticle(articleId);
 
   return (
@@ -33,7 +33,11 @@ export default function ArticleReview({
         <AsyncStateRenderer state={article} pending={() => <ReviewPending />}>
           {(state) => (
             <Suspense fallback={<ReviewPending />}>
-              <Article investigating={false} articleData={state} />
+              <Article
+                userKind={"authenticated"}
+                articleData={state}
+                bookmarked={articlesBookmarked.has(articleId)}
+              />
             </Suspense>
           )}
         </AsyncStateRenderer>

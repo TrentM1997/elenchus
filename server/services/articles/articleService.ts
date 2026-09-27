@@ -54,13 +54,13 @@ export class ArticleService implements IArticleService {
     try {
       const biases = await this.db.sources.getBiases(articles);
 
-      await this.firecrawl.runFirecrawlJob(
-        jobId,
+      await this.firecrawl.runFirecrawlJob({
+        id: jobId,
         articles,
-        biases,
-        this.jobs,
-        this.save.bind(this),
-      );
+        MBFC_DATA: biases,
+        jobs: this.jobs,
+        persistArticle: this.save.bind(this),
+      });
     } catch (error) {
       this.jobs[jobId] = {
         ...this.jobs[jobId],

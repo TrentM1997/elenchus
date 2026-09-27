@@ -1,6 +1,6 @@
-import { ServerError } from "../../core/errors/ServerError.js";
+import { ServerError } from "../../core/errors/ServerError.ts";
 import { BrowsingOption } from "../../types/types.ts";
-import { INewsApiParser, NewsApiParser } from "./articleParser.js";
+import { INewsApiParser, NewsApiParser } from "./newsApiParser.ts";
 
 export interface INewsAPIService {
   search(query: string): Promise<BrowsingOption[][]>;

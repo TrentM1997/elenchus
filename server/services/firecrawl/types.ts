@@ -1,6 +1,7 @@
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import { InsertableArticleSchemaType } from "../../schemas/ArticleSchema.js";
-import { FailedAttempt, FcParam } from "../../types/types.js";
+import { FailedAttempt } from "../../types/types.js";
+import type { ArticleToExtractSchemaType } from "@elenchus/contracts/schemas/articles/FirecrawlExtractionSchemas";
 
 export interface JobResult {
   status: "pending" | "fulfilled" | "rejected";
@@ -15,7 +16,7 @@ export interface JobResult {
 
 export type RunFirecrawlJobParameters = {
   id: string;
-  articles: FcParam[];
+  articles: ArticleToExtractSchemaType[];
   MBFC_DATA: any;
   jobs: Record<string, JobResult>;
   persistArticle: (

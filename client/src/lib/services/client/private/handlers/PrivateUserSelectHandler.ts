@@ -2,7 +2,10 @@ import {
   ArticleSchemaType,
   GetArticleResponseSchemaType,
 } from "@elenchus/contracts/schemas/articles/ArticleSchema";
-import { BookmarkedArticlesResponseSchemaType } from "@elenchus/contracts/schemas/articles/BookmarkSchema";
+import {
+  BookmarkedArticlesResponseSchemaType,
+  BookmarkRecordsResponseSchemaType,
+} from "@elenchus/contracts/schemas/articles/BookmarkSchema";
 import {
   InvestigationAndSourcesResponseSchemaType,
   InvestigationSaveResponseType,
@@ -69,6 +72,7 @@ interface IBookmarkSelectHandler {
   byId(
     article_id: ArticleSchemaType["id"],
   ): Promise<GetArticleResponseSchemaType>;
+  records(signal: AbortSignal): Promise<BookmarkRecordsResponseSchemaType>;
 }
 
 class BookmarkSelectHandler implements IBookmarkSelectHandler {
@@ -83,13 +87,16 @@ class BookmarkSelectHandler implements IBookmarkSelectHandler {
     return await this.http.request(route, { signal });
   }
 
-  public async byId(
-    article_id: ArticleSchemaType["id"],
-  ): Promise<GetArticleResponseSchemaType> {
+  public async byId(article_id: ArticleSchemaType["id"]) {
     const route = this.routes.bookmarks.get.single;
 
     return await this.http.request(route, {
       params: { articleId: String(article_id) },
     });
+  }
+
+  public async records(signal: AbortSignal) {
+    const route = this.routes.bookmarks.get.records;
+    return await this.http.request(route, { signal });
   }
 }

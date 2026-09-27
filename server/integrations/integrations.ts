@@ -1,6 +1,6 @@
 import { BLUESKY_EMAIL, BLUESKY_PASSWORD } from "../src/Config.js";
 import { BlueSkyService, IBlueSkyService } from "./blueSky/blueSkyService.js";
-import { INewsAPIService, NewsAPIService } from "./newsApi/newsApiHandler.js";
+import { INewsAPIService, NewsAPIService } from "./newsApi/newsAPIService.ts";
 import { AtpAgent } from "@atproto/api";
 import {
   IWikipediaService,

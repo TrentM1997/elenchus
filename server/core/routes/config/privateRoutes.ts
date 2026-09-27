@@ -44,6 +44,29 @@ export function protectedRoutes(app: IAppServices, router: Router) {
     }),
   );
 
+  const bookmarkRecordsRoute = PRIVATE_API_CONFIG.bookmarks.get.records;
+
+  registrar.register(
+    router,
+    bookmarkRecordsRoute,
+    wrapAsync(async (req, res) => {
+      const userId = req.user.userId;
+      const result: Static<typeof bookmarkRecordsRoute.outputSchema> =
+        await app.services.api.user.articles.bookmarkRecords(userId);
+
+      if (result.ok === false) {
+        throw new ServerError(result.message, 500, result.details);
+      }
+
+      const data = validateServerOrThrow(
+        bookmarkRecordsRoute.outputSchema,
+        result,
+      );
+
+      res.success("bookmark records retrieved successfully", data, 200);
+    }),
+  );
+
   const bookmarkedArticlesRoute = PRIVATE_API_CONFIG.bookmarks.get.all;
 
   registrar.register(
