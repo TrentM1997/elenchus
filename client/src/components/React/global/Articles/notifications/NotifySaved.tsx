@@ -1,15 +1,24 @@
 import { motion } from "framer-motion";
-import { useEffect } from "react";
-import { NotifySaved } from "@/env";
+import { SetStateAction, useEffect } from "react";
 import { scaleUpDown } from "@/motion/variants";
 
+export type BookmarkNotificationMessage =
+  | "bookmarked"
+  | "unboomarked"
+  | "issue syncing with user records";
+
 export default function NotifySavedArticle({
-  message,
   setNotification,
-}: NotifySaved) {
+  message,
+}: {
+  setNotification: React.Dispatch<
+    SetStateAction<BookmarkNotificationMessage | "idle">
+  >;
+  message: BookmarkNotificationMessage;
+}) {
   useEffect(() => {
     const timer = window.setTimeout(() => {
-      setNotification(null);
+      setNotification("idle");
     }, 2000);
 
     return () => clearTimeout(timer);

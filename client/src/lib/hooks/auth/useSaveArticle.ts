@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { SetStateAction, useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/state/store";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
@@ -7,9 +7,14 @@ import {
   saveThisArticle,
 } from "@/state/Reducers/Investigate/articles/thunks";
 import { hydrateBookmarkRecords } from "@/state/Reducers/Dashboard/thunks";
+import { BookmarkNotificationMessage } from "@/components/React/global/Articles/notifications/NotifySaved";
 
 interface SaveArticleHook {
   handleSaveArticle: () => Promise<void>;
+  setNotification: React.Dispatch<
+    SetStateAction<BookmarkNotificationMessage | "idle">
+  >;
+  notification: BookmarkNotificationMessage | "idle";
 }
 
 interface SaveHookParams {
@@ -21,6 +26,9 @@ export function useSaveArticle({
   article,
   bookmarked,
 }: SaveHookParams): SaveArticleHook {
+  const [notification, setNotification] = useState<
+    BookmarkNotificationMessage | "idle"
+  >("idle");
   const dispatch = useDispatch<AppDispatch>();
 
   const handleSaveArticle = useCallback(async (): Promise<void> => {
@@ -30,18 +38,21 @@ export function useSaveArticle({
         if (!result.ok) {
           throw new Error("Bookmark delete attempt failed");
         }
+        setNotification("unboomarked");
       } else {
         const result = await dispatch(saveThisArticle(article.id)).unwrap();
         if (!result.ok) {
           throw new Error("Bookmark attempt failed");
         }
+        setNotification("bookmarked");
       }
     } catch (err) {
+      setNotification("issue syncing with user records");
       console.error(err);
     } finally {
       await dispatch(hydrateBookmarkRecords());
     }
   }, [dispatch, bookmarked]);
 
-  return { handleSaveArticle };
+  return { handleSaveArticle, setNotification, notification };
 }
