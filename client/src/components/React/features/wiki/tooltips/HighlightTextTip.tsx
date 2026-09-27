@@ -15,14 +15,14 @@ export default function HighlightTextTip() {
 
     return (
         <motion.div
-            className="w-full h-auto pb-8 pt-4"
+            className="w-full py-6"
             {...divProps}>
 
 
 
             <div className="flex items-center justify-center">
-                <p className="text-lg text-white text-wrap font-light p-4">
-                    To select a term you want explained, hold down left click while dragging over the term you want explained!
+                <p className="text-sm leading-7 text-zinc-300 font-light">
+                    Highlight a word or phrase in the article to look it up on Wikipedia.
                 </p>
             </div>
 

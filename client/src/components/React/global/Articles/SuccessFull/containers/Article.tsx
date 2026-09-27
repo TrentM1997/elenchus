@@ -1,15 +1,18 @@
+import { UserKind } from "@/state/Reducers/Athentication/Authentication";
 import ArticleHeader from "../components/hero/containers/ArticleHeader";
 import ArticleContent from "../components/text/ArticleContent";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 
 type ArticleProps = {
   articleData: ArticleSchemaType;
-  investigating?: boolean;
+  userKind: UserKind;
+  bookmarked: boolean;
 };
 
 export default function Article({
   articleData,
-  investigating,
+  userKind,
+  bookmarked,
 }: ArticleProps): JSX.Element | null {
   if (!articleData) return null;
 
@@ -22,8 +25,9 @@ export default function Article({
     >
       <div className="relative">
         <ArticleHeader
+          bookmarked={bookmarked}
           articleData={articleData}
-          investigating={investigating}
+          userKind={userKind}
         />
         <ArticleContent
           article_text={articleData.full_text}

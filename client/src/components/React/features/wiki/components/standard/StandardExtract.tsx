@@ -1,22 +1,19 @@
 import { useState, useRef } from "react";
 import { useScrollTrap } from "@/lib/hooks/rendering/useOverScrollTrap";
 import { AnimatePresence, motion } from "framer-motion";
-import { useAppSelector } from "@/state/hooks/useAppSelector";
-import { selectWikiSummary } from "@/state/Reducers/Investigate/wiki/WikiSlice";
-import { WikiSummaryResponse } from "@/lib/services/wiki/wiki";
+import { WikiSummaryResponseSchemaType } from "@elenchus/contracts/schemas/integrations/WikipediaExtractSchemas";
 
-export default function StandardExtract(): JSX.Element | null {
-  const summary: WikiSummaryResponse = useAppSelector(selectWikiSummary);
+export default function StandardExtract({
+  summary,
+}: {
+  summary: Extract<WikiSummaryResponseSchemaType, { kind: "summary" }>;
+}): JSX.Element | null {
   const [readExtract, setReadExtract] = useState<boolean>(false);
   const scrollRef = useRef(null);
   useScrollTrap(scrollRef);
 
-  if (!summary || !summary.extract || !summary.description) {
-    return null;
-  }
-
   return (
-    <motion.main className="2xl:min-h-36 relative min-w-full max-w-full h-auto flex flex-col gap-y-6 mb-6 items-center justify-between transition-all duration-400 ease-in-out ">
+    <motion.main className="relative flex w-full flex-col gap-5 pb-5">
       <AnimatePresence mode="popLayout">
         {!readExtract && summary.description && (
           <motion.div
@@ -33,7 +30,7 @@ export default function StandardExtract(): JSX.Element | null {
               scale: 1,
               transition: { type: "tween", duration: 0.2, delay: 0 },
             }}
-            className="text-white text-lg font-light tracking-tight flex flex-col h-full grow items-center justify-center "
+            className="w-full text-sm leading-7 font-light text-zinc-300"
           >
             {summary.description}
           </motion.div>
@@ -54,11 +51,11 @@ export default function StandardExtract(): JSX.Element | null {
               scale: 1,
               transition: { type: "tween", duration: 0.2 },
             }}
-            className="h-72 w-full border-b border-white/20 mt-4 overflow-y-hidden relative"
+            className="h-64 max-h-[40dvh] w-full overflow-hidden relative"
           >
             <div
               ref={scrollRef}
-              className="absolute inset-0 text-white 2xl:text-sm  overflow-y-scroll no-scrollbar lg:text-sm text-xs font-light tracking-tight"
+              className="absolute inset-0 overflow-y-auto overscroll-contain pr-2 text-sm leading-7 font-light text-zinc-300"
             >
               {summary.extract}
             </div>
@@ -69,8 +66,8 @@ export default function StandardExtract(): JSX.Element | null {
         <button
           onClick={() => setReadExtract((readExtract) => !readExtract)}
           type="button"
-          className="w-44 h-8 p-1.5 rounded-full bg-white flex items-center justify-center
-                 text-black  md:hover:bg-white/10 md:hover:text-white transition-all duration-200 ease-in-out"
+          className="w-full min-h-10 px-4 py-2 rounded-xl border border-white/10 bg-white/5 flex items-center justify-center
+                 text-sm text-zinc-200 hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
         >
           {readExtract ? "Read description" : "Read full extract"}
         </button>

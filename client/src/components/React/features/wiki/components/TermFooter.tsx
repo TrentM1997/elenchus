@@ -7,6 +7,7 @@ import TimeStamp from "./timestamp/TimeStamp";
 import { useHandleSaveExtract } from "@/lib/hooks/useHandleSaveExtract";
 
 export default function TermFooter({ article_url }: { article_url: string }) {
+  const userKind = useSelector((s: RootState) => s.auth.userKind);
   const extract = useSelector((s: RootState) => s.investigation.wiki.extract);
   const { handleSaveExtract, status, summary, disambig } = useHandleSaveExtract(
     { article_url },
@@ -15,12 +16,11 @@ export default function TermFooter({ article_url }: { article_url: string }) {
   return (
     <motion.footer
       className={`${extract.status === "ready" ? "opacity-100" : "opacity-0"} transition-opacity duration-200 ease-in
-        min-w-full h-16 flex shrink-0 items-center justify-between`}
+        w-full border-t border-white/10 pt-4 flex shrink-0 items-center justify-between gap-3`}
     >
       <TimeStamp disambig={disambig} summary={summary} />
-      <div className="h-6 w-6 cursor-pointer group relative">
-        {extract.status === "ready" && (
-          <>
+      {userKind === "authenticated" && extract.status === "ready" && (
+        <div className="h-9 w-9 rounded-xl border border-white/10 bg-white/5 p-2 hover:bg-white/10 transition-colors cursor-pointer group relative">
             <SaveExtractTooltip
               saved={status === "saved"}
               saving={status === "pending"}
@@ -29,9 +29,8 @@ export default function TermFooter({ article_url }: { article_url: string }) {
               saved={status === "saved"}
               handleSave={handleSaveExtract}
             />
-          </>
-        )}
-      </div>
+        </div>
+      )}
     </motion.footer>
   );
 }

@@ -1,49 +1,41 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "../../../../types/databaseInterfaces.js";
-import type { BiasSchemaType } from "@elenchus/contracts/schemas/articles/BiasSchema";
-import type { FcParam } from "../../../../types/types.js";
-
-interface NormalizedRatings {
-  bias: BiasSchemaType;
-  factual_reporting: string | null;
-  country: string | null;
-}
+import { DbResult } from "../../../types/types.ts";
+import { validateSchema } from "../../../../schemas/ValidateSchema.ts";
+import {
+  SourceRatingSchema,
+  SourceRatingSchemaType,
+} from "@elenchus/contracts/schemas/articles/SourceRatingSchemas";
+import type { ArticleToExtractSchemaType } from "@elenchus/contracts/schemas/articles/FirecrawlExtractionSchemas";
 
 interface LookupsType {
   source: string;
-  normalized: NormalizedRatings;
+  normalized: SourceRatingSchemaType;
+}
+
+export type SourceFactCheckRatingsMap = Map<string, LookupsType["normalized"]>;
+
+export interface ISourcesRepository {
+  getBiases(
+    articles: ArticleToExtractSchemaType[],
+  ): Promise<SourceFactCheckRatingsMap>;
 }
 
 export class SourcesRepository {
   constructor(private readonly db: SupabaseClient<Database>) {}
 
-  public async getBiases(articles: FcParam[]) {
+  public async getBiases(articles: ArticleToExtractSchemaType[]) {
     return await this.executeGetBiases(articles);
   }
 
-  private async executeGetBiases(articles: FcParam[]) {
-    const biasRatings = new Map<
-      string,
-      {
-        bias: BiasSchemaType;
-        factual_reporting: string | null;
-        country: string | null;
-      }
-    >();
+  private async executeGetBiases(articles: ArticleToExtractSchemaType[]) {
     const uniqueSources = Array.from(new Set(articles.map((a) => a.source)));
+    const lookups = this.getRatingsForSources(uniqueSources);
+    return await this.toBiasRatingsDto(lookups);
+  }
 
-    const lookups = uniqueSources.map(async (source): Promise<LookupsType> => {
-      const rating = await this.getSourceBiases(source);
-
-      return {
-        source,
-        normalized: {
-          bias: (rating?.bias as BiasSchemaType) ?? null,
-          factual_reporting: rating?.factual_reporting ?? null,
-          country: rating?.country ?? null,
-        },
-      };
-    });
+  private async toBiasRatingsDto(lookups: Promise<LookupsType>[]) {
+    const biasRatings = new Map<string, LookupsType["normalized"]>();
 
     const results = await Promise.all(lookups);
     for (const { source, normalized } of results)
@@ -52,37 +44,66 @@ export class SourcesRepository {
     return biasRatings;
   }
 
-  private async getSourceBiases(provider: string) {
-    try {
-      const { data, error } = await this.db
-        .from("sources")
-        .select("country,bias,factual_reporting,name")
-        .ilike("name", `%${provider}%`)
-        .limit(1);
+  private getRatingsForSources(sources: string[]) {
+    return sources.map(async (source) => {
+      const result = await this.selectSourceRatings(source);
 
-      if (error) {
-        console.error(
-          "[getMediaBiases] DB error for provider:",
-          provider,
-          error.message,
-        );
-        return null;
+      if (!result.ok) {
+        return {
+          source: source,
+          normalized: {
+            bias: "Unknown",
+            factual_reporting: null,
+            country: null,
+          } satisfies SourceRatingSchemaType,
+        };
       }
 
-      if (!data || data.length === 0) {
-        return null;
-      }
+      const rating = result.data;
 
-      const { country, bias, factual_reporting, name } = data[0];
+      return {
+        source,
+        normalized: rating,
+      };
+    });
+  }
 
-      return { country, bias, factual_reporting, name };
-    } catch (err) {
-      console.error(
-        "[getMediaBiases] Unexpected throw for provider:",
-        provider,
-        err,
-      );
-      return null;
+  private async selectSourceRatings(
+    provider: string,
+  ): Promise<DbResult<SourceRatingSchemaType>> {
+    const { data, error } = await this.db
+      .from("sources")
+      .select("country,bias,factual_reporting")
+      .ilike("name", `%${provider}%`)
+      .limit(1)
+      .single();
+
+    if (error) {
+      return {
+        ok: false,
+        message: error.message,
+        details: error.details,
+      };
     }
+
+    return this.validateSourceRatings(data);
+  }
+
+  private validateSourceRatings(
+    results: unknown,
+  ): DbResult<SourceRatingSchemaType> {
+    const result = validateSchema(SourceRatingSchema, results);
+
+    if (!result.ok) {
+      return {
+        ok: false,
+        message: "Invalid source ratings",
+        details: result.errors
+          .map((error) => `${error.path}: ${error.message}`)
+          .join("; "),
+      };
+    }
+
+    return { ok: true, data: result.data };
   }
 }

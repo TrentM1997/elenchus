@@ -259,6 +259,7 @@ declare global {
   interface SaveArticleButton {
     article: ArticleSchemaType;
     open: boolean;
+    bookmarked: boolean;
     reviewing?: boolean;
   }
 

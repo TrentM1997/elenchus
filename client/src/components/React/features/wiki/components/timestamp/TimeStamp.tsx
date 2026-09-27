@@ -18,9 +18,9 @@ export default function TimeStamp({ disambig, summary }): JSX.Element | null {
 
     return (
         <div className={`
-                text-zinc-400 text-sm font-light tracking-tight
+                text-zinc-400 text-xs font-light leading-5 tracking-tight
                 `}>
-            Last Updated: <span className="text-white">
+            Last Updated: <span className="text-zinc-300">
                 {lastChanged
                     ? lastChanged
                     : null

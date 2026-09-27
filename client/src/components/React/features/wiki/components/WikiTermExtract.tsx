@@ -36,9 +36,9 @@ export default function WikiTermExtract({ article_url }: WikiTerm) {
       animate="open"
       exit="closed"
       transition={{ type: "tween", duration: 0.2 }}
-      className="w-[17rem] h-80 xl:w-80 lg:h-auto p-2 rounded-3xl  
-            bg-black border border-border_gray z-30
-        flex flex-col items-center fixed lg:left-0.5 bottom-128 md:bottom-32 2xl:bottom-44 2xl:left-12"
+      className="w-[min(20rem,calc(100vw-2rem))] max-h-[calc(100dvh-8rem)] overflow-y-auto p-5 rounded-3xl
+            bg-[#18191c] border border-white/10 shadow-xl shadow-black/20 text-zinc-300 z-30
+        flex flex-col items-center fixed left-4 bottom-24 lg:left-0.5 md:bottom-32 2xl:bottom-44 2xl:left-12"
     >
       <div className="min-w-full max-w-full h-auto relative">
         <WikiModalHeader />
@@ -124,9 +124,9 @@ function Extract({ title }: ExtractTitle): JSX.Element | null {
       exit="closed"
       transition={{ type: "tween", duration: 0.2 }}
     >
-      <figcaption className="flex flex-col h-12 w-full items-center gap-y-2">
-        <h1 className="text-zinc-400 font-light text-center tracking-tight text-base mt-2">
-          <em>{title}</em>
+      <figcaption className="w-full pb-3 pt-5">
+        <h1 className="text-zinc-100 font-light tracking-tight text-lg">
+          {title}
         </h1>
       </figcaption>
       <Description />
@@ -150,9 +150,11 @@ function WikiModalHeader() {
 
   return (
     <>
-      <div
+      <button
+        type="button"
+        aria-label="Close Wikipedia extract"
         onClick={handleClose}
-        className="cursor-pointer transition-all duration-200 ease-in-out absolute w-8 h-8 top-0 right-0 rounded-full p-1 md:hover:bg-white/10"
+        className="absolute right-0 top-0 h-8 w-8 rounded-lg p-1.5 text-zinc-400 transition-colors hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -170,9 +172,9 @@ function WikiModalHeader() {
           <path d="M18 6l-12 12" />
           <path d="M6 6l12 12" />
         </svg>
-      </div>
-      <div className="w-full gap-x-2 px-2 mx-auto h-fit min-h-14 flex items-center justify-start">
-        <div className="w-7 h-7">
+      </button>
+      <div className="flex w-full items-center gap-3 border-b border-white/10 pb-4 pr-8">
+        <div className="h-9 w-9 shrink-0 rounded-full border border-white/10 bg-white/5 p-1.5">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width={"100%"}
@@ -195,7 +197,7 @@ function WikiModalHeader() {
           </svg>
         </div>
         <div className="w-auto h-fit">
-          <p className="text-zinc-400 font-light text-lg">Wikipedia Extract</p>
+          <p className="text-zinc-300 font-light text-sm tracking-tight">Wikipedia Extract</p>
         </div>
       </div>
     </>

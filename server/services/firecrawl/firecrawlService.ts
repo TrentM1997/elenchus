@@ -1,5 +1,5 @@
 import Firecrawl from "@mendable/firecrawl-js";
-import { Article, FailedAttempt, FcParam } from "../../types/types.js";
+import { FailedAttempt, FcParam } from "../../types/types.js";
 import {
   FirecrawlJobParser,
   IFirecrawlJobParser,
@@ -8,17 +8,13 @@ import {
   FirecrawlScrapeHandler,
   IFirecrawlScrapeHandler,
 } from "./scrape/firecrawlScrapeHandler.js";
-import { JobResult, RunFirecrawlJobParameters } from "./types.js";
+import { RunFirecrawlJobParameters } from "./types.js";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import { InsertableArticleSchemaType } from "../../schemas/ArticleSchema.js";
 
 export interface IFirecrawlService {
   runFirecrawlJob(
-    id: string,
-    articles: FcParam[],
-    MBFC_DATA: any,
-    jobs: Record<string, JobResult>,
-    persistArticle: RunFirecrawlJobParameters["persistArticle"],
+    params: RunFirecrawlJobParameters,
   ): Promise<ArticleSchemaType[]>;
 }
 
@@ -31,19 +27,9 @@ export class FirecrawlService implements IFirecrawlService {
   }
 
   public async runFirecrawlJob(
-    id: string,
-    articles: FcParam[],
-    MBFC_DATA: any,
-    jobs: Record<string, JobResult>,
-    persistArticle: RunFirecrawlJobParameters["persistArticle"],
+    params: RunFirecrawlJobParameters,
   ): Promise<ArticleSchemaType[]> {
-    return await this.executeFirecrawlJob({
-      id,
-      articles,
-      MBFC_DATA,
-      jobs,
-      persistArticle,
-    });
+    return await this.executeFirecrawlJob(params);
   }
 
   private async executeFirecrawlJob(params: RunFirecrawlJobParameters) {

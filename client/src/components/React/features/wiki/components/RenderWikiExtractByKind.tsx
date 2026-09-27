@@ -1,4 +1,3 @@
-import FailedState from "@/components/React/global/fallbacks/FailedState";
 import { assertNever } from "@/lib/helpers/asserts/assertNever";
 import type { WikiResponseSchemaType } from "@elenchus/contracts/schemas/integrations/WikipediaExtractSchemas";
 import DisambigExtract from "./disambig/DisambigExtract";
@@ -12,10 +11,10 @@ export default function RenderWikiExtractByKind({
 }) {
   switch (extract.kind) {
     case "summary": {
-      return <StandardExtract />;
+      return <StandardExtract summary={extract} />;
     }
     case "disambiguation": {
-      return <DisambigExtract key="disambing" />;
+      return <DisambigExtract disambig={extract} key="disambing" />;
     }
     case "error": {
       return <ExtractError key={"errormessage"} />;

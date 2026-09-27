@@ -7,6 +7,7 @@ import {
 } from "../schemas/articles/ArticleSchema.js";
 import {
   BookmarkArticleIdSchema,
+  BookmarkRecordsResponseSchema,
   BookmarkResponseSchema,
   BookmarkedArticlesResponseSchema,
   DeleteBookmarkResponseSchema,
@@ -174,6 +175,11 @@ export const PRIVATE_BOOKMARKS_API_CONTRACT = {
       method: "GET",
       paramsSchema: Type.Object({ articleId: IdPathParamSchema }),
       outputSchema: GetArticleResponseSchema,
+    },
+    records: {
+      path: "/user/bookmarks/records",
+      method: "GET",
+      outputSchema: BookmarkRecordsResponseSchema,
     },
   },
   post: {

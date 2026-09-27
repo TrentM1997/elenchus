@@ -3,6 +3,8 @@ import ArticleLoader from "@/components/React/global/Articles/loaders/ArticleLoa
 import FailedState from "@/components/React/global/fallbacks/FailedState";
 import PendingState from "@/components/React/global/fallbacks/PendingState";
 import { assertNever } from "@/lib/helpers/asserts/assertNever";
+import { BookmarkedArticlesSet } from "@/lib/hooks/articles/useBookmarkRecords";
+import { UserKind } from "@/state/Reducers/Athentication/Authentication";
 import { ArticleExtractionState } from "@/state/Reducers/Investigate/articles/types";
 import { Suspense, lazy } from "react";
 const Article = lazy(
@@ -13,9 +15,13 @@ const Article = lazy(
 export default function ExtractionRenderer({
   state,
   page,
+  userKind,
+  articlesBookmarked,
 }: {
   state: ArticleExtractionState;
   page: number;
+  userKind: UserKind;
+  articlesBookmarked: BookmarkedArticlesSet;
 }): JSX.Element | null {
   switch (state.status) {
     case "initial": {
@@ -47,7 +53,8 @@ export default function ExtractionRenderer({
             <Article
               key={article.article_url}
               articleData={article}
-              investigating={true}
+              userKind={userKind}
+              bookmarked={articlesBookmarked.has(article.id)}
             />
           </Suspense>
         </>

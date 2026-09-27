@@ -1,34 +1,47 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/state/store";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
-import { saveThisArticle } from "@/state/Reducers/Investigate/articles/thunks";
+import {
+  deleteSavedArticle,
+  saveThisArticle,
+} from "@/state/Reducers/Investigate/articles/thunks";
+import { hydrateBookmarkRecords } from "@/state/Reducers/Dashboard/thunks";
 
 interface SaveArticleHook {
   handleSaveArticle: () => Promise<void>;
-  status: "bookmarked" | "unbookmarked";
 }
 
 interface SaveHookParams {
   article: ArticleSchemaType;
+  bookmarked: boolean;
 }
 
-export function useSaveArticle({ article }: SaveHookParams): SaveArticleHook {
-  const [status, setStatus] = useState<"bookmarked" | "unbookmarked">(
-    "unbookmarked",
-  );
+export function useSaveArticle({
+  article,
+  bookmarked,
+}: SaveHookParams): SaveArticleHook {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleSaveArticle = useCallback(async (): Promise<void> => {
     try {
-      const result = await dispatch(saveThisArticle(article.id)).unwrap();
-      if (result.ok) {
-        setStatus("bookmarked");
+      if (bookmarked) {
+        const result = await dispatch(deleteSavedArticle(article.id)).unwrap();
+        if (!result.ok) {
+          throw new Error("Bookmark delete attempt failed");
+        }
+      } else {
+        const result = await dispatch(saveThisArticle(article.id)).unwrap();
+        if (!result.ok) {
+          throw new Error("Bookmark attempt failed");
+        }
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      await dispatch(hydrateBookmarkRecords());
     }
-  }, [dispatch]);
+  }, [dispatch, bookmarked]);
 
-  return { handleSaveArticle, status };
+  return { handleSaveArticle };
 }

@@ -1,88 +1,82 @@
 import { useState } from "react";
+import type { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 
+interface MoreProps {
+  setOpen: (open: boolean) => void;
+  articleData: Pick<ArticleSchemaType, "article_url" | "factual_reporting" | "country">;
+}
 
+const actionClassName = "flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-light text-zinc-300 transition-colors hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40";
 
-export default function More({ setOpen, articleData }) {
-    const [showSourceDetails, setShowSourceDetails] = useState<boolean>(false);
+export default function More({ setOpen, articleData }: MoreProps) {
+  const [showSourceDetails, setShowSourceDetails] = useState(false);
 
-    const toggleDetails = (): void => {
-        setShowSourceDetails((prev: boolean) => !prev);
-    }
+  return (
+    <div
+      className="absolute bottom-full right-0 z-30 mb-3 w-64 max-w-[calc(100vw-4rem)] rounded-2xl border border-white/10 bg-[#18191c] p-2 text-zinc-300 shadow-xl shadow-black/25"
+      onKeyDown={(event) => {
+        if (event.key === "Escape") setOpen(false);
+      }}
+    >
+      <div className="mb-1 flex items-center justify-between gap-4 px-3 py-1.5">
+        <span className="text-xs font-light tracking-tight text-zinc-400">
+          {showSourceDetails ? "Source info" : "Article options"}
+        </span>
+        <button
+          type="button"
+          aria-label="Close article options"
+          onClick={() => setOpen(false)}
+          className="-mr-1 flex h-8 w-8 items-center justify-center rounded-lg text-zinc-400 transition-colors hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+        >
+          <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+            <path d="m6 6 12 12M18 6 6 18" />
+          </svg>
+        </button>
+      </div>
 
-    return (
-        <div className="bg-black border border-border_gray z-30 rounded-md opacity-0 animate-fade-blur ease-soft
-        w-auto h-auto p-3 absolute bottom-0 right-10">
-            <div
-                onClick={() => { setOpen(false) }}
-                className="absolute right-1 top-1 hover:bg-white/10 rounded-md p-1 xs:h-7 xs:w-7 md:h-8 md:w-8 cursor-pointer z-30 pointer-events-auto">
-                <svg className="text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="100%" height="100%">
-                    <path d="M 39.486328 6.9785156 A 1.50015 1.50015 0 0 0 38.439453 7.4394531 L 24 21.878906 L 9.5605469 7.4394531 A 1.50015 1.50015 0 0 0 8.484375 6.984375 A 1.50015 1.50015 0 0 0 7.4394531 9.5605469 L 21.878906 24 L 7.4394531 38.439453 A 1.50015 1.50015 0 1 0 9.5605469 40.560547 L 24 26.121094 L 38.439453 40.560547 A 1.50015 1.50015 0 1 0 40.560547 38.439453 L 26.121094 24 L 40.560547 9.5605469 A 1.50015 1.50015 0 0 0 39.486328 6.9785156 z" fill="currentColor" />
-                </svg>
-            </div>
-            <div className="flex items-center justify-start relative">
+      {showSourceDetails ? (
+        <SourceDetails articleData={articleData} toggleDetails={() => setShowSourceDetails(false)} />
+      ) : (
+        <MoreOptions url={articleData.article_url} toggleDetails={() => setShowSourceDetails(true)} />
+      )}
+    </div>
+  );
+}
 
-                {!showSourceDetails && <MoreOptions url={articleData.article_url} toggleDetails={toggleDetails} />}
-
-                {showSourceDetails && <SourceDetails articleData={articleData} toggleDetails={toggleDetails} />}
-                {showSourceDetails && <div className="w-12 z-0 h-full pointer-events-auto" />}
-            </div>
-
+function SourceDetails({ articleData, toggleDetails }: {
+  articleData: MoreProps["articleData"];
+  toggleDetails: () => void;
+}) {
+  return (
+    <div>
+      <dl className="space-y-4 px-3 pb-4 pt-2 text-sm font-light tracking-tight">
+        <div className="space-y-1">
+          <dt className="text-xs text-zinc-400">Reporting integrity</dt>
+          <dd className="break-words text-zinc-200">{articleData.factual_reporting ?? "Unknown"}</dd>
         </div>
-    );
-};
-
-interface SourceDetails {
-    articleData: any,
-    toggleDetails: () => void
-}
-
-function SourceDetails({ articleData, toggleDetails }: SourceDetails): JSX.Element | null {
-
-
-    return (
-        <div className="w-full md:w-60 z-10 pointer-events-auto h-auto p-4 md:p-2 mr-6 md:mr-0 mt-2 md:mt-0 opacity-0 animate-fade-in ease-soft">
-            <ul className="flex flex-col gap-y-3">
-                <li className="text-white text-left cursor-pointer 
-                 xs:text-xs md:text-sm font-light tracking-tight text-nowrap">
-                    <span className="text-blue-400">Reporting integrity</span> • {articleData.factual_reporting ?? 'unknown'}
-                </li>
-                <li className="text-white text-left cursor-pointer 
-                 xs:text-xs md:text-sm font-light tracking-tight">
-                    <span className="text-blue-400">Country of origin</span> • {articleData.country ?? 'unknown'}
-                </li>
-                <li onClick={toggleDetails}
-                    className="text-white text-left hover:text-blue-400 transition-all cursor-pointer w-fit
-                duration-200 ease-in-out xs:text-xs md:text-sm font-light tracking-tight"
-                >
-                    &larr;<span className="text-white ml-2">back </span>
-                </li>
-            </ul>
+        <div className="space-y-1">
+          <dt className="text-xs text-zinc-400">Country of origin</dt>
+          <dd className="break-words text-zinc-200">{articleData.country ?? "Unknown"}</dd>
         </div>
-    )
-
+      </dl>
+      <div className="border-t border-white/10 pt-1">
+        <button type="button" onClick={toggleDetails} className={actionClassName}>
+          <span className="flex items-center gap-2"><span aria-hidden="true">←</span> Back</span>
+        </button>
+      </div>
+    </div>
+  );
 }
 
-interface MoreOptions {
-    url: string,
-    toggleDetails: () => void
-}
-
-function MoreOptions({ url, toggleDetails }: MoreOptions): JSX.Element | null {
-
-    return (
-        <ul className="w-full mx-auto flex flex-col gap-y-2 pr-12">
-            <li className="text-white text-left hover:text-blue-400 transition-all cursor-pointer 
-                duration-200 ease-in-out xs:text-xs md:text-sm font-light tracking-tight text-nowrap">
-                <a href={url} target="_blank">
-                    Visit source
-                </a>
-            </li>
-            <li onClick={toggleDetails}
-                className="text-white text-left hover:text-blue-400 transition-all cursor-pointer 
-                duration-200 ease-in-out xs:text-xs md:text-sm font-light tracking-tight"
-            >
-                Source info
-            </li>
-        </ul>
-    )
+function MoreOptions({ url, toggleDetails }: { url: string; toggleDetails: () => void }) {
+  return (
+    <div className="space-y-1">
+      <a href={url} target="_blank" rel="noopener noreferrer" className={actionClassName}>
+        Visit source <span aria-hidden="true" className="text-zinc-500">↗</span>
+      </a>
+      <button type="button" onClick={toggleDetails} className={actionClassName}>
+        Source info <span aria-hidden="true" className="text-zinc-500">→</span>
+      </button>
+    </div>
+  );
 }

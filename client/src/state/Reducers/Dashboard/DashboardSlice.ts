@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AsyncState } from "@/state/types";
 import {
+  hydrateBookmarkRecords,
   hydrateDashboard,
   hydrateOpenedArticle,
   hydrateOpenInvestigation,
@@ -8,6 +9,7 @@ import {
 import { InvestigationSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import {
+  DashboardBookmarkState,
   DashboardTab,
   OpenInvestigation,
   OpenInvestigationExtracts,
@@ -33,6 +35,8 @@ export type ResearchMetrics = {
 };
 
 interface InitialState {
+  bookmarkRequestId: string | null;
+  bookmarks: DashboardBookmarkState;
   articles: SavedArticles;
   investigations: SavedInvestigations;
   ArticleToReview: OpenedArticle;
@@ -44,6 +48,8 @@ interface InitialState {
 }
 
 const initialState: InitialState = {
+  bookmarkRequestId: null,
+  bookmarks: { status: "initial" },
   articles: { status: "initial" },
   investigations: { status: "initial" },
   metrics: {
@@ -119,6 +125,38 @@ const DashboardSlice = createSlice({
   },
 
   extraReducers(builder) {
+    builder.addCase(hydrateBookmarkRecords.pending, (state, action) => {
+      state.bookmarkRequestId = action.meta.requestId;
+      state.bookmarks = { status: "pending" };
+    });
+
+    builder.addCase(hydrateBookmarkRecords.rejected, (state, action) => {
+      if (state.bookmarkRequestId !== action.meta.requestId) return;
+      state.bookmarkRequestId = null;
+      if (action.meta.aborted) {
+        state.bookmarks = { status: "initial" };
+      } else {
+        state.bookmarks = {
+          status: "failed",
+          details: "Failed to retrieve bookmark records",
+        };
+      }
+    });
+
+    builder.addCase(hydrateBookmarkRecords.fulfilled, (state, action) => {
+      if (state.bookmarkRequestId !== action.meta.requestId) return;
+      state.bookmarkRequestId = null;
+      const result = action.payload;
+      if (result.length === 0) {
+        state.bookmarks = {
+          status: "empty",
+          message: "No bookmark records found",
+        };
+      } else {
+        state.bookmarks = { status: "ready", data: result };
+      }
+    });
+
     builder.addCase(hydrateDashboard.pending, (state: InitialState) => {
       state.articles = { status: "pending" };
       state.investigations = { status: "pending" };

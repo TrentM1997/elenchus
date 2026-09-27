@@ -15,7 +15,7 @@ export default function TermModalContainer({ children }: TermModalContainer): JS
             animate='open'
             exit='closed'
             transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
-            className="fixed inset-0 bg-black/40 flex items-center justify-center"
+            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm p-4 flex items-center justify-center"
         >
             {children}
         </motion.section>

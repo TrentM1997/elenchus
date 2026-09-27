@@ -3,6 +3,35 @@ import { InvestigationSchemaType } from "@elenchus/contracts/schemas/investigati
 import { serverClient } from "@/lib/services/client/serverClient";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
+export const hydrateBookmarkRecords = createAsyncThunk(
+  "DashboardSlice/hydrateBookmarkRecords",
+  async (_, thunkAPI) => {
+    const { signal } = thunkAPI;
+
+    try {
+      const results =
+        await serverClient.privileged.user.select.bookmarks.records(signal);
+      if (!results.ok) {
+        throw new Error("Failed to retrieve bookmark records");
+      }
+
+      return results.data;
+    } catch (err) {
+      if (signal.aborted) {
+        return thunkAPI.rejectWithValue(
+          "Bookmark records retrieval cancelled by user/navigation",
+        );
+      } else {
+        return thunkAPI.rejectWithValue(
+          err instanceof Error
+            ? err.message
+            : "Bookmark records retrieval failed",
+        );
+      }
+    }
+  },
+);
+
 export const hydrateDashboard = createAsyncThunk(
   "DashboardSlice/hydrateDashboard",
   async (_, thunkAPI) => {

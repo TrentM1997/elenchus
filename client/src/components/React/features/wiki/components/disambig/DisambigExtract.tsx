@@ -1,26 +1,22 @@
 import { useState, useRef, useMemo } from "react";
 import { useScrollTrap } from "@/lib/hooks/rendering/useOverScrollTrap";
 import { AnimatePresence, motion } from "framer-motion";
-import { useAppSelector } from "@/state/hooks/useAppSelector";
-import { selectWikiDisambig } from "@/state/Reducers/Investigate/wiki/WikiSlice";
-import {
-  WikiDisambigCandidate,
-  WikiDisambigResponse,
-} from "@/lib/services/wiki/wiki";
 import NavCandidates from "./buttons/NavDisambig";
 import Candidate from "./term/Candidate";
+import { WikiResponseSchemaType } from "@elenchus/contracts/schemas/integrations/WikipediaExtractSchemas";
 
-export default function DisambigExtract(): JSX.Element | null {
-  const disambig: WikiDisambigResponse = useAppSelector(selectWikiDisambig);
+export default function DisambigExtract({
+  disambig,
+}: {
+  disambig: Extract<WikiResponseSchemaType, { kind: "disambiguation" }>;
+}): JSX.Element | null {
   const candidates = disambig?.candidates ?? [];
   if (!candidates.length) return null;
   const scrollRef = useRef(null);
   const [page, setPage] = useState<number>(0);
   useScrollTrap(scrollRef);
   const terms = useMemo(() => {
-    return candidates?.filter(
-      (term: WikiDisambigCandidate) => term.extract !== "",
-    );
+    return candidates?.filter((term) => term.extract !== "");
   }, [candidates]);
 
   return (
