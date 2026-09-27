@@ -38,7 +38,7 @@ export function useSaveArticle({
         if (!result.ok) {
           throw new Error("Bookmark delete attempt failed");
         }
-        setNotification("unboomarked");
+        setNotification("unbookmarked");
       } else {
         const result = await dispatch(saveThisArticle(article.id)).unwrap();
         if (!result.ok) {

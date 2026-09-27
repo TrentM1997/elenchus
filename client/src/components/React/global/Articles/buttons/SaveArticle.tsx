@@ -1,35 +1,13 @@
-import { BookmarkState } from "@/lib/hooks/dashboard/events/useBookmarkSavedArticles";
-import NotifySavedArticle, {
-  BookmarkNotificationMessage,
-} from "../notifications/NotifySaved";
+import NotifySavedArticle from "../notifications/NotifySaved";
 import SaveArticleTooltip from "../tooltips/SaveArticleTooltip";
 import { useSaveArticle } from "@/lib/hooks/auth/useSaveArticle";
-import { RootState } from "@/state/store";
 import { AnimatePresence } from "framer-motion";
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import { DashboardBookmarkState } from "@/state/Reducers/Dashboard/types";
-
-function createBookmarkMessage(
-  status: DashboardBookmarkState["status"],
-  bookmarked: boolean,
-): BookmarkNotificationMessage {
-  if (status === "failed") {
-    return "issue syncing with user records";
-  } else if (status === "ready" && bookmarked === true) {
-    return "bookmarked";
-  } else {
-    return "unboomarked";
-  }
-}
 
 export default function Bookmark({
   article,
   open,
   bookmarked,
 }: SaveArticleButton) {
-  const status = useSelector((s: RootState) => s.dash.bookmarks.status);
-
   const { handleSaveArticle, setNotification, notification } = useSaveArticle({
     article,
     bookmarked,
@@ -46,7 +24,7 @@ export default function Bookmark({
       <AnimatePresence>
         {notification !== "idle" && (
           <NotifySavedArticle
-            message={createBookmarkMessage(status, bookmarked)}
+            message={notification}
             setNotification={setNotification}
           />
         )}

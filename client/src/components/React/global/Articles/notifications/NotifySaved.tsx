@@ -4,7 +4,7 @@ import { scaleUpDown } from "@/motion/variants";
 
 export type BookmarkNotificationMessage =
   | "bookmarked"
-  | "unboomarked"
+  | "unbookmarked"
   | "issue syncing with user records";
 
 export default function NotifySavedArticle({
