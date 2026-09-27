@@ -9,7 +9,7 @@ export default function Bookmark({
   bookmarked,
 }: SaveArticleButton) {
   const { handleSaveArticle, setNotification, notification } = useSaveArticle({
-    article,
+    articleId: article.id,
     bookmarked,
   });
 

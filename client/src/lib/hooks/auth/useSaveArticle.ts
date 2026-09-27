@@ -18,12 +18,12 @@ interface SaveArticleHook {
 }
 
 interface SaveHookParams {
-  article: ArticleSchemaType;
+  articleId: ArticleSchemaType["id"];
   bookmarked: boolean;
 }
 
 export function useSaveArticle({
-  article,
+  articleId,
   bookmarked,
 }: SaveHookParams): SaveArticleHook {
   const [notification, setNotification] = useState<
@@ -34,13 +34,13 @@ export function useSaveArticle({
   const handleSaveArticle = useCallback(async (): Promise<void> => {
     try {
       if (bookmarked) {
-        const result = await dispatch(deleteSavedArticle(article.id)).unwrap();
+        const result = await dispatch(deleteSavedArticle(articleId)).unwrap();
         if (!result.ok) {
           throw new Error("Bookmark delete attempt failed");
         }
         setNotification("unbookmarked");
       } else {
-        const result = await dispatch(saveThisArticle(article.id)).unwrap();
+        const result = await dispatch(saveThisArticle(articleId)).unwrap();
         if (!result.ok) {
           throw new Error("Bookmark attempt failed");
         }
@@ -52,7 +52,7 @@ export function useSaveArticle({
     } finally {
       await dispatch(hydrateBookmarkRecords());
     }
-  }, [dispatch, bookmarked]);
+  }, [dispatch, bookmarked, articleId]);
 
   return { handleSaveArticle, setNotification, notification };
 }
