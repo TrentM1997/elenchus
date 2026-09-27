@@ -22,7 +22,7 @@ export default function NotifySavedArticle({
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [message]);
 
   return (
     <motion.div
