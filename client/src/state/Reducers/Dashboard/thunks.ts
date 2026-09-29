@@ -74,30 +74,19 @@ export const hydrateOpenInvestigation = createAsyncThunk(
       const result =
         await serverClient.privileged.user.select.investigations.byId(
           investigation_id,
+          thunkAPI.signal,
         );
 
-      if (result.investigation.ok === false) {
+      if (result.ok === false) {
         throw new Error(
-          `Message: ${result.investigation.message} — Detials: ${result.investigation.details}`,
-        );
-      }
-
-      if (result.sources.ok === false) {
-        throw new Error(
-          `Message: ${result.sources.message} — Details: ${result.sources.details}`,
-        );
-      }
-
-      if (result.extracts.ok === false) {
-        throw new Error(
-          `Message: ${result.extracts.message} — Details: ${result.extracts.details}`,
+          `Message: ${result.message} — Detials: ${result.details}`,
         );
       }
 
       return {
-        investigation: result.investigation.data,
-        sources: result.sources.data,
-        extracts: result.extracts.data,
+        investigation: result.data.investigation,
+        sources: result.data.sources,
+        extracts: result.data.extracts,
       };
     } catch (err) {
       console.error(err);
@@ -112,8 +101,10 @@ export const hydrateOpenedArticle = createAsyncThunk(
   "DashboardSlice/hydrateOpenArticle",
   async (article_id: ArticleSchemaType["id"], thunkAPI) => {
     try {
-      const result =
-        await serverClient.privileged.user.select.bookmarks.byId(article_id);
+      const result = await serverClient.privileged.user.select.bookmarks.byId(
+        article_id,
+        thunkAPI.signal,
+      );
 
       if (result.ok === false) {
         throw new Error(

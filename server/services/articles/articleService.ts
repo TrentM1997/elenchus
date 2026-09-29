@@ -5,6 +5,7 @@ import { InsertableArticleSchemaType } from "../../schemas/ArticleSchema.js";
 import { FcParam } from "../../types/types.js";
 import { IFirecrawlService } from "../firecrawl/firecrawlService.js";
 import { JobResult } from "../firecrawl/types.js";
+import { assertNever } from "../../core/asserts/assertNever.ts";
 
 export interface IArticleService {
   extract(articles: FcParam[]): { jobId: string };
@@ -75,6 +76,8 @@ export class ArticleService implements IArticleService {
         error:
           error instanceof Error ? error.message : "Article extraction failed",
       };
+    } finally {
+      this.scheduleCompletedJobCleanup({ job: this.jobs[jobId], jobId });
     }
   }
 
@@ -86,5 +89,44 @@ export class ArticleService implements IArticleService {
       throw new ServerError(result.message, 500, result.details);
     }
     return result.data;
+  }
+
+  private scheduleCompletedJobCleanup({
+    job,
+    jobId,
+  }: {
+    job: JobResult | undefined;
+    jobId: string;
+  }): void {
+    if (job) {
+      switch (job.status) {
+        case "pending": {
+          break;
+        }
+        case "fulfilled": {
+          this.scheduleJobCleanup(jobId);
+          break;
+        }
+        case "rejected": {
+          this.scheduleJobCleanup(jobId);
+          break;
+        }
+
+        default: {
+          return assertNever(job.status);
+        }
+      }
+    }
+  }
+
+  private scheduleJobCleanup(jobId: string): void {
+    const timer = setTimeout(
+      () => {
+        delete this.jobs[jobId];
+      },
+      10 * 60 * 1000,
+    );
+
+    timer.unref();
   }
 }

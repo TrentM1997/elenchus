@@ -393,7 +393,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      save_complete_investigation: {
+        Args: {
+          p_article_ids: number[]
+          p_extracts: Json
+          p_investigation: Json
+          p_user_id: string
+        }
+        Returns: Json
+      }
     }
     Enums: {
       [_ in never]: never

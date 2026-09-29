@@ -1,18 +1,32 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "../../../../types/databaseInterfaces.js";
 import {
-  validateOrThrow,
-  validateServerOrThrow,
-} from "../../../../core/validation/validateOrThrow.js";
-import {
-  InvestigationSchemaType,
-  InvestigationSchema,
-  PersistInvestigationInputSchema,
-  PersistInvestigationInputSchemaType,
-  InsertableInvestigationSchemaType,
-} from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
+  IInvestigationsRepositoryParser,
+  InvestigationsRepositoryParser,
+} from "./InvestigationsRespositoryParser.ts";
+import { InvestigationSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import type { AuthenticatedUserId } from "../../../../services/auth/authorization.js";
 import { DbResult } from "../../../types/types.ts";
+import {
+  IWikipediaExtractsRepository,
+  WikipediaExtractsRepository,
+} from "../wikipediaExtracts/wikipediaExtractsRepository.js";
+import {
+  IInvestigationSourcesRepository,
+  InvestigationSourcesRepository,
+} from "../investigationSources/investigationSourcesRepository.js";
+import {
+  IInvestigationWriteHandler,
+  InvestigationWriteHandler,
+} from "./InvestigationWriteHandler.ts";
+import {
+  IInvestigationSelectHandler,
+  InvestigationSelectHandler,
+} from "./InvestigationSelectHandler.ts";
+import {
+  ArticlesRepository,
+  IArticlesRepository,
+} from "../articles/articlesRepository.ts";
 
 export type InvestigationSaveResult = DbResult<InvestigationSchemaType>;
 
@@ -22,177 +36,28 @@ export type InsertableInvestigation =
   Database["public"]["Tables"]["investigations"]["Insert"];
 
 export interface IInvestigationsRepository {
-  save(
-    investigation: unknown,
-    user_id: AuthenticatedUserId,
-  ): Promise<InvestigationSaveResult>;
-  getSavedInvestigations(
-    user_id: AuthenticatedUserId,
-  ): Promise<SavedInvestigationsResult>;
-  selectById(
-    user_id: AuthenticatedUserId,
-    investigation_id: InvestigationSchemaType["id"],
-  ): Promise<DbResult<InvestigationSchemaType>>;
+  readonly write: IInvestigationWriteHandler;
+  readonly select: IInvestigationSelectHandler;
 }
 
 export class InvestigationsRepository implements IInvestigationsRepository {
-  constructor(private readonly db: SupabaseClient<Database>) {}
-
-  public async getSavedInvestigations(
-    user_id: AuthenticatedUserId,
-  ): Promise<SavedInvestigationsResult> {
-    return await this.executeGetSavedInvestigations(user_id);
-  }
-
-  public async save(
-    investigation: unknown,
-    user_id: AuthenticatedUserId,
-  ): Promise<InvestigationSaveResult> {
-    return await this.executeSave(investigation, user_id);
-  }
-
-  public async selectById(
-    user_id: AuthenticatedUserId,
-    investigation_id: InvestigationSchemaType["id"],
-  ): Promise<DbResult<InvestigationSchemaType>> {
-    return await this.executeSelectById(user_id, investigation_id);
-  }
-
-  private async executeSelectById(
-    user_id: AuthenticatedUserId,
-    investigation_id: InvestigationSchemaType["id"],
-  ): Promise<DbResult<InvestigationSchemaType>> {
-    const { data, error } = await this.db
-      .from("investigations")
-      .select()
-      .eq("user_id", user_id)
-      .eq("id", investigation_id)
-      .maybeSingle();
-
-    if (error) {
-      return {
-        ok: false,
-        message: error.message,
-        details: error.details,
-      };
-    }
-
-    if (data === null) {
-      return {
-        ok: false,
-        message: "Investigation not found",
-      };
-    }
-
-    return {
-      ok: true,
-      data: this.validateInvestigation(data),
-    };
-  }
-
-  private async executeGetSavedInvestigations(
-    user_id: AuthenticatedUserId,
-  ): Promise<SavedInvestigationsResult> {
-    const { data, error } = await this.db
-      .from("investigations")
-      .select()
-      .eq("user_id", user_id)
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      return {
-        ok: false,
-        message: error.message,
-        details: error.details,
-      };
-    }
-
-    return {
-      ok: true,
-      data: this.validateInvestigations(data),
-    };
-  }
-
-  private async executeSave(
-    investigation: unknown,
-    user_id: AuthenticatedUserId,
-  ): Promise<InvestigationSaveResult> {
-    const validatedInput = this.validateInvestigationInput(investigation);
-    const insertable = this.toInsertableInvestigation(validatedInput, user_id);
-    return this.insertInvestigation(insertable);
-  }
-
-  private async insertInvestigation(
-    investigation: InsertableInvestigation,
-  ): Promise<InvestigationSaveResult> {
-    const { data, error } = await this.db
-      .from("investigations")
-      .upsert([investigation])
-      .select()
-      .single();
-
-    if (error) {
-      return {
-        ok: false,
-        message: error.message,
-        details: error.details,
-      };
-    }
-
-    return { ok: true, data: this.validateInvestigation(data) };
-  }
-
-  private toInsertableInvestigation(
-    investigation: PersistInvestigationInputSchemaType,
-    user_id: AuthenticatedUserId,
-  ): InsertableInvestigationSchemaType {
-    const {
-      idea,
-      initial_perspective,
-      premises,
-      ending_perspective,
-      changed_opinion,
-      new_concepts,
-      takeaway,
-      had_merit,
-      biases,
-      expertise,
-    } = investigation;
-
-    return {
-      idea: idea,
-      biases: biases,
-      expertise: expertise,
-      initial_perspective: initial_perspective,
-      premises: premises,
-      ending_perspective: ending_perspective,
-      changed_opinion: changed_opinion,
-      new_concepts: new_concepts,
-      takeaway: takeaway,
-      had_merit: had_merit,
-      user_id: user_id,
-    };
-  }
-
-  private validateInvestigations(
-    results: unknown[],
-  ): InvestigationSchemaType[] {
-    const investigations = [];
-
-    for (const result of results) {
-      const investigation = validateServerOrThrow(InvestigationSchema, result);
-      investigations.push(investigation);
-    }
-    return investigations;
-  }
-
-  private validateInvestigation(raw: unknown): InvestigationSchemaType {
-    return validateServerOrThrow(InvestigationSchema, raw);
-  }
-
-  private validateInvestigationInput(
-    investigation: unknown,
-  ): PersistInvestigationInputSchemaType {
-    return validateOrThrow(PersistInvestigationInputSchema, investigation);
+  public readonly write: IInvestigationWriteHandler;
+  private readonly parser: IInvestigationsRepositoryParser;
+  public select: IInvestigationSelectHandler;
+  constructor(
+    private readonly db: SupabaseClient<Database>,
+    private readonly articles: IArticlesRepository,
+    private readonly extracts: IWikipediaExtractsRepository,
+    private readonly sources: IInvestigationSourcesRepository,
+  ) {
+    this.parser = new InvestigationsRepositoryParser();
+    this.write = new InvestigationWriteHandler(this.db, this.parser);
+    this.select = new InvestigationSelectHandler(
+      this.db,
+      this.parser,
+      this.sources,
+      this.extracts,
+      this.articles,
+    );
   }
 }

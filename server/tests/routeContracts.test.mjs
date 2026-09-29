@@ -109,9 +109,8 @@ test("private routes convert validated path IDs and retain the authenticated use
     investigations: { hydrateInvestigation: async input => {
       calls.push(input);
       return {
-        investigation: { ok: true, data: investigation },
-        sources: { ok: true, data: [article] },
-        extracts: { ok: true, data: [] },
+        ok: true,
+        data: { investigation, sources: [article], extracts: [] },
       };
     } },
   } } }, Router());
@@ -130,9 +129,8 @@ test("private routes convert validated path IDs and retain the authenticated use
   });
   assert.deepEqual(hydrated, {
     data: {
-      investigation: { ok: true, data: investigation },
-      sources: { ok: true, data: [article] },
-      extracts: { ok: true, data: [] },
+      ok: true,
+      data: { investigation, sources: [article], extracts: [] },
     },
     status: 200,
   });

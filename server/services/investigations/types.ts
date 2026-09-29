@@ -4,12 +4,15 @@ import {
   InvestigationSchemaType,
   InvestigationsSavedReponseSchemaType,
   PersistInvestigationInputSchemaType,
+  SelectedInvestigationPayloadSchemaType,
 } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import { DbResult } from "../../db/types/types.ts";
 import { InvestigationSaveResult } from "../../db/access/repositories/investigations/investigationsRepository.ts";
 import { AuthenticatedUserId } from "../auth/authorization.ts";
 import { SavedExtractSchemaType } from "@elenchus/contracts/schemas/integrations/InvestigationExtractRowSchema";
 import { WikiResponseSchemaType } from "@elenchus/contracts/schemas/integrations/WikipediaExtractSchemas";
+import { IInvestigationServiceWriteHandler } from "./handlers/InvestigationServiceWriteHandler.ts";
+import { IInvestigationServiceSelectHandler } from "./handlers/InvestigationServiceSelectHandler.ts";
 
 export type SaveSourcesAndExtractsArgs = {
   userId: AuthenticatedUserId;
@@ -48,12 +51,6 @@ export type SaveSourcesParams = {
 };
 
 export interface IInvestigationService {
-  save(params: SaveInvestigationParams): Promise<InvestigationSaveResult>;
-
-  getSavedResearch(
-    user_id: string | undefined | null,
-  ): Promise<InvestigationsSavedReponseSchemaType>;
-  hydrateInvestigation(
-    params: HydrateInvestigationParams,
-  ): Promise<InvestigationAndSourcesResponseSchemaType>;
+  readonly write: IInvestigationServiceWriteHandler;
+  readonly select: IInvestigationServiceSelectHandler;
 }
