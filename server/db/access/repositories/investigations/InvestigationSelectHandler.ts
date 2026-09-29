@@ -1,18 +1,12 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "../../../../types/databaseInterfaces.js";
 import { IInvestigationsRepositoryParser } from "./InvestigationsRespositoryParser.ts";
-import { IInvestigationSourcesRepository } from "../investigationSources/investigationSourcesRepository.js";
-import { IWikipediaExtractsRepository } from "../wikipediaExtracts/wikipediaExtractsRepository.js";
 import { AuthenticatedUserId } from "../../../../services/auth/authorization.ts";
 import { SavedInvestigationsResult } from "./investigationsRepository.ts";
 import {
   InvestigationAndSourcesResponseSchemaType,
   InvestigationSchemaType,
 } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
-import { DbResult } from "../../../types/types.ts";
-import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
-import { SavedExtractSchemaType } from "@elenchus/contracts/schemas/integrations/InvestigationExtractRowSchema";
-import { IArticlesRepository } from "../articles/articlesRepository.ts";
 
 export interface IInvestigationSelectHandler {
   all(user_id: AuthenticatedUserId): Promise<SavedInvestigationsResult>;
@@ -26,9 +20,6 @@ export class InvestigationSelectHandler implements IInvestigationSelectHandler {
   constructor(
     private readonly db: SupabaseClient<Database>,
     private readonly parser: IInvestigationsRepositoryParser,
-    private readonly sources: IInvestigationSourcesRepository,
-    private readonly extracts: IWikipediaExtractsRepository,
-    private readonly articles: IArticlesRepository,
   ) {}
 
   public async all(
@@ -41,63 +32,17 @@ export class InvestigationSelectHandler implements IInvestigationSelectHandler {
     user_id: AuthenticatedUserId,
     investigation_id: InvestigationSchemaType["id"],
   ): Promise<InvestigationAndSourcesResponseSchemaType> {
-    return await this.executeById(user_id, investigation_id);
+    return await this.selectById(user_id, investigation_id);
   }
 
-  private async executeById(
+  private async selectById(
     user_id: AuthenticatedUserId,
     investigation_id: InvestigationSchemaType["id"],
   ): Promise<InvestigationAndSourcesResponseSchemaType> {
-    const [investigation, sources, extracts] = await Promise.all([
-      this.investigationById(user_id, investigation_id),
-      this.sourcesOfInvestigation(user_id, investigation_id),
-      this.extractsByInvestigationId(user_id, investigation_id),
-    ]);
-
-    if (investigation.ok === false) {
-      return {
-        ok: false,
-        message: investigation.message,
-        details: investigation.details,
-      };
-    }
-
-    if (sources.ok === false) {
-      return {
-        ok: false,
-        message: sources.message,
-        details: sources.details,
-      };
-    }
-
-    if (extracts.ok === false) {
-      return {
-        ok: false,
-        message: extracts.message,
-        details: extracts.details,
-      };
-    }
-
-    return {
-      ok: true,
-      data: {
-        investigation: investigation.data,
-        extracts: extracts.data,
-        sources: sources.data,
-      },
-    };
-  }
-
-  private async investigationById(
-    user_id: AuthenticatedUserId,
-    investigation_id: InvestigationSchemaType["id"],
-  ): Promise<DbResult<InvestigationSchemaType>> {
-    const { data, error } = await this.db
-      .from("investigations")
-      .select()
-      .eq("user_id", user_id)
-      .eq("id", investigation_id)
-      .maybeSingle();
+    const { data, error } = await this.db.rpc("hydrate_investigation", {
+      p_investigation_id: investigation_id,
+      p_user_id: user_id,
+    });
 
     if (error) {
       return {
@@ -106,46 +51,10 @@ export class InvestigationSelectHandler implements IInvestigationSelectHandler {
         details: error.details,
       };
     }
-
-    if (data === null) {
-      return {
-        ok: false,
-        message: "Investigation not found",
-      };
-    }
-
     return {
       ok: true,
-      data: this.parser.validateInvestigation(data),
+      data: this.parser.validateSelectedInvestigation(data),
     };
-  }
-
-  private async sourcesOfInvestigation(
-    user_id: AuthenticatedUserId,
-    investigation_id: InvestigationSchemaType["id"],
-  ): Promise<DbResult<ArticleSchemaType[]>> {
-    const sources = await this.sources.select.byInvestigationId(
-      user_id,
-      investigation_id,
-    );
-    if (!sources.ok) {
-      return {
-        ok: false,
-        message: sources.message,
-        details: sources.details,
-      };
-    }
-
-    const ids = sources.data.map((source) => source.article_id);
-
-    return await this.articles.byIds(ids);
-  }
-
-  private async extractsByInvestigationId(
-    user_id: AuthenticatedUserId,
-    investigation_id: InvestigationSchemaType["id"],
-  ): Promise<DbResult<SavedExtractSchemaType[]>> {
-    return await this.extracts.select.extracts(user_id, investigation_id);
   }
 
   private async executeGetSavedInvestigations(

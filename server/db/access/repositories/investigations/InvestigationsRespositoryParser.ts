@@ -13,7 +13,6 @@ import {
 } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import type { AuthenticatedUserId } from "../../../../services/auth/authorization.js";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
-import { InsertableInvestigationSources } from "../investigationSources/investigationSourcesRepository.ts";
 
 export interface IInvestigationsRepositoryParser {
   toInsertableInvestigation(
@@ -28,11 +27,6 @@ export interface IInvestigationsRepositoryParser {
   validateSelectedInvestigation(
     result: unknown,
   ): SelectedInvestigationPayloadSchemaType;
-  toInsertableSources(
-    userId: AuthenticatedUserId,
-    rawArticleIds: ArticleSchemaType["id"][],
-    investigation_id: InvestigationSchemaType["id"],
-  ): InsertableInvestigationSources;
 }
 
 export class InvestigationsRepositoryParser implements IInvestigationsRepositoryParser {
@@ -66,20 +60,6 @@ export class InvestigationsRepositoryParser implements IInvestigationsRepository
       had_merit: had_merit,
       user_id: user_id,
     };
-  }
-
-  public toInsertableSources(
-    userId: AuthenticatedUserId,
-    rawArticleIds: ArticleSchemaType["id"][],
-    investigation_id: InvestigationSchemaType["id"],
-  ): InsertableInvestigationSources {
-    return rawArticleIds.map((articleId) => {
-      return {
-        article_id: articleId,
-        investigation_id: investigation_id,
-        user_id: userId,
-      };
-    });
   }
 
   public validateInvestigations(results: unknown[]): InvestigationSchemaType[] {

@@ -5,16 +5,8 @@ import {
   InvestigationsRepositoryParser,
 } from "./InvestigationsRespositoryParser.ts";
 import { InvestigationSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
-import type { AuthenticatedUserId } from "../../../../services/auth/authorization.js";
 import { DbResult } from "../../../types/types.ts";
-import {
-  IWikipediaExtractsRepository,
-  WikipediaExtractsRepository,
-} from "../wikipediaExtracts/wikipediaExtractsRepository.js";
-import {
-  IInvestigationSourcesRepository,
-  InvestigationSourcesRepository,
-} from "../investigationSources/investigationSourcesRepository.js";
+
 import {
   IInvestigationWriteHandler,
   InvestigationWriteHandler,
@@ -23,10 +15,6 @@ import {
   IInvestigationSelectHandler,
   InvestigationSelectHandler,
 } from "./InvestigationSelectHandler.ts";
-import {
-  ArticlesRepository,
-  IArticlesRepository,
-} from "../articles/articlesRepository.ts";
 
 export type InvestigationSaveResult = DbResult<InvestigationSchemaType>;
 
@@ -44,20 +32,9 @@ export class InvestigationsRepository implements IInvestigationsRepository {
   public readonly write: IInvestigationWriteHandler;
   private readonly parser: IInvestigationsRepositoryParser;
   public select: IInvestigationSelectHandler;
-  constructor(
-    private readonly db: SupabaseClient<Database>,
-    private readonly articles: IArticlesRepository,
-    private readonly extracts: IWikipediaExtractsRepository,
-    private readonly sources: IInvestigationSourcesRepository,
-  ) {
+  constructor(private readonly db: SupabaseClient<Database>) {
     this.parser = new InvestigationsRepositoryParser();
     this.write = new InvestigationWriteHandler(this.db, this.parser);
-    this.select = new InvestigationSelectHandler(
-      this.db,
-      this.parser,
-      this.sources,
-      this.extracts,
-      this.articles,
-    );
+    this.select = new InvestigationSelectHandler(this.db, this.parser);
   }
 }
