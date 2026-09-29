@@ -200,7 +200,9 @@ const DashboardSlice = createSlice({
       state.openInvestigation = {
         status: "failed",
         details:
-          action.error.message ?? "Failed to hydrate opened investigation",
+          typeof action.payload === "string"
+            ? action.payload
+            : action.error.message ?? "Failed to hydrate opened investigation",
       };
     });
 

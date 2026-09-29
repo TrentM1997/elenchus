@@ -1,7 +1,7 @@
 import { TermList } from "./TermList";
 import { InvestigationExtracts } from "@/state/Reducers/Dashboard/types";
 
-export function Terms({
+export default function WikipediaTerms({
   extracts,
 }: {
   extracts: InvestigationExtracts;

@@ -2,7 +2,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { SourcesFromResearch } from "../Details/sources/SourcesUsed";
 import DetailsTable from "../Details/DetailsTable";
 import DetailsTableSkeleton from "../Details/DetailsTableSkeleton";
-import { Terms } from "../Details/wiki/containers/WikipediaTerms";
+import WikipediaTerms from "../Details/wiki/containers/WikipediaTerms";
+import WikipediaTermsSkeleton from "../Details/wiki/containers/WikipediaTermsSkeleton";
 import DetailView from "../../../ProfileNavigation/mobile/DetailView";
 import { ScrollUp } from "@/lib/helpers/scroll/ScrollToTop";
 import { changeTab } from "@/state/Reducers/Dashboard/DashboardSlice";
@@ -11,6 +12,7 @@ import { InvestigationSchemaType } from "@elenchus/contracts/schemas/investigati
 import { RootState } from "@/state/store";
 import AsyncStateRenderer from "@/components/React/pipelines/AsyncStateRenderer";
 import ResearchSourceSkeleton from "../Details/sources/ResearchSourceSkeleton";
+import React from "react";
 
 export default function ResearchReview({
   investigationId,
@@ -32,24 +34,27 @@ export default function ResearchReview({
           animate-fade-blur animation-delay-200ms"
     >
       <DetailView backTo={backTo} />
-
-      <div className="w-full h-full pb-20 overscroll-contain overflow-y-scroll no-scrollbar grow flex flex-col gap-y-24 items-center justify-start">
+      <div
+        className="w-full h-full pb-20 overscroll-contain overflow-y-scroll 
+      no-scrollbar grow flex flex-col gap-y-24 items-center justify-start"
+      >
         <AsyncStateRenderer
           state={investigation}
-          pending={() => <DetailsTableSkeleton />}
+          pending={() => (
+            <React.Fragment>
+              <DetailsTableSkeleton />
+              <ResearchSourceSkeleton />
+              <WikipediaTermsSkeleton />
+            </React.Fragment>
+          )}
         >
-          {(state) => <DetailsTable investigation={state.investigation} />}
-        </AsyncStateRenderer>
-
-        <AsyncStateRenderer
-          state={investigation}
-          pending={() => <ResearchSourceSkeleton />}
-        >
-          {(state) => <SourcesFromResearch sources={state.sources} />}
-        </AsyncStateRenderer>
-
-        <AsyncStateRenderer state={investigation}>
-          {(state) => <Terms extracts={state.extracts} />}
+          {(state) => (
+            <React.Fragment>
+              <DetailsTable investigation={state.investigation} />
+              <SourcesFromResearch sources={state.sources} />
+              <WikipediaTerms extracts={state.extracts} />
+            </React.Fragment>
+          )}
         </AsyncStateRenderer>
       </div>
     </section>

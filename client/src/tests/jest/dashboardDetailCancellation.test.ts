@@ -65,9 +65,12 @@ test.each(["article", "investigation"] as const)(
       .toEqual(isArticle
         ? { status: "ready", data: article(2) }
         : {
-            investigation: { status: "ready", data: investigation(2) },
-            sources: { status: "ready", data: [article(2)] },
-            extracts: { status: "ready", data: [] },
+            status: "ready",
+            data: {
+              investigation: investigation(2),
+              sources: [article(2)],
+              extracts: [],
+            },
           });
   },
 );

@@ -11,7 +11,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "disable-toolbar": "astro preferences disable devToolbar",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "npx jest --verbose"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",
