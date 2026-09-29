@@ -5,6 +5,7 @@ import {
 import { IHttpClient } from "@/lib/services/client/http/types";
 import {
   ExtractsToPersistSchemaType,
+  InvestigationAndSourcesResponseSchemaType,
   InvestigationSaveResponseType,
   PersistInvestigationInputSchemaType,
 } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
@@ -22,7 +23,7 @@ export interface IPrivateUserWritesHandler {
     investigation: PersistInvestigationInputSchemaType;
     articleIds: ArticleSchemaType["id"][];
     extracts: ExtractsToPersistSchemaType;
-  }): Promise<InvestigationSaveResponseType>;
+  }): Promise<InvestigationAndSourcesResponseSchemaType>;
 }
 
 export class PrivateUserWritesHandler implements IPrivateUserWritesHandler {
@@ -43,7 +44,7 @@ export class PrivateUserWritesHandler implements IPrivateUserWritesHandler {
     investigation: PersistInvestigationInputSchemaType;
     articleIds: ArticleSchemaType["id"][];
     extracts: ExtractsToPersistSchemaType;
-  }): Promise<InvestigationSaveResponseType> {
+  }) {
     const route = this.routes.investigations.post;
 
     return await this.http.request(route, { body });

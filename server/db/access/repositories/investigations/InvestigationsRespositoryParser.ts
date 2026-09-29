@@ -12,7 +12,6 @@ import {
   SelectedInvestigationPayloadSchema,
 } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import type { AuthenticatedUserId } from "../../../../services/auth/authorization.js";
-import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 
 export interface IInvestigationsRepositoryParser {
   toInsertableInvestigation(

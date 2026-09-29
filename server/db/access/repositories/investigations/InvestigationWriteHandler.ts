@@ -69,6 +69,15 @@ export class InvestigationWriteHandler implements IInvestigationWriteHandler {
       };
     }
 
+    if (data === null) {
+      return {
+        ok: false,
+        message: "Investigation was not selected",
+        details:
+          "This investigation is either missing or owned by another user",
+      };
+    }
+
     return {
       ok: true,
       data: this.parser.validateSelectedInvestigation(data),

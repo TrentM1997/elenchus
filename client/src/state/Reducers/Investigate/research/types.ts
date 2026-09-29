@@ -1,12 +1,13 @@
 import {
-  InvestigationSaveResponseType,
   PersistInvestigationInputSchemaType,
+  SelectedInvestigationPayloadSchemaType,
 } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import { AsyncState } from "@/state/types";
 import { WikiResponseSchemaType } from "@elenchus/contracts/schemas/integrations/WikipediaExtractSchemas";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 
-export type SaveInvestigationState = AsyncState<InvestigationSaveResponseType>;
+export type SaveInvestigationState =
+  AsyncState<SelectedInvestigationPayloadSchemaType>;
 
 export type PerspectiveFraming = Pick<
   PersistInvestigationInputSchemaType,

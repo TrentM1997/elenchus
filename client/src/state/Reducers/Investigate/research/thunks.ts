@@ -43,7 +43,7 @@ export const saveInvgestigation = createAsyncThunk(
       }
 
       thunkAPI.dispatch(
-        updateResearchPersistence({ status: "ready", data: result }),
+        updateResearchPersistence({ status: "ready", data: result.data }),
       );
       return result.data;
     } catch (err) {

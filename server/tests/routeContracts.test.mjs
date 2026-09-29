@@ -106,13 +106,13 @@ test("private routes convert validated path IDs and retain the authenticated use
   const record = data => async input => { calls.push(input); return { ok: true, data }; };
   const router = protectedRoutes({ services: { api: {
     user: { articles: { articleById: record(article), removeBookmark: record([bookmark]), bookmark: record(bookmark) } },
-    investigations: { hydrateInvestigation: async input => {
+    investigations: { select: { byId: async input => {
       calls.push(input);
       return {
         ok: true,
         data: { investigation, sources: [article], extracts: [] },
       };
-    } },
+    } } },
   } } }, Router());
   const user = { userId: "authenticated-user" };
   for (const method of ["get", "delete"]) {

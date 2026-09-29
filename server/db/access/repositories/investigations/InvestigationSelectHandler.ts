@@ -51,6 +51,16 @@ export class InvestigationSelectHandler implements IInvestigationSelectHandler {
         details: error.details,
       };
     }
+
+    if (data === null) {
+      return {
+        ok: false,
+        message: "Investigation was not selected",
+        details:
+          "This investigation either belongs to a different user or cannot be found",
+      };
+    }
+
     return {
       ok: true,
       data: this.parser.validateSelectedInvestigation(data),
