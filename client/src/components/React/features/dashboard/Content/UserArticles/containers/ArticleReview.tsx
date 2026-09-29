@@ -2,11 +2,11 @@ import DetailView from "../../../ProfileNavigation/mobile/DetailView";
 import AsyncStateRenderer from "@/components/React/pipelines/AsyncStateRenderer";
 import { Suspense } from "react";
 import DelayedFallback from "@/components/React/global/fallbacks/DelayedFallback";
-import PendingState from "@/components/React/global/fallbacks/PendingState";
 import Article from "@/components/React/global/Articles/SuccessFull/containers/Article";
 import { useHydrateOpenedArticle } from "@/lib/hooks/dashboard/hydration/useHydrateOpenedArticle";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import { useBookmarkRecords } from "@/lib/hooks/articles/useBookmarkRecords";
+import ArticleSkeleton from "@/components/React/global/Articles/skeletons/ArticleSkeleton";
 
 export default function ArticleReview({
   articleId,
@@ -30,9 +30,16 @@ export default function ArticleReview({
                  xl:px-24
                  "
       >
-        <AsyncStateRenderer state={article} pending={() => <ReviewPending />}>
+        <AsyncStateRenderer
+          state={article}
+          pending={() => (
+            <DelayedFallback>
+              <ArticleSkeleton />
+            </DelayedFallback>
+          )}
+        >
           {(state) => (
-            <Suspense fallback={<ReviewPending />}>
+            <Suspense>
               <Article
                 userKind={"authenticated"}
                 articleData={state}
@@ -43,16 +50,5 @@ export default function ArticleReview({
         </AsyncStateRenderer>
       </main>
     </section>
-  );
-}
-
-function ReviewPending() {
-  return (
-    <DelayedFallback>
-      <PendingState
-        title="Loading article"
-        message="Getting your saved article ready."
-      />
-    </DelayedFallback>
   );
 }

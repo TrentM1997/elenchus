@@ -24,6 +24,17 @@ export type OpenInvestigationExtracts = AsyncState<
   Extract<ExtractsSelectedResponseSchemaType, { ok: true }>["data"]
 >;
 
+export type InvestigationExtracts = Extract<
+  ExtractsSelectedResponseSchemaType,
+  { ok: true }
+>["data"];
+
+export type OpenedResearchState = AsyncState<{
+  investigation: InvestigationSchemaType;
+  sources: ArticleSchemaType[];
+  extracts: InvestigationExtracts;
+}>;
+
 export type DashboardTab =
   | { kind: "metrics" }
   | { kind: "manage account" }

@@ -81,7 +81,24 @@ export const hydrateOpenInvestigation = createAsyncThunk(
           `Message: ${result.investigation.message} — Detials: ${result.investigation.details}`,
         );
       }
-      return result;
+
+      if (result.sources.ok === false) {
+        throw new Error(
+          `Message: ${result.sources.message} — Details: ${result.sources.details}`,
+        );
+      }
+
+      if (result.extracts.ok === false) {
+        throw new Error(
+          `Message: ${result.extracts.message} — Details: ${result.extracts.details}`,
+        );
+      }
+
+      return {
+        investigation: result.investigation.data,
+        sources: result.sources.data,
+        extracts: result.extracts.data,
+      };
     } catch (err) {
       console.error(err);
       return thunkAPI.rejectWithValue(

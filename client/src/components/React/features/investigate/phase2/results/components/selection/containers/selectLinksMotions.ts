@@ -1,7 +1,8 @@
 import { softEase } from "@/motion/variants";
 import { ActiveModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+import type { Variants } from "framer-motion";
 
-export function getSelectLinksMotions(modal: ActiveModal) {
+export function getSelectLinksMotions(modal: ActiveModal): Variants {
   return {
     initial: { opacity: 0, y: 100 },
     animate: {

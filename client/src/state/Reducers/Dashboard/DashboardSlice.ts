@@ -11,8 +11,7 @@ import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleS
 import {
   DashboardBookmarkState,
   DashboardTab,
-  OpenInvestigation,
-  OpenInvestigationExtracts,
+  OpenedResearchState,
   VirtuosoScrollPos,
 } from "./types";
 
@@ -21,12 +20,6 @@ export type SavedArticles = AsyncState<ArticleSchemaType[]>;
 type SavedInvestigations = AsyncState<InvestigationSchemaType[]>;
 
 export type OpenedArticle = AsyncState<ArticleSchemaType>;
-
-export type ResearchToReviewState = {
-  investigation: OpenInvestigation;
-  sources: AsyncState<ArticleSchemaType[]>;
-  extracts: OpenInvestigationExtracts;
-};
 
 export type ResearchMetrics = {
   bias: AsyncState<number[]>;
@@ -44,7 +37,7 @@ interface InitialState {
   tab: DashboardTab;
   articleScrollPosition: VirtuosoScrollPos;
   researchScrollPosition: VirtuosoScrollPos;
-  openInvestigation: ResearchToReviewState;
+  openInvestigation: OpenedResearchState;
 }
 
 const initialState: InitialState = {
@@ -58,11 +51,7 @@ const initialState: InitialState = {
     outcomes: { status: "initial" },
   },
   ArticleToReview: { status: "initial" },
-  openInvestigation: {
-    investigation: { status: "initial" },
-    sources: { status: "initial" },
-    extracts: { status: "initial" },
-  },
+  openInvestigation: { status: "initial" },
   tab: { kind: "metrics" },
   articleScrollPosition: { status: "initial" },
   researchScrollPosition: { status: "initial" },
@@ -115,11 +104,7 @@ const DashboardSlice = createSlice({
       state.ArticleToReview = { status: "initial" };
     },
     clearOpenedInvestigation: (state: InitialState) => {
-      state.openInvestigation = {
-        investigation: { status: "initial" },
-        sources: { status: "initial" },
-        extracts: { status: "initial" },
-      };
+      state.openInvestigation = { status: "initial" };
     },
     clearDashboardSlice: () => initialState,
   },
@@ -206,69 +191,21 @@ const DashboardSlice = createSlice({
     );
 
     builder.addCase(hydrateOpenInvestigation.pending, (state) => {
-      state.openInvestigation = {
-        investigation: { status: "pending" },
-        sources: { status: "pending" },
-        extracts: { status: "pending" },
-      };
+      state.openInvestigation = { status: "pending" };
     });
 
     builder.addCase(hydrateOpenInvestigation.rejected, (state, action) => {
       if (action.meta.aborted) return;
+
       state.openInvestigation = {
-        investigation: {
-          status: "failed",
-          details: "Failed to hydrate investigation",
-        },
-        sources: {
-          status: "failed",
-          details: "Failed to hydrate sources of investigation",
-        },
-        extracts: {
-          status: "failed",
-          details: "Failed to hydrate extracted terms from wikipedia",
-        },
+        status: "failed",
+        details:
+          action.error.message ?? "Failed to hydrate opened investigation",
       };
     });
 
     builder.addCase(hydrateOpenInvestigation.fulfilled, (state, action) => {
-      const { investigation, sources, extracts } = action.payload;
-
-      if (investigation.ok === false) {
-        state.openInvestigation.investigation = {
-          status: "failed",
-          details: investigation.message,
-        };
-      } else {
-        state.openInvestigation.investigation = {
-          status: "ready",
-          data: investigation.data,
-        };
-      }
-
-      if (extracts.ok === false) {
-        state.openInvestigation.extracts = {
-          status: "failed",
-          details: extracts.message,
-        };
-      } else {
-        state.openInvestigation.extracts = {
-          status: "ready",
-          data: extracts.data,
-        };
-      }
-
-      if (sources.ok === false) {
-        state.openInvestigation.sources = {
-          status: "failed",
-          details: sources.message,
-        };
-      } else {
-        state.openInvestigation.sources = {
-          status: "ready",
-          data: sources.data,
-        };
-      }
+      state.openInvestigation = { status: "ready", data: action.payload };
     });
 
     builder.addCase(hydrateOpenedArticle.pending, (state) => {

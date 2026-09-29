@@ -43,7 +43,7 @@ export class BookmarkSelectHandler implements IBookmarkSelectHandler {
       .from("bookmarks")
       .select()
       .eq("user_id", user_id)
-      .order("created_at");
+      .order("created_at", { ascending: false });
 
     if (error) {
       return {

@@ -1,0 +1,32 @@
+import { useEffect } from "react";
+import { useTooltipFlags } from "@/lib/hooks/rendering/useTooltipFlags";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "@/state/store";
+import { useMaxSelectedToast } from "@/lib/hooks/rendering/useAutoDismiss";
+import { populateTooltip } from "@/state/Reducers/Investigate/Rendering";
+import { SelectedArticles } from "@/state/Reducers/Investigate/articles/ChosenArticles";
+
+export const useManageSelectTooltipWrapper = ({
+  selected,
+}: {
+  selected: SelectedArticles;
+}) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { getFlags } = useTooltipFlags();
+  const chosenCount = selected.status === "empty" ? 0 : selected.data.length;
+  useMaxSelectedToast({ count: chosenCount });
+  const surfaceTooltip = async () => {
+    const flags = getFlags();
+    if (flags.selectingTooltip === false) {
+      dispatch(populateTooltip("Guide Selection"));
+    }
+  };
+
+  useEffect(() => {
+    surfaceTooltip();
+  }, []);
+
+  return {
+    count: chosenCount,
+  };
+};
