@@ -1,10 +1,16 @@
 import { validateServerOrThrow } from "../../../core/validation/validateOrThrow.js";
-import { ArticleSchema, ArticleSchemaType, FactualReportingRatingSchema, FactualReportingRatingSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
-import { InsertableArticleSchema, InsertableArticleSchemaType } from "../../../schemas/ArticleSchema.js";
+import {
+  ArticleSchemaType,
+  FactualReportingRatingSchema,
+  FactualReportingRatingSchemaType,
+} from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import {
+  InsertableArticleSchema,
+  InsertableArticleSchemaType,
+} from "../../../schemas/ArticleSchema.js";
 import { BiasSchemaType } from "@elenchus/contracts/schemas/articles/BiasSchema";
 import { validateSchema } from "../../../schemas/ValidateSchema.js";
 import {
-  Article,
   BiasInfo,
   FailedAttempt,
   FcParam,
@@ -46,8 +52,10 @@ export class FirecrawlJobParser implements IFirecrawlJobParser {
   ): void {
     const success = new Set(retrieved.map((r) => this.cleanUrl(r.article_url)));
     for (let i = failed.length - 1; i >= 0; i--) {
-      if (success.has(this.cleanUrl(failed[i].article_url)))
+      const failedJobs = failed[i];
+      if (failedJobs && success.has(this.cleanUrl(failedJobs.article_url))) {
         failed.splice(i, 1);
+      }
     }
   }
 
