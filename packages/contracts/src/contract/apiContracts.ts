@@ -159,7 +159,7 @@ export const PRIVATE_INVESTIGATIONS_API_CONTRACT = {
     path: "/user/investigations",
     method: "POST",
     bodySchema: SaveInvestigationInputSchema,
-    outputSchema: InvestigationSaveResponse,
+    outputSchema: InvestigationAndSourcesResponseSchema,
   },
 } as const satisfies PrivateInvestigationsApiContract;
 

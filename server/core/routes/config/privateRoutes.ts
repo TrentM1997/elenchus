@@ -199,7 +199,7 @@ export function protectedRoutes(app: IAppServices, router: Router) {
       } = validateOrThrow(saveInvestigationRoute.bodySchema, req.body);
 
       const result: Static<typeof saveInvestigationRoute.outputSchema> =
-        await app.services.api.investigations.save({
+        await app.services.api.investigations.write.investigation({
           user_id: userId,
           investigation,
           articleIds,
@@ -230,7 +230,7 @@ export function protectedRoutes(app: IAppServices, router: Router) {
     wrapAsync(async (req, res) => {
       const userId = req.user.userId;
       const result: Static<typeof savedInvestigationsRoute.outputSchema> =
-        await app.services.api.investigations.getSavedResearch(userId);
+        await app.services.api.investigations.select.all(userId);
 
       if (!result.ok) {
         throw new ServerError(
@@ -262,18 +262,11 @@ export function protectedRoutes(app: IAppServices, router: Router) {
       );
 
       const result: Static<typeof savedInvestigationRoute.outputSchema> =
-        await app.services.api.investigations.hydrateInvestigation({
+        await app.services.api.investigations.select.byId({
           user_id: userId,
           investigation_id: Number(investigationId),
         });
 
-      if (!result.investigation.ok) {
-        throw new ServerError(
-          "Failed to retrieve investigation",
-          404,
-          result.investigation.details,
-        );
-      }
       const data = validateServerOrThrow(
         savedInvestigationRoute.outputSchema,
         result,

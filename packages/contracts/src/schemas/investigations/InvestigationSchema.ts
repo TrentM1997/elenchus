@@ -2,12 +2,18 @@ import { Type } from "@sinclair/typebox";
 import type { Static } from "@sinclair/typebox";
 import { PersistenceFailedResponseSchema } from "../auth/PersistenceFailedSchema.js";
 import { ArticleSchema } from "../articles/ArticleSchema.js";
-import { InvestigationSourcesResponseSchema } from "./InvestigationSourceSchema.js";
+import {
+  InvestigationSourceSchema,
+  InvestigationSourcesResponseSchema,
+} from "./InvestigationSourceSchema.js";
 import {
   WikiSummaryResponseSchema,
   WikiDisambigResponseSchema,
 } from "../integrations/WikipediaExtractSchemas.js";
-import { SavedExtractArraySchema } from "../integrations/InvestigationExtractRowSchema.js";
+import {
+  SavedExtractArraySchema,
+  SavedExtractSchema,
+} from "../integrations/InvestigationExtractRowSchema.js";
 
 export const PerspectiveSchema = Type.Union([
   Type.Literal("Neutral"),
@@ -110,11 +116,25 @@ export const InvestigationSaveResponse = Type.Union([
   PersistenceFailedResponseSchema,
 ]);
 
-export const InvestigationAndSourcesResponseSchema = Type.Object({
-  investigation: InvestigationSaveResponse,
-  sources: InvestigationSourcesResponseSchema,
-  extracts: ExtractsSelectedResponseSchema,
+export const SelectedInvestigationPayloadSchema = Type.Object({
+  investigation: InvestigationSchema,
+  sources: Type.Array(ArticleSchema),
+  extracts: Type.Array(SavedExtractSchema),
 });
+
+export type SelectedInvestigationPayloadSchemaType = Static<
+  typeof SelectedInvestigationPayloadSchema
+>;
+
+const InvestigationPersistedSchema = Type.Object({
+  ok: Type.Literal(true),
+  data: SelectedInvestigationPayloadSchema,
+});
+
+export const InvestigationAndSourcesResponseSchema = Type.Union([
+  InvestigationPersistedSchema,
+  PersistenceFailedResponseSchema,
+]);
 
 export type InvestigationAndSourcesResponseSchemaType = Static<
   typeof InvestigationAndSourcesResponseSchema

@@ -43,14 +43,21 @@ test.each(["article", "investigation"] as const)(
       ? store.dispatch(hydrateOpenedArticle(1))
       : store.dispatch(hydrateOpenInvestigation(1));
 
+    const signal = byId.mock.calls[0][1] as AbortSignal;
+    expect(signal).toBeInstanceOf(AbortSignal);
+    expect(signal.aborted).toBe(false);
     oldRequest.abort();
+    expect(signal.aborted).toBe(true);
     store.dispatch(isArticle ? clearOpenedArticle() : clearOpenedInvestigation());
     const response = (id: number) => isArticle
       ? { ok: true, data: article(id) }
       : {
-          investigation: { ok: true, data: investigation(id) },
-          sources: { ok: true, data: [article(id)] },
-          extracts: { ok: true, data: [] },
+          ok: true,
+          data: {
+            investigation: investigation(id),
+            sources: [article(id)],
+            extracts: [],
+          },
         };
     byId.mockResolvedValueOnce(response(2));
     const nextRequest = isArticle

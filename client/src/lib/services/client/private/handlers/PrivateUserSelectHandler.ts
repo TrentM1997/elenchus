@@ -8,7 +8,6 @@ import {
 } from "@elenchus/contracts/schemas/articles/BookmarkSchema";
 import {
   InvestigationAndSourcesResponseSchemaType,
-  InvestigationSaveResponseType,
   InvestigationSchemaType,
   InvestigationsSavedReponseSchemaType,
 } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
@@ -39,6 +38,7 @@ interface IInvestigationSelectHander {
   all(signal: AbortSignal): Promise<InvestigationsSavedReponseSchemaType>;
   byId(
     investigation_id: InvestigationSchemaType["id"],
+    signal?: AbortSignal,
   ): Promise<InvestigationAndSourcesResponseSchemaType>;
 }
 
@@ -58,11 +58,13 @@ class InvestigationSelectHander implements IInvestigationSelectHander {
 
   public async byId(
     investigation_id: InvestigationSchemaType["id"],
+    signal?: AbortSignal,
   ): Promise<InvestigationAndSourcesResponseSchemaType> {
     const route = this.routes.investigations.get.single;
 
     return await this.http.request(route, {
       params: { investigationId: `${investigation_id}` },
+      signal,
     });
   }
 }
@@ -71,6 +73,7 @@ interface IBookmarkSelectHandler {
   all(signal: AbortSignal): Promise<BookmarkedArticlesResponseSchemaType>;
   byId(
     article_id: ArticleSchemaType["id"],
+    signal?: AbortSignal,
   ): Promise<GetArticleResponseSchemaType>;
   records(signal: AbortSignal): Promise<BookmarkRecordsResponseSchemaType>;
 }
@@ -87,11 +90,12 @@ class BookmarkSelectHandler implements IBookmarkSelectHandler {
     return await this.http.request(route, { signal });
   }
 
-  public async byId(article_id: ArticleSchemaType["id"]) {
+  public async byId(article_id: ArticleSchemaType["id"], signal?: AbortSignal) {
     const route = this.routes.bookmarks.get.single;
 
     return await this.http.request(route, {
       params: { articleId: String(article_id) },
+      signal,
     });
   }
 

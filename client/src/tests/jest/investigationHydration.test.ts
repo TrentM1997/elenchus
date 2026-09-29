@@ -21,9 +21,8 @@ const investigation = {
 };
 const data = { investigation, sources: [], extracts: [] };
 const response = {
-  investigation: { ok: true as const, data: investigation },
-  sources: { ok: true as const, data: [] },
-  extracts: { ok: true as const, data: [] },
+  ok: true as const,
+  data,
 };
 const byId = jest.mocked(serverClient.privileged.user.select.investigations.byId);
 
@@ -42,7 +41,7 @@ test("successful hydration exposes all three pieces together, including empty co
 
   const action = await request;
   expect(hydrateOpenInvestigation.fulfilled.match(action)).toBe(true);
-  expect(byId).toHaveBeenCalledWith(investigation.id);
+  expect(byId).toHaveBeenCalledWith(investigation.id, expect.any(AbortSignal));
   expect(store.getState().openInvestigation).toEqual({ status: "ready", data });
 });
 
@@ -54,8 +53,9 @@ test.each(["investigation", "sources", "extracts"] as const)(
     const message = `Could not load ${section}`;
     const details = `${section} service unavailable`;
     byId.mockResolvedValueOnce({
-      ...response,
-      [section]: { ok: false, message, details },
+      ok: false,
+      message,
+      details,
     });
 
     const request = store.dispatch(hydrateOpenInvestigation(investigation.id));
