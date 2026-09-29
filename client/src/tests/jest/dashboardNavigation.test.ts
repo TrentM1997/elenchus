@@ -48,9 +48,9 @@ const investigation = {
   expertise: null,
 };
 const openedInvestigation = {
-  investigation: { ok: true as const, data: investigation },
-  extracts: { ok: true as const, data: [] },
-  sources: { ok: true as const, data: [article] },
+  investigation,
+  extracts: [],
+  sources: [article],
 };
 const setup = () => {
   const store = configureStore({ reducer: { dash: reducer } });
@@ -88,9 +88,9 @@ test("investigation source navigation retains the parent ID and clears the artic
       investigation.id,
     ),
   );
-  expect(state().dash.openInvestigation.sources).toEqual({
+  expect(state().dash.openInvestigation).toEqual({
     status: "ready",
-    data: [article],
+    data: openedInvestigation,
   });
   store.dispatch(
     changeTab({
@@ -105,8 +105,8 @@ test("investigation source navigation retains the parent ID and clears the artic
     kind: "investigations", display: "review", current: "article",
     investigationId: investigation.id, articleId: article.id,
   });
-  expect(state().dash.openInvestigation.investigation).toEqual({
-    status: "ready", data: investigation,
+  expect(state().dash.openInvestigation).toEqual({
+    status: "ready", data: openedInvestigation,
   });
   store.dispatch(
     changeTab({
@@ -132,7 +132,7 @@ test("investigation sources are independent of bookmarked articles", () => {
       investigationId: 34,
     }),
   );
-  expect(state().dash.openInvestigation.sources).toEqual({ status: "initial" });
+  expect(state().dash.openInvestigation).toEqual({ status: "initial" });
   const unbookmarkedSource = {
     ...article,
     id: 99,
@@ -141,33 +141,33 @@ test("investigation sources are independent of bookmarked articles", () => {
   store.dispatch(
     hydrateOpenInvestigation.fulfilled(
       {
-        investigation: { ok: true, data: investigation },
-        extracts: { ok: true as const, data: [] },
-        sources: { ok: true, data: [unbookmarkedSource] },
+        investigation,
+        extracts: [],
+        sources: [unbookmarkedSource],
       },
       "open",
       investigation.id,
     ),
   );
   expect(state().dash.articles).toEqual({ status: "ready", data: [article] });
-  expect(state().dash.openInvestigation.sources).toEqual({
+  expect(state().dash.openInvestigation).toEqual({
     status: "ready",
-    data: [unbookmarkedSource],
+    data: { investigation, extracts: [], sources: [unbookmarkedSource] },
   });
   store.dispatch(
     hydrateOpenInvestigation.fulfilled(
       {
-        investigation: { ok: true, data: investigation },
-        extracts: { ok: true as const, data: [] },
-        sources: { ok: true, data: [] },
+        investigation,
+        extracts: [],
+        sources: [],
       },
       "reopen",
       investigation.id,
     ),
   );
-  expect(state().dash.openInvestigation.sources).toEqual({
+  expect(state().dash.openInvestigation).toEqual({
     status: "ready",
-    data: [],
+    data: { investigation, extracts: [], sources: [] },
   });
 });
 
