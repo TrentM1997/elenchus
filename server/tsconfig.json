@@ -4,6 +4,7 @@
     "esModuleInterop": true,
     "target": "ES2022",
     "moduleResolution": "NodeNext",
+    "noUncheckedIndexedAccess": true,
     "sourceMap": true,
     "rootDir": "./",
     "outDir": "./dist",

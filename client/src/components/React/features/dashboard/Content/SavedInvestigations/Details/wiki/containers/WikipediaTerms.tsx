@@ -1,13 +1,10 @@
-import NoSavedExtracts from "../fallbacks/NoSavedExtracts";
 import { TermList } from "./TermList";
-import { OpenInvestigationExtracts } from "@/state/Reducers/Dashboard/types";
-import FailedState from "@/components/React/global/fallbacks/FailedState";
-import PendingState from "@/components/React/global/fallbacks/PendingState";
+import { InvestigationExtracts } from "@/state/Reducers/Dashboard/types";
 
 export function Terms({
   extracts,
 }: {
-  extracts: OpenInvestigationExtracts;
+  extracts: InvestigationExtracts;
 }): JSX.Element | null {
   return (
     <section className="w-full lg:max-w-5xl xl:max-w-5xl 2xl:max-w-7xl">
@@ -25,34 +22,8 @@ export function Terms({
             immersed in research
           </p>
         </div>
-        <RenderSavedWikipediaExtracts extracts={extracts} />
+        <TermList extracts={extracts} excess={extracts.length > 4} />
       </div>
     </section>
   );
-}
-
-function RenderSavedWikipediaExtracts({
-  extracts,
-}: {
-  extracts: OpenInvestigationExtracts;
-}) {
-  switch (extracts.status) {
-    case "initial":
-      return null;
-    case "pending": {
-      return <PendingState />;
-    }
-    case "failed": {
-      return <FailedState />;
-    }
-    case "empty": {
-      return <NoSavedExtracts />;
-    }
-    case "ready": {
-      if (extracts.data.length === 0) return <NoSavedExtracts />;
-      return (
-        <TermList extracts={extracts.data} excess={extracts.data.length > 4} />
-      );
-    }
-  }
 }

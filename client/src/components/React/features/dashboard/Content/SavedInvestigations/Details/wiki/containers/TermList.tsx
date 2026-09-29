@@ -2,6 +2,7 @@ import { useState } from "react";
 import PaginateTerms from "../components/buttons/PaginateTerms";
 import TermListItem from "../components/extract/items/TermListItem";
 import { WikipediaExtractsSaved } from "@/state/Reducers/Dashboard/types";
+import NoSavedExtracts from "../fallbacks/NoSavedExtracts";
 
 export interface TermsTypes {
   extracts: WikipediaExtractsSaved;
@@ -10,6 +11,8 @@ export interface TermsTypes {
 
 export function TermList({ extracts, excess }: TermsTypes) {
   const [page, setPage] = useState<number>(0);
+
+  if (extracts.length === 0) return <NoSavedExtracts />;
 
   return (
     <div className="flex flex-col w-full gap-y-4 2xl:gap-y-12">

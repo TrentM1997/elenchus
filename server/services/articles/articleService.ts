@@ -18,6 +18,12 @@ export class ArticleService implements IArticleService {
     private readonly firecrawl: IFirecrawlService,
   ) {}
 
+  public getExtractionJob(jobId: string): JobResult | undefined {
+    const job = this.jobs[jobId];
+
+    return job ? structuredClone(job) : undefined;
+  }
+
   public extract(articles: FcParam[]): { jobId: string } {
     return this.startExtraction(articles);
   }
@@ -41,12 +47,6 @@ export class ArticleService implements IArticleService {
     return { jobId };
   }
 
-  public getExtractionJob(jobId: string): JobResult | undefined {
-    const job = this.jobs[jobId];
-
-    return job ? structuredClone(job) : undefined;
-  }
-
   private async executeExtraction(
     jobId: string,
     articles: FcParam[],
@@ -62,13 +62,19 @@ export class ArticleService implements IArticleService {
         persistArticle: this.save.bind(this),
       });
     } catch (error) {
+      const job = this.jobs[jobId];
+
+      if (!job) {
+        console.error("Extraction job unexpectedly missing", { jobId, error });
+        return;
+      }
+
       this.jobs[jobId] = {
-        ...this.jobs[jobId],
+        ...job,
         status: "rejected",
         error:
           error instanceof Error ? error.message : "Article extraction failed",
       };
-      return;
     }
   }
 

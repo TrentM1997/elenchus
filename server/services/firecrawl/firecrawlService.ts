@@ -63,14 +63,16 @@ export class FirecrawlService implements IFirecrawlService {
   }) {
     const updateJobSnapshot = () => {
       const prog = retrieved.length + failed.length;
-      jobs[id] = {
-        ...jobs[id],
-        result: {
-          retrieved: [...retrieved],
-          rejected: [...failed],
-          progress: `${prog}/${articles.length}`,
-        },
-      };
+      if (jobs[id]) {
+        jobs[id] = {
+          ...jobs[id],
+          result: {
+            retrieved: [...retrieved],
+            rejected: [...failed],
+            progress: `${prog}/${articles.length}`,
+          },
+        };
+      }
     };
 
     const pushFailed = (f: FailedAttempt) => {

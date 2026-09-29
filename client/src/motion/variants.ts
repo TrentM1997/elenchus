@@ -1,10 +1,11 @@
+import type { Easing, Variants } from "framer-motion";
+
 export const variants = {
   open: { opacity: 1 },
   closed: { opacity: 0 },
-};
+} satisfies Variants;
 
 export const searchResultsMotionProps = {
-  initial: false,
   open: {
     opacity: 1,
     transition: { type: "tween", duration: 0.3, ease: [0.33, 0, 0.67, 1] },
@@ -13,7 +14,7 @@ export const searchResultsMotionProps = {
     opacity: 0,
     transition: { type: "tween", duration: 0.2, ease: [0.65, 0, 0.35, 1] },
   },
-};
+} satisfies Variants;
 
 export const headerTransitions = {
   initial: { opacity: 0 },
@@ -25,9 +26,9 @@ export const headerTransitions = {
     opacity: 0,
     transition: { duration: 0.2, delay: 0, type: "tween" },
   },
-};
+} satisfies Variants;
 
-export const softEase: Array<number> = [0.33, 0, 0.67, 1];
+export const softEase: Easing = [0.33, 0, 0.67, 1];
 
 export const hideBottom = {
   show: {
@@ -50,7 +51,7 @@ export const hideBottom = {
       ease: softEase,
     },
   },
-};
+} satisfies Variants;
 
 export const hideTop = {
   show: {
@@ -61,7 +62,7 @@ export const hideTop = {
     y: -100,
     opacity: 0,
   },
-};
+} satisfies Variants;
 
 export const popoverVariants = {
   initial: { opacity: 0 },
@@ -73,7 +74,7 @@ export const popoverVariants = {
     opacity: 0,
     transition: { delay: 0, duration: 0.4, type: "tween", ease: softEase },
   },
-};
+} satisfies Variants;
 
 export const stepVariants = {
   open: {
@@ -101,7 +102,7 @@ export const stepVariants = {
       ease: softEase,
     },
   },
-};
+} satisfies Variants;
 
 export const delays = {
   open: {
@@ -119,7 +120,7 @@ export const delays = {
       type: "tween",
     },
   },
-};
+} satisfies Variants;
 
 export const scaleUpDown = {
   closed: {
@@ -130,7 +131,7 @@ export const scaleUpDown = {
     opacity: 1,
     scale: 1,
   },
-};
+} satisfies Variants;
 
 export const investigationsVariants = {
   open: {
@@ -148,7 +149,7 @@ export const investigationsVariants = {
       type: "tween",
     },
   },
-};
+} satisfies Variants;
 
 export const searchResultsVariants = {
   open: {
@@ -169,7 +170,7 @@ export const searchResultsVariants = {
       ease: [0.33, 0, 0.67, 1],
     },
   },
-};
+} satisfies Variants;
 
 export const pagesVariants = {
   show: {
@@ -180,7 +181,7 @@ export const pagesVariants = {
     opacity: 0,
     transition: { type: "tween", duration: 0.4, ease: "easeInOut" },
   },
-};
+} satisfies Variants;
 
 export const extractionToastVariants = {
   initial: {
@@ -210,13 +211,13 @@ export const extractionToastVariants = {
     opacity: 0,
     transition: { type: "tween", duration: 0.2, ease: softEase },
   },
-};
+} satisfies Variants;
 
 export const articleContent = {
   initial: { opacity: 0 },
   animate: { opacity: 1, transition: { type: "tween", duration: 0.25 } },
   exit: { opacity: 0, transition: { type: "tween", duration: 0.25 } },
-};
+} satisfies Variants;
 
 export const panelmotions: any = {
   initial: { opacity: 0 },
@@ -238,4 +239,4 @@ export const panelmotions: any = {
       ease: softEase,
     },
   },
-};
+} satisfies Variants;
