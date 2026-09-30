@@ -1,7 +1,15 @@
 import type { Router, RequestHandler } from "express";
 import type { RouteConfigDefinition } from "@elenchus/contracts";
 
-export class RouteRegistrar {
+export interface IRouteRegistrar {
+  register(
+    router: Router,
+    route: RouteConfigDefinition,
+    handler: RequestHandler,
+  ): void;
+}
+
+export class RouteRegistrar implements IRouteRegistrar {
   public register(
     router: Router,
     route: RouteConfigDefinition,

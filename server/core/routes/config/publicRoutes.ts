@@ -7,14 +7,24 @@ import {
   validateServerOrThrow,
 } from "../../validation/validateOrThrow.js";
 import { ClientError } from "../../errors/ClientError.js";
-import { PUBLIC_API_CONFIG } from "@elenchus/contracts";
-import { RouteRegistrar } from "./routeRegistrar.js";
+import { ApiContract } from "@elenchus/contracts";
+import { IRouteRegistrar } from "./routeRegistrar.js";
 import type { Static } from "@sinclair/typebox";
 
-const registrar = new RouteRegistrar();
+export type CreatePublicRoutesParams = {
+  app: IAppServices;
+  router: Router;
+  registrar: IRouteRegistrar;
+  contract: ApiContract["public"];
+};
 
-export function publicRoutes(app: IAppServices, router: Router) {
-  const feedbackRoute = PUBLIC_API_CONFIG.user.feedback;
+export function createPublicRoutes({
+  app,
+  router,
+  registrar,
+  contract,
+}: CreatePublicRoutesParams) {
+  const feedbackRoute = contract.user.feedback;
 
   registrar.register(
     router,
@@ -35,7 +45,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
     }),
   );
 
-  const passwordResetRoute = PUBLIC_API_CONFIG.user.passwordReset;
+  const passwordResetRoute = contract.user.passwordReset;
 
   registrar.register(
     router,
@@ -65,7 +75,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
     }),
   );
 
-  const recoverRoute = PUBLIC_API_CONFIG.auth.recover;
+  const recoverRoute = contract.auth.recover;
 
   registrar.register(
     router,
@@ -80,7 +90,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
     }),
   );
 
-  const loginRoute = PUBLIC_API_CONFIG.auth.login;
+  const loginRoute = contract.auth.login;
 
   registrar.register(
     router,
@@ -103,7 +113,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
     }),
   );
 
-  const logOutRoute = PUBLIC_API_CONFIG.auth.logOut;
+  const logOutRoute = contract.auth.logOut;
 
   registrar.register(
     router,
@@ -122,7 +132,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
     }),
   );
 
-  const signUpRoute = PUBLIC_API_CONFIG.auth.signUp;
+  const signUpRoute = contract.auth.signUp;
 
   registrar.register(
     router,
@@ -145,7 +155,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
     }),
   );
 
-  const wikiRoute = PUBLIC_API_CONFIG.integrations.wiki;
+  const wikiRoute = contract.integrations.wiki;
 
   registrar.register(
     router,
@@ -161,7 +171,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
     }),
   );
 
-  const pollRoute = PUBLIC_API_CONFIG.articles.poll;
+  const pollRoute = contract.articles.poll;
 
   registrar.register(
     router,
@@ -185,7 +195,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
     }),
   );
 
-  const extractRoute = PUBLIC_API_CONFIG.articles.extract;
+  const extractRoute = contract.articles.extract;
 
   registrar.register(
     router,
@@ -201,7 +211,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
     }),
   );
 
-  const blueSkyFeedRoute = PUBLIC_API_CONFIG.integrations.blueSky.feed;
+  const blueSkyFeedRoute = contract.integrations.blueSky.feed;
 
   registrar.register(
     router,
@@ -216,7 +226,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
     }),
   );
 
-  const blueSkySearchRoute = PUBLIC_API_CONFIG.integrations.blueSky.search;
+  const blueSkySearchRoute = contract.integrations.blueSky.search;
 
   registrar.register(
     router,
@@ -238,7 +248,7 @@ export function publicRoutes(app: IAppServices, router: Router) {
     }),
   );
 
-  const newsSearchRoute = PUBLIC_API_CONFIG.integrations.newsApi;
+  const newsSearchRoute = contract.integrations.newsApi;
 
   registrar.register(
     router,

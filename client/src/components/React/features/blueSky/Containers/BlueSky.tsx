@@ -1,14 +1,9 @@
-import { selectPOVData } from "@/state/Reducers/Investigate/pov/selectors";
-import { startTransition, useEffect, useLayoutEffect, useRef } from "react";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/state/store";
 import ErrorBoundary from "../../../global/ErrorBoundaries/ErrorBoundary";
-import { selectPost } from "@/state/Reducers/BlueSky/BlueSkySlice";
 import SearchBlueSky from "../Components/input/SearchBlueSky";
 import BlueSkyHeader from "../Components/BlueSkyHeader";
 import CloseBlueSky from "../Components/buttons/CloseBlueSky";
-import { useNavigate } from "react-router-dom";
 import FeedContainer from "./FeedContainer";
+import { useRedirectFromLandingPage } from "@/lib/hooks/blueSky/useRedirectFromLandingPage";
 
 interface BlueSkyProps {
   context: "home" | "investigate";
@@ -19,32 +14,7 @@ export default function BlueSky({
   context,
   shouldAnimate = true,
 }: BlueSkyProps) {
-  const posts = useSelector((state: RootState) => state.bluesky.posts);
-  const navigate = useNavigate();
-  const { idea } = useSelector(selectPOVData);
-  const dispatch = useDispatch();
-  const shouldRedirect: boolean = context === "home";
-  const redirectTimer = useRef<number | null>(null);
-
-  useEffect(() => {
-    if (!idea) return;
-
-    if (idea && shouldRedirect) {
-      redirectTimer.current = window.setTimeout(() => {
-        startTransition(() => {
-          navigate("/investigate");
-        });
-        redirectTimer.current = null;
-      }, 850);
-    }
-
-    return () => {
-      if (redirectTimer.current !== null) {
-        clearTimeout(redirectTimer.current);
-      }
-      dispatch(selectPost({ status: "initial" }));
-    };
-  }, [idea, shouldRedirect]);
+  const { posts, shouldRedirect } = useRedirectFromLandingPage(context);
 
   return (
     <div className="lg:p-8 w-full relative opacity-0 animate-fade-in animation-delay-200ms ease-soft">

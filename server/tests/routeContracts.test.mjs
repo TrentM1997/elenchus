@@ -1,9 +1,18 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { Router } from "express";
-import { publicRoutes } from "../dist/core/routes/config/publicRoutes.js";
-import { protectedRoutes } from "../dist/core/routes/config/privateRoutes.js";
+import { createPublicRoutes } from "../dist/core/routes/config/publicRoutes.js";
+import { createPrivateRoutes } from "../dist/core/routes/config/privateRoutes.js";
+import { RouteRegistrar } from "../dist/core/routes/config/routeRegistrar.js";
 import { PUBLIC_API_CONFIG, PRIVATE_API_CONFIG } from "@elenchus/contracts";
+
+function publicRoutes(app, router) {
+  return createPublicRoutes({ app, router, registrar: new RouteRegistrar(), contract: PUBLIC_API_CONFIG });
+}
+
+function protectedRoutes(app, router) {
+  return createPrivateRoutes({ app, router, registrar: new RouteRegistrar(), contract: PRIVATE_API_CONFIG });
+}
 
 function invoke(router, method, path, request) {
   const route = router.stack.find(layer =>
@@ -41,11 +50,11 @@ test("search validates the query object and passes only q to the integration", a
 });
 
 for (const [name, config, register] of [
-  ["public", PUBLIC_API_CONFIG, publicRoutes],
-  ["private", PRIVATE_API_CONFIG, protectedRoutes],
+  ["public", PUBLIC_API_CONFIG, createPublicRoutes],
+  ["private", PRIVATE_API_CONFIG, createPrivateRoutes],
 ]) {
 test(`each ${name} contract is registered once with its declared method`, () => {
-  const router = register({}, Router());
+  const router = register({ app: {}, router: Router(), registrar: new RouteRegistrar(), contract: config });
   function routes(config) {
     return Object.values(config).flatMap(value =>
       "path" in value ? [value] : routes(value));
@@ -57,6 +66,30 @@ test(`each ${name} contract is registered once with its declared method`, () => 
     ? Object.keys(layer.route.methods).map(method => `${method.toUpperCase()} ${layer.route.path}`)
     : []).sort();
   assert.deepEqual(actual, expected);
+});
+
+test(`${name} routes use the injected contract and registrar`, () => {
+  function relocate(config) {
+    return Object.fromEntries(Object.entries(config).map(([key, value]) => [
+      key,
+      "path" in value ? { ...value, path: `/injected${value.path}` } : relocate(value),
+    ]));
+  }
+  const contract = relocate(config);
+  const router = Router();
+  const registrations = [];
+  const realRegistrar = new RouteRegistrar();
+  const registrar = {
+    register(target, route, handler) {
+      assert.equal(target, router);
+      registrations.push(route);
+      realRegistrar.register(target, route, handler);
+    },
+  };
+  register({ app: {}, router, registrar, contract });
+  assert.ok(registrations.length > 0);
+  assert.ok(registrations.every(route => route.path.startsWith("/injected/")));
+  assert.equal(router.stack.length, registrations.length);
 });
 }
 
