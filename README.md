@@ -35,6 +35,8 @@ PORT=5001
 
 All seven credentials are required at server startup. Use an existing Supabase project with the application's database tables and policies configured; starting the app does not provision them. Keep the service key on the server.
 
+Investigation saving and hydration also require database functions installed in that project. Follow the [investigation persistence and database setup guide](docs/investigation-persistence.md) to install or update the RPCs and regenerate database types. Builds and Docker startup do not apply the SQL automatically.
+
 ## Docker development
 
 From the repository root:
@@ -96,10 +98,10 @@ Run from the repository root:
 npm run typecheck
 npm run build
 npm exec --workspace=elenchus -- jest --runInBand
-node --test server/tests/routeContracts.test.mjs
+npm test --workspace=server
 ```
 
-The full build compiles contracts, then the server, then the client. Server route tests import compiled output, so build before running them. Client Jest maps contracts imports to shared TypeScript source.
+The full build compiles contracts, then the server, then the client. The server test command automatically builds contracts and the server through its `pretest` script, then runs all `server/tests/*.test.mjs` files against compiled output. Client Jest maps contracts imports to shared TypeScript source.
 
 Individual build commands are `npm run build:contracts`, `npm run build:server`, and `npm run build:client`; application build commands compile contracts first.
 

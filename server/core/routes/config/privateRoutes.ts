@@ -1,5 +1,5 @@
 import type { Static } from "@sinclair/typebox";
-import { PRIVATE_API_CONFIG } from "@elenchus/contracts";
+import type { ApiContract } from "@elenchus/contracts";
 import { Router } from "express";
 import { IAppServices } from "../../../services/appServices.js";
 import { wrapAsync } from "../../async/wrapAsync.js";
@@ -8,13 +8,22 @@ import {
   validateServerOrThrow,
 } from "../../validation/validateOrThrow.js";
 import { ServerError } from "../../errors/ServerError.js";
+import { IRouteRegistrar } from "./routeRegistrar.js";
 
-import { RouteRegistrar } from "./routeRegistrar.js";
+export type CreatePrivateRoutesParams = {
+  app: IAppServices;
+  router: Router;
+  registrar: IRouteRegistrar;
+  contract: ApiContract["private"];
+};
 
-const registrar = new RouteRegistrar();
-
-export function protectedRoutes(app: IAppServices, router: Router) {
-  const deleteAccountRoute = PRIVATE_API_CONFIG.account.delete;
+export function createPrivateRoutes({
+  registrar,
+  router,
+  app,
+  contract,
+}: CreatePrivateRoutesParams) {
+  const deleteAccountRoute = contract.account.delete;
 
   registrar.register(
     router,
@@ -44,7 +53,7 @@ export function protectedRoutes(app: IAppServices, router: Router) {
     }),
   );
 
-  const bookmarkRecordsRoute = PRIVATE_API_CONFIG.bookmarks.get.records;
+  const bookmarkRecordsRoute = contract.bookmarks.get.records;
 
   registrar.register(
     router,
@@ -67,7 +76,7 @@ export function protectedRoutes(app: IAppServices, router: Router) {
     }),
   );
 
-  const bookmarkedArticlesRoute = PRIVATE_API_CONFIG.bookmarks.get.all;
+  const bookmarkedArticlesRoute = contract.bookmarks.get.all;
 
   registrar.register(
     router,
@@ -91,7 +100,7 @@ export function protectedRoutes(app: IAppServices, router: Router) {
     }),
   );
 
-  const bookmarkedArticleRoute = PRIVATE_API_CONFIG.bookmarks.get.single;
+  const bookmarkedArticleRoute = contract.bookmarks.get.single;
 
   registrar.register(
     router,
@@ -123,7 +132,7 @@ export function protectedRoutes(app: IAppServices, router: Router) {
     }),
   );
 
-  const bookmarkRoute = PRIVATE_API_CONFIG.bookmarks.post;
+  const bookmarkRoute = contract.bookmarks.post;
 
   registrar.register(
     router,
@@ -153,7 +162,7 @@ export function protectedRoutes(app: IAppServices, router: Router) {
     }),
   );
 
-  const deleteBookmarkRoute = PRIVATE_API_CONFIG.bookmarks.delete;
+  const deleteBookmarkRoute = contract.bookmarks.delete;
 
   registrar.register(
     router,
@@ -185,7 +194,7 @@ export function protectedRoutes(app: IAppServices, router: Router) {
     }),
   );
 
-  const saveInvestigationRoute = PRIVATE_API_CONFIG.investigations.post;
+  const saveInvestigationRoute = contract.investigations.post;
 
   registrar.register(
     router,
@@ -222,7 +231,7 @@ export function protectedRoutes(app: IAppServices, router: Router) {
     }),
   );
 
-  const savedInvestigationsRoute = PRIVATE_API_CONFIG.investigations.get.all;
+  const savedInvestigationsRoute = contract.investigations.get.all;
 
   registrar.register(
     router,
@@ -249,7 +258,7 @@ export function protectedRoutes(app: IAppServices, router: Router) {
     }),
   );
 
-  const savedInvestigationRoute = PRIVATE_API_CONFIG.investigations.get.single;
+  const savedInvestigationRoute = contract.investigations.get.single;
 
   registrar.register(
     router,

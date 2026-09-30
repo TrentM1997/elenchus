@@ -1,34 +1,12 @@
-import { useDispatch } from "react-redux";
-import { updatePOVDraft } from "@/state/Reducers/Investigate/pov/thunks";
-import { smoothScrollUp } from "@/lib/helpers/scroll/ScrollToTop";
-import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
-import { AppDispatch } from "@/state/store";
 import { BlueSkyPostSchemaType } from "@elenchus/contracts/schemas/integrations/BlueSkySchemas";
-import { useEffect } from "react";
-import { selectPost } from "@/state/Reducers/BlueSky/BlueSkySlice";
+import { useSelectBlueSkyPost } from "@/lib/hooks/blueSky/useSelectBlueSkyPost";
 
 interface UseThis {
   post: BlueSkyPostSchemaType;
 }
 
 export default function UseThisPost({ post }: UseThis) {
-  const dispatch = useDispatch<AppDispatch>();
-
-  const investigateThis = () => {
-    dispatch(updatePOVDraft({ idea: post.record.text }));
-    dispatch(renderModal(null));
-    smoothScrollUp();
-  };
-
-  const unselect = () => {
-    dispatch(renderModal(null));
-  };
-
-  useEffect(() => {
-    return () => {
-      dispatch(selectPost({ status: "initial" }));
-    };
-  }, [dispatch]);
+  const { investigateThis, unselect } = useSelectBlueSkyPost(post);
 
   return (
     <div

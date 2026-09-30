@@ -13,6 +13,7 @@ import { globalErrorHandler } from "../core/middleware/globalErrorHandler.js";
 import { spaFallback } from "../core/routes/spaFallback.js";
 import { createRouter } from "../core/routes/createRouter.js";
 import { AppServices } from "../services/appServices.js";
+import { apiContractConfig } from "@elenchus/contracts";
 
 const corsOptions: object = {
   origin: ["https://elenchusapp.io", "http://localhost:5173"],
@@ -65,7 +66,7 @@ app.options("*", (req, res) => {
   res.sendStatus(200);
 });
 
-app.use(createRouter(new AppServices()));
+app.use(createRouter({ app: new AppServices(), contract: apiContractConfig }));
 
 app.use(globalErrorHandler);
 

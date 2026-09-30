@@ -1,9 +1,9 @@
-import Lottie, { LottieRefCurrentProps } from "lottie-react";
+import Lottie from "lottie-react";
 import blueCheck from "@/lotties/blueCheck.json";
-import React, { useEffect, useCallback, useMemo, useRef } from "react";
-import { PerspectiveFraming } from "@/state/Reducers/Investigate/research/types";
+import React from "react";
 import { BiasKind } from "../../steps/Step3";
 import { PerspectiveDraft } from "@/state/Reducers/Investigate/pov/types";
+import { useBiasLottiePlayState } from "@/lib/hooks/rendering/useBiasLottiePlayState";
 
 interface Biases {
   research: PerspectiveDraft;
@@ -12,58 +12,8 @@ interface Biases {
 }
 
 function Biases({ research, bias, getPOV }: Biases): JSX.Element | null {
-  const lottieRef = useRef<LottieRefCurrentProps | null>(null);
+  const { lottieRef, handleComplete } = useBiasLottiePlayState(research, bias);
   const { biases } = research;
-
-  const chosen = useMemo(() => {
-    if (biases === null) return false;
-    const isChosen: boolean = bias === biases;
-    return isChosen;
-  }, [bias, biases]);
-
-  const hasPlayedBefore = useMemo(() => {
-    if (!chosen) return false;
-    try {
-      const lastPlayed = sessionStorage.getItem("previous-biases");
-      return lastPlayed === bias;
-    } catch {
-      return false;
-    }
-  }, [chosen]);
-
-  const jumpToEnd = useCallback(() => {
-    const api = lottieRef.current;
-    if (!api) return;
-    const lastFrame = api.getDuration(true);
-    if (lastFrame) {
-      api.goToAndStop(Math.max(0, lastFrame), true);
-    }
-  }, []);
-
-  useEffect(() => {
-    const lottieApi = lottieRef.current;
-    if (!lottieApi) return;
-
-    if (!chosen) {
-      lottieApi.goToAndStop(0, true);
-      return;
-    }
-
-    if (hasPlayedBefore) {
-      jumpToEnd();
-    } else {
-      lottieApi.play();
-    }
-  }, [hasPlayedBefore]);
-
-  const handleComplete = useCallback(() => {
-    if (!chosen) return;
-    try {
-      sessionStorage.setItem("previous-biases", bias);
-    } catch {}
-    jumpToEnd();
-  }, [chosen, jumpToEnd]);
-
   return (
     <div className="relative" key={bias}>
       <div

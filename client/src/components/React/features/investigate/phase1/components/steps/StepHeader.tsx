@@ -1,40 +1,17 @@
 import HelpButton from "@/components/React/global/Help/buttons/Question";
 import { AnimatePresence, motion } from "framer-motion";
 import { headerTransitions } from "@/motion/variants";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/state/store";
 import React from "react";
+import { useStepWizardHeader } from "@/lib/hooks/stepWizard/useStepWizardHeader";
 
-interface StepHeader {
+export interface StepHeader {
   title: string;
   subheader?: string | null;
   info: Help[];
 }
 
 function StepHeader({ title, subheader, info }: StepHeader) {
-  const step = useSelector(
-    (state: RootState) => state.investigation.stepper.wizardStep.current,
-  );
-  const [display, setDisplay] = useState({
-    title: title,
-    subheader: subheader,
-  });
-  const [propsChanging, setPropsChanging] = useState<boolean>(false);
-
-  useEffect(() => {
-    setPropsChanging(true);
-
-    const timer = setTimeout(() => {
-      setDisplay({
-        title: title,
-        subheader: subheader,
-      });
-      setPropsChanging(false);
-    }, 20);
-
-    return () => clearTimeout(timer);
-  }, [step]);
+  const { propsChanging, display } = useStepWizardHeader({ title, subheader });
 
   return (
     <div

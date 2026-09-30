@@ -197,7 +197,9 @@ function WikiModalHeader() {
           </svg>
         </div>
         <div className="w-auto h-fit">
-          <p className="text-zinc-300 font-light text-sm tracking-tight">Wikipedia Extract</p>
+          <p className="text-zinc-300 font-light text-sm tracking-tight">
+            Wikipedia Extract
+          </p>
         </div>
       </div>
     </>
