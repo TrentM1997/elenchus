@@ -1,6 +1,7 @@
-import Lottie, { LottieRefCurrentProps } from "lottie-react";
+import Lottie from "lottie-react";
 import blueCheck from "@/lotties/blueCheck.json";
-import React, { useEffect, useCallback, useMemo, useRef } from "react";
+import React from "react";
+import { usePerspectiveLottiePlayState } from "@/lib/hooks/rendering/usePerspectiveLottiePlayState";
 
 interface Perspective {
   perspective: string | null;
@@ -13,55 +14,10 @@ function Perspective({
   opinion,
   getPOV,
 }: Perspective): JSX.Element | null {
-  const lottieRef = useRef<LottieRefCurrentProps | null>(null);
-
-  const chosen = useMemo(() => {
-    if (perspective === null) return false;
-    const isChosen: boolean = opinion === perspective;
-    return isChosen;
-  }, [opinion, perspective]);
-
-  const hasPlayedBefore = useMemo(() => {
-    if (!chosen) return false;
-    try {
-      const lastPlayed = sessionStorage.getItem("previous-perspective");
-      return lastPlayed === opinion;
-    } catch {
-      return false;
-    }
-  }, [chosen]);
-
-  const jumpToEnd = useCallback(() => {
-    const api = lottieRef.current;
-    if (!api) return;
-    const lastFrame = api.getDuration(true);
-    if (!lastFrame) return;
-    api.goToAndStop(Math.max(0, lastFrame), true);
-  }, []);
-
-  useEffect(() => {
-    const lottieApi = lottieRef.current;
-    if (!lottieApi) return;
-
-    if (!chosen) {
-      lottieApi.goToAndStop(0, true);
-      return;
-    }
-
-    if (hasPlayedBefore) {
-      jumpToEnd();
-    } else {
-      lottieApi.play();
-    }
-  }, [hasPlayedBefore]);
-
-  const handleComplete = useCallback(() => {
-    if (!chosen || !perspective) return;
-    try {
-      sessionStorage.setItem("previous-perspective", perspective);
-    } catch {}
-    jumpToEnd();
-  }, [chosen, jumpToEnd, perspective]);
+  const { lottieRef, handleComplete } = usePerspectiveLottiePlayState({
+    perspective,
+    opinion,
+  });
 
   return (
     <div className="relative" key={opinion}>

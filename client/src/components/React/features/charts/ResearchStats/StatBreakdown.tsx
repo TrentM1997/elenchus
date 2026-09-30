@@ -4,6 +4,12 @@ interface StatBreakdown {
   outcomes: StatBreakdownTypes;
 }
 
+export type StatItemLabel =
+  | "Changed your opinion"
+  | "Validated your POV"
+  | "Remained neutral"
+  | "Needed more information";
+
 export default function StatBreakdown({ outcomes }: StatBreakdown) {
   const { neededMore, neutral, percentChanged, validated } = outcomes;
 
