@@ -14,7 +14,10 @@ export interface IAuthRouteHandler {
   login(credentials: LoginCredentials): Promise<LoginResponseSchemaType>;
   logOut(): Promise<LogOutResultSchemaType>;
   recover(): Promise<RecoverSessionResponseSchemaType>;
-  signup(credentials: LoginCredentials): Promise<CreateUserResponseSchemaType>;
+  signup(
+    credentials: LoginCredentials,
+    signal: AbortSignal,
+  ): Promise<CreateUserResponseSchemaType>;
   resetPassword(
     credentials: LoginCredentials,
   ): Promise<ResetPasswordResponseSchemaType>;
@@ -44,10 +47,10 @@ export class AuthRouteHandler implements IAuthRouteHandler {
     return await this.http.request(route, {});
   }
 
-  public async signup(credentials: LoginCredentials) {
+  public async signup(credentials: LoginCredentials, signal: AbortSignal) {
     const route = this.routes.auth.signUp;
 
-    return await this.http.request(route, { body: credentials });
+    return await this.http.request(route, { body: credentials, signal });
   }
 
   public async resetPassword(credentials: LoginCredentials) {

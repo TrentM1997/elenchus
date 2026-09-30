@@ -1,71 +1,26 @@
-import { useDispatch, useSelector } from "react-redux";
 import GuideDoneReading from "../tooltips/GuideDoneReading";
-import { RootState } from "@/state/store";
-import { useEffect, useRef } from "react";
-import { useTooltipFlags } from "@/lib/hooks/rendering/useTooltipFlags";
 import PanelLabel from "./PanelLabel";
-import {
-  populateTooltip,
-  TooltipDisplayed,
-} from "@/state/Reducers/Investigate/Rendering";
 import { AnimatePresence } from "framer-motion";
-import { smoothScrollUp } from "@/lib/helpers/scroll/ScrollToTop";
-import { wait } from "@/lib/helpers/formatting/Presentation";
-import { startReflection } from "@/state/Reducers/Investigate/research/ResearchSlice";
 import ButtonHoverTooltip from "../../tooltips/ButtonHoverTooltip";
+import { useFinishedReadingTooltip } from "@/lib/hooks/articles/useFinishReadingTooltip";
 
 export function FinishedReading() {
-  const articles = useSelector((s: RootState) => s.investigation.read.articles);
-  const tooltip: TooltipDisplayed = useSelector(
-    (s: RootState) => s.investigation.rendering.tooltip,
-  );
-  const { getFlags, setFlag } = useTooltipFlags();
-  const dispatch = useDispatch();
-  const animateTooltip: boolean =
-    Array.isArray(articles) &&
-    articles.length > 0 &&
-    tooltip === "Finished Reading Button";
-  const flagTimer = useRef<number | null>(null);
-
-  useEffect(() => {
-    if (!Array.isArray(articles) || articles.length === 0) {
-      return;
-    }
-
-    const flags = getFlags();
-
-    if (flags.readingTooltip === false) {
-      flagTimer.current = window.setTimeout(() => {
-        dispatch(populateTooltip("Finished Reading Button"));
-        setFlag("readingTooltip", true);
-        flagTimer.current = null;
-      }, 2000);
-    }
-  }, [getFlags, setFlag, dispatch]);
-
-  const handleClick = async (): Promise<void> => {
-    smoothScrollUp();
-    await wait(500);
-    dispatch(
-      startReflection({
-        ending_perspective: null,
-        changed_opinion: null,
-        had_merit: null,
-        new_concepts: null,
-        takeaway: null,
-      }),
-    );
-  };
+  const { articles, handleClick, tooltip } = useFinishedReadingTooltip();
 
   return (
     <div
-      className={`${articles.status === "error" ? "pointer-events-none opacity-30" : "pointer-events-auto opacity-100 lg:hover:bg-border_gray/40"}
+      className={`${
+        articles.status === "error"
+          ? "pointer-events-none opacity-30"
+          : "pointer-events-auto opacity-100 lg:hover:bg-border_gray/40"
+      }
             shrink-0 w-fit h-10 lg:h-auto px-2 md:py-1.5 xl:px-2 2xl:px-2.5 relative
               transition-all ease-soft duration-300 flex justify-center lg:border-r group cursor-pointer
-              border-border_gray`}
+              border-border_gray
+              `}
     >
       <AnimatePresence>
-        {animateTooltip && <GuideDoneReading />}
+        {articles.status === "ready" && <GuideDoneReading />}
       </AnimatePresence>
       <button
         onClick={handleClick}
@@ -101,14 +56,3 @@ function ForwardArrow(): JSX.Element {
     </svg>
   );
 }
-
-//function CheckMark(): JSX.Element {
-//
-//    return (
-//        <svg xmlns="http://www.w3.org/2000/svg" width={'100%'} height={'100%'} viewBox="0 0 24 24" fill="currentColor"
-//            className="text-button_blue delay-200 lg:group-hover:scale-125 transition-all ease-soft duration-200 icon icon-tabler icons-tabler-filled icon-tabler-circle-check">
-//            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-//            <path d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z" />
-//        </svg>
-//    )
-//};

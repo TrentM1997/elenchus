@@ -21,11 +21,11 @@ type SavedInvestigations = AsyncState<InvestigationSchemaType[]>;
 
 export type OpenedArticle = AsyncState<ArticleSchemaType>;
 
-export type ResearchMetrics = {
-  bias: AsyncState<number[]>;
-  integrity: AsyncState<number[]>;
-  outcomes: AsyncState<StatBreakdownTypes>;
-};
+export type ResearchMetricsState = AsyncState<{
+  bias: number[];
+  integrity: number[];
+  outcomes: StatBreakdownTypes;
+}>;
 
 interface InitialState {
   bookmarkRequestId: string | null;
@@ -33,7 +33,7 @@ interface InitialState {
   articles: SavedArticles;
   investigations: SavedInvestigations;
   ArticleToReview: OpenedArticle;
-  metrics: ResearchMetrics;
+  metrics: ResearchMetricsState;
   tab: DashboardTab;
   articleScrollPosition: VirtuosoScrollPos;
   researchScrollPosition: VirtuosoScrollPos;
@@ -45,11 +45,7 @@ const initialState: InitialState = {
   bookmarks: { status: "initial" },
   articles: { status: "initial" },
   investigations: { status: "initial" },
-  metrics: {
-    bias: { status: "initial" },
-    integrity: { status: "initial" },
-    outcomes: { status: "initial" },
-  },
+  metrics: { status: "initial" },
   ArticleToReview: { status: "initial" },
   openInvestigation: { status: "initial" },
   tab: { kind: "metrics" },
@@ -78,15 +74,10 @@ const DashboardSlice = createSlice({
     changeTab: (state: InitialState, action: PayloadAction<DashboardTab>) => {
       state.tab = action.payload;
     },
-    getIntegrityMetrics: (
-      state: InitialState,
-      action: PayloadAction<ResearchMetrics["integrity"]>,
-    ) => {
-      state.metrics.integrity = action.payload;
-    },
+
     getMetrics: (
       state: InitialState,
-      action: PayloadAction<ResearchMetrics>,
+      action: PayloadAction<ResearchMetricsState>,
     ) => {
       state.metrics = action.payload;
     },
@@ -170,6 +161,10 @@ const DashboardSlice = createSlice({
         }>,
       ) => {
         const { articles, investigations } = action.payload;
+
+        if (investigations.length === 0 && articles.length === 0) {
+        }
+
         if (articles.length > 0) {
           state.articles = { status: "ready", data: articles };
         } else {
@@ -202,7 +197,8 @@ const DashboardSlice = createSlice({
         details:
           typeof action.payload === "string"
             ? action.payload
-            : action.error.message ?? "Failed to hydrate opened investigation",
+            : (action.error.message ??
+              "Failed to hydrate opened investigation"),
       };
     });
 

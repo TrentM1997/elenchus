@@ -14,17 +14,10 @@ export const useCalculateMetrics = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    if (investigations.status !== "ready" || articles.status !== "ready") {
+    if (investigations.status !== "ready" || articles.status !== "ready")
       return;
-    }
 
-    dispatch(
-      getMetrics({
-        bias: { status: "pending" },
-        integrity: { status: "pending" },
-        outcomes: { status: "pending" },
-      }),
-    );
+    dispatch(getMetrics({ status: "pending" }));
 
     let worker: Worker | undefined;
     let active = true;
@@ -38,9 +31,8 @@ export const useCalculateMetrics = () => {
 
       dispatch(
         getMetrics({
-          bias: { status: "failed", details },
-          integrity: { status: "failed", details },
-          outcomes: { status: "failed", details },
+          status: "failed",
+          details: "Could not calaculate metrics",
         }),
       );
 
@@ -60,9 +52,12 @@ export const useCalculateMetrics = () => {
           cancelAnimationFrame(raf);
           dispatch(
             getMetrics({
-              bias: { status: "ready", data: payload.bias },
-              integrity: { status: "ready", data: payload.integrity },
-              outcomes: { status: "ready", data: payload.outcomes },
+              status: "ready",
+              data: {
+                integrity: payload.integrity,
+                bias: payload.bias,
+                outcomes: payload.outcomes,
+              },
             }),
           );
           worker?.terminate();

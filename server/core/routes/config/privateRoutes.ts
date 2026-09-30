@@ -39,6 +39,9 @@ export function createPrivateRoutes({
           credentials,
         );
 
+      console.log("*******************************");
+      console.log({ "Delete Account Result": result });
+      console.log("*******************************");
       if (!result.ok) {
         throw new ServerError(result.message, 401, result.details);
       }

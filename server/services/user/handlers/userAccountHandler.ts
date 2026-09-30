@@ -2,13 +2,13 @@ import { LoginCredentialsSchemaType } from "@elenchus/contracts/schemas/auth/Aut
 import { IDbClient } from "../../../db/access/client/dbClient.ts";
 import { IAuthorization } from "../../auth/authorization.ts";
 import {
-  AccountDeletionResult,
   CreateUserResult,
   RequestPasswordResetResult,
 } from "../../../db/access/repositories/user/userWriteHandler.ts";
 import { FeedbackReqSchemaType } from "@elenchus/contracts/schemas/auth/FeedbackSchema";
 import { FeedbackSubmitResult } from "../../../db/access/repositories/feedback/feedbackRespository.ts";
 import { ResetPasswordResponseSchemaType } from "@elenchus/contracts/schemas/auth/ResetPasswordSchema";
+import { DeleteAccountResponseSchemaType } from "@elenchus/contracts/schemas/auth/DeleteAccountResponseSchema";
 
 export interface IUserAccountHandler {
   changePassword(credentials: {
@@ -18,7 +18,7 @@ export interface IUserAccountHandler {
   deleteAccount(
     user_id: string | null | undefined,
     credentials: LoginCredentialsSchemaType,
-  ): Promise<AccountDeletionResult>;
+  ): Promise<DeleteAccountResponseSchemaType>;
   signUp(credentials: LoginCredentialsSchemaType): Promise<CreateUserResult>;
   requestPasswordReset(email: string): Promise<RequestPasswordResetResult>;
 
@@ -55,14 +55,14 @@ export class UserAccountHandler implements IUserAccountHandler {
   public async deleteAccount(
     user_id: string | null | undefined,
     credentials: LoginCredentialsSchemaType,
-  ): Promise<AccountDeletionResult> {
+  ): Promise<DeleteAccountResponseSchemaType> {
     return await this.executeDeleteAccount(user_id, credentials);
   }
 
   private async executeDeleteAccount(
     user_id: string | null | undefined,
     credentials: LoginCredentialsSchemaType,
-  ): Promise<AccountDeletionResult> {
+  ): Promise<DeleteAccountResponseSchemaType> {
     const userId = this.policy.requireAuthenticated(user_id);
     return await this.db.user.write.deleteAccount(userId, credentials);
   }

@@ -45,3 +45,53 @@ export const resetPassword = createAsyncThunk(
     }
   },
 );
+
+export const signUp = createAsyncThunk(
+  "auth/signUp",
+  async (credentials: LoginCredentials, thunkAPI) => {
+    try {
+      const result = await serverClient.general.auth.signup(
+        credentials,
+        thunkAPI.signal,
+      );
+
+      if (!result.ok) {
+        throw new Error("Failed to create new user");
+      }
+
+      return result;
+    } catch (err) {
+      if (thunkAPI.signal.aborted) {
+        console.log("signup aborted by user/navigation");
+      }
+      return thunkAPI.rejectWithValue(
+        err instanceof Error ? err.message : "Failed to delete account",
+      );
+    }
+  },
+);
+
+export const deleteAccount = createAsyncThunk(
+  "auth/deleteAccount",
+  async (credentials: LoginCredentials, thunkAPI) => {
+    try {
+      const result = await serverClient.privileged.account.deleteAccount(
+        credentials,
+        thunkAPI.signal,
+      );
+
+      if (result.ok === false) {
+        throw new Error("Account deletion failed");
+      }
+
+      return result;
+    } catch (err) {
+      if (thunkAPI.signal.aborted) {
+        console.log("account deletion aborted by user/navigation");
+      }
+      return thunkAPI.rejectWithValue(
+        err instanceof Error ? err.message : "Failed to delete account",
+      );
+    }
+  },
+);

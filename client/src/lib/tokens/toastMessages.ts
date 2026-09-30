@@ -32,4 +32,10 @@ export const toastMessageConfig = {
     failed: "Failed to save your investigation",
     success: "Investigation saved successfully!",
   },
+  "delete account": {
+    idle: "idle",
+    pending: "Deleting your account...",
+    failed: "Failed to delete your account",
+    success: "Account deleted successfully!",
+  },
 } satisfies ToastMessageConfig;

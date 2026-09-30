@@ -3,13 +3,11 @@ import ScrolltoTop from "@/lib/helpers/scroll/ScrollToTop";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { variants } from "@/motion/variants";
-import RenderMetricsCharts from "../UserCharts/ChartJsWrapper";
 import { useScrollWithShadow } from "@/lib/hooks/rendering/useScrollWithShadow";
-import { useRenderMetrics } from "@/lib/hooks/dashboard/rendering/useRenderMetrics";
+import RenderCharts from "../UserCharts/RenderCharts";
 
-export default function Metrics(): JSX.Element | null {
+export default function ResearchMetrics(): JSX.Element | null {
   const metrics = useSelector((s: RootState) => s.dash.metrics);
-  const { priority1, priority2, priority3 } = useRenderMetrics();
   const { boxShadow, onScrollHandler } = useScrollWithShadow();
 
   return (
@@ -27,16 +25,10 @@ export default function Metrics(): JSX.Element | null {
       <article
         onScroll={onScrollHandler}
         style={{ boxShadow: boxShadow }}
-        className="h-full w-full flex flex-col justify-start items-center gap-y-24 
-            
+        className="h-full w-full flex flex-col py-16 items-center gap-y-24 
             overflow-y-auto no-scrollbar scrollbar-gutter-stable-both scroll-smooth overscroll-contain"
       >
-        <RenderMetricsCharts
-          metrics={metrics}
-          priority1={priority1}
-          priority2={priority2}
-          priority3={priority3}
-        />
+        <RenderCharts metrics={metrics} />
       </article>
     </motion.section>
   );

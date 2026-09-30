@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { loginUser, logOut } from "./thunks";
+import { deleteAccount, loginUser, logOut, signUp } from "./thunks";
 
 export type UserKind = "anonymous" | "authenticated";
 
@@ -29,6 +29,14 @@ export const AuthenticationSlice = createSlice({
 
     builder.addCase(loginUser.fulfilled, (state: Authentication) => {
       state.userKind = "authenticated";
+    });
+
+    builder.addCase(signUp.fulfilled, (state) => {
+      state.userKind === "authenticated";
+    });
+
+    builder.addCase(deleteAccount.fulfilled, (state: Authentication) => {
+      state.userKind = "anonymous";
     });
   },
 });

@@ -78,7 +78,9 @@ test("investigation source navigation retains the parent ID and clears the artic
     }),
   );
   expect(state().dash.tab).toEqual({
-    kind: "investigations", display: "review", current: "investigation",
+    kind: "investigations",
+    display: "review",
+    current: "investigation",
     investigationId: investigation.id,
   });
   store.dispatch(
@@ -102,11 +104,15 @@ test("investigation source navigation retains the parent ID and clears the artic
     }),
   );
   expect(state().dash.tab).toEqual({
-    kind: "investigations", display: "review", current: "article",
-    investigationId: investigation.id, articleId: article.id,
+    kind: "investigations",
+    display: "review",
+    current: "article",
+    investigationId: investigation.id,
+    articleId: article.id,
   });
   expect(state().dash.openInvestigation).toEqual({
-    status: "ready", data: openedInvestigation,
+    status: "ready",
+    data: openedInvestigation,
   });
   store.dispatch(
     changeTab({
@@ -117,7 +123,9 @@ test("investigation source navigation retains the parent ID and clears the artic
     }),
   );
   expect(state().dash.tab).toEqual({
-    kind: "investigations", display: "review", current: "investigation",
+    kind: "investigations",
+    display: "review",
+    current: "investigation",
     investigationId: investigation.id,
   });
 });
@@ -176,19 +184,37 @@ test("article hydration clears stale detail while loading a missing article and 
   store.dispatch(
     changeTab({ kind: "articles", display: "review", articleId: 12 }),
   );
-  store.dispatch(hydrateOpenedArticle.fulfilled(
-    { ok: true, data: article }, "first-article", article.id,
-  ));
-  expect(state().dash.ArticleToReview).toEqual({ status: "ready", data: article });
+  store.dispatch(
+    hydrateOpenedArticle.fulfilled(
+      { ok: true, data: article },
+      "first-article",
+      article.id,
+    ),
+  );
+  expect(state().dash.ArticleToReview).toEqual({
+    status: "ready",
+    data: article,
+  });
   store.dispatch(
     changeTab({ kind: "articles", display: "review", articleId: 999 }),
   );
   store.dispatch(hydrateOpenedArticle.pending("missing-article", 999));
-  expect(state().dash.tab).toEqual({ kind: "articles", display: "review", articleId: 999 });
+  expect(state().dash.tab).toEqual({
+    kind: "articles",
+    display: "review",
+    articleId: 999,
+  });
   expect(state().dash.ArticleToReview).toEqual({ status: "pending" });
-  store.dispatch(hydrateOpenedArticle.rejected(new Error("Article not found"), "missing-article", 999));
+  store.dispatch(
+    hydrateOpenedArticle.rejected(
+      new Error("Article not found"),
+      "missing-article",
+      999,
+    ),
+  );
   expect(state().dash.ArticleToReview).toEqual({
-    status: "failed", details: "Failed to hydrate article",
+    status: "failed",
+    details: "Failed to hydrate article",
   });
   store.dispatch(changeTab({ kind: "articles", display: "main" }));
   // The article hydration hook dispatches this cleanup when the review unmounts.
@@ -232,11 +258,16 @@ test("list positions survive tab changes, but leaving clears all dashboard state
   );
   store.dispatch(
     getMetrics({
-      bias: { status: "ready", data: [1] },
-      integrity: { status: "ready", data: [1] },
-      outcomes: {
-        status: "ready",
-        data: { neededMore: 0, validated: 100, neutral: 0, percentChanged: 0 },
+      status: "ready",
+      data: {
+        bias: [1],
+        integrity: [1],
+        outcomes: {
+          neededMore: 0,
+          validated: 100,
+          neutral: 0,
+          percentChanged: 0,
+        },
       },
     }),
   );

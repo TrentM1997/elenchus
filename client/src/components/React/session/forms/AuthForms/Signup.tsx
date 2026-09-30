@@ -12,8 +12,7 @@ import {
 import NewPasswordGuide from "../InputGuides/NewPasswordGuide";
 import type { SigninStatus } from "@/lib/hooks/auth/useSignIn";
 import { useSignupValidation } from "@/lib/hooks/auth/useSignupValidation";
-import { serverClient } from "@/lib/services/client/serverClient";
-import { authenticated } from "@/state/Reducers/Athentication/Authentication";
+import { signUp } from "@/state/Reducers/Athentication/thunks";
 
 export default function Signup() {
   const activeSession = useSelector(
@@ -39,14 +38,15 @@ export default function Signup() {
     e: React.MouseEvent<HTMLButtonElement>,
   ): Promise<void> => {
     e.preventDefault();
+    if (fields.email === null || fields.password === null) return;
+
     setStatus("pending");
     try {
-      const result = await serverClient.general.auth.signup({
-        email: fields.email ?? "",
-        password: fields.password ?? "",
-      });
-      setStatus("success");
-      if (result.data.session) dispatch(authenticated("authenticated"));
+      const result = await dispatch(
+        signUp({ email: fields.email, password: fields.password }),
+      ).unwrap();
+
+      if (result.ok) setStatus("success");
     } catch (error) {
       setStatus("failed");
     }
