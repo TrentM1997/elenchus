@@ -26,6 +26,20 @@ On the server, AppServices composes services and integrations. RouteRegistrar re
 
 The registrar does not automatically perform validation or authentication. Those responsibilities remain visible in route handlers and middleware.
 
+### Router composition
+
+The Express entry point mounts the API with:
+
+```ts
+app.use(createRouter({ app: new AppServices(), contract: apiContractConfig }));
+```
+
+`createRouter({ app, contract })` creates the parent router, public and protected child routers, and RouteRegistrar. It passes the services, registrar, and injected contract groups to `configureMiddleware`, which registers public routes and places `authenticate` followed by `requireAuth` before the private routes on the protected router.
+
+The returned parent router mounts `configSessionHandler` first, then the public router, then the protected router. Requests therefore have their request-scoped auth handler available before reaching either group; requests reaching protected routes pass through authentication and the required-auth check before their endpoint handlers run.
+
+Route factories receive `contract.public` or `contract.private` through their arguments. Use that injected contract when adding routes so registration and validation use the same supplied definitions, including in tests.
+
 ## Contract and schema ownership
 
 The source of truth is `packages/contracts/src`:
@@ -100,6 +114,30 @@ Repository return values use `DbResult<T>`, with either `{ ok: true, data: T }` 
 
 Signup and account deletion use isolated Supabase clients to avoid changing the shared repository client's session state. See the [auth client isolation notes](../server/db/access/repositories/user/README.md).
 
+## Investigations are complete research records
+
+See [investigation persistence and database setup](investigation-persistence.md) for the tables, RPC arguments and payloads, ownership checks, execution permissions, SQL deployment, and type generation.
+
+An investigation consists of three connected pieces:
+
+- The user's research account, including the perspective they held before examining the evidence and their reflection afterward.
+- The article sources they examined.
+- The Wikipedia terms and extracts that provided context for their research.
+
+Together, these preserve what the user thought, what they examined, and how their thinking changed. Losing any part of the saved record removes context that makes the research useful. Treating these pieces as one investigation is a product requirement, and it governs both saving and hydration.
+
+### Saving
+
+Saving must preserve the investigation and its selected sources and extracts together. The server calls [save_complete_investigation](../server/db/access/migrations/001save_complete_investigation.sql) to insert the investigation, source links, extracts, and disambiguation candidates within one database transaction. If a write fails, the transaction rolls back rather than leaving a partially saved research record. A successful call returns `{ investigation, sources, extracts }`.
+
+Keep this atomicity when changing persistence. Saving the perspective successfully while losing its supporting context must not be reported as a successful investigation save.
+
+### Hydration
+
+Opening a saved investigation must retrieve the same complete record. The server calls [hydrate_investigation](../server/db/access/migrations/002hydrate_investigation.sql), and the client exposes the returned investigation, sources, and extracts together through one `openInvestigation` loading state. The review becomes ready only after the complete payload has been retrieved and validated. A failed load must not present partial context or retain a previous investigation's data as the newly opened record.
+
+An empty sources or extracts collection can be a valid part of the saved record. All-or-nothing means every part is successfully retrieved, not that every collection must contain an item. A failed or missing part must never be silently substituted with an empty collection to make hydration appear successful.
+
 ## Adding an endpoint: the feedback pattern
 
 Use the existing feedback endpoint as a model.
@@ -124,7 +162,7 @@ For a new endpoint, add its entry to the appropriate feature contract and update
 Inside the public route registration function:
 
 ```ts
-const feedbackRoute = PUBLIC_API_CONFIG.user.feedback;
+const feedbackRoute = contract.user.feedback;
 
 registrar.register(
   router,
@@ -133,7 +171,7 @@ registrar.register(
     const { feedback } = validateOrThrow(feedbackRoute.bodySchema, req.body);
 
     const result: Static<typeof feedbackRoute.outputSchema> =
-      await app.services.api.user.submitFeedback(feedback);
+      await app.services.api.user.account.submitFeedback(feedback);
 
     if (!result.ok) {
       throw new ServerError("Failed to submit feedback", 500, result.details);
@@ -162,7 +200,7 @@ For new functionality, expose the handler through the relevant public/private cl
 
 ### 4. Verify
 
-Run workspace typechecks, client tests, and built server route tests as listed in the root README. Cover the request shape, service arguments, successful response, and rejection of malformed output where relevant.
+Run workspace typechecks, client tests, and the full server test suite as listed in the root README. `npm test --workspace=server` builds its dependencies before running the tests. Cover the request shape, service arguments, successful response, and rejection of malformed output where relevant.
 
 ## Build and development
 

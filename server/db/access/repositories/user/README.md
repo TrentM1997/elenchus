@@ -28,8 +28,9 @@ or database records were involved.
 
 ## The intended flow
 
-1. The signup route calls `UserService.signUp(credentials)`.
-2. `UserService` delegates to `UserWriteHandler.createUser(credentials)`.
+1. The signup route calls `app.services.api.user.account.signUp(credentials)`.
+2. `UserService.account` is implemented by `UserAccountHandler`, whose `signUp()`
+   delegates to `db.user.write.createUser(credentials)` on `UserWriteHandler`.
 3. The write handler creates an isolated `signupClient`, calls `auth.signUp()`,
    validates the response, and returns the user and session.
 4. The route calls `req.auth.establishSession(session, res)` to set the browser's

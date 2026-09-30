@@ -11,11 +11,8 @@ export type HttpMethod =
 
 export type RouteConfigDefinition = {
   path: string;
-  /** Validates the JSON request body. */
   bodySchema?: TSchema;
-  /** Validates the named URL query parameters. */
   querySchema?: TSchema;
-  /** Validates the named parameters substituted into the route path. */
   paramsSchema?: TSchema;
   outputSchema: TSchema;
   method: HttpMethod;

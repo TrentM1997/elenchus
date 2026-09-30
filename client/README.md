@@ -20,7 +20,7 @@ Pass raw query and parameter values to handlers; do not pre-encode them. Arrays 
 
 Import schemas directly from `@elenchus/contracts/schemas/...`. The old `src/lib/schemas` compatibility files have been removed.
 
-See the [architecture guide](../docs/architecture.md) for an endpoint example and the server side of the request.
+See the [ServerClient guide](src/lib/services/client/README.md) for usage examples, result and error handling, cancellation, and extraction polling. The [architecture guide](../docs/architecture.md) covers adding an endpoint and the server side of the request.
 
 ## Commands
 
