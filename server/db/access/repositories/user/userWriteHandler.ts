@@ -12,6 +12,7 @@ import type { LoginCredentialsSchemaType } from "@elenchus/contracts/schemas/aut
 import type { AuthenticatedUserId } from "../../../../services/auth/authorization.js";
 import { ResetPasswordResponseSchemaType } from "@elenchus/contracts/schemas/auth/ResetPasswordSchema";
 import type { DbResult } from "../../../types/types.ts";
+import { DeleteAccountResponseSchemaType } from "@elenchus/contracts/schemas/auth/DeleteAccountResponseSchema";
 
 type CreateUserSuccessPayload = {
   user: CreatedUserSchemaType;
@@ -22,13 +23,11 @@ export type CreateUserResult = DbResult<CreateUserSuccessPayload>;
 
 export type RequestPasswordResetResult = DbResult<Record<string, never>>;
 
-export type AccountDeletionResult = DbResult<User | null>;
-
 export interface IUserWriteHandler {
   deleteAccount(
     user_id: AuthenticatedUserId,
     credentials: LoginCredentialsSchemaType,
-  ): Promise<AccountDeletionResult>;
+  ): Promise<DeleteAccountResponseSchemaType>;
   requestPasswordReset(email: string): Promise<RequestPasswordResetResult>;
   createUser(credentials: {
     email: string;
@@ -66,14 +65,14 @@ export class UserWriteHandler implements IUserWriteHandler {
   public async deleteAccount(
     user_id: AuthenticatedUserId,
     credentials: LoginCredentialsSchemaType,
-  ): Promise<AccountDeletionResult> {
+  ): Promise<DeleteAccountResponseSchemaType> {
     return await this.executeDeleteAccount(user_id, credentials);
   }
 
   private async executeDeleteAccount(
     user_id: AuthenticatedUserId,
     credentials: LoginCredentialsSchemaType,
-  ): Promise<DbResult<User | null>> {
+  ): Promise<DeleteAccountResponseSchemaType> {
     const verificationClient = createClient<Database>(
       SUPABASE_URL,
       SUPABASE_PUBLIC_KEY,
@@ -112,10 +111,8 @@ export class UserWriteHandler implements IUserWriteHandler {
       },
     });
 
-    const {
-      error: deletionError,
-      data: { user },
-    } = await adminClient.auth.admin.deleteUser(user_id);
+    const { error: deletionError } =
+      await adminClient.auth.admin.deleteUser(user_id);
 
     if (deletionError) {
       return {
@@ -125,7 +122,7 @@ export class UserWriteHandler implements IUserWriteHandler {
       };
     }
 
-    return { ok: true, data: user };
+    return { ok: true, data: null };
   }
 
   private async executeRequestPasswordReset(

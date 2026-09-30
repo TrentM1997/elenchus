@@ -49,6 +49,13 @@ export const hydrateDashboard = createAsyncThunk(
         throw new Error("Failed to hydrate investigations");
       }
 
+      console.log({
+        "Dasbhoard Payload": {
+          Articles: articles.data,
+          Investigations: investigations.data,
+        },
+      });
+
       return {
         articles: articles.data,
         investigations: investigations.data,

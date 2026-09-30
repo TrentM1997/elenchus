@@ -3,7 +3,7 @@ import SignOutModal from "@/components/React/session/forms/AuthForms/SignOutModa
 import Popover from "@/components/React/features/blueSky/popover/Popover";
 import { GetTheseArticles } from "@/components/React/features/investigate/phase2/modals/GetTheseArticles";
 import BackToSearch from "@/components/React/features/investigate/phase3/components/modals/BackToSearch";
-import DeleteUserAccount from "@/components/React/session/modals/DeleteUser";
+import DeleteUserAccount from "@/components/React/session/forms/AuthForms/deleteAccount/DeleteUser";
 import FeedBackForm from "@/components/React/session/forms/UserFeedback/FeedbackForm";
 import { PreviousWork } from "../../features/investigate/phase5/modals/PreviousWork";
 import type { ActiveModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";

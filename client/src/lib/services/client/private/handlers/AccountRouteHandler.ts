@@ -7,6 +7,7 @@ type LoginCredentials = { email: string; password: string };
 export interface IAccountRouteHandler {
   deleteAccount(
     credentials: LoginCredentials,
+    signal: AbortSignal,
   ): Promise<DeleteAccountResponseSchemaType>;
 }
 
@@ -18,9 +19,10 @@ export class AccountRouteHandler implements IAccountRouteHandler {
 
   public async deleteAccount(
     credentials: LoginCredentials,
+    signal: AbortSignal,
   ): Promise<DeleteAccountResponseSchemaType> {
     const route = this.routes.account.delete;
 
-    return await this.http.request(route, { body: credentials });
+    return await this.http.request(route, { body: credentials, signal });
   }
 }

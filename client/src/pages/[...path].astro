@@ -1,0 +1,22 @@
+---
+import BaseLayout from "@/components/Astro/layouts/BaseLayout.astro";
+import App from "@/components/React/app/App";
+
+export function getStaticPaths() {
+  return [
+    "dashboard",
+    "investigate",
+    "about",
+    "login",
+    "signup",
+    "reset-password",
+    "email-for-reset",
+  ].map((path) => ({
+    params: { path },
+  }));
+}
+---
+
+<BaseLayout>
+  <App client:only="react" />
+</BaseLayout>

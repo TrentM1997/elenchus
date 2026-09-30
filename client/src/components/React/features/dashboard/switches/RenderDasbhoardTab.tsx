@@ -1,6 +1,6 @@
 import type { JSX } from "react";
 import type { DashboardTab } from "@/state/Reducers/Dashboard/types";
-import Metrics from "@/components/React/features/dashboard/Content/containers/Metrics";
+import Metrics from "@/components/React/features/dashboard/Content/containers/ResearchMetrics";
 import AccManagement from "@/components/React/features/dashboard/ProfileNavigation/AccountManagement/AccManagement";
 import { assertNever } from "@/lib/helpers/asserts/assertNever";
 import RenderArticleTab from "./RenderArticleTab";

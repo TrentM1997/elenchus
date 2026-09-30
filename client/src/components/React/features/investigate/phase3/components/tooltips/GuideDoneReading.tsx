@@ -3,17 +3,7 @@ import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { populateTooltip } from "@/state/Reducers/Investigate/Rendering";
 import { useTooltipFlags } from "@/lib/hooks/rendering/useTooltipFlags";
-
-const variants = {
-  closed: {
-    opacity: 0,
-    scale: 0,
-  },
-  open: {
-    opacity: 1,
-    scale: 1,
-  },
-};
+import { tooltipVariants } from "@/motion/variants";
 
 export default function GuideDoneReading({}) {
   const dispatch = useDispatch();
@@ -23,13 +13,13 @@ export default function GuideDoneReading({}) {
     const timer = setTimeout(() => {
       dispatch(populateTooltip(null));
       setFlag("readingTooltip", true);
-    }, 7000);
+    }, 5000);
     return () => clearTimeout(timer);
-  }, []);
+  }, [dispatch, setFlag]);
 
   return (
     <motion.div
-      variants={variants}
+      variants={tooltipVariants}
       initial="closed"
       animate="open"
       exit="closed"

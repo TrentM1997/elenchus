@@ -52,21 +52,22 @@ export function LegendSkeleton(): JSX.Element | null {
     <div className="relative h-fit w-auto mx-auto flex flex-wrap gap-1.5 items-center justify-start box-border">
       {Array.from({ length: 3 }).map((_, i) => (
         <div
+          key={i}
           className={`w-fit flex items-center justify-start gap-y-1 gap-x-2 space-x-1`}
         >
-          <div key={i} className={`flex items-center space-x-0.5`}>
+          <div className={`flex items-center space-x-0.5`}>
             {/* little colored square */}
             <div className="h-2.5 w-10 rounded-full bg-zinc-700/50" />
             {/* text placeholder */}
             <div className="h-2 w-16 rounded bg-zinc-700/50" />
           </div>
-          <div key={i} className={`flex items-center space-x-0.5`}>
+          <div className={`flex items-center space-x-0.5`}>
             {/* little colored square */}
             <div className="h-2.5 w-10 rounded-full bg-zinc-700/50" />
             {/* text placeholder */}
             <div className="h-2 w-16 rounded bg-zinc-700/50" />
           </div>
-          <div key={i} className={`flex items-center space-x-0.5`}>
+          <div className={`flex items-center space-x-0.5`}>
             {/* little colored square */}
             <div className="h-2.5 w-10 rounded-full bg-zinc-700/50" />
             {/* text placeholder */}

@@ -1,5 +1,34 @@
 import type { Easing, Variants } from "framer-motion";
 
+export const metricsContainerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.15, // 150 ms between chart entrances
+    },
+  },
+} satisfies Variants;
+
+export const chartVariants = {
+  hidden: { opacity: 0, y: 12 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.3 },
+  },
+} satisfies Variants;
+
+export const tooltipVariants = {
+  closed: {
+    opacity: 0,
+    scale: 0,
+  },
+  open: {
+    opacity: 1,
+    scale: 1,
+  },
+} satisfies Variants;
+
 export const variants = {
   open: { opacity: 1 },
   closed: { opacity: 0 },

@@ -11,7 +11,12 @@ export type ActiveModal =
   | "Article Extraction Warning"
   | null;
 
-export type ToastKind = "login" | "logout" | "signup" | "save investigation";
+export type ToastKind =
+  | "login"
+  | "logout"
+  | "signup"
+  | "save investigation"
+  | "delete account";
 
 export type ActiveToast =
   | { status: "idle"; kind: null }

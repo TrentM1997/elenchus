@@ -1,7 +1,12 @@
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { saveInvgestigation } from "./Reducers/Investigate/research/thunks";
 import { renderToast } from "./Reducers/RenderingPipelines/PipelineSlice";
-import { loginUser, logOut } from "./Reducers/Athentication/thunks";
+import {
+  deleteAccount,
+  loginUser,
+  logOut,
+  signUp,
+} from "./Reducers/Athentication/thunks";
 
 export const listenerMiddleware = createListenerMiddleware();
 
@@ -69,5 +74,47 @@ listenerMiddleware.startListening({
   actionCreator: logOut.fulfilled,
   effect: (action, api) => {
     api.dispatch(renderToast({ status: "success", kind: "logout" }));
+  },
+});
+
+listenerMiddleware.startListening({
+  actionCreator: signUp.pending,
+  effect: (action, api) => {
+    api.dispatch(renderToast({ kind: "signup", status: "pending" }));
+  },
+});
+
+listenerMiddleware.startListening({
+  actionCreator: signUp.rejected,
+  effect: (action, api) => {
+    api.dispatch(renderToast({ kind: "signup", status: "failed" }));
+  },
+});
+
+listenerMiddleware.startListening({
+  actionCreator: signUp.fulfilled,
+  effect: (action, api) => {
+    api.dispatch(renderToast({ kind: "signup", status: "success" }));
+  },
+});
+
+listenerMiddleware.startListening({
+  actionCreator: deleteAccount.pending,
+  effect: (action, api) => {
+    api.dispatch(renderToast({ kind: "delete account", status: "pending" }));
+  },
+});
+
+listenerMiddleware.startListening({
+  actionCreator: deleteAccount.rejected,
+  effect: (action, api) => {
+    api.dispatch(renderToast({ kind: "delete account", status: "failed" }));
+  },
+});
+
+listenerMiddleware.startListening({
+  actionCreator: deleteAccount.fulfilled,
+  effect: (action, api) => {
+    api.dispatch(renderToast({ kind: "delete account", status: "success" }));
   },
 });
