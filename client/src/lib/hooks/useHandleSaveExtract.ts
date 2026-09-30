@@ -10,9 +10,11 @@ import { updateResearchExtracts } from "@/state/Reducers/Investigate/research/Re
 import type { ExtractsAndSources } from "@/state/Reducers/Investigate/research/types";
 import { wait } from "../helpers/formatting/Presentation";
 
-type SavePayload = ExtractsAndSources["extracts"][number] & { associatedArticle: string };
+type SavePayload = ExtractsAndSources["extracts"][number] & {
+  associatedArticle: string;
+};
 
-type SaveExtractionStatus = "initial" | "saved" | "pending" | "failed";
+export type SaveExtractionStatus = "initial" | "saved" | "pending" | "failed";
 
 export const useHandleSaveExtract = ({
   article_url,
@@ -24,7 +26,9 @@ export const useHandleSaveExtract = ({
   const saveVersion = useRef(0);
   const summary = useAppSelector(selectWikiSummary);
   const disambig = useAppSelector(selectWikiDisambig);
-  const research = useAppSelector(state => state.investigation.research.research);
+  const research = useAppSelector(
+    (state) => state.investigation.research.research,
+  );
 
   const payload: SavePayload | null = useMemo(() => {
     if (summary) {
@@ -55,10 +59,14 @@ export const useHandleSaveExtract = ({
     const version = ++saveVersion.current;
     setStatus("pending");
     const extracts = research.data.context.extracts;
-    const exists = extracts.some(extract => extract.title === payload.title);
-    dispatch(updateResearchExtracts(exists
-      ? extracts.filter(extract => extract.title !== payload.title)
-      : [...extracts, payload]));
+    const exists = extracts.some((extract) => extract.title === payload.title);
+    dispatch(
+      updateResearchExtracts(
+        exists
+          ? extracts.filter((extract) => extract.title !== payload.title)
+          : [...extracts, payload],
+      ),
+    );
     await wait(500);
     if (version === saveVersion.current) setStatus("saved");
   }, [payload, dispatch, research]);
