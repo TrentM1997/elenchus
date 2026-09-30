@@ -5,9 +5,8 @@ import {
   increment,
   denyIncrement,
 } from "@/state/Reducers/Investigate/pov/StepSlice";
-import { motion } from "framer-motion";
 import { selectPost } from "@/state/Reducers/BlueSky/BlueSkySlice";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 
 export const useNextStep = () => {
   const {
@@ -38,10 +37,6 @@ export const useNextStep = () => {
       dispatch(denyIncrement());
     }
   };
-
-  useEffect(() => {
-    return () => window.removeEventListener("nextStepClick", handleStep);
-  }, [status]);
 
   return {
     handleStep,
