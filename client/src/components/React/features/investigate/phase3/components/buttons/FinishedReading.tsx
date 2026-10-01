@@ -20,7 +20,8 @@ export function FinishedReading() {
               `}
     >
       <AnimatePresence>
-        {articles.status === "ready" && <GuideDoneReading />}
+        {articles.status === "ready" &&
+          tooltip === "Finished Reading Button" && <GuideDoneReading />}
       </AnimatePresence>
       <button
         onClick={handleClick}

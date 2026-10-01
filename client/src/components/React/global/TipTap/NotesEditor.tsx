@@ -1,45 +1,15 @@
-import { EditorContent, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import { useDispatch } from "react-redux";
-import { saveNote } from "@/state/Reducers/Investigate/articles/NoteTaking";
-import { useSelector } from "react-redux";
-import { RootState } from "@/state/store";
+import { EditorContent } from "@tiptap/react";
+import { TakingNoteState } from "@/state/Reducers/Investigate/articles/NoteTaking";
+import { useNoteEditor } from "@/lib/hooks/notes/useNoteEditor";
 
-export default function StepsEditor({ setterFunction, context }) {
-  const investigateState = useSelector(
-    (state: RootState) => state.investigation,
-  );
-  const { notes } = investigateState;
-  const { noteTaken } = notes;
-  const dispatch = useDispatch();
-
-  const handleContent = () => {
-    dispatch(setterFunction(editor.getText()));
-    dispatch(saveNote(editor.getText()));
-  };
-
-  const editor = useEditor({
-    content: `${noteTaken}`,
-    extensions: [
-      StarterKit.configure({
-        heading: {
-          levels: [1, 2],
-        },
-      }),
-    ],
+export default function NotesEditor({
+  current,
+}: {
+  current: Extract<TakingNoteState, { status: "open" } | { status: "draft" }>;
+}) {
+  const { editor, handleContainerClick } = useNoteEditor({
+    current,
   });
-
-  if (!editor) {
-    return null;
-  }
-
-  editor.on("update", handleContent);
-
-  const handleContainerClick = () => {
-    if (editor && !editor.isFocused) {
-      editor.commands.focus("end", null);
-    }
-  };
 
   return (
     <div className="w-full h-full box-border mx-auto">
@@ -286,7 +256,7 @@ export default function StepsEditor({ setterFunction, context }) {
             color: "#ffffff",
           }}
           editor={editor}
-          className="text-black text-base focus:outline-none px-4 
+          className="text-black text-base focus:outline-none px-4 pt-2
                     focus:border-none font-thin font-serif tracking-tight cursor-text
                     min-w-full h-full prose"
         />
