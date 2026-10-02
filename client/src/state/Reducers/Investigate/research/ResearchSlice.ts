@@ -163,3 +163,5 @@ export const {
 } = ResearchSlice.actions;
 
 export default ResearchSlice.reducer;
+
+export type ResearchSliceType = ReturnType<typeof ResearchSlice.reducer>;

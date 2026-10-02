@@ -5,7 +5,6 @@ import { GetTheseArticles } from "@/components/React/features/investigate/phase2
 import BackToSearch from "@/components/React/features/investigate/phase3/components/modals/BackToSearch";
 import DeleteUserAccount from "@/components/React/session/forms/AuthForms/deleteAccount/DeleteUser";
 import FeedBackForm from "@/components/React/session/forms/UserFeedback/FeedbackForm";
-import { PreviousWork } from "../../features/investigate/phase5/modals/PreviousWork";
 import type { ActiveModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
 import ArticleExtractionToast from "../../global/modals/ArticleExtactionToast";
 import { assertNever } from "@/lib/helpers/asserts/assertNever";
@@ -55,12 +54,7 @@ export default function RenderModal({
           <FeedBackForm />
         </ModalLayer>
       );
-    case "Work Modal":
-      return (
-        <ModalLayer key={"prev-work-modal"}>
-          <PreviousWork />
-        </ModalLayer>
-      );
+
     case "Article Extraction Warning":
       return (
         <ModalLayer key={"extraction-warning"}>

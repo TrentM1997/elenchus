@@ -3,6 +3,7 @@ import { RootState } from "@/state/store";
 import { getWikiExtract } from "./thunks";
 import { AsyncState } from "@/state/types";
 import { WikiResponseSchemaType } from "@elenchus/contracts/schemas/integrations/WikipediaExtractSchemas";
+import { WikipediaToolState } from "./types";
 
 interface modalXY {
   x: number;
@@ -11,38 +12,18 @@ interface modalXY {
 
 export type WikipediaExtractState = AsyncState<WikiResponseSchemaType>;
 
-export interface ModalStages {
-  display: boolean;
-  highlight: boolean;
-  confirmExtract: boolean;
-  text: string | null;
-}
-
 interface WikiTypes {
-  wikiModalStages: ModalStages;
-  displayWikiModal: boolean;
-  gettingSelection: boolean;
-  status: string;
+  extractTool: WikipediaToolState;
   extract: WikipediaExtractState;
   modalPosition: modalXY | null;
-  selectedText: string | null;
-  errormessage: string | null;
+  currentRequestId: string | null;
 }
 
 const initialState: WikiTypes = {
-  wikiModalStages: {
-    display: false,
-    highlight: false,
-    confirmExtract: false,
-    text: null,
-  },
-  displayWikiModal: false,
-  gettingSelection: false,
-  status: "idle",
+  extractTool: { status: "closed" },
   extract: { status: "initial" },
   modalPosition: null,
-  selectedText: null,
-  errormessage: null,
+  currentRequestId: null,
 };
 
 export const selectWikiExtract = (s: RootState) => s.investigation.wiki.extract;
@@ -77,8 +58,11 @@ export const WikipediaExtractSlice = createSlice({
   name: "investigate/wikiExtract",
   initialState: initialState,
   reducers: {
-    selectingText: (state, action) => {
-      state.gettingSelection = action.payload;
+    wikiToolAction: (
+      state: WikiTypes,
+      action: PayloadAction<WikipediaToolState>,
+    ) => {
+      state.extractTool = action.payload;
     },
     getModalPosition: (
       state,
@@ -86,46 +70,30 @@ export const WikipediaExtractSlice = createSlice({
     ) => {
       state.modalPosition = action.payload;
     },
-    getSelectedText: (state, action) => {
-      state.selectedText = action.payload;
-    },
-    showWikiModal: (state) => {
-      state.displayWikiModal = !state.displayWikiModal;
-    },
-    modalStages: (state, action: PayloadAction<ModalStages>) => {
-      state.wikiModalStages = action.payload;
-    },
 
     clearWikiSlice: () => initialState,
   },
   extraReducers: (builder) => {
-    builder.addCase(getWikiExtract.pending, (state) => {
-      state.status = "pending";
+    builder.addCase(getWikiExtract.pending, (state, action) => {
+      state.currentRequestId = action.meta.requestId;
       state.extract = { status: "pending" };
-      state.errormessage = null;
     });
-    builder.addCase(
-      getWikiExtract.fulfilled,
-      (state, action: PayloadAction<WikiResponseSchemaType>) => {
-        const payload = action.payload;
+    builder.addCase(getWikiExtract.fulfilled, (state, action) => {
+      if (state.currentRequestId !== action.meta.requestId) return;
+      const payload = action.payload;
 
-        if (payload.kind === "error") {
-          state.status = "rejected";
-          state.errormessage = payload.message;
-          state.extract = { status: "failed", details: payload.message };
-        } else {
-          state.status = "fulfilled";
-          state.errormessage = null;
-          state.extract = { status: "ready", data: payload };
-        }
-      },
-    );
+      if (payload.kind === "error") {
+        state.extract = { status: "failed", details: payload.message };
+      } else {
+        state.extract = { status: "ready", data: payload };
+      }
+    });
     builder.addCase(getWikiExtract.rejected, (state, action) => {
-      const message = typeof action.payload === "string"
-        ? action.payload
-        : action.error.message ?? "Failed to extract Wikipedia term";
-      state.status = "rejected";
-      state.errormessage = message;
+      if (state.currentRequestId !== action.meta.requestId) return;
+      const message =
+        typeof action.payload === "string"
+          ? action.payload
+          : (action.error.message ?? "Failed to extract Wikipedia term");
       state.extract = { status: "failed", details: message };
     });
   },
@@ -133,13 +101,7 @@ export const WikipediaExtractSlice = createSlice({
 
 export type WikiSliceState = ReturnType<typeof WikipediaExtractSlice.reducer>;
 
-export const {
-  selectingText,
-  getModalPosition,
-  clearWikiSlice,
-  getSelectedText,
-  showWikiModal,
-  modalStages,
-} = WikipediaExtractSlice.actions;
+export const { getModalPosition, clearWikiSlice, wikiToolAction } =
+  WikipediaExtractSlice.actions;
 
 export default WikipediaExtractSlice.reducer;

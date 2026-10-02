@@ -1,16 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { hydrateFeed, searchBlueSky } from "./thunks";
-import {
-  BlueSkyPosts,
-  Dimensions,
-  PopoverPost,
-  PopoverXY,
-  SelectedPost,
-} from "./types";
+import { BlueSkyPosts, Dimensions, PopoverXY, SelectedPost } from "./types";
 import { SplitBlueSkyFeedSchemaType } from "@elenchus/contracts/schemas/integrations/BlueSkySchemas";
 
 interface InitialState {
-  fadeOutHomePage: boolean;
   posts: BlueSkyPosts;
   selected: SelectedPost;
   popoverPosition: PopoverXY;
@@ -18,7 +11,6 @@ interface InitialState {
 }
 
 const initialState: InitialState = {
-  fadeOutHomePage: false,
   posts: { status: "initial" },
   selected: { status: "initial" },
   containerDimensions: {
@@ -38,9 +30,6 @@ export const BlueSkySlice = createSlice({
     selectPost: (state, action: PayloadAction<SelectedPost>) => {
       state.selected = action.payload;
     },
-    getStoredPosts: (state, action) => {
-      state.posts = action.payload.posts;
-    },
     getBlueSkyPosts: (
       state: InitialState,
       action: PayloadAction<BlueSkyPosts>,
@@ -51,9 +40,6 @@ export const BlueSkySlice = createSlice({
       const coordinates = action.payload;
       state.popoverPosition.x = coordinates.x;
       state.popoverPosition.y = coordinates.y;
-    },
-    landingPageFadeOut: (state, action: PayloadAction<boolean>) => {
-      state.fadeOutHomePage = action.payload;
     },
     resetBlueSkyState: () => initialState,
   },
@@ -110,9 +96,7 @@ export const BlueSkySlice = createSlice({
 export const {
   resetBlueSkyState,
   selectPost,
-  getStoredPosts,
   getPopoverPosition,
-  landingPageFadeOut,
   getBlueSkyPosts,
 } = BlueSkySlice.actions;
 

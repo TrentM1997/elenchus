@@ -1,6 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/state/store";
-import { modalStages } from "@/state/Reducers/Investigate/wiki/WikiSlice";
+import {
+  clearWikiSlice,
+  wikiToolAction,
+} from "@/state/Reducers/Investigate/wiki/WikiSlice";
 import PanelLabel from "./PanelLabel";
 import { ArticleExtractionState } from "@/state/Reducers/Investigate/articles/types";
 
@@ -9,25 +12,22 @@ export default function GetInfo({
 }: {
   status: ArticleExtractionState["status"];
 }) {
-  const wikiModalStages = useSelector(
-    (s: RootState) => s.investigation.wiki.wikiModalStages,
+  const toolStatus = useSelector(
+    (s: RootState) => s.investigation.wiki.extractTool.status,
   );
   const dispatch = useDispatch<AppDispatch>();
-
   const toggle = () => {
-    dispatch(
-      modalStages({
-        display: true,
-        highlight: true,
-        confirmExtract: false,
-        text: null,
-      }),
-    );
+    dispatch(clearWikiSlice());
+    dispatch(wikiToolAction({ status: "highlight" }));
   };
 
   return (
     <div
-      className={`${status === "error" ? "pointer-events-none opacity-30" : "pointer-events-auto opacity-100 lg:hover:bg-border_gray/40"}
+      className={`${
+        status === "error"
+          ? "pointer-events-none opacity-30"
+          : "pointer-events-auto opacity-100 lg:hover:bg-border_gray/40"
+      }
             flex shrink-0 w-fit h-10 lg:h-auto md:py-1.5 px-2.5 xl:px-2.5 group relative  group cursor-pointer
              transition-all ease-soft duration-300 justify-center items-center 
             `}
@@ -38,11 +38,12 @@ export default function GetInfo({
                 rounded-lg transition-all duration-300 m-auto relative
                 ease-in-out group"
       >
-        <GetInfoTooltip modalActive={wikiModalStages.display} />
+        <GetInfoTooltip modalActive={toolStatus === "closed"} />
 
         <div className="h-full w-full box-border">
           <svg
-            className={`icon group-hover:text-button_blue will-change-transform icon-tabler icons-tabler-filled icon-tabler-info-square transition-colors duration-300 ease-soft delay-150 ${wikiModalStages.highlight ? "text-button_blue" : "text-pearl"}`}
+            className={`icon group-hover:text-button_blue will-change-transform icon-tabler icons-tabler-filled icon-tabler-info-square 
+              transition-colors duration-300 ease-soft delay-150 ${toolStatus === "highlight" ? "text-button_blue" : "text-pearl"}`}
             xmlns="http://www.w3.org/2000/svg"
             width={"100%"}
             height={"100%"}
@@ -66,12 +67,18 @@ interface GetInfoTooltipProps {
 function GetInfoTooltip({ modalActive }: GetInfoTooltipProps): JSX.Element {
   return (
     <div
-      className={`absolute p-1 bg-white z-50 opacity-0 transition-opacity duration-200 ease-soft pointer-events-none
-            ${modalActive ? "" : "md:group-hover:opacity-100"}
+      className={`absolute p-1 bg-white z-50 opacity-0 transition-opacity 
+        duration-200 ease-soft pointer-events-none
+            ${modalActive ? "md:group-hover:opacity-100" : ""}
             delay-700  bottom-[3.3rem] -left-4
-                    rounded-md items-center border border-astro_gray shadow-thick after:content-[''] after:absolute after:bottom-[-10px] after:left-1/2 
-                    after:transform after:-translate-x-1/2 after:border-t-[10px] after:border-l-[10px] after:border-r-[10px] after:border-b-0 
-                    after:border-t-white after:border-l-transparent after:border-r-transparent after:border-b-transparent`}
+                    rounded-md items-center border border-astro_gray 
+                    shadow-thick after:content-[''] after:absolute after:bottom-[-10px] after:left-1/2 
+                    after:transform after:-translate-x-1/2 
+                    after:border-t-[10px] after:border-l-[10px] 
+                    after:border-r-[10px] after:border-b-0 
+                    after:border-t-white after:border-l-transparent 
+                    after:border-r-transparent after:border-b-transparent
+                    `}
     >
       <p className="text-black text-wrap text-[0.80rem]">
         highlight to look up

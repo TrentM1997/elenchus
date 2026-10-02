@@ -3,7 +3,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 export type ActiveModal =
   | "Back to Search"
   | "Extract Confirmation"
-  | "Work Modal"
   | "Feedback Form"
   | "Sign Out"
   | "Bluesky Post Selected"
@@ -16,7 +15,8 @@ export type ToastKind =
   | "logout"
   | "signup"
   | "save investigation"
-  | "delete account";
+  | "delete account"
+  | "feedback";
 
 export type ActiveToast =
   | { status: "idle"; kind: null }

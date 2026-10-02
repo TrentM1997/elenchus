@@ -1,75 +1,14 @@
-import { useDispatch, useSelector } from "react-redux";
-import {
-  getAuthorEmail,
-  getFeedBackMessage,
-  stopAskingForFeedBack,
-} from "@/state/Reducers/Feedback/FeedbackSlice";
-import React, { useEffect, useState } from "react";
-import { RootState } from "@/state/store";
-import type { SigninStatus } from "@/lib/hooks/auth/useSignIn";
-import { wait } from "@/lib/helpers/formatting/Presentation";
-import { populateModal } from "@/state/Reducers/Investigate/Rendering";
-import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
-import { serverClient } from "@/lib/services/client/serverClient";
+import { useFeedbackForm } from "@/lib/hooks/feedback/useFeedbackForm";
 
 export default function FeedBackForm() {
-  const activeSession = useSelector(
-    (state: RootState) => state.auth.userKind === "authenticated",
-  );
-  const authorEmail = useSelector(
-    (state: RootState) => state.feedback.authorEmail,
-  );
-  const message = useSelector((state: RootState) => state.feedback.message);
-  const [needInput, setNeedInput] = useState<boolean>(true);
-  const [feedbackSubmitted, setFeedbacksubmitted] = useState<boolean>(false);
-  const [status, setStatus] = useState<SigninStatus>("idle");
-  const dispatch = useDispatch();
-
-  const closeFeedback = () => {
-    dispatch(renderModal(null));
-    dispatch(stopAskingForFeedBack(true));
-  };
-
-  const getEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let target = e.target.value;
-    dispatch(getAuthorEmail(target));
-  };
-
-  const getMessage = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const target = e.target.value;
-    console.log(target);
-    dispatch(getFeedBackMessage(target));
-  };
-
-  useEffect(() => {
-    if (status === "idle") return;
-
-    const executeFeedback = async () => {
-      const data = await serverClient.general.user.submitFeedback({
-        email: authorEmail,
-        message: message,
-      });
-      if (data) {
-        setStatus("success");
-        setFeedbacksubmitted(true);
-      } else {
-        setFeedbacksubmitted(false);
-        setStatus("failed");
-      }
-
-      await wait(1500);
-      dispatch(populateModal(null));
-    };
-
-    executeFeedback();
-  }, [status, feedbackSubmitted]);
-
-  useEffect(() => {
-    return () => {
-      dispatch(getAuthorEmail(null));
-      dispatch(getFeedBackMessage(null));
-    };
-  }, []);
+  const {
+    activeSession,
+    decline,
+    recordEmailInput,
+    recordMessage,
+    sendFeedback,
+    inputErrors,
+  } = useFeedbackForm();
 
   return (
     <div
@@ -77,7 +16,7 @@ export default function FeedBackForm() {
       flex-col items-center shadow-material rounded-xl md:rounded-3xl bg-gradient-to-tr from-ebony to-mirage p-8"
     >
       <div
-        onClick={closeFeedback}
+        onClick={() => decline()}
         className="w-fit rounded-full p-1.5 md:hover:bg-white/10 transition-all 
         duration-200 ease-in-out h-fit flex justify-end absolute top-2 right-2 cursor-pointer"
       >
@@ -123,7 +62,7 @@ export default function FeedBackForm() {
             Email
           </label>
           <input
-            onChange={(e) => getEmail(e)}
+            onChange={(e) => recordEmailInput(e)}
             type="email"
             id="email"
             name="email"
@@ -139,7 +78,7 @@ export default function FeedBackForm() {
         </label>
 
         <textarea
-          onChange={(e) => getMessage(e)}
+          onChange={(e) => recordMessage(e)}
           placeholder="Let us know what you enjoyed, and what we can improve!"
           id="message"
           name="message"
@@ -147,17 +86,10 @@ export default function FeedBackForm() {
     focus:outline-none focus:border-zinc-400 focus:ring-0 text-base sm:text-sm placeholder-zinc-500 relative prose-styles"
           defaultValue={""}
         />
-        {needInput && (
-          <label
-            htmlFor="message"
-            className="text-xs leading-7 text-red-500 ml-2"
-          >
-            Please fill email and message fields to submit!
-          </label>
-        )}
+        {inputErrors && <p role="alert">{inputErrors}</p>}
       </div>
       <button
-        onClick={() => setStatus("pending")}
+        onClick={() => sendFeedback()}
         type="button"
         className="rounded-full border-0 bg-white text-black py-1 px-6 text-base font-light transition-all duration-200 ease-in-out sm:hover:text-white  sm:hover:bg-mirage focus:outline-none"
       >

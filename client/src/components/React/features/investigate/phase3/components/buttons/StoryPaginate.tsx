@@ -5,8 +5,7 @@ import {
   decrementStory,
   incrementStoryBy,
 } from "@/state/Reducers/Investigate/articles/ExtractedArticles";
-import type { ModalStages } from "@/state/Reducers/Investigate/wiki/WikiSlice";
-import { modalStages } from "@/state/Reducers/Investigate/wiki/WikiSlice";
+import { wikiToolAction } from "@/state/Reducers/Investigate/wiki/WikiSlice";
 import { wait } from "@/lib/helpers/formatting/Presentation";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 
@@ -18,22 +17,15 @@ export default function StoryPaginate({
   const currentStory = useSelector(
     (s: RootState) => s.investigation.read.currentStory,
   );
-  const wikiModalState: ModalStages = useSelector(
-    (s: RootState) => s.investigation.wiki.wikiModalStages,
+  const wikiModalState = useSelector(
+    (s: RootState) => s.investigation.wiki.extractTool,
   );
   const dispatch = useDispatch();
 
   const decrement = async () => {
     if (currentStory > 0) {
-      if (wikiModalState.display === true) {
-        dispatch(
-          modalStages({
-            display: false,
-            highlight: false,
-            confirmExtract: false,
-            text: null,
-          }),
-        );
+      if (wikiModalState.status !== "closed") {
+        dispatch(wikiToolAction({ status: "closed" }));
         await wait(200);
         dispatch(decrementStory());
       } else {
@@ -44,15 +36,8 @@ export default function StoryPaginate({
 
   const increment = async () => {
     if (currentStory < articles.length - 1) {
-      if (wikiModalState.display === true) {
-        dispatch(
-          modalStages({
-            display: false,
-            highlight: false,
-            confirmExtract: false,
-            text: null,
-          }),
-        );
+      if (wikiModalState.status !== "closed") {
+        dispatch(wikiToolAction({ status: "closed" }));
         await wait(200);
         dispatch(incrementStory());
       } else {

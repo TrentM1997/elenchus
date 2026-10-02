@@ -7,8 +7,30 @@ import {
   logOut,
   signUp,
 } from "./Reducers/Athentication/thunks";
+import { submitFeedback } from "./Reducers/Feedback/thunks";
 
 export const listenerMiddleware = createListenerMiddleware();
+
+listenerMiddleware.startListening({
+  actionCreator: submitFeedback.pending,
+  effect: (action, api) => {
+    api.dispatch(renderToast({ kind: "feedback", status: "pending" }));
+  },
+});
+
+listenerMiddleware.startListening({
+  actionCreator: submitFeedback.rejected,
+  effect: (action, api) => {
+    api.dispatch(renderToast({ kind: "feedback", status: "failed" }));
+  },
+});
+
+listenerMiddleware.startListening({
+  actionCreator: submitFeedback.fulfilled,
+  effect: (action, api) => {
+    api.dispatch(renderToast({ kind: "feedback", status: "success" }));
+  },
+});
 
 listenerMiddleware.startListening({
   actionCreator: saveInvgestigation.pending,

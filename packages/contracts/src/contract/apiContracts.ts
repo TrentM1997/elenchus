@@ -15,7 +15,6 @@ import {
 import { DeleteAccountResponseSchema } from "../schemas/auth/DeleteAccountResponseSchema.js";
 import {
   InvestigationAndSourcesResponseSchema,
-  InvestigationSaveResponse,
   InvestigationsSavedReponseSchema,
   SaveInvestigationInputSchema,
 } from "../schemas/investigations/InvestigationSchema.js";

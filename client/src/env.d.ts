@@ -376,13 +376,6 @@ declare global {
     articleMap: Map<string, SavedArticle>;
   }
 
-  interface WikiTypes {
-    gettingSelection: boolean;
-    selectedText: string | null;
-    status: string;
-    displayWikiModal: boolean;
-  }
-
   interface ArticleSavedComponent {
     children: ReactNode[];
   }
