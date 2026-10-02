@@ -1,8 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/state/store";
-import { populateTooltip } from "@/state/Reducers/Investigate/Rendering";
-import type { TooltipDisplayed } from "@/state/Reducers/Investigate/Rendering";
+import { renderGuideTip } from "@/state/Reducers/Overlay/PipelineSlice";
 
 type UseMaxSelectedToast = { count: number; limit?: number; timeout?: number };
 
@@ -11,9 +10,8 @@ export function useMaxSelectedToast({
   limit = 3,
   timeout = 3000,
 }: UseMaxSelectedToast): void {
-  const tooltip: TooltipDisplayed = useSelector(
-    (s: RootState) => s.investigation.rendering.tooltip,
-  );
+  const guideTip = useSelector((s: RootState) => s.overlay.guideTip);
+
   const dispatch = useDispatch<AppDispatch>();
   const prevCountRef = useRef<number>(0);
 
@@ -22,19 +20,19 @@ export function useMaxSelectedToast({
 
     const justReachedLimit: boolean = prev < limit && count === limit;
 
-    if (justReachedLimit) dispatch(populateTooltip("Max Toast"));
+    if (justReachedLimit) dispatch(renderGuideTip("Max Toast"));
 
     prevCountRef.current = count;
   }, [count, dispatch]);
 
   useEffect(() => {
-    if (tooltip === null) return;
+    if (guideTip === null) return;
     const timer = window.setTimeout(() => {
-      dispatch(populateTooltip(null));
+      dispatch(renderGuideTip(null));
     }, timeout);
 
     return () => {
       clearTimeout(timer);
     };
-  }, [tooltip, dispatch]);
+  }, [guideTip, dispatch]);
 }

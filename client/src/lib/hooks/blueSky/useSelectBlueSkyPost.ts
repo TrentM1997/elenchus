@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import { updatePOVDraft } from "@/state/Reducers/Investigate/pov/thunks";
 import { smoothScrollUp } from "@/lib/helpers/scroll/ScrollToTop";
-import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+import { renderModal } from "@/state/Reducers/Overlay/PipelineSlice";
 import { AppDispatch } from "@/state/store";
 import { BlueSkyPostSchemaType } from "@elenchus/contracts/schemas/integrations/BlueSkySchemas";
 import { selectPost } from "@/state/Reducers/BlueSky/BlueSkySlice";

@@ -13,7 +13,7 @@ import { startReflection } from "@/state/Reducers/Investigate/research/ResearchS
 export function FinishedReading() {
   const dispatch = useDispatch<AppDispatch>();
   const { pushNotes } = usePushWrittenNotesToResearch();
-  const { articles, tooltip } = useFinishedReadingTooltip();
+  const { articles, guideTip } = useFinishedReadingTooltip();
 
   const advance = async (): Promise<void> => {
     smoothScrollUp();
@@ -48,7 +48,7 @@ export function FinishedReading() {
     >
       <AnimatePresence>
         {articles.status === "ready" &&
-          tooltip === "Finished Reading Button" && <GuideDoneReading />}
+          guideTip === "Finished Reading Button" && <GuideDoneReading />}
       </AnimatePresence>
       <button
         onClick={() => advancePhase()}
@@ -56,7 +56,7 @@ export function FinishedReading() {
         duration-300 max-w-8 max-h-8 xl:max-w-7 xl:max-h-7 2xl:max-w-8 group
         2xl:max-h-8 ease-in-out group relative"
       >
-        {tooltip !== "Finished Reading Button" && (
+        {guideTip !== "Finished Reading Button" && (
           <ButtonHoverTooltip description="done reading" />
         )}
         <div className="h-full w-full box-border">

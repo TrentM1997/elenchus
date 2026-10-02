@@ -31,9 +31,13 @@ export type EvidenceContext = {
 };
 
 export type UserResearchType =
-  | { phase: "initial" }
+  | {
+      phase: "initial";
+      path: "choose" | "browse blueSky" | "decided";
+    }
   | {
       phase: "framing";
+
       data: {
         framing: PerspectiveFraming;
       };

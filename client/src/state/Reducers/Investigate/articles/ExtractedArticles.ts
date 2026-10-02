@@ -7,7 +7,6 @@ import type { ArticleExtractionState } from "./types";
 interface InitialState {
   articles: ArticleExtractionState;
   currentStory: number;
-  reading: boolean;
   paginateLimit: boolean;
   progress: string;
   activeRequestId: string | null;
@@ -22,7 +21,6 @@ export type ExtractionProgressToastTypes = Pick<
 const initialState: InitialState = {
   articles: { status: "initial" },
   currentStory: 0,
-  reading: false,
   paginateLimit: false,
   progress: "",
   activeRequestId: null,
@@ -47,13 +45,7 @@ export const ExtractedArticleSlice = createSlice({
     incrementStoryBy: (state, action: PayloadAction<number>) => {
       state.currentStory = Math.max(0, action.payload);
     },
-    isReading: (state, action: PayloadAction<boolean>) => {
-      state.reading = action.payload;
-    },
     resetReadingSlice: () => initialState,
-    limitPagination: (state, action: PayloadAction<boolean>) => {
-      state.paginateLimit = action.payload;
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -64,7 +56,6 @@ export const ExtractedArticleSlice = createSlice({
         state.currentStory = 0;
         state.progress = "0/" + action.meta.arg.length;
         state.dismissedFailureUrls = [];
-        state.reading = false;
         state.paginateLimit = false;
       })
       .addCase(extractionProgressReceived, (state, action) => {
@@ -135,9 +126,7 @@ export const {
   incrementStory,
   decrementStory,
   incrementStoryBy,
-  isReading,
   resetReadingSlice,
   closeNotification,
-  limitPagination,
 } = ExtractedArticleSlice.actions;
 export default ExtractedArticleSlice.reducer;

@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { variants } from "@/motion/variants";
 import React from "react";
-import { populateTooltip } from "@/state/Reducers/Investigate/Rendering";
 import { useTooltipFlags } from "@/lib/hooks/rendering/useTooltipFlags";
+import { renderGuideTip } from "@/state/Reducers/Overlay/PipelineSlice";
 
 function GuideSelectingArticles({}) {
   const { setFlag } = useTooltipFlags();
@@ -12,7 +12,7 @@ function GuideSelectingArticles({}) {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      dispatch(populateTooltip(null));
+      dispatch(renderGuideTip(null));
       setFlag("selectingTooltip", true);
     }, 5000);
 

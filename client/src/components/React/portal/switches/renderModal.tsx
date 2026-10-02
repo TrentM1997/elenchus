@@ -5,7 +5,7 @@ import { GetTheseArticles } from "@/components/React/features/investigate/phase2
 import BackToSearch from "@/components/React/features/investigate/phase3/components/modals/BackToSearch";
 import DeleteUserAccount from "@/components/React/session/forms/AuthForms/deleteAccount/DeleteUser";
 import FeedBackForm from "@/components/React/session/forms/UserFeedback/FeedbackForm";
-import type { ActiveModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+import type { ActiveModal } from "@/state/Reducers/Overlay/PipelineSlice";
 import ArticleExtractionToast from "../../global/modals/ArticleExtactionToast";
 import { assertNever } from "@/lib/helpers/asserts/assertNever";
 

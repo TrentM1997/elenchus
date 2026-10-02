@@ -1,8 +1,10 @@
 import type { JSX } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "@/state/store";
-import { populateTooltip } from "@/state/Reducers/Investigate/Rendering";
-import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+import {
+  renderGuideTip,
+  renderModal,
+} from "@/state/Reducers/Overlay/PipelineSlice";
 import { retrieveChosenArticlesCSS } from "./styles";
 
 export default function RetrieveChosenArticles(): JSX.Element {
@@ -15,7 +17,7 @@ export default function RetrieveChosenArticles(): JSX.Element {
     if (selected.status !== "empty") {
       dispatch(renderModal("Extract Confirmation"));
     } else {
-      dispatch(populateTooltip("Selection Required"));
+      dispatch(renderGuideTip("Selection Required"));
     }
   };
 

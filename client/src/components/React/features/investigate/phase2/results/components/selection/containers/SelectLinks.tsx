@@ -14,9 +14,7 @@ export default function SelectLinks() {
   const selected = useSelector(
     (s: RootState) => s.investigation.getArticle.selected,
   );
-  const tooltip = useSelector(
-    (s: RootState) => s.investigation.rendering.tooltip,
-  );
+  const guideTip = useSelector((s: RootState) => s.overlay.guideTip);
 
   return (
     <AnimatePresence initial={false}>
@@ -31,7 +29,7 @@ export default function SelectLinks() {
           <SelectTooltipWrapper
             selected={selected}
             canAnimate={modal === null}
-            tooltip={tooltip}
+            guideTip={guideTip}
           />
           <CurrentChosen chosenArticles={selected} />
           <RetrieveChosenArticles />

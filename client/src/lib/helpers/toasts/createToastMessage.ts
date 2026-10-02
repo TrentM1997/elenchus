@@ -1,5 +1,5 @@
 import { toastMessageConfig } from "@/lib/tokens/toastMessages";
-import { ActiveToast } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+import { ActiveToast } from "@/state/Reducers/Overlay/PipelineSlice";
 
 export function createToastMessage({
   kind,

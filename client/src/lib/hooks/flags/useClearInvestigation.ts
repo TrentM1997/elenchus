@@ -1,10 +1,12 @@
 import { useEffect } from "react";
-import type { TooltipDisplayed } from "@/state/Reducers/Investigate/Rendering";
-import { populateTooltip } from "@/state/Reducers/Investigate/Rendering";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/state/store";
 import { CLEAR_INVESTIGATION } from "@/state/Reducers/Root/InvestigateReducer";
 import { useTooltipFlags } from "../rendering/useTooltipFlags";
+import {
+  GuideTip,
+  renderGuideTip,
+} from "@/state/Reducers/Overlay/PipelineSlice";
 
 export const PLAYSTATE_KEYS = [
   "previous-biases",
@@ -22,7 +24,7 @@ export function clearCachedPlayStates(keys: Array<string>) {
   }
 }
 
-type ReturnTooltipFunction = (tooltip: TooltipDisplayed) => Promise<void>;
+type ReturnTooltipFunction = (tooltip: GuideTip) => Promise<void>;
 
 interface ClearInvestigationReturnType {
   removeTooltip: ReturnTooltipFunction;
@@ -32,13 +34,13 @@ const useClearInvestigation = (): ClearInvestigationReturnType => {
   const { setFlag } = useTooltipFlags();
   const dispatch = useDispatch<AppDispatch>();
 
-  async function removeToolTip(tooltip: TooltipDisplayed) {
+  async function removeToolTip(tooltip: GuideTip) {
     if (tooltip === "Guide Selection") {
       setFlag("selectingTooltip", true);
-      dispatch(populateTooltip(null));
+      dispatch(renderGuideTip(null));
     } else if (tooltip === "Finished Reading Button") {
       setFlag("readingTooltip", true);
-      dispatch(populateTooltip(null));
+      dispatch(renderGuideTip(null));
     }
   }
 

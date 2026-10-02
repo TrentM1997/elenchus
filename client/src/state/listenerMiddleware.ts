@@ -1,6 +1,6 @@
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { saveInvgestigation } from "./Reducers/Investigate/research/thunks";
-import { renderToast } from "./Reducers/RenderingPipelines/PipelineSlice";
+import { renderToast } from "./Reducers/Overlay/PipelineSlice";
 import {
   deleteAccount,
   loginUser,

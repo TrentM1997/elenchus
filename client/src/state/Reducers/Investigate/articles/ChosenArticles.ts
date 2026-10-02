@@ -17,12 +17,10 @@ export type SelectedArticles =
 
 interface InitialState {
   selected: SelectedArticles;
-  showMaxToast: boolean;
 }
 
 const initialState: InitialState = {
   selected: { status: "empty" },
-  showMaxToast: false,
 };
 
 export const ArticlesSlice = createSlice({
@@ -90,16 +88,13 @@ export const ArticlesSlice = createSlice({
           return assertNever(state.selected);
       }
     },
-    openMaxtoast: (state, action) => {
-      state.showMaxToast = action.payload;
-    },
+
     clearChosenArticles: () => {
       return initialState;
     },
   },
 });
 
-export const { choose, discard, clearChosenArticles, openMaxtoast } =
-  ArticlesSlice.actions;
+export const { choose, discard, clearChosenArticles } = ArticlesSlice.actions;
 
 export default ArticlesSlice.reducer;

@@ -1,14 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/state/store";
-import { populateTooltip } from "@/state/Reducers/Investigate/Rendering";
 import { useEffect, useRef } from "react";
 import { useTooltipFlags } from "@/lib/hooks/rendering/useTooltipFlags";
 
 export const useFinishedReadingTooltip = () => {
   const articles = useSelector((s: RootState) => s.investigation.read.articles);
-  const tooltip = useSelector(
-    (s: RootState) => s.investigation.rendering.tooltip,
-  );
+  const guideTip = useSelector((s: RootState) => s.overlay.guideTip);
   const { getFlags, setFlag } = useTooltipFlags();
   const dispatch = useDispatch();
 
@@ -19,7 +16,6 @@ export const useFinishedReadingTooltip = () => {
 
     if (flags.readingTooltip === false) {
       flagTimer.current = window.setTimeout(() => {
-        dispatch(populateTooltip("Finished Reading Button"));
         setFlag("readingTooltip", true);
         flagTimer.current = null;
       }, 2000);
@@ -28,6 +24,6 @@ export const useFinishedReadingTooltip = () => {
 
   return {
     articles,
-    tooltip,
+    guideTip,
   };
 };

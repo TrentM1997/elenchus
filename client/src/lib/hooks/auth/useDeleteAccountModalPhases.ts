@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+import { renderModal } from "@/state/Reducers/Overlay/PipelineSlice";
 import { useState } from "react";
 import { AppDispatch } from "@/state/store";
 import { assertNever } from "@/lib/helpers/asserts/assertNever";

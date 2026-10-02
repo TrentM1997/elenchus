@@ -12,12 +12,10 @@ interface FullTextProps {
 }
 
 export default function FullText({ article_text, article_url }: FullTextProps) {
-  const { handleHighlightEnd, handleHighlightStart, toolState } =
-    useHighlightTerm();
+  const { handleHighlightEnd, toolState } = useHighlightTerm();
 
   return (
     <div
-      onMouseDown={(e) => handleHighlightStart(e)}
       onMouseUp={handleHighlightEnd}
       className={`pt-6 text-white w-full h-full tracking-tight relative selection:bg-blue-300 selection:text-black`}
     >

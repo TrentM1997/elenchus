@@ -3,7 +3,7 @@ import MenuItem, { DashboardLink } from "./MenuItems";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { useNavigate } from "react-router-dom";
-import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+import { renderModal } from "@/state/Reducers/Overlay/PipelineSlice";
 import { wait } from "@/lib/helpers/formatting/Presentation";
 
 const variants = {
