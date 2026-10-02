@@ -325,6 +325,38 @@ export type Database = {
         }
         Relationships: []
       }
+      notes: {
+        Row: {
+          content: Json
+          created_at: string
+          id: string
+          investigation_id: number
+          user_id: string
+        }
+        Insert: {
+          content: Json
+          created_at?: string
+          id?: string
+          investigation_id: number
+          user_id: string
+        }
+        Update: {
+          content?: Json
+          created_at?: string
+          id?: string
+          investigation_id?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notes_investigation_id_user_id_fkey"
+            columns: ["investigation_id", "user_id"]
+            isOneToOne: false
+            referencedRelation: "investigations"
+            referencedColumns: ["id", "user_id"]
+          },
+        ]
+      }
       sources: {
         Row: {
           bias: string | null
@@ -402,6 +434,7 @@ export type Database = {
           p_article_ids: number[]
           p_extracts: Json
           p_investigation: Json
+          p_notes?: Json
           p_user_id: string
         }
         Returns: Json

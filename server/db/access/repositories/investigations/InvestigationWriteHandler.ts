@@ -6,12 +6,14 @@ import { DbResult } from "../../../types/types.ts";
 import { InvestigationExtractsToPersist } from "../../../../services/investigations/types.ts";
 import { SelectedInvestigationPayloadSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import { NotesInputSchemaType } from "@elenchus/contracts/schemas/investigations/NoteSchema";
 
 type PersistInvestigationParams = {
   userId: AuthenticatedUserId;
   investigation: unknown;
   articleIds: ArticleSchemaType["id"][];
   extracts: InvestigationExtractsToPersist[];
+  notes?: NotesInputSchemaType;
 };
 
 export interface IInvestigationWriteHandler {
@@ -20,6 +22,7 @@ export interface IInvestigationWriteHandler {
     investigation,
     userId,
     extracts,
+    notes,
   }: PersistInvestigationParams): Promise<
     DbResult<SelectedInvestigationPayloadSchemaType>
   >;
@@ -36,29 +39,26 @@ export class InvestigationWriteHandler implements IInvestigationWriteHandler {
     investigation,
     userId,
     extracts,
+    notes,
   }: PersistInvestigationParams): Promise<
     DbResult<SelectedInvestigationPayloadSchemaType>
   > {
-    return await this.execute({ articleIds, investigation, userId, extracts });
+    return await this.execute({
+      articleIds,
+      investigation,
+      userId,
+      extracts,
+      notes,
+    });
   }
 
-  private async execute({
-    articleIds,
-    investigation,
-    userId,
-    extracts,
-  }: PersistInvestigationParams): Promise<
-    DbResult<SelectedInvestigationPayloadSchemaType>
-  > {
-    const validatedInvestigation =
-      this.parser.validateInvestigationInput(investigation);
-
-    const { data, error } = await this.db.rpc("save_complete_investigation", {
-      p_user_id: userId,
-      p_investigation: validatedInvestigation,
-      p_article_ids: articleIds,
-      p_extracts: extracts ?? [],
-    });
+  private async execute(
+    params: PersistInvestigationParams,
+  ): Promise<DbResult<SelectedInvestigationPayloadSchemaType>> {
+    const { data, error } = await this.db.rpc(
+      "save_complete_investigation",
+      this.getInsertPayload(params),
+    );
 
     if (error) {
       console.error(error.message, error.details, error.cause);
@@ -82,5 +82,34 @@ export class InvestigationWriteHandler implements IInvestigationWriteHandler {
       ok: true,
       data: this.parser.validateSelectedInvestigation(data),
     };
+  }
+
+  private getInsertPayload({
+    articleIds,
+    investigation,
+    userId,
+    extracts,
+    notes,
+  }: PersistInvestigationParams) {
+    const validInvestigation =
+      this.parser.validateInvestigationInput(investigation);
+
+    if (notes) {
+      return {
+        p_user_id: userId,
+        p_investigation: validInvestigation,
+        p_article_ids: articleIds,
+        p_extracts: extracts ?? [],
+        p_notes: this.parser.validateNotesInput(notes),
+      };
+    } else {
+      return {
+        p_user_id: userId,
+        p_investigation: validInvestigation,
+        p_article_ids: articleIds,
+        p_extracts: extracts ?? [],
+        p_notes: [],
+      };
+    }
   }
 }

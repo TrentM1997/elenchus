@@ -7,10 +7,10 @@ import {
   selectWikiSummary,
 } from "@/state/Reducers/Investigate/wiki/WikiSlice";
 import { updateResearchExtracts } from "@/state/Reducers/Investigate/research/ResearchSlice";
-import type { ExtractsAndSources } from "@/state/Reducers/Investigate/research/types";
+import type { EvidenceContext } from "@/state/Reducers/Investigate/research/types";
 import { wait } from "../helpers/formatting/Presentation";
 
-type SavePayload = ExtractsAndSources["extracts"][number] & {
+type SavePayload = EvidenceContext["extracts"][number] & {
   associatedArticle: string;
 };
 

@@ -208,6 +208,7 @@ export function createPrivateRoutes({
         investigation,
         articleIds,
         extracts = [],
+        notes,
       } = validateOrThrow(saveInvestigationRoute.bodySchema, req.body);
 
       const result: Static<typeof saveInvestigationRoute.outputSchema> =
@@ -216,6 +217,7 @@ export function createPrivateRoutes({
           investigation,
           articleIds,
           extracts,
+          notes,
         });
 
       if (!result.ok) {

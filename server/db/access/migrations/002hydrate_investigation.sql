@@ -12,6 +12,15 @@ set search_path = ''
 as $$
   select jsonb_build_object(
     'investigation', to_jsonb(i),
+    'notes', (
+      select coalesce(
+        jsonb_agg(to_jsonb(n) order by n.created_at, n.id),
+        '[]'::jsonb
+      )
+      from public.notes n
+      where n.investigation_id = i.id
+        and n.user_id = p_user_id
+    ),
     'sources', (
       select coalesce(jsonb_agg(to_jsonb(a) order by s.created_at, s.id), '[]'::jsonb)
       from public.investigation_sources s

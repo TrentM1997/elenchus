@@ -6,9 +6,9 @@ import { IHttpClient } from "@/lib/services/client/http/types";
 import {
   ExtractsToPersistSchemaType,
   InvestigationAndSourcesResponseSchemaType,
-  InvestigationSaveResponseType,
   PersistInvestigationInputSchemaType,
 } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
+import { NotesInputSchemaType } from "@elenchus/contracts/schemas/investigations/NoteSchema";
 import { PrivateApiContract } from "@elenchus/contracts";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 
@@ -23,6 +23,7 @@ export interface IPrivateUserWritesHandler {
     investigation: PersistInvestigationInputSchemaType;
     articleIds: ArticleSchemaType["id"][];
     extracts: ExtractsToPersistSchemaType;
+    notes?: NotesInputSchemaType;
   }): Promise<InvestigationAndSourcesResponseSchemaType>;
 }
 
@@ -44,6 +45,7 @@ export class PrivateUserWritesHandler implements IPrivateUserWritesHandler {
     investigation: PersistInvestigationInputSchemaType;
     articleIds: ArticleSchemaType["id"][];
     extracts: ExtractsToPersistSchemaType;
+    notes?: NotesInputSchemaType;
   }) {
     const route = this.routes.investigations.post;
 

@@ -7,6 +7,7 @@ import {
 } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import { updateResearchPersistence } from "./ResearchSlice";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import { NotesInputSchemaType } from "@elenchus/contracts/schemas/investigations/NoteSchema";
 
 export const saveInvgestigation = createAsyncThunk(
   "ResearchSlice/saveInvgestigation",
@@ -15,11 +16,12 @@ export const saveInvgestigation = createAsyncThunk(
       research: Extract<UserResearchType, { phase: "completed" }>["data"];
       articleIds: ArticleSchemaType["id"][];
       extracts: ExtractsToPersistSchemaType;
+      notes?: NotesInputSchemaType;
     },
     thunkAPI,
   ) => {
     thunkAPI.dispatch(updateResearchPersistence({ status: "pending" }));
-    const { articleIds, extracts } = args;
+    const { articleIds, extracts, notes } = args;
     const { framing, reflection } = args.research;
     const input = {
       ...framing,
@@ -31,6 +33,7 @@ export const saveInvgestigation = createAsyncThunk(
         investigation: input,
         articleIds,
         extracts,
+        notes,
       });
       if (result.ok === false) {
         thunkAPI.dispatch(

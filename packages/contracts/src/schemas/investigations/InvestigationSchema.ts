@@ -14,6 +14,7 @@ import {
   SavedExtractArraySchema,
   SavedExtractSchema,
 } from "../integrations/InvestigationExtractRowSchema.js";
+import { NoteSchema, NotesInputSchema } from "./NoteSchema.js";
 
 export const PerspectiveSchema = Type.Union([
   Type.Literal("Neutral"),
@@ -67,7 +68,12 @@ export const SaveInvestigationInputSchema = Type.Object({
       Type.Union([WikiSummaryResponseSchema, WikiDisambigResponseSchema]),
     ),
   ),
+  notes: Type.Optional(NotesInputSchema),
 });
+
+export type SaveInvestigationInputSchemaType = Static<
+  typeof SaveInvestigationInputSchema
+>;
 
 export const ExtractsToPersistSchema = Type.Optional(
   Type.Array(
@@ -120,6 +126,7 @@ export const SelectedInvestigationPayloadSchema = Type.Object({
   investigation: InvestigationSchema,
   sources: Type.Array(ArticleSchema),
   extracts: Type.Array(SavedExtractSchema),
+  notes: Type.Optional(Type.Array(NoteSchema)),
 });
 
 export type SelectedInvestigationPayloadSchemaType = Static<

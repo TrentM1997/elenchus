@@ -13,9 +13,11 @@ The hosted Supabase project must already contain these tables and their required
 | `investigation_sources` | Links an investigation and its owner to existing article IDs |
 | `investigation_extracts` | Saved Wikipedia summaries and disambiguation extracts |
 | `investigation_extract_candidates` | Candidates belonging to a disambiguation extract, including their position |
+| `notes` | Tiptap JSON documents linked to their investigation and owner |
 
 The SQL files below define functions and execution grants; they do not create these tables. They are not a complete empty-database bootstrap. The generated [database types](../server/types/databaseInterfaces.ts) describe the schema used by the server, but do not install database objects.
 
+The `notes` table requires `content jsonb NOT NULL`, non-null investigation and user IDs, generated UUID and creation timestamp defaults, and the composite foreign key `(investigation_id, user_id)` referencing `investigations(id, user_id)`.
 ## Save RPC
 
 [001save_complete_investigation.sql](../server/db/access/migrations/001save_complete_investigation.sql) defines `public.save_complete_investigation`.
@@ -26,12 +28,17 @@ The SQL files below define functions and execution grants; they do not create th
 | `p_investigation jsonb` | Validated framing and reflection fields |
 | `p_article_ids bigint[]` | IDs of articles already persisted by the application |
 | `p_extracts jsonb` | Array of selected Wikipedia summaries or disambiguation extracts |
+| `p_notes jsonb` | Array of `{ content: ... }` notes; defaults to `[]` when omitted |
 
-The function inserts a new investigation, links its articles, and inserts its extracts and any disambiguation candidates within one transaction. An error rolls back those writes together. It does not scrape or create articles. It casts supplied `lastUpdated` values to timestamps, treating an empty string as NULL.
+The function inserts a new investigation, links its articles, and inserts its extracts, disambiguation candidates, and notes within one transaction. An error rolls back those writes together. It does not scrape or create articles. It casts supplied `lastUpdated` values to timestamps, treating an empty string as NULL.
 
 The [write handler](../server/db/access/repositories/investigations/InvestigationWriteHandler.ts) calls `.rpc("save_complete_investigation", args)`, handles database errors, and validates the returned payload. The SQL file is not imported into TypeScript: `.rpc()` calls the function already installed in the database.
 
 Each successful call creates a new investigation. This is not an update or an idempotent operation. Do not automatically retry a save after a lost response: the first call may already have committed.
+
+Omitted notes and empty arrays insert no notes; explicit NULL and non-array inputs are rejected. Each element must contain a content object. Notes use the authenticated user ID and newly inserted investigation ID. The save script removes the old four-argument signature before defining the five-argument function and its permissions in one transaction.
+
+Application integration must forward `notes ?? []` as `p_notes`, include notes in the selected-investigation response schema, and hydrate the client note collection. Regenerate database types after applying the scripts.
 
 ## Hydration RPC and payload
 
@@ -44,6 +51,7 @@ It selects the investigation and assembles its sources and extracts in one SQL s
   investigation: /* saved investigation row */,
   sources: /* full article rows, not source-link rows or IDs */ [],
   extracts: /* saved extracts with nested candidates where applicable */ [],
+  notes: /* complete saved note rows, including JSON content */ [],
 }
 ```
 
@@ -51,7 +59,7 @@ Extracts include their saved identity and ownership fields, `kind`, `title`, `pa
 
 The save response orders sources by the supplied article-ID order. Hydration orders them by source-link creation time and ID. Both order extracts by capture time and ID, and candidates by their stored position.
 
-Empty collections return `[]`. Hydration returns SQL NULL when the investigation does not exist or belongs to another user. The [select handler](../server/db/access/repositories/investigations/InvestigationSelectHandler.ts) converts NULL into a failed result; successful data is validated by the repository parser before it reaches the client. The repository's `{ ok, data }` result and the HTTP success envelope are separate from the RPC payload.
+Both RPCs also return `notes`, an array of complete note rows. Notes are ordered by `created_at, id`; this does not preserve input or tab order. Empty collections return `[]`. Hydration returns SQL NULL when the investigation does not exist or belongs to another user. The [select handler](../server/db/access/repositories/investigations/InvestigationSelectHandler.ts) converts NULL into a failed result; successful data is validated by the repository parser before it reaches the client. The repository's `{ ok, data }` result and the HTTP success envelope are separate from the RPC payload.
 
 The SQL reconstructs existing records; it cannot establish whether context was lost before it was stored. An empty collection is not itself evidence of a failed read. The atomic save prevents partial writes through this save operation.
 
