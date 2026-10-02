@@ -45,6 +45,26 @@ test("successful hydration exposes all three pieces together, including empty co
   expect(store.getState().openInvestigation).toEqual({ status: "ready", data });
 });
 
+test("hydration retains saved rich-text notes for the review", async () => {
+  const store = configureStore({ reducer });
+  const notes = [{
+    id: "note-1",
+    user_id: "owner-1",
+    investigation_id: investigation.id,
+    created_at: "2026-10-01T12:00:00Z",
+    content: { type: "doc", content: [{ type: "paragraph", content: [
+      { type: "text", text: "An observation", marks: [{ type: "bold" }] },
+    ] }] },
+  }];
+  byId.mockResolvedValueOnce({ ok: true, data: { ...data, notes } });
+
+  await store.dispatch(hydrateOpenInvestigation(investigation.id));
+
+  expect(store.getState().openInvestigation).toEqual({
+    status: "ready", data: { ...data, notes },
+  });
+});
+
 test.each(["investigation", "sources", "extracts"] as const)(
   "a %s failure rejects the whole investigation and preserves the failure details",
   async (section) => {

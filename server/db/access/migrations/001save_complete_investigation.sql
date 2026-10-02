@@ -1,8 +1,17 @@
+-- Requires public.notes with its defaults and composite investigation-owner FK.
+-- Apply the signature change and permissions atomically.
+begin;
+
+drop function if exists public.save_complete_investigation(
+  uuid, jsonb, bigint[], jsonb
+);
+
 create or replace function public.save_complete_investigation(
   p_user_id uuid,
   p_investigation jsonb,
   p_article_ids bigint[],
-  p_extracts jsonb
+  p_extracts jsonb,
+  p_notes jsonb default '[]'::jsonb
 )
 returns jsonb
 language plpgsql
@@ -24,6 +33,19 @@ begin
 
   if jsonb_typeof(p_extracts) is distinct from 'array' then
     raise exception 'Extracts must be an array';
+  end if;
+
+  if jsonb_typeof(p_notes) is distinct from 'array' then
+    raise exception 'Notes must be an array';
+  end if;
+
+  if exists (
+    select 1
+    from jsonb_array_elements(p_notes) as note(value)
+    where jsonb_typeof(note.value) is distinct from 'object'
+      or jsonb_typeof(note.value -> 'content') is distinct from 'object'
+  ) then
+    raise exception 'Each note must contain a content object';
   end if;
 
   -- 1. Save the investigation and obtain its generated ID.
@@ -136,8 +158,22 @@ begin
     end if;
   end loop;
 
+  -- 5. Save note documents; the database supplies IDs and creation timestamps.
+  insert into public.notes (user_id, investigation_id, content)
+  select p_user_id, v_investigation.id, note.value -> 'content'
+  from jsonb_array_elements(p_notes) as note(value);
+
   return jsonb_build_object(
     'investigation', to_jsonb(v_investigation),
+    'notes', (
+      select coalesce(
+        jsonb_agg(to_jsonb(n) order by n.created_at, n.id),
+        '[]'::jsonb
+      )
+      from public.notes n
+      where n.investigation_id = v_investigation.id
+        and n.user_id = p_user_id
+    ),
     'sources', (
       select coalesce(jsonb_agg(to_jsonb(a) order by requested.position), '[]'::jsonb)
       from unnest(p_article_ids) with ordinality as requested(article_id, position)
@@ -189,9 +225,11 @@ $$;
 
 -- Only the server's service-role client may invoke this function.
 revoke execute on function public.save_complete_investigation(
-  uuid, jsonb, bigint[], jsonb
+  uuid, jsonb, bigint[], jsonb, jsonb
 ) from public, anon, authenticated;
 
 grant execute on function public.save_complete_investigation(
-  uuid, jsonb, bigint[], jsonb
+  uuid, jsonb, bigint[], jsonb, jsonb
 ) to service_role;
+
+commit;

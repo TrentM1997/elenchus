@@ -5,6 +5,7 @@ import {
 } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import { AsyncState } from "@/state/types";
 import { BookmarkSchemaType } from "@elenchus/contracts/schemas/articles/BookmarkSchema";
+import { NoteSchemaType } from "@elenchus/contracts/schemas/investigations/NoteSchema";
 
 export type DashboardBookmarkState = AsyncState<
   BookmarkSchemaType[],
@@ -33,6 +34,7 @@ export type OpenedResearchState = AsyncState<{
   investigation: InvestigationSchemaType;
   sources: ArticleSchemaType[];
   extracts: InvestigationExtracts;
+  notes?: NoteSchemaType[];
 }>;
 
 export type DashboardTab =

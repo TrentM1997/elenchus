@@ -3,9 +3,36 @@ import PanelLabel from "./PanelLabel";
 import { AnimatePresence } from "framer-motion";
 import ButtonHoverTooltip from "../../tooltips/ButtonHoverTooltip";
 import { useFinishedReadingTooltip } from "@/lib/hooks/articles/useFinishReadingTooltip";
+import { usePushWrittenNotesToResearch } from "@/lib/hooks/notes/usePushWrittenNotesToResearch";
+import { smoothScrollUp } from "@/lib/helpers/scroll/ScrollToTop";
+import { wait } from "@/lib/helpers/formatting/Presentation";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/state/store";
+import { startReflection } from "@/state/Reducers/Investigate/research/ResearchSlice";
 
 export function FinishedReading() {
-  const { articles, handleClick, tooltip } = useFinishedReadingTooltip();
+  const dispatch = useDispatch<AppDispatch>();
+  const { pushNotes } = usePushWrittenNotesToResearch();
+  const { articles, tooltip } = useFinishedReadingTooltip();
+
+  const advance = async (): Promise<void> => {
+    smoothScrollUp();
+    await wait(500);
+    dispatch(
+      startReflection({
+        ending_perspective: null,
+        changed_opinion: null,
+        had_merit: null,
+        new_concepts: null,
+        takeaway: null,
+      }),
+    );
+  };
+
+  const advancePhase = () => {
+    pushNotes();
+    void advance();
+  };
 
   return (
     <div
@@ -20,10 +47,11 @@ export function FinishedReading() {
               `}
     >
       <AnimatePresence>
-        {articles.status === "ready" && <GuideDoneReading />}
+        {articles.status === "ready" &&
+          tooltip === "Finished Reading Button" && <GuideDoneReading />}
       </AnimatePresence>
       <button
-        onClick={handleClick}
+        onClick={() => advancePhase()}
         className="my-auto mx-auto rounded-lg transition-all 
         duration-300 max-w-8 max-h-8 xl:max-w-7 xl:max-h-7 2xl:max-w-8 group
         2xl:max-h-8 ease-in-out group relative"

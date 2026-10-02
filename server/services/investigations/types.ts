@@ -1,10 +1,7 @@
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import {
-  InvestigationAndSourcesResponseSchemaType,
   InvestigationSchemaType,
-  InvestigationsSavedReponseSchemaType,
   PersistInvestigationInputSchemaType,
-  SelectedInvestigationPayloadSchemaType,
 } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import { DbResult } from "../../db/types/types.ts";
 import { InvestigationSaveResult } from "../../db/access/repositories/investigations/investigationsRepository.ts";
@@ -13,6 +10,7 @@ import { SavedExtractSchemaType } from "@elenchus/contracts/schemas/integrations
 import { WikiResponseSchemaType } from "@elenchus/contracts/schemas/integrations/WikipediaExtractSchemas";
 import { IInvestigationServiceWriteHandler } from "./handlers/InvestigationServiceWriteHandler.ts";
 import { IInvestigationServiceSelectHandler } from "./handlers/InvestigationServiceSelectHandler.ts";
+import { NotesInputSchemaType } from "@elenchus/contracts/schemas/investigations/NoteSchema";
 
 export type SaveSourcesAndExtractsArgs = {
   userId: AuthenticatedUserId;
@@ -31,6 +29,7 @@ export type SaveInvestigationParams = {
   investigation: PersistInvestigationInputSchemaType;
   articleIds: ArticleSchemaType["id"][];
   extracts: InvestigationExtractsToPersist[];
+  notes?: NotesInputSchemaType;
 };
 
 export type HydrateInvestigationParams = {

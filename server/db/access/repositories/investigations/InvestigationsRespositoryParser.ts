@@ -12,6 +12,10 @@ import {
   SelectedInvestigationPayloadSchema,
 } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import type { AuthenticatedUserId } from "../../../../services/auth/authorization.js";
+import {
+  NotesInputSchema,
+  NotesInputSchemaType,
+} from "@elenchus/contracts/schemas/investigations/NoteSchema";
 
 export interface IInvestigationsRepositoryParser {
   toInsertableInvestigation(
@@ -26,6 +30,7 @@ export interface IInvestigationsRepositoryParser {
   validateSelectedInvestigation(
     result: unknown,
   ): SelectedInvestigationPayloadSchemaType;
+  validateNotesInput(data: unknown): NotesInputSchemaType;
 }
 
 export class InvestigationsRepositoryParser implements IInvestigationsRepositoryParser {
@@ -85,5 +90,9 @@ export class InvestigationsRepositoryParser implements IInvestigationsRepository
     result: unknown,
   ): SelectedInvestigationPayloadSchemaType {
     return validateServerOrThrow(SelectedInvestigationPayloadSchema, result);
+  }
+
+  public validateNotesInput(data: unknown): NotesInputSchemaType {
+    return validateOrThrow(NotesInputSchema, data);
   }
 }

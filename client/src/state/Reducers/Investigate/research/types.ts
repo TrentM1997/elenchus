@@ -5,6 +5,7 @@ import {
 import { AsyncState } from "@/state/types";
 import { WikiResponseSchemaType } from "@elenchus/contracts/schemas/integrations/WikipediaExtractSchemas";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import { NotesInputSchemaType } from "@elenchus/contracts/schemas/investigations/NoteSchema";
 
 export type SaveInvestigationState =
   AsyncState<SelectedInvestigationPayloadSchemaType>;
@@ -23,9 +24,10 @@ export type ResearchReflection = Pick<
   | "takeaway"
 >;
 
-export type ExtractsAndSources = {
+export type EvidenceContext = {
   extracts: Exclude<WikiResponseSchemaType, { kind: "error" }>[];
   sources: ArticleSchemaType["id"][];
+  notes?: NotesInputSchemaType;
 };
 
 export type UserResearchType =
@@ -46,14 +48,14 @@ export type UserResearchType =
       phase: "evidence";
       data: {
         framing: PerspectiveFraming;
-        context: ExtractsAndSources;
+        context: EvidenceContext;
       };
     }
   | {
       phase: "reflection";
       data: {
         framing: PerspectiveFraming;
-        context: ExtractsAndSources;
+        context: EvidenceContext;
         reflection: ResearchReflection;
       };
     }
@@ -61,7 +63,7 @@ export type UserResearchType =
       phase: "completed";
       data: {
         framing: PerspectiveFraming;
-        context: ExtractsAndSources;
+        context: EvidenceContext;
         reflection: ResearchReflection;
       };
     }
@@ -69,7 +71,7 @@ export type UserResearchType =
       phase: "end";
       data: {
         framing: PerspectiveFraming;
-        context: ExtractsAndSources;
+        context: EvidenceContext;
         reflection: ResearchReflection;
       };
     };

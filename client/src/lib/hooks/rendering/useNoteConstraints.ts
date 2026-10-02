@@ -21,11 +21,15 @@ type UseNoteConstraintsReturn = {
   setNotePosition: React.Dispatch<React.SetStateAction<NotePosition>>;
   notesRef: React.RefObject<HTMLDivElement>;
   containerRef: React.RefObject<HTMLDivElement>;
+  constraints: DragConstraints;
 };
 
 export type { NotePosition, DragConstraints, UseNoteConstraintsReturn };
 
 const useNoteConstraints = (): UseNoteConstraintsReturn => {
+  const constraints = useSelector(
+    (s: RootState) => s.investigation.notes.constraints,
+  );
   const measureStatus: CanMeasureStatus = useSelector(
     (s: RootState) => s.investigation.notes.status,
   );
@@ -66,6 +70,7 @@ const useNoteConstraints = (): UseNoteConstraintsReturn => {
     setNotePosition: setNotePosition,
     notesRef: notesRef,
     containerRef: containerRef,
+    constraints,
   };
 };
 

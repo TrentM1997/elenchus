@@ -28,6 +28,7 @@ export class InvestigationServiceWriteHandler implements IInvestigationServiceWr
       investigation: params.investigation,
       userId: userId,
       extracts: params.extracts,
+      notes: params.notes,
     });
   }
 }

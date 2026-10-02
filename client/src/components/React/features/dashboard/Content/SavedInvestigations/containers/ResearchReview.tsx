@@ -13,6 +13,7 @@ import { RootState } from "@/state/store";
 import AsyncStateRenderer from "@/components/React/pipelines/AsyncStateRenderer";
 import ResearchSourceSkeleton from "../Details/sources/ResearchSourceSkeleton";
 import React from "react";
+import InvestigationNotes from "../notes/YourNotes";
 
 export default function ResearchReview({
   investigationId,
@@ -51,6 +52,7 @@ export default function ResearchReview({
           {(state) => (
             <React.Fragment>
               <DetailsTable investigation={state.investigation} />
+              <InvestigationNotes notes={state.notes} />
               <SourcesFromResearch sources={state.sources} />
               <WikipediaTerms extracts={state.extracts} />
             </React.Fragment>

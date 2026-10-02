@@ -1,5 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
-import { draftNote } from "@/state/Reducers/Investigate/articles/NoteTaking";
+import {
+  openOrCloseNotePad,
+  TakingNoteState,
+} from "@/state/Reducers/Investigate/articles/NoteTaking";
 import PanelLabel from "./PanelLabel";
 import { RootState } from "@/state/store";
 import ButtonHoverTooltip from "../../tooltips/ButtonHoverTooltip";
@@ -10,13 +13,11 @@ export default function TakeNotes({
 }: {
   status: ArticleExtractionState["status"];
 }) {
-  const takingNotes = useSelector(
-    (s: RootState) => s.investigation.notes.takingNotes,
-  );
+  const current = useSelector((s: RootState) => s.investigation.notes.current);
   const dispatch = useDispatch();
 
   const handleClick = () => {
-    dispatch(draftNote({ status: "draft", data: "" }));
+    dispatch(openOrCloseNotePad({ status: "open" }));
   };
 
   return (
@@ -36,10 +37,12 @@ export default function TakeNotes({
         rounded-lg transition-all duration-300 m-auto relative
         ease-in-out group"
       >
-        {!takingNotes && <ButtonHoverTooltip description="take notes" />}
+        {current.status === "closed" && (
+          <ButtonHoverTooltip description="take notes" />
+        )}
 
         <div className="h-full w-full box-border">
-          <NotesButton />
+          <NotesButton status={current.status} />
         </div>
       </button>
       <PanelLabel description={"notes"} />
@@ -47,11 +50,11 @@ export default function TakeNotes({
   );
 }
 
-function NotesButton(): JSX.Element {
-  const takingNotes = useSelector(
-    (s: RootState) => s.investigation.notes.takingNotes,
-  );
-
+function NotesButton({
+  status,
+}: {
+  status: TakingNoteState["status"];
+}): JSX.Element {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -64,8 +67,10 @@ function NotesButton(): JSX.Element {
       strokeLinecap="round"
       strokeLinejoin="round"
       className={`
-                ${takingNotes ? "text-blue-500" : "text-white"}
-                md:group-hover:text-blue-500 will-change-transform transition-colors delay-150 duration-300 ease-soft icon icon-tabler icons-tabler-outline icon-tabler-note`}
+                ${status !== "closed" ? "text-blue-500" : "text-white"}
+                md:group-hover:text-blue-500 will-change-transform transition-colors 
+                delay-150 duration-300 ease-soft icon icon-tabler icons-tabler-outline 
+                icon-tabler-note`}
     >
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <path d="M13 20l7 -7" />

@@ -3,9 +3,10 @@ import {
   PerspectiveFraming,
   ResearchReflection,
   SaveInvestigationState,
-  ExtractsAndSources,
+  EvidenceContext,
   UserResearchType,
 } from "./types";
+import { NotesInputSchemaType } from "@elenchus/contracts/schemas/investigations/NoteSchema";
 
 export interface ResearchState {
   research: UserResearchType;
@@ -54,7 +55,7 @@ const ResearchSlice = createSlice({
 
     startEvidence: (
       state: ResearchState,
-      action: PayloadAction<ExtractsAndSources>,
+      action: PayloadAction<EvidenceContext>,
     ) => {
       const research = state.research;
       if (research.phase !== "searching") return;
@@ -117,7 +118,7 @@ const ResearchSlice = createSlice({
     },
     updateResearchSources: (
       state: ResearchState,
-      action: PayloadAction<ExtractsAndSources["sources"]>,
+      action: PayloadAction<EvidenceContext["sources"]>,
     ) => {
       const research = state.research;
 
@@ -127,13 +128,21 @@ const ResearchSlice = createSlice({
     },
     updateResearchExtracts: (
       state: ResearchState,
-      action: PayloadAction<ExtractsAndSources["extracts"]>,
+      action: PayloadAction<EvidenceContext["extracts"]>,
     ) => {
       const research = state.research;
 
       if (research.phase === "initial" || !("context" in research.data)) return;
 
       research.data.context.extracts = action.payload;
+    },
+    updateResearchNotes: (
+      state: ResearchState,
+      action: PayloadAction<NotesInputSchemaType>,
+    ) => {
+      if (state.research.phase !== "evidence") return;
+
+      state.research.data.context.notes = action.payload;
     },
   },
 });
@@ -142,6 +151,7 @@ export const {
   updateResearchPersistence,
   startReflection,
   completeResearch,
+  updateResearchNotes,
   updateReflection,
   startEvidence,
   startFraming,
