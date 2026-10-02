@@ -1,20 +1,19 @@
 import { useSelector } from "react-redux";
-import type { PathSelected } from "@/state/Reducers/Investigate/Rendering";
 import { RootState } from "@/state/store";
-import { renderInitialPhase } from "../switches/renderInitialPhase";
+import RenderInitialPhase from "../switches/renderInitialPhase";
 
 function InitialPhase() {
-    const path: PathSelected = useSelector((s: RootState) => s.investigation.rendering.path);
+  const state = useSelector(
+    (s: RootState) => s.investigation.research.research,
+  );
 
-    return (
-        <div
-            id="initial-phase-container"
-            className="mx-auto"
-        >
-            {renderInitialPhase(path)}
-        </div>
-    );
-};
+  if (state.phase !== "initial") return null;
 
+  return (
+    <div id="initial-phase-container" className="mx-auto">
+      <RenderInitialPhase state={state} />
+    </div>
+  );
+}
 
 export default InitialPhase;

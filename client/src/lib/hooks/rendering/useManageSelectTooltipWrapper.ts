@@ -3,8 +3,8 @@ import { useTooltipFlags } from "@/lib/hooks/rendering/useTooltipFlags";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/state/store";
 import { useMaxSelectedToast } from "@/lib/hooks/rendering/useAutoDismiss";
-import { populateTooltip } from "@/state/Reducers/Investigate/Rendering";
 import { SelectedArticles } from "@/state/Reducers/Investigate/articles/ChosenArticles";
+import { renderGuideTip } from "@/state/Reducers/Overlay/PipelineSlice";
 
 export const useManageSelectTooltipWrapper = ({
   selected,
@@ -18,7 +18,7 @@ export const useManageSelectTooltipWrapper = ({
   const surfaceTooltip = async () => {
     const flags = getFlags();
     if (flags.selectingTooltip === false) {
-      dispatch(populateTooltip("Guide Selection"));
+      dispatch(renderGuideTip("Guide Selection"));
     }
   };
 

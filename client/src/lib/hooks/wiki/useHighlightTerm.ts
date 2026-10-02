@@ -1,7 +1,6 @@
 import { WikipediaToolState } from "@/state/Reducers/Investigate/wiki/types";
 import {
   clearWikiSlice,
-  getModalPosition,
   wikiToolAction,
 } from "@/state/Reducers/Investigate/wiki/WikiSlice";
 import { AppDispatch, RootState } from "@/state/store";
@@ -9,9 +8,6 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 type HighlightTermHook = {
-  handleHighlightStart: (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-  ) => void;
   handleHighlightEnd: () => void;
   toolState: WikipediaToolState;
 };
@@ -21,15 +17,6 @@ export const useHighlightTerm = (): HighlightTermHook => {
     (s: RootState) => s.investigation.wiki.extractTool,
   );
   const dispatch = useDispatch<AppDispatch>();
-
-  const handleHighlightStart = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (toolState.status !== "highlight") return;
-
-    const x: number = e.pageX;
-    const y: number = e.pageY;
-
-    dispatch(getModalPosition({ x, y }));
-  };
 
   const handleText = (selection: Selection | null) => {
     if (selection && selection.rangeCount > 0) {
@@ -56,7 +43,6 @@ export const useHighlightTerm = (): HighlightTermHook => {
   }, []);
 
   return {
-    handleHighlightStart,
     handleHighlightEnd,
     toolState,
   };

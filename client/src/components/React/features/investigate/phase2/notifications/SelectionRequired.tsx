@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { createPortal } from "react-dom";
-import { populateTooltip } from "@/state/Reducers/Investigate/Rendering";
+import { renderGuideTip } from "@/state/Reducers/Overlay/PipelineSlice";
 
 interface SelectionRequired {
   count: number;
@@ -16,7 +16,7 @@ export default function SelectionRequired({
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      dispatch(populateTooltip(null));
+      dispatch(renderGuideTip(null));
     }, 5000);
 
     return () => clearTimeout(timer);

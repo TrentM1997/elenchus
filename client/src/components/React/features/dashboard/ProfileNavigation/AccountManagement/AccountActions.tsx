@@ -1,11 +1,11 @@
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ScrolltoTop from "@/lib/helpers/scroll/ScrollToTop";
-import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+import { renderModal } from "@/state/Reducers/Overlay/PipelineSlice";
 
 export default function AccountActions() {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const actions = [
     {
@@ -22,16 +22,12 @@ export default function AccountActions() {
     },
   ];
 
-
-  const deleteAction = actions[1]
-  const changeAction = actions[0]
-
+  const deleteAction = actions[1];
+  const changeAction = actions[0];
 
   function getResetLink() {
-
-    navigate('/emailForReset')
+    navigate("/emailForReset");
   }
-
 
   return (
     <section className="lg:p-8">
@@ -55,12 +51,15 @@ export default function AccountActions() {
                   <div className="gap-12 w-full">
                     <div>
                       <div className="flex justify-between items-center">
-                        <h3 className={`text-lg ${changeAction.isPermanent ? "text-blue-400" : "text-white"}`}>
+                        <h3
+                          className={`text-lg ${changeAction.isPermanent ? "text-blue-400" : "text-white"}`}
+                        >
                           {changeAction.title}
-
                         </h3>
                       </div>
-                      <p className="mt-3 text-sm text-white">{changeAction.description}</p>
+                      <p className="mt-3 text-sm text-white">
+                        {changeAction.description}
+                      </p>
                     </div>
                   </div>
                   <div className="mt-8 w-full">
@@ -69,7 +68,9 @@ export default function AccountActions() {
                       type="button"
                       className="text-sm py-2 w-full px-4 border focus:ring-2 rounded-full border-transparent bg-white hover:bg-white/10 text-black duration-200 focus:ring-offset-2 focus:ring-white hover:text-white inline-flex items-center justify-center ring-1 ring-transparent"
                     >
-                      {changeAction.title === 'Change Password' ? 'Get a link' : 'Delete my account'}
+                      {changeAction.title === "Change Password"
+                        ? "Get a link"
+                        : "Delete my account"}
                     </button>
                   </div>
                 </div>
@@ -81,21 +82,26 @@ export default function AccountActions() {
                   <div className="gap-12 w-full">
                     <div>
                       <div className="flex justify-between items-center">
-                        <h3 className={`text-lg ${deleteAction.isPermanent ? "text-blue-400" : "text-white"}`}>
+                        <h3
+                          className={`text-lg ${deleteAction.isPermanent ? "text-blue-400" : "text-white"}`}
+                        >
                           {deleteAction.title}
-
                         </h3>
                       </div>
-                      <p className="mt-3 text-sm text-white">{deleteAction.description}</p>
+                      <p className="mt-3 text-sm text-white">
+                        {deleteAction.description}
+                      </p>
                     </div>
                   </div>
                   <div className="mt-8 w-full">
                     <button
-                      onClick={() => dispatch(renderModal('Delete Account'))}
+                      onClick={() => dispatch(renderModal("Delete Account"))}
                       type="button"
                       className="text-sm py-2 w-full px-4 border focus:ring-2 rounded-full border-transparent bg-white hover:bg-white/10 text-black duration-200 focus:ring-offset-2 focus:ring-white hover:text-white inline-flex items-center justify-center ring-1 ring-transparent"
                     >
-                      {deleteAction.title === 'Change Password' ? 'Get a link' : 'Delete my account'}
+                      {deleteAction.title === "Change Password"
+                        ? "Get a link"
+                        : "Delete my account"}
                     </button>
                   </div>
                 </div>
@@ -106,4 +112,4 @@ export default function AccountActions() {
       </div>
     </section>
   );
-};
+}

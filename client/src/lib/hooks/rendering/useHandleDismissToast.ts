@@ -1,7 +1,7 @@
 import {
   ActiveToast,
   renderToast,
-} from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+} from "@/state/Reducers/Overlay/PipelineSlice";
 import { AppDispatch } from "@/state/store";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";

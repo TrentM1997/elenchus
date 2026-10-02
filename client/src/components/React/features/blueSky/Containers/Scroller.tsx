@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/state/store";
 import { useCallback } from "react";
 import { softEase, variants } from "@/motion/variants";
-import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+import { renderModal } from "@/state/Reducers/Overlay/PipelineSlice";
 import { BlueSkyPostSchemaType } from "@elenchus/contracts/schemas/integrations/BlueSkySchemas";
 
 export default function Scroller({

@@ -1,8 +1,6 @@
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/state/store";
-import {
-  choosePath,
-} from "@/state/Reducers/Investigate/Rendering";
+import { chooseIdeaSource } from "@/state/Reducers/Investigate/research/ResearchSlice";
 import { wait } from "@/lib/helpers/formatting/Presentation";
 import { updatePOVDraft } from "@/state/Reducers/Investigate/pov/thunks";
 
@@ -10,7 +8,7 @@ export default function CloseBlueSky() {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleClose = async () => {
-    dispatch(choosePath("Path Chosen"));
+    dispatch(chooseIdeaSource({ phase: "initial", path: "decided" }));
     await wait(300);
     dispatch(updatePOVDraft({}));
   };

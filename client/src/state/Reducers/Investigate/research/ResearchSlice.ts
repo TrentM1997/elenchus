@@ -14,7 +14,7 @@ export interface ResearchState {
 }
 
 const initialState: ResearchState = {
-  research: { phase: "initial" },
+  research: { phase: "initial", path: "choose" },
   persistence: { status: "initial" },
 };
 
@@ -28,6 +28,7 @@ const ResearchSlice = createSlice({
     ) => {
       state.persistence = action.payload;
     },
+
     startFraming: (
       state: ResearchState,
       action: PayloadAction<PerspectiveFraming>,
@@ -144,6 +145,13 @@ const ResearchSlice = createSlice({
 
       state.research.data.context.notes = action.payload;
     },
+    chooseIdeaSource: (
+      state: ResearchState,
+      action: PayloadAction<Extract<UserResearchType, { phase: "initial" }>>,
+    ) => {
+      if (state.research.phase !== "initial") return;
+      state.research = action.payload;
+    },
   },
 });
 
@@ -160,6 +168,7 @@ export const {
   updateResearchExtracts,
   updateResearchSources,
   endInvestigation,
+  chooseIdeaSource,
 } = ResearchSlice.actions;
 
 export default ResearchSlice.reducer;

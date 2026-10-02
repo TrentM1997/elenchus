@@ -6,21 +6,11 @@ import { SplitBlueSkyFeedSchemaType } from "@elenchus/contracts/schemas/integrat
 interface InitialState {
   posts: BlueSkyPosts;
   selected: SelectedPost;
-  popoverPosition: PopoverXY;
-  containerDimensions: Dimensions;
 }
 
 const initialState: InitialState = {
   posts: { status: "initial" },
   selected: { status: "initial" },
-  containerDimensions: {
-    w: null,
-    h: null,
-  },
-  popoverPosition: {
-    x: null,
-    y: null,
-  },
 };
 
 export const BlueSkySlice = createSlice({
@@ -35,11 +25,6 @@ export const BlueSkySlice = createSlice({
       action: PayloadAction<BlueSkyPosts>,
     ) => {
       state.posts = action.payload;
-    },
-    getPopoverPosition: (state, action: PayloadAction<PopoverXY>) => {
-      const coordinates = action.payload;
-      state.popoverPosition.x = coordinates.x;
-      state.popoverPosition.y = coordinates.y;
     },
     resetBlueSkyState: () => initialState,
   },
@@ -93,11 +78,7 @@ export const BlueSkySlice = createSlice({
   },
 });
 
-export const {
-  resetBlueSkyState,
-  selectPost,
-  getPopoverPosition,
-  getBlueSkyPosts,
-} = BlueSkySlice.actions;
+export const { resetBlueSkyState, selectPost, getBlueSkyPosts } =
+  BlueSkySlice.actions;
 
 export default BlueSkySlice.reducer;

@@ -2,16 +2,13 @@ import { RootState } from "@/state/store";
 import { useSelector } from "react-redux";
 import InvestigationWorkSpace from "@/components/React/features/investigate/shared/containers/InvestigationWorkSpace";
 import { useBodyLock } from "@/lib/hooks/rendering/useBodyLock";
-import type { TooltipDisplayed } from "@/state/Reducers/Investigate/Rendering";
 import { useClearInvestigation } from "@/lib/hooks/flags/useClearInvestigation";
 
 export default function InvestigateContainer() {
   const research = useSelector(
     (s: RootState) => s.investigation.research.research,
   );
-  const tooltip: TooltipDisplayed = useSelector(
-    (s: RootState) => s.investigation.rendering.tooltip,
-  );
+  const guideTip = useSelector((s: RootState) => s.overlay.guideTip);
   const gettingHelp = useSelector(
     (s: RootState) => s.investigation.help.gettingHelp,
   );
@@ -20,7 +17,7 @@ export default function InvestigateContainer() {
 
   return (
     <main
-      onClick={() => removeTooltip(tooltip)}
+      onClick={() => removeTooltip(guideTip)}
       className={`
         max-w-dvw sm:w-full shrink-0 flex flex-col grow 
         transition-opacity duration-200 ease-in-out h-full mx-auto justify-center

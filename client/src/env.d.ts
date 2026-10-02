@@ -9,7 +9,7 @@ import { SigninStatus } from "./lib/hooks/auth/useSignIn";
 import { FactualReportingRatingSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import { BlueSkyPosts } from "./state/Reducers/BlueSky/types";
 import { BlueSkyPostSchemaType } from "@elenchus/contracts/schemas/integrations/BlueSkySchemas";
-import { ActiveToast } from "./state/Reducers/RenderingPipelines/PipelineSlice";
+import { ActiveToast } from "./state/Reducers/Overlay/PipelineSlice";
 import { BrowsingOptionSchemaType } from "@elenchus/contracts/schemas/articles/BrowsingOptionSchema";
 import type { DashboardTab } from "./state/Reducers/Dashboard/types";
 import type { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";

@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "@/state/store";
 import { extractArticles } from "@/state/Reducers/Investigate/articles/thunks";
-import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+import { renderModal } from "@/state/Reducers/Overlay/PipelineSlice";
 import { wait } from "@/lib/helpers/formatting/Presentation";
 import { SelectedArticles } from "@/state/Reducers/Investigate/articles/ChosenArticles";
 import { UserKind } from "@/state/Reducers/Athentication/Authentication";

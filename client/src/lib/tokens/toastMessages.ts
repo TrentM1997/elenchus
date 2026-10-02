@@ -1,7 +1,4 @@
-import {
-  ActiveToast,
-  ToastKind,
-} from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+import { ActiveToast, ToastKind } from "@/state/Reducers/Overlay/PipelineSlice";
 
 type ToastMessages = Record<ActiveToast["status"], string>;
 

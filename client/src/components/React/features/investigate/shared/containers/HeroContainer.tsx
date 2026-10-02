@@ -1,7 +1,7 @@
 import { AnimatePresence } from "framer-motion";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
-import { ActiveModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+import { ActiveModal } from "@/state/Reducers/Overlay/PipelineSlice";
 import RenderHero from "../../switches/renderHero";
 import { getHeroContainerStyles } from "./styles";
 

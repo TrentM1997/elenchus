@@ -6,7 +6,6 @@ import ReadingReducer from "../Investigate/articles/ExtractedArticles";
 import SelectingArticles from "../Investigate/articles/ChosenArticles";
 import SearchResults from "../Investigate/articles/SearchResults";
 import HelpReducer from "../Investigate/help/HelpModal";
-import RenderingSlice from "../Investigate/Rendering";
 import WikipediaExtractSlice from "../Investigate/wiki/WikiSlice";
 import ResearchSlice from "@/state/Reducers/Investigate/research/ResearchSlice";
 
@@ -20,7 +19,6 @@ const investigateReducer = combineReducers({
   search: SearchResults,
   help: HelpReducer,
   wiki: WikipediaExtractSlice,
-  rendering: RenderingSlice,
   research: ResearchSlice,
 });
 

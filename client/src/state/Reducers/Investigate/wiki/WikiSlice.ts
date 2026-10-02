@@ -5,24 +5,17 @@ import { AsyncState } from "@/state/types";
 import { WikiResponseSchemaType } from "@elenchus/contracts/schemas/integrations/WikipediaExtractSchemas";
 import { WikipediaToolState } from "./types";
 
-interface modalXY {
-  x: number;
-  y: number;
-}
-
 export type WikipediaExtractState = AsyncState<WikiResponseSchemaType>;
 
 interface WikiTypes {
   extractTool: WikipediaToolState;
   extract: WikipediaExtractState;
-  modalPosition: modalXY | null;
   currentRequestId: string | null;
 }
 
 const initialState: WikiTypes = {
   extractTool: { status: "closed" },
   extract: { status: "initial" },
-  modalPosition: null,
   currentRequestId: null,
 };
 
@@ -64,12 +57,6 @@ export const WikipediaExtractSlice = createSlice({
     ) => {
       state.extractTool = action.payload;
     },
-    getModalPosition: (
-      state,
-      action: PayloadAction<{ x: number; y: number }>,
-    ) => {
-      state.modalPosition = action.payload;
-    },
 
     clearWikiSlice: () => initialState,
   },
@@ -101,7 +88,6 @@ export const WikipediaExtractSlice = createSlice({
 
 export type WikiSliceState = ReturnType<typeof WikipediaExtractSlice.reducer>;
 
-export const { getModalPosition, clearWikiSlice, wikiToolAction } =
-  WikipediaExtractSlice.actions;
+export const { clearWikiSlice, wikiToolAction } = WikipediaExtractSlice.actions;
 
 export default WikipediaExtractSlice.reducer;

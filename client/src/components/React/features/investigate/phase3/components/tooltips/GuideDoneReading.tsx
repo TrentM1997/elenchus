@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
-import { populateTooltip } from "@/state/Reducers/Investigate/Rendering";
 import { useTooltipFlags } from "@/lib/hooks/rendering/useTooltipFlags";
 import { tooltipVariants } from "@/motion/variants";
+import { renderGuideTip } from "@/state/Reducers/Overlay/PipelineSlice";
 
 export default function GuideDoneReading({}) {
   const dispatch = useDispatch();
@@ -11,7 +11,7 @@ export default function GuideDoneReading({}) {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      dispatch(populateTooltip(null));
+      dispatch(renderGuideTip(null));
       setFlag("readingTooltip", true);
     }, 5000);
     return () => clearTimeout(timer);

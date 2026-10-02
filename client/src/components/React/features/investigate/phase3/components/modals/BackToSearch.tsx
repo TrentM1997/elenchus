@@ -1,5 +1,5 @@
 import { resetResults } from "@/state/Reducers/Investigate/articles/SearchResults";
-import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+import { renderModal } from "@/state/Reducers/Overlay/PipelineSlice";
 import { useDispatch } from "react-redux";
 import { startSearching } from "@/state/Reducers/Investigate/research/ResearchSlice";
 import { resetReadingSlice } from "@/state/Reducers/Investigate/articles/ExtractedArticles";
@@ -60,4 +60,3 @@ export default function BackToSearch(): JSX.Element {
     </div>
   );
 }
-

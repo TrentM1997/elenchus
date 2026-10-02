@@ -4,7 +4,7 @@ import {
   recordFeedback,
 } from "@/state/Reducers/Feedback/FeedbackSlice";
 import { submitFeedback } from "@/state/Reducers/Feedback/thunks";
-import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+import { renderModal } from "@/state/Reducers/Overlay/PipelineSlice";
 import { AppDispatch, RootState } from "@/state/store";
 import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";

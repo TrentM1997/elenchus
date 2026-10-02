@@ -5,7 +5,7 @@ import Failed from "./Failed";
 import Pending from "./Pending";
 import { hideTop } from "@/motion/variants";
 import { createPortal } from "react-dom";
-import { ActiveToast } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+import { ActiveToast } from "@/state/Reducers/Overlay/PipelineSlice";
 import { createToastMessage } from "@/lib/helpers/toasts/createToastMessage";
 import { assertNever } from "@/lib/helpers/asserts/assertNever";
 

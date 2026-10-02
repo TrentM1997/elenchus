@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { wait } from "@/lib/helpers/formatting/Presentation";
-import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+import { renderModal } from "@/state/Reducers/Overlay/PipelineSlice";
 import { logOut } from "@/state/Reducers/Athentication/thunks";
 import { AppDispatch } from "@/state/store";
 

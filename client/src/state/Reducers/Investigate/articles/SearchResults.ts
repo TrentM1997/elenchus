@@ -1,27 +1,20 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ArticleType } from "@/env";
+import { createSlice } from "@reduxjs/toolkit";
 import { AsyncState } from "@/state/types";
 import { searchNewsApi } from "./thunks";
 import { SearchResultsResponseSchemaType } from "@elenchus/contracts/schemas/articles/BrowsingOptionSchema";
 
 export type SearchResultsState = AsyncState<SearchResultsResponseSchemaType>;
 
-export type SearchResultsPages = AsyncState<Page>;
-
-export type Page = Array<ArticleType>;
-
 interface SearchResults {
   pages: SearchResultsState;
   currentPage: number;
   activeRequestId: string | null;
-  mutePagination: boolean;
 }
 
 const initialState: SearchResults = {
   pages: { status: "initial" },
   currentPage: 0,
   activeRequestId: null,
-  mutePagination: false,
 };
 
 export const SearchResultsSlice = createSlice({
@@ -39,12 +32,6 @@ export const SearchResultsSlice = createSlice({
     },
     incrementPageBy: (state, action) => {
       state.currentPage = action.payload;
-    },
-    temporaryPaginationMute: (
-      state: SearchResults,
-      action: PayloadAction<boolean>,
-    ) => {
-      state.mutePagination = action.payload;
     },
     resetResults: () => initialState,
     resetArticles: (state) => {
@@ -88,7 +75,6 @@ export const {
   incrementPage,
   incrementPageBy,
   decrementPage,
-  temporaryPaginationMute,
 } = SearchResultsSlice.actions;
 
 export default SearchResultsSlice.reducer;

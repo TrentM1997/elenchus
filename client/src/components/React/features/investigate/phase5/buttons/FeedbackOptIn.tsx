@@ -1,5 +1,5 @@
 import { showFeedbackForm } from "@/state/Reducers/Feedback/FeedbackSlice";
-import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+import { renderModal } from "@/state/Reducers/Overlay/PipelineSlice";
 import { AppDispatch } from "@/state/store";
 import { useDispatch } from "react-redux";
 

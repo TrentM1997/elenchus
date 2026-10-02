@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/state/store";
 import { deleteAccount } from "@/state/Reducers/Athentication/thunks";
 import { requiredInput } from "@/lib/helpers/formatting/validation";
-import { renderModal } from "@/state/Reducers/RenderingPipelines/PipelineSlice";
+import { renderModal } from "@/state/Reducers/Overlay/PipelineSlice";
 import { wait } from "@/lib/helpers/formatting/Presentation";
 import { useNavigate } from "react-router-dom";
 

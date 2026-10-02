@@ -3,7 +3,7 @@ import { InvestigateFeature } from "./Reducers/Root/InvestigateReducer";
 import AuthenticateReducer from "./Reducers/Athentication/Authentication";
 import FeedBackSlice from "./Reducers/Feedback/FeedbackSlice";
 import BlueSkySlice from "./Reducers/BlueSky/BlueSkySlice";
-import PipelineSlice from "./Reducers/RenderingPipelines/PipelineSlice";
+import PipelineSlice from "./Reducers/Overlay/PipelineSlice";
 import DashboardSlice from "./Reducers/Dashboard/DashboardSlice";
 import { listenerMiddleware } from "./listenerMiddleware";
 
