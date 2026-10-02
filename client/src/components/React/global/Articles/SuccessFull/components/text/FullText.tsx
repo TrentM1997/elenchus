@@ -1,17 +1,10 @@
-import { AppDispatch, RootState } from "@/state/store";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  clearWikiSlice,
-  getModalPosition,
-  modalStages,
-} from "@/state/Reducers/Investigate/wiki/WikiSlice";
 import { AnimatePresence } from "framer-motion";
 import TermModalContainer from "@/components/React/features/wiki/components/popovers/containers/TermModalContainer";
 import TermModal from "@/components/React/features/wiki/components/popovers/modals/TermModal";
 import WikiTermExtract from "@/components/React/features/wiki/components/WikiTermExtract";
 import ArticleBody from "./ArticleBody";
-import { useEffect } from "react";
 import ErrorBoundary from "@/components/React/global/ErrorBoundaries/ErrorBoundary";
+import { useHighlightTerm } from "@/lib/hooks/wiki/useHighlightTerm";
 
 interface FullTextProps {
   article_text: string;
@@ -19,47 +12,8 @@ interface FullTextProps {
 }
 
 export default function FullText({ article_text, article_url }: FullTextProps) {
-  const investigateState = useSelector(
-    (state: RootState) => state.investigation,
-  );
-  const dispatch = useDispatch<AppDispatch>();
-  const { wikiModalStages } = investigateState.wiki;
-
-  const handleHighlightStart = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!wikiModalStages.highlight) {
-      return;
-    } else {
-      const x: number = e.pageX;
-      const y: number = e.pageY;
-
-      dispatch(getModalPosition({ x, y }));
-    }
-  };
-
-  const handleHighlightEnd = () => {
-    if (wikiModalStages.highlight) {
-      const selection = window.getSelection();
-
-      if (selection && selection.rangeCount > 0) {
-        const selectedTextString = selection.toString().trim();
-        selectedTextString.length > 3 &&
-          dispatch(
-            modalStages({
-              display: true,
-              highlight: false,
-              confirmExtract: true,
-              text: selectedTextString,
-            }),
-          );
-      }
-    }
-  };
-
-  useEffect(() => {
-    return () => {
-      dispatch(clearWikiSlice());
-    };
-  }, []);
+  const { handleHighlightEnd, handleHighlightStart, toolState } =
+    useHighlightTerm();
 
   return (
     <div
@@ -67,14 +21,14 @@ export default function FullText({ article_text, article_url }: FullTextProps) {
       onMouseUp={handleHighlightEnd}
       className={`pt-6 text-white w-full h-full tracking-tight relative selection:bg-blue-300 selection:text-black`}
     >
-      {wikiModalStages.text && wikiModalStages.confirmExtract && (
+      {toolState.status === "confirm" && (
         <TermModalContainer>
           <TermModal />
         </TermModalContainer>
       )}
       <ErrorBoundary>
         <AnimatePresence>
-          {wikiModalStages.display && (
+          {toolState.status !== "closed" && (
             <WikiTermExtract article_url={article_url} />
           )}
         </AnimatePresence>

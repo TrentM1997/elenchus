@@ -1,4 +1,4 @@
-import GoToDashboard from "../features/investigate/phase5/buttons/GoToDashboard";
+import FeedbackOptIn from "../features/investigate/phase5/buttons/FeedbackOptIn";
 import SaveInvestigation from "../features/investigate/phase5/buttons/SaveInvestigation";
 import { useSaveInvestigation } from "@/lib/hooks/useHandleSaveInvestigation";
 import { assertNever } from "@/lib/helpers/asserts/assertNever";
@@ -14,7 +14,7 @@ export default function RenderSaveInvestigationButtons() {
       return <SaveInvestigation status={status} handleSave={handleSave} />;
     }
     case "ready": {
-      return <GoToDashboard />;
+      return <FeedbackOptIn />;
     }
 
     default: {

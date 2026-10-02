@@ -3,7 +3,6 @@ import { BrowsingOptionSchemaType } from "@elenchus/contracts/schemas/articles/B
 import { assertNever } from "@/lib/helpers/asserts/assertNever";
 
 const MAX = 3;
-const MIN = 0;
 
 export type SelectedArticles =
   | { status: "empty" }

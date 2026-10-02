@@ -1,8 +1,9 @@
 import { UserKind } from "@/state/Reducers/Athentication/Authentication";
 import RenderSaveInvestigationButtons from "./RenderSaveInvestigationButtons";
 import React from "react";
-import InvestigateMore from "../features/investigate/phase5/buttons/InvestigateMore";
 import { assertNever } from "@/lib/helpers/asserts/assertNever";
+
+// → TODO: create button for optional sign up to save work for anonymous user case
 
 export default function RenderFinalOptionsByUserKind({
   userKind,
@@ -11,13 +12,12 @@ export default function RenderFinalOptionsByUserKind({
 }) {
   switch (userKind) {
     case "anonymous": {
-      return <InvestigateMore />;
+      return null;
     }
     case "authenticated": {
       return (
         <React.Fragment>
           <RenderSaveInvestigationButtons />;
-          <InvestigateMore />
         </React.Fragment>
       );
     }

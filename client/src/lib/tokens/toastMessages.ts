@@ -38,4 +38,10 @@ export const toastMessageConfig = {
     failed: "Failed to delete your account",
     success: "Account deleted successfully!",
   },
+  feedback: {
+    idle: "idle",
+    pending: "submitting feedback...",
+    failed: "Failed to submit feedback.",
+    success: "Feedback submitted",
+  },
 } satisfies ToastMessageConfig;

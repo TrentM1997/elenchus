@@ -1,24 +1,20 @@
 import { FeedbackResponseSchemaType } from "@elenchus/contracts/schemas/auth/FeedbackSchema";
 import { AsyncState } from "@/state/types";
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { FeedbackFormState } from "./types";
+import { submitFeedback } from "./thunks";
 
 export type FeedbackState = AsyncState<FeedbackResponseSchemaType>;
 
 interface FeedbackTypes {
-  status: string;
-  authorEmail: string;
-  message: string;
+  form: FeedbackFormState;
   seen: boolean | null;
-  declined: boolean | null;
   feedback: FeedbackState;
 }
 
 const initialState: FeedbackTypes = {
-  status: "idle",
-  authorEmail: "",
-  message: "",
+  form: { status: "initial" },
   seen: false,
-  declined: false,
   feedback: { status: "initial" },
 };
 
@@ -26,30 +22,45 @@ export const FeedBackSlice = createSlice({
   name: "feedback",
   initialState: initialState,
   reducers: {
-    getAuthorEmail: (state, action) => {
-      state.authorEmail = action.payload;
+    showFeedbackForm: (state: FeedbackTypes) => {
+      state.form = { status: "showing" };
     },
-    getFeedBackMessage: (state, action) => {
-      state.message = action.payload;
-    },
-    feedbackSubmitted: (state) => {
-      state.status = "fullfilled";
+    recordFeedback: (
+      state: FeedbackTypes,
+      action: PayloadAction<Extract<FeedbackFormState, { status: "ready" }>>,
+    ) => {
+      state.form = action.payload;
     },
     stopAskingForFeedBack: (state, action) => {
       state.seen = action.payload;
     },
-    declineFeedBack: (state, action) => {
-      state.declined = action.payload;
+    declineFeedBack: (state) => {
+      state.form = { status: "initial" };
     },
+  },
+  extraReducers(builder) {
+    builder.addCase(submitFeedback.pending, (state) => {
+      state.feedback = { status: "pending" };
+    });
+
+    builder.addCase(submitFeedback.rejected, (state) => {
+      state.feedback = {
+        status: "failed",
+        details: "Feedback submission failure",
+      };
+    });
+
+    builder.addCase(submitFeedback.fulfilled, (state, action) => {
+      state.feedback = { status: "ready", data: action.payload };
+    });
   },
 });
 
 export const {
-  getAuthorEmail,
-  getFeedBackMessage,
-  feedbackSubmitted,
   stopAskingForFeedBack,
   declineFeedBack,
+  showFeedbackForm,
+  recordFeedback,
 } = FeedBackSlice.actions;
 
 export default FeedBackSlice.reducer;

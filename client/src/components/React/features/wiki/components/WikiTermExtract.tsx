@@ -12,8 +12,8 @@ import { WikiTerm } from "@/env";
 import HighlightTextTip from "../tooltips/HighlightTextTip";
 import {
   clearWikiSlice,
-  modalStages,
   WikipediaExtractState,
+  wikiToolAction,
 } from "@/state/Reducers/Investigate/wiki/WikiSlice";
 import { assertNever } from "@/lib/helpers/asserts/assertNever";
 import EmptyState from "@/components/React/global/fallbacks/EmptyState";
@@ -138,14 +138,7 @@ function WikiModalHeader() {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleClose = () => {
-    dispatch(
-      modalStages({
-        display: false,
-        highlight: false,
-        confirmExtract: false,
-        text: null,
-      }),
-    );
+    dispatch(wikiToolAction({ status: "closed" }));
   };
 
   return (

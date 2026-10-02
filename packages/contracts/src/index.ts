@@ -21,4 +21,5 @@ export {
   type PrivateApiContract,
   type PublicApiContract,
 } from "./contract/apiContractConfig.js";
+export { formatsConfig, type FormatConfigType } from "./schemas/formats.js";
 export type { RouteConfigDefinition } from "./contract/types.js";
