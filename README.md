@@ -113,5 +113,5 @@ For Heroku, the existing `heroku-postbuild` script copies logo assets and runs t
 
 ## Contact
 
-Trent Irvin — trentirvin51@gmail.com
+Trent Irvin — trentirvin875@gmail.com
 
