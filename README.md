@@ -115,6 +115,3 @@ For Heroku, the existing `heroku-postbuild` script copies logo assets and runs t
 
 Trent Irvin — trentirvin51@gmail.com
 
-Said Gadzhiev — saga080700@gmail.com
-
-[Project repository](https://github.com/TrentM1997/ElenchusBackup)
