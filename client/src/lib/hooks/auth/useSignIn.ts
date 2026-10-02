@@ -26,9 +26,7 @@ export const useSignIn = (
     const executeSignin = async () => {
       if (userEmail === null || userPassword === null) return;
 
-      const signin = await dispatch(
-        loginUser({ email: userEmail, password: userPassword }),
-      );
+      void dispatch(loginUser({ email: userEmail, password: userPassword }));
     };
 
     if (status === "pending") {

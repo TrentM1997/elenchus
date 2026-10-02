@@ -1,8 +1,5 @@
 import { SearchResultsResponseSchemaType } from "@elenchus/contracts/schemas/articles/BrowsingOptionSchema";
-import {
-  BlueSkyPostSchemaArrayType,
-  SplitBlueSkyFeedSchemaType,
-} from "@elenchus/contracts/schemas/integrations/BlueSkySchemas";
+import { SplitBlueSkyFeedSchemaType } from "@elenchus/contracts/schemas/integrations/BlueSkySchemas";
 import type { PublicApiContract } from "@elenchus/contracts";
 import { IHttpClient } from "../../http/types";
 import { WikiResponse } from "@elenchus/contracts/schemas/integrations/WikipediaExtractSchemas";

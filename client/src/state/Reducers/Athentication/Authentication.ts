@@ -18,9 +18,6 @@ export const AuthenticationSlice = createSlice({
     authenticated: (state: Authentication, action: PayloadAction<UserKind>) => {
       state.userKind = action.payload;
     },
-    clearAuthSlice: () => {
-      return initialState;
-    },
   },
   extraReducers(builder) {
     builder.addCase(logOut.fulfilled, (state: Authentication) => {
@@ -41,6 +38,6 @@ export const AuthenticationSlice = createSlice({
   },
 });
 
-export const { clearAuthSlice, authenticated } = AuthenticationSlice.actions;
+export const { authenticated } = AuthenticationSlice.actions;
 
 export default AuthenticationSlice.reducer;

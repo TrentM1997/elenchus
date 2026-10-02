@@ -8,9 +8,7 @@ import { renderModal } from "@/state/Reducers/Overlay/PipelineSlice";
 import { AppDispatch, RootState } from "@/state/store";
 import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { FormInputValidationService } from "@/lib/services/validation/FormValidationService";
-import { formatsConfig } from "@elenchus/contracts";
-const validate = new FormInputValidationService(formatsConfig);
+import { formInputValidator } from "@/lib/services/validation/FormValidationService";
 
 export const useFeedbackForm = () => {
   const activeSession = useSelector(
@@ -49,7 +47,7 @@ export const useFeedbackForm = () => {
 
   const recordMessage = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      const { ok, data } = validate.messageInput(e.target.value);
+      const { ok, data } = formInputValidator.messageInput(e.target.value);
 
       if (!ok) {
       }

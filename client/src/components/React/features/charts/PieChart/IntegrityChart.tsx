@@ -5,7 +5,7 @@ import React from "react";
 function IntegrityChart({
   integrityRatings,
 }: {
-  integrityRatings: number[];
+  integrityRatings: IntegrityRatings;
 }): JSX.Element {
   return (
     <section className="lg:p-8 opacity-0 animate-fade-in ease-soft animation-delay-300ms transition-opacity">

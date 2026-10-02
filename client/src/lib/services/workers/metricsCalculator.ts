@@ -10,7 +10,7 @@ export type MetricsRequest = {
 
 export type MetricsPayload = {
   bias: number[];
-  integrity: number[];
+  integrity: IntegrityRatings;
   outcomes: StatBreakdownTypes;
 };
 
@@ -103,7 +103,7 @@ class MetricsCalculator implements IMetricsCalculator {
     return total === 0 ? 0 : Math.floor((counter / total) * 100);
   }
 
-  private getIntegrity(articles: ArticleSchemaType[]): number[] {
+  private getIntegrity(articles: ArticleSchemaType[]): IntegrityRatings {
     return this.getSourceIntegrity(this.extractRatings(articles));
   }
 
@@ -121,7 +121,7 @@ class MetricsCalculator implements IMetricsCalculator {
 
   private getSourceIntegrity(
     factualReportRatings: ArticleSchemaType["factual_reporting"][],
-  ): number[] {
+  ): IntegrityRatings {
     let integrityRatings = {
       "Very High": 0,
       High: 0,
@@ -191,9 +191,7 @@ class MetricsCalculator implements IMetricsCalculator {
       }
     }
 
-    const arr = Object.values(integrityRatings);
-
-    return arr;
+    return integrityRatings;
   }
 
   private calcBiases(articles: ArticleSchemaType[]): number[] {

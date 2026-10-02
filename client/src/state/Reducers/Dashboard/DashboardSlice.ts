@@ -23,7 +23,7 @@ export type OpenedArticle = AsyncState<ArticleSchemaType>;
 
 export type ResearchMetricsState = AsyncState<{
   bias: number[];
-  integrity: number[];
+  integrity: IntegrityRatings;
   outcomes: StatBreakdownTypes;
 }>;
 
@@ -66,11 +66,6 @@ const DashboardSlice = createSlice({
     ) => {
       state.researchScrollPosition = action.payload;
     },
-    resetDashboardNavigation: (state) => {
-      state.tab = { kind: "metrics" };
-      state.articleScrollPosition = { status: "initial" };
-      state.researchScrollPosition = { status: "initial" };
-    },
     changeTab: (state: InitialState, action: PayloadAction<DashboardTab>) => {
       state.tab = action.payload;
     },
@@ -81,16 +76,7 @@ const DashboardSlice = createSlice({
     ) => {
       state.metrics = action.payload;
     },
-    openSavedArticle: (
-      state: InitialState,
-      action: PayloadAction<ArticleSchemaType["id"]>,
-    ) => {
-      state.tab = {
-        kind: "articles",
-        display: "review",
-        articleId: action.payload,
-      };
-    },
+
     clearOpenedArticle: (state: InitialState) => {
       state.ArticleToReview = { status: "initial" };
     },
@@ -227,11 +213,9 @@ const DashboardSlice = createSlice({
 export const {
   storeScrollPosition,
   storeResearchScrollPosition,
-  resetDashboardNavigation,
   clearDashboardSlice,
   getMetrics,
   changeTab,
-  openSavedArticle,
   clearOpenedArticle,
   clearOpenedInvestigation,
 } = DashboardSlice.actions;

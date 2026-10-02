@@ -7,7 +7,6 @@ import type { ArticleExtractionState } from "./types";
 interface InitialState {
   articles: ArticleExtractionState;
   currentStory: number;
-  paginateLimit: boolean;
   progress: string;
   activeRequestId: string | null;
   dismissedFailureUrls: string[];
@@ -21,7 +20,6 @@ export type ExtractionProgressToastTypes = Pick<
 const initialState: InitialState = {
   articles: { status: "initial" },
   currentStory: 0,
-  paginateLimit: false,
   progress: "",
   activeRequestId: null,
   dismissedFailureUrls: [],
@@ -56,7 +54,6 @@ export const ExtractedArticleSlice = createSlice({
         state.currentStory = 0;
         state.progress = "0/" + action.meta.arg.length;
         state.dismissedFailureUrls = [];
-        state.paginateLimit = false;
       })
       .addCase(extractionProgressReceived, (state, action) => {
         if (state.activeRequestId !== action.payload.requestId) return;

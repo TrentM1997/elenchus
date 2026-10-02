@@ -1,19 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { stepOrder, type WizardStep, type WizardStepType } from "./types";
+import { stepOrder, type WizardStepType } from "./types";
 
 export type PaginationStatus = "active" | "idle";
 
 export interface StepState {
   wizardStep: WizardStepType;
   status: PaginationStatus | null;
-  acceptInput: boolean | null;
 }
 
 const initialState: StepState = {
   wizardStep: { current: "idea", status: "initial" },
   status: "idle",
-  acceptInput: null,
 };
 
 export const StepSlice = createSlice({
@@ -39,26 +37,10 @@ export const StepSlice = createSlice({
     denyIncrement: (state) => {
       state.wizardStep.status = "halt";
     },
-    allowIncrement: (state) => {
-      state.wizardStep.status = "proceed";
-    },
-    goToStep: (state, action: PayloadAction<WizardStep>) => {
-      state.wizardStep = { status: "proceed", current: action.payload };
-    },
-    backToStart: (state) => {
-      state.wizardStep = { current: "idea", status: "initial" };
-    },
   },
 });
 
-export const {
-  increment,
-  decrement,
-  goToStep,
-  backToStart,
-  denyIncrement,
-  allowIncrement,
-  updatePaginateStatus,
-} = StepSlice.actions;
+export const { increment, decrement, denyIncrement, updatePaginateStatus } =
+  StepSlice.actions;
 
 export default StepSlice.reducer;

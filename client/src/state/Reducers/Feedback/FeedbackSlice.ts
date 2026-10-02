@@ -1,9 +1,5 @@
-import { FeedbackResponseSchemaType } from "@elenchus/contracts/schemas/auth/FeedbackSchema";
-import { AsyncState } from "@/state/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { FeedbackFormState } from "./types";
-
-export type FeedbackState = AsyncState<FeedbackResponseSchemaType>;
 
 interface FeedbackTypes {
   form: FeedbackFormState;
