@@ -1,5 +1,5 @@
 {
-	"pid": 22100,
+	"pid": 8664,
 	"port": 5173,
 	"url": "http://localhost:5173",
 	"urls": {
@@ -10,5 +10,5 @@
 		"networkInterfaceNames": []
 	},
 	"background": false,
-	"startedAt": "2026-10-01T21:41:18.265Z"
+	"startedAt": "2026-10-02T01:25:55.087Z"
 }
