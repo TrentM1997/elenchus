@@ -21,9 +21,6 @@ export const SearchResultsSlice = createSlice({
   name: "searchResults",
   initialState: initialState,
   reducers: {
-    getPages: (state, action) => {
-      state.pages = action.payload;
-    },
     incrementPage: (state: SearchResults) => {
       state.currentPage += 1;
     },
@@ -71,7 +68,6 @@ export const SearchResultsSlice = createSlice({
 export const {
   resetResults,
   resetArticles,
-  getPages,
   incrementPage,
   incrementPageBy,
   decrementPage,

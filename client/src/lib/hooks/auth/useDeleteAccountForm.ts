@@ -9,11 +9,6 @@ import { useNavigate } from "react-router-dom";
 
 export type Credentials = { email: string; password: string };
 
-export type DeleteAccountCredentialsValidation =
-  | "initial"
-  | "valid"
-  | "invalid";
-
 export const useDeleteAccountForm = () => {
   const navigate = useNavigate();
   const toast = useSelector((s: RootState) => s.overlay.toast);

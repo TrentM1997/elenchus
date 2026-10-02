@@ -390,7 +390,10 @@ declare global {
     successful: boolean | null;
   }
 
-  type IntegrityRatings = Record<FactualReportingRatingSchemaType, number>;
+  type IntegrityRatings = Record<
+    NonNullable<FactualReportingRatingSchemaType>,
+    number
+  >;
 
   interface WebWorkerResponse {
     type: string;

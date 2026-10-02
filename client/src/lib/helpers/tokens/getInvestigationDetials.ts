@@ -7,15 +7,6 @@ interface InvestigationData {
   description: string | null;
 }
 
-interface ThoughtMap {
-  idea: string | null;
-  initial_perspective: string | null;
-  biases: string | null;
-  premises: string | null;
-  ending_perspective: string | null;
-  changed_opinion: boolean | null;
-}
-
 export function getInvestigationDetialsTableCopy(
   investigation: InvestigationSchemaType,
 ) {

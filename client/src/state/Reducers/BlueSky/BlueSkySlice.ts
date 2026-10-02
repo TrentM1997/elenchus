@@ -1,7 +1,7 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { hydrateFeed, searchBlueSky } from "./thunks";
-import { BlueSkyPosts, Dimensions, PopoverXY, SelectedPost } from "./types";
-import { SplitBlueSkyFeedSchemaType } from "@elenchus/contracts/schemas/integrations/BlueSkySchemas";
+import type { BlueSkyPosts, SelectedPost } from "./types";
+import type { SplitBlueSkyFeedSchemaType } from "@elenchus/contracts/schemas/integrations/BlueSkySchemas";
 
 interface InitialState {
   posts: BlueSkyPosts;
@@ -26,7 +26,6 @@ export const BlueSkySlice = createSlice({
     ) => {
       state.posts = action.payload;
     },
-    resetBlueSkyState: () => initialState,
   },
   extraReducers: (builder) => {
     builder.addCase(searchBlueSky.pending, (state) => {
@@ -78,7 +77,6 @@ export const BlueSkySlice = createSlice({
   },
 });
 
-export const { resetBlueSkyState, selectPost, getBlueSkyPosts } =
-  BlueSkySlice.actions;
+export const { selectPost, getBlueSkyPosts } = BlueSkySlice.actions;
 
 export default BlueSkySlice.reducer;

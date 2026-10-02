@@ -261,7 +261,19 @@ test("list positions survive tab changes, but leaving clears all dashboard state
       status: "ready",
       data: {
         bias: [1],
-        integrity: [1],
+        integrity: {
+          "Very High": 0,
+          High: 0,
+          "Mostly Factual": 0,
+          Mixed: 0,
+          Low: 0,
+          "Very Low": 0,
+          "Conspiracy-Pseudoscience": 0,
+          "Pro-Science": 0,
+          "Questionable Source": 0,
+          Satire: 0,
+          Unknown: 1,
+        },
         outcomes: {
           neededMore: 0,
           validated: 100,

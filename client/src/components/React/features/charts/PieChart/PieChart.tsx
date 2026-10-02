@@ -1,11 +1,10 @@
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import { motion } from "framer-motion";
-import { useSelector } from "react-redux";
-import { RootState } from "@/state/store";
 import ErrorBoundary from "../../../global/ErrorBoundaries/ErrorBoundary";
 import { ChartData } from "chart.js";
 import React from "react";
+import { factualReportingRatingConfig } from "./pieChartConfig";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const variants = {
@@ -13,43 +12,25 @@ const variants = {
   closed: { opacity: 0 },
 };
 
-const ratings: string[] = [
-  "Very High",
-  "High",
-  "Mostly Factual",
-  "Mixed",
-  "Low",
-  "Very Low",
-  "Conspiracy-Pseudoscience",
-  "Pro-Science",
-  "Questionable Source",
-  "Satire",
-  "Unknown",
-];
+function PieChart({
+  integrityRatings,
+}: {
+  integrityRatings: IntegrityRatings;
+}) {
+  const labels = factualReportingRatingConfig.map(({ rating }) => rating);
+  const colors = factualReportingRatingConfig.map(({ color }) => color);
+  const values = factualReportingRatingConfig.map(
+    ({ rating }) => integrityRatings[rating],
+  );
 
-const tableColors: string[] = [
-  "#0d9488",
-  "#2628a1",
-  "#a1a1aa",
-  "#64748b",
-  "#eab308",
-  "#f97316",
-  "#dc2626",
-  "#2e8b57",
-  "#71717a",
-  "#8695f9",
-  "#ffffff",
-];
-
-function PieChart({ integrityRatings }: { integrityRatings: number[] }) {
   const data: ChartData<"pie", number[], string> = {
-    labels: ratings,
+    labels: labels,
     datasets: [
       {
         label: "# of sources",
-        data: integrityRatings,
-        backgroundColor: tableColors,
-        borderColor: tableColors,
+        data: values,
+        backgroundColor: colors,
+        borderColor: colors,
         borderWidth: 1,
       },
     ],
