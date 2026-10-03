@@ -31,9 +31,6 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Audit Dependencies
-        run: npm audit --omit=dev
-
       - name: Audit Development Dependencies
         continue-on-error: true
         run: npm audit

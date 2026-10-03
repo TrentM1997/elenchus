@@ -44,7 +44,7 @@ export default function ExtractBookmark({
           fontFamily="none"
           fontWeight="none"
           fontSize="none"
-          textAnchor="none"
+          
           style={{ mixBlendMode: "normal" }}
         >
           <g transform="scale(8.53333,8.53333)">
