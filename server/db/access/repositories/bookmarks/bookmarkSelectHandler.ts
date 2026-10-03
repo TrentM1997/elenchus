@@ -1,7 +1,7 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import { Database } from "../../../../types/databaseInterfaces.js";
-import { BookmarkValidator } from "./bookmarkValidator.js";
-import type { AuthenticatedUserId } from "../../../../services/auth/authorization.js";
+import { Database } from "../../../../types/databaseInterfaces.ts";
+import { BookmarkValidator } from "./bookmarkValidator.ts";
+import type { AuthenticatedUserId } from "../../../../services/auth/authorization.ts";
 import { BookmarkSchemaType } from "@elenchus/contracts/schemas/articles/BookmarkSchema";
 import { DbResult } from "../../../types/types.ts";
 
