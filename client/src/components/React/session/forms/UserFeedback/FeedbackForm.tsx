@@ -41,7 +41,7 @@ export default function FeedBackForm() {
             fontFamily="none"
             fontWeight="none"
             fontSize="none"
-            textAnchor="none"
+            textAnchor={undefined}
             style={{ mixBlendMode: "normal" }}
           >
             <g transform="scale(16,16)">

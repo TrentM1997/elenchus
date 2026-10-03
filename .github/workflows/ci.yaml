@@ -1,0 +1,66 @@
+name: elenchus CI pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  app:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get files
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Audit Development Dependencies
+        continue-on-error: true
+        run: npm audit
+
+      - name: Create CI Environment Variables
+        run: |
+          cat > .env << 'EOF'
+          NODE_ENV=development
+          PORT=5001
+          SUPABASE_URL=https://example.supabase.co
+          SUPABASE_SERVICE_KEY=example_service_key
+          SUPABASE_PUBLIC_KEY=example_public_key
+          FIRECRAWL_KEY=some_firecrawl_key
+          BLUESKY_EMAIL=some_blue_sky_email_address
+          BLUESKY_PASSWORD=example_blue_sky_password
+          NEWS_API_KEY=example_news_api_key
+          EOF
+          cp .env server/.env
+
+      - name: Build API Contract
+        run: npm run build:contracts
+
+      - name: Build Express Server
+        run: npm run build:server
+
+      - name: Build Astro Client
+        run: npm run build:client
+
+      - name: Test Server
+        run: npm run test:server
+
+      - name: Test Client
+        run: npm run test:client

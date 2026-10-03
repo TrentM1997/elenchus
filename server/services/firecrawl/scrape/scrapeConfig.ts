@@ -1,4 +1,5 @@
 import Firecrawl from "@mendable/firecrawl-js";
+import type { ScrapeOptions } from "@mendable/firecrawl-js";
 
 export const schema = {
   type: "object",
@@ -34,7 +35,7 @@ export const FIRECRAWL_OPTIONS = {
         "Extract ONLY the main article body. Return it as markdown in content_markdown. Preserve paragraph breaks, headings, bullet lists, and quoted passages. Exclude navigation menus, cookie notices, paywall blurbs, newsletter signups, and unrelated promos.",
     },
   ],
-} satisfies Parameters<Firecrawl["scrape"]>[1];
+} satisfies ScrapeOptions;
 
 export const excluded_tags = [
   // multimedia / ads

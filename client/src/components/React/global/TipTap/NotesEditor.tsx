@@ -43,7 +43,7 @@ export default function NotesEditor({
                   fontFamily="none"
                   fontWeight="none"
                   fontSize="none"
-                  textAnchor="none"
+                  
                   style={{ mixBlendMode: "normal" }}
                 >
                   <g transform="scale(10.66667,10.66667)">
@@ -81,7 +81,7 @@ export default function NotesEditor({
                   fontFamily="none"
                   fontWeight="none"
                   fontSize="none"
-                  textAnchor="none"
+                  
                   style={{ mixBlendMode: "normal" }}
                 >
                   <g transform="scale(10.66667,10.66667)">
@@ -117,7 +117,7 @@ export default function NotesEditor({
                   fontFamily="none"
                   fontWeight="none"
                   fontSize="none"
-                  textAnchor="none"
+                  
                   style={{ mixBlendMode: "normal" }}
                 >
                   <g transform="scale(10.66667,10.66667)">
@@ -175,7 +175,7 @@ export default function NotesEditor({
                   fontFamily="none"
                   fontWeight="none"
                   fontSize="none"
-                  textAnchor="none"
+                  
                   style={{ mixBlendMode: "normal" }}
                 >
                   <g transform="translate(255.88654,256) rotate(180) scale(5.33333,5.33333)">
@@ -214,7 +214,7 @@ export default function NotesEditor({
                   fontFamily="none"
                   fontWeight="none"
                   fontSize="none"
-                  textAnchor="none"
+                  
                   style={{ mixBlendMode: "normal" }}
                 >
                   <g transform="scale(10.66667,10.66667)">
