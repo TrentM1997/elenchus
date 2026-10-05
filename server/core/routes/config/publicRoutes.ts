@@ -203,7 +203,7 @@ export function createPublicRoutes({
     wrapAsync(async (req, res) => {
       const { articles } = validateOrThrow(extractRoute.bodySchema, req.body);
       const result: Static<typeof extractRoute.outputSchema> =
-        app.services.api.articles.extract(articles);
+        await app.services.api.articles.extract(articles);
 
       const data = validateServerOrThrow(extractRoute.outputSchema, result);
 

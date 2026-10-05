@@ -8,6 +8,7 @@ import {
 } from "./articlesParser.js";
 import { BookmarkSchemaType } from "@elenchus/contracts/schemas/articles/BookmarkSchema";
 import { DbResult } from "../../../types/types.ts";
+import { ServerError } from "../../../../core/errors/ServerError.ts";
 
 export type ArticlesFromBookmarks = DbResult<ArticleSchemaType[]>;
 
@@ -22,6 +23,9 @@ export interface IArticlesRepository {
     article_id: ArticleSchemaType["id"],
   ): Promise<DbResult<ArticleSchemaType>>;
   byIds(ids: ArticleSchemaType["id"][]): Promise<DbResult<ArticleSchemaType[]>>;
+  byUrls(
+    urls: ArticleSchemaType["article_url"][],
+  ): Promise<DbResult<ArticleSchemaType[]>>;
 }
 
 export class ArticlesRepository implements IArticlesRepository {
@@ -50,6 +54,37 @@ export class ArticlesRepository implements IArticlesRepository {
     article_id: ArticleSchemaType["id"],
   ): Promise<DbResult<ArticleSchemaType>> {
     return await this.executeById(article_id);
+  }
+
+  public async byUrls(
+    urls: ArticleSchemaType["article_url"][],
+  ): Promise<DbResult<ArticleSchemaType[]>> {
+    return await this.selectbyUrls(urls);
+  }
+
+  private async selectbyUrls(
+    urls: ArticleSchemaType["article_url"][],
+  ): Promise<DbResult<ArticleSchemaType[]>> {
+    const { data, error } = await this.db
+      .from("articles")
+      .select()
+      .in("article_url", urls);
+
+    if (error) {
+      throw new ServerError(error.message, 500, error.cause);
+    }
+
+    if (data === null) {
+      return {
+        ok: false,
+        message: "Article not found",
+      };
+    }
+
+    return {
+      ok: true,
+      data: this.parser.validateArticles(data),
+    };
   }
 
   private async executeByIds(

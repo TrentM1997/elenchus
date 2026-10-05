@@ -108,7 +108,7 @@ test("extraction validates responses while retaining 202, polling snapshots, and
     error: null, createdAt: 1,
   };
   const router = publicRoutes({ services: { api: { articles: {
-    extract: () => ({ jobId: "job-1" }),
+    extract: async () => ({ jobId: "job-1" }),
     getExtractionJob: id => id === "job-1" ? job : undefined,
   } } } }, Router());
   assert.deepEqual(await invoke(router, "post", "/articles/extract", {

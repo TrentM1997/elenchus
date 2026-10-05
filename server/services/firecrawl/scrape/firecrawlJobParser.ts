@@ -10,25 +10,20 @@ import {
 } from "../../../schemas/ArticleSchema.js";
 import { BiasSchemaType } from "@elenchus/contracts/schemas/articles/BiasSchema";
 import { validateSchema } from "../../../schemas/ValidateSchema.js";
-import {
-  BiasInfo,
-  FailedAttempt,
-  FcParam,
-  FirecrawlContent,
-  MBFC,
-} from "../../../types/types.js";
 import { dropParams } from "./scrapeConfig.js";
+import { ArticleToExtractSchemaType } from "@elenchus/contracts/schemas/articles/FirecrawlExtractionSchemas";
+import { BiasInfo, FailedAttempt, FirecrawlContent, MBFC } from "./types.ts";
 
 export interface IFirecrawlJobParser {
   reconcileFailed(
     retrieved: ArticleSchemaType[],
     failed: FailedAttempt[],
   ): void;
-  toFailedAttempt(a: FcParam, reason: string): FailedAttempt;
+  toFailedAttempt(a: ArticleToExtractSchemaType, reason: string): FailedAttempt;
   cleanUrl(url: string): string;
   toScrapedArticleDto(
     c: FirecrawlContent,
-    a: FcParam,
+    a: ArticleToExtractSchemaType,
     mb: MBFC,
     urlClean: string,
   ): InsertableArticleSchemaType;
@@ -59,7 +54,10 @@ export class FirecrawlJobParser implements IFirecrawlJobParser {
     }
   }
 
-  public toFailedAttempt(a: FcParam, reason: string): FailedAttempt {
+  public toFailedAttempt(
+    a: ArticleToExtractSchemaType,
+    reason: string,
+  ): FailedAttempt {
     const cleaned = this.cleanUrl(a.url);
     return {
       title: a.title,
@@ -73,7 +71,7 @@ export class FirecrawlJobParser implements IFirecrawlJobParser {
 
   public toScrapedArticleDto(
     c: FirecrawlContent,
-    a: FcParam,
+    a: ArticleToExtractSchemaType,
     mb: MBFC,
     urlClean: string,
   ): InsertableArticleSchemaType {
