@@ -1,6 +1,8 @@
 import Firecrawl from "@mendable/firecrawl-js";
-import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
-import { InsertableArticleSchemaType, validateArticle } from "../../../schemas/ArticleSchema.js";
+import {
+  InsertableArticleSchemaType,
+  validateArticle,
+} from "../../../schemas/ArticleSchema.js";
 import type { FcParam, FirecrawlResponse } from "../../../types/types.js";
 import { ServerError } from "../../../core/errors/ServerError.js";
 import { IFirecrawlJobParser } from "./firecrawlJobParser.js";

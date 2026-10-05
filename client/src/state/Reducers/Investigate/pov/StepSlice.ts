@@ -6,7 +6,7 @@ export type PaginationStatus = "active" | "idle";
 
 export interface StepState {
   wizardStep: WizardStepType;
-  status: PaginationStatus | null;
+  status: PaginationStatus;
 }
 
 const initialState: StepState = {
@@ -18,10 +18,7 @@ export const StepSlice = createSlice({
   name: "StepsCounter",
   initialState: initialState,
   reducers: {
-    updatePaginateStatus: (
-      state,
-      action: PayloadAction<PaginationStatus | null>,
-    ) => {
+    updatePaginateStatus: (state, action: PayloadAction<PaginationStatus>) => {
       state.status = action.payload;
     },
     increment: (state) => {
