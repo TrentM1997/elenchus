@@ -26,7 +26,7 @@ export interface IAuthRouteHandler {
 export class AuthRouteHandler implements IAuthRouteHandler {
   constructor(
     private readonly routes: Pick<PublicApiContract, "auth" | "user">,
-    private readonly http: Pick<IHttpClient, "request">,
+    private readonly http: IHttpClient,
   ) {}
 
   public async login(credentials: LoginCredentials) {

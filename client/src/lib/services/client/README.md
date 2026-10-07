@@ -45,6 +45,8 @@ Contracts live in `packages/contracts/src/contract/apiContracts.ts`, with groupi
 
 Pass raw query values and path parameters. `RequestUrlBuilder` encodes them; pre-encoding would encode them twice. The current transport supports GET, POST, and DELETE, with no general-purpose retry or timeout policy.
 
+The URL builder prepends `PUBLIC_API_ORIGIN` from the client environment, defaulting to an empty string. Empty means same-origin browser requests, which Astro can proxy during development. A configured origin means direct browser-to-API requests. Docker's `API_PROXY_TARGET` configures the Astro proxy, not the browser client; see [API URL configuration](../../../../../README.md#client-configuration-and-api-urls).
+
 ## Results and errors
 
 The parser removes the outer HTTP success envelope and returns its validated `data`. An endpoint payload can itself be a result union:
@@ -55,7 +57,7 @@ The parser removes the outer HTTP success envelope and returns its validated `da
 { ok: false, message, details }
 ```
 
-For investigation saving and hydration, the successful payload is `{ investigation, sources, extracts }`. Other endpoints have their own shapes; do not assume every method returns an `ok` union.
+For investigation saving and hydration, the successful payload contains `{ investigation, sources, extracts }` and optional `notes`. The current database RPCs return `notes` as an array, including an empty array when there are no notes. Other endpoints have their own shapes; do not assume every method returns an `ok` union.
 
 There are two failure paths callers must handle:
 
@@ -81,7 +83,7 @@ async function loadInvestigation(id: number, signal: AbortSignal) {
     throw new Error(result.message);
   }
 
-  return result.data; // { investigation, sources, extracts }
+  return result.data; // { investigation, sources, extracts, notes? }
 }
 ```
 
@@ -101,6 +103,7 @@ async function saveInvestigation(
     investigation,
     articleIds,
     extracts: [], // Supply the selected Wikipedia extracts when present.
+    notes: [], // Supply { content: ... } note documents when present.
   });
 
   if (result.ok === false) {

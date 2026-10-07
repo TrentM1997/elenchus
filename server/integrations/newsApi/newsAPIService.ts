@@ -1,9 +1,9 @@
 import { ServerError } from "../../core/errors/ServerError.ts";
-import { BrowsingOption } from "../../types/types.ts";
+import type { BrowsingOptionSchemaType } from "@elenchus/contracts/schemas/integrations/NewsApiSchemas";
 import { INewsApiParser, NewsApiParser } from "./newsApiParser.ts";
 
 export interface INewsAPIService {
-  search(query: string): Promise<BrowsingOption[][]>;
+  search(query: string): Promise<BrowsingOptionSchemaType[][]>;
 }
 
 export class NewsAPIService implements INewsAPIService {
@@ -12,11 +12,13 @@ export class NewsAPIService implements INewsAPIService {
     this.parser = new NewsApiParser();
   }
 
-  public async search(query: string): Promise<BrowsingOption[][]> {
+  public async search(query: string): Promise<BrowsingOptionSchemaType[][]> {
     return await this.executeSearch(query);
   }
 
-  private async executeSearch(query: string): Promise<BrowsingOption[][]> {
+  private async executeSearch(
+    query: string,
+  ): Promise<BrowsingOptionSchemaType[][]> {
     const url = this.setUrl(query);
     const request = await fetch(url.toString(), {
       headers: { "X-Api-Key": this.apiKey },

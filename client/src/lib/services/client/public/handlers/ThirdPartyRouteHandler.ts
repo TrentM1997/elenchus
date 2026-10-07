@@ -18,7 +18,7 @@ export class ThirdPartyRouteHandler implements IThirdPartyRouteHandler {
   public readonly search: IThirdPartyRouteSearchHandler;
   constructor(
     private readonly routes: Pick<PublicApiContract, "integrations">,
-    private readonly http: Pick<IHttpClient, "request">,
+    private readonly http: IHttpClient,
   ) {
     this.search = new ThirdPartyRouteSearchHandler(this.routes, this.http);
   }

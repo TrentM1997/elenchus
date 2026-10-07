@@ -14,7 +14,7 @@ export interface IAccountRouteHandler {
 export class AccountRouteHandler implements IAccountRouteHandler {
   constructor(
     private readonly routes: Pick<PrivateApiContract, "account">,
-    private readonly http: Pick<IHttpClient, "request">,
+    private readonly http: IHttpClient,
   ) {}
 
   public async deleteAccount(

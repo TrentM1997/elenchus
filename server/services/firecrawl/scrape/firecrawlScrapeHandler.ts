@@ -3,11 +3,11 @@ import {
   InsertableArticleSchemaType,
   validateArticle,
 } from "../../../schemas/ArticleSchema.js";
-import type { FcParam, FirecrawlResponse } from "../../../types/types.js";
 import { ServerError } from "../../../core/errors/ServerError.js";
 import { IFirecrawlJobParser } from "./firecrawlJobParser.js";
 import { FIRECRAWL_OPTIONS } from "./scrapeConfig.js";
-import { ScrapeParameters } from "./types.js";
+import { FirecrawlResponse, ScrapeParameters } from "./types.js";
+import { ArticleToExtractSchemaType } from "@elenchus/contracts/schemas/articles/FirecrawlExtractionSchemas";
 
 export interface IFirecrawlScrapeHandler {
   scrape(params: ScrapeParameters): Promise<void>;
@@ -76,7 +76,7 @@ export class FirecrawlScrapeHandler implements IFirecrawlScrapeHandler {
   }
 
   private pushFailedContent(
-    article: FcParam,
+    article: ArticleToExtractSchemaType,
     pushFailed: ScrapeParameters["pushFailed"],
     message:
       | "empty or incomplete body"

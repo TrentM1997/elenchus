@@ -2,6 +2,14 @@
 
 Elenchus is an npm workspace repository with an Astro/React client, an Express server, and a shared TypeBox contracts package. Hosted Supabase provides authentication and persistence. NewsAPI, Firecrawl, Wikipedia, and Bluesky are accessed through server-side services or integrations.
 
+## Runtime boundaries
+
+Astro serves the client on port 4173 during development and builds static output into `client/dist`. React and Redux execute in the browser. Express runs separately on port 5001 by default; its entry point mounts the API and does not serve the client files.
+
+`PUBLIC_API_ORIGIN` determines the browser's API destination. If empty, API paths are relative to the client's origin. Astro's development proxy forwards those paths to `API_PROXY_TARGET`, which defaults to `http://localhost:5001` and is set to `http://api:5001` in Compose. A nonempty `PUBLIC_API_ORIGIN` bypasses that proxy and must be reachable by the browser. Cross-origin requests include cookies and are subject to `server/src/corsConfig.ts`.
+
+Compose currently starts a client container and an API container using `Dockerfile.dev`. The contracts workspace is compiled code used by both applications, not a network service. A static production client needs its own host or web server and either a configured API origin or API proxy; production container and hosting configuration has not been added yet.
+
 ## Request flow
 
 ```mermaid
@@ -70,6 +78,8 @@ await this.http.request(this.routes.articles.poll, {
 
 The builder replaces `:jobId` with its encoded value. Query values are scalar and serialized with URLSearchParams; arrays travel in POST JSON bodies. Encoding happens here once, rather than in handlers.
 
+After constructing the path and query, the builder prepends `import.meta.env.PUBLIC_API_ORIGIN` (or an empty string). This is a client build setting; changing the API origin for a static deployment requires rebuilding the client.
+
 HttpClient dispatches GET, POST, or DELETE from the contract, includes cookies through `credentials: "include"`, and forwards AbortSignal. It reports HTTP and network failures through ServerRequestError; cancellation remains cancellation.
 
 The contract method type also allows other HTTP verbs, but adding one requires implementing it in both HttpClient and RouteRegistrar first.
@@ -118,23 +128,24 @@ Signup and account deletion use isolated Supabase clients to avoid changing the 
 
 See [investigation persistence and database setup](investigation-persistence.md) for the tables, RPC arguments and payloads, ownership checks, execution permissions, SQL deployment, and type generation.
 
-An investigation consists of three connected pieces:
+An investigation consists of connected pieces:
 
 - The user's research account, including the perspective they held before examining the evidence and their reflection afterward.
 - The article sources they examined.
 - The Wikipedia terms and extracts that provided context for their research.
+- The rich-text notes they recorded while examining evidence.
 
 Together, these preserve what the user thought, what they examined, and how their thinking changed. Losing any part of the saved record removes context that makes the research useful. Treating these pieces as one investigation is a product requirement, and it governs both saving and hydration.
 
 ### Saving
 
-Saving must preserve the investigation and its selected sources and extracts together. The server calls [save_complete_investigation](../server/db/access/migrations/001save_complete_investigation.sql) to insert the investigation, source links, extracts, and disambiguation candidates within one database transaction. If a write fails, the transaction rolls back rather than leaving a partially saved research record. A successful call returns `{ investigation, sources, extracts }`.
+Saving must preserve the investigation, selected sources, extracts, and notes together. The server calls [save_complete_investigation](../server/db/migrations/001save_complete_investigation.sql) to insert the investigation, source links, extracts, disambiguation candidates, and notes within one database transaction. If a write fails, the transaction rolls back rather than leaving a partially saved research record. The current RPC returns `{ investigation, sources, extracts, notes }`; the shared response schema permits `notes` to be omitted.
 
 Keep this atomicity when changing persistence. Saving the perspective successfully while losing its supporting context must not be reported as a successful investigation save.
 
 ### Hydration
 
-Opening a saved investigation must retrieve the same complete record. The server calls [hydrate_investigation](../server/db/access/migrations/002hydrate_investigation.sql), and the client exposes the returned investigation, sources, and extracts together through one `openInvestigation` loading state. The review becomes ready only after the complete payload has been retrieved and validated. A failed load must not present partial context or retain a previous investigation's data as the newly opened record.
+Opening a saved investigation must retrieve the same complete record. The server calls [hydrate_investigation](../server/db/migrations/002hydrate_investigation.sql), and the client exposes the returned investigation, sources, extracts, and any returned notes through one `openInvestigation` loading state. The review becomes ready only after the payload has been retrieved and validated. A failed load must not present partial context or retain a previous investigation's data as the newly opened record.
 
 An empty sources or extracts collection can be a valid part of the saved record. All-or-nothing means every part is successfully retrieved, not that every collection must contain an item. A failed or missing part must never be silently substituted with an empty collection to make hydration appear successful.
 
@@ -204,6 +215,8 @@ Run workspace typechecks, client tests, and the full server test suite as listed
 
 ## Build and development
 
-Contracts compile to ESM JavaScript and declarations under packages/contracts/dist. Both applications depend on that workspace package. Root builds compile contracts before applications; import the package exports rather than raw sibling source files.
+Contracts compile to ESM JavaScript and declarations under `packages/contracts/dist`. Both applications depend on that workspace package. Run `npm run build:contracts` before `npm run build:server` or `npm run build:client`; the application build scripts do not rebuild contracts themselves. Import the package exports rather than raw sibling source files.
 
-Docker Compose runs Astro and Express separately with Compose Watch and hosted Supabase. Production Express serves the built Astro client. See the [root README](../README.md) for commands and environment configuration.
+Root `typecheck` and the server's `pretest` hook build contracts automatically. Server tests then run against a fresh server build, while client Jest maps contracts imports to their TypeScript sources and transforms `import.meta.env` to test values.
+
+Docker Compose runs Astro and Express separately with Compose Watch and hosted Supabase. Each container has its own compiled contracts. The client recompiles contracts in watch mode; the API's current watcher rebuilds only Express, so recreate the services after contract changes. See the [root README](../README.md) for commands, environment configuration, and build outputs.

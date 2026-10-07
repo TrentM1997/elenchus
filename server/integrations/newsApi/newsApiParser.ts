@@ -1,5 +1,4 @@
 import { logoMap } from "../../src/logoMap.ts";
-import { BrowsingOption, NewsArticle } from "../../types/types.ts";
 import { validateServerOrThrow } from "../../core/validation/validateOrThrow.ts";
 import {
   NewsApiResultItemSchema,
@@ -9,7 +8,8 @@ import {
 } from "@elenchus/contracts/schemas/integrations/NewsApiSchemas";
 import {
   BrowsingOptionSchemaArray,
-  BrowsingOptionSchemaArrayType,
+  type BrowsingOptionSchemaArrayType,
+  type BrowsingOptionSchemaType,
 } from "@elenchus/contracts/schemas/articles/BrowsingOptionSchema";
 import { validateSchema } from "../../schemas/ValidateSchema.ts";
 
@@ -72,8 +72,10 @@ export class NewsApiParser implements INewsApiParser {
     return value;
   }
 
-  private chunkIntoPages(results: BrowsingOption[]): BrowsingOption[][] {
-    const pages: BrowsingOption[][] = [];
+  private chunkIntoPages(
+    results: BrowsingOptionSchemaType[],
+  ): BrowsingOptionSchemaType[][] {
+    const pages: BrowsingOptionSchemaType[][] = [];
 
     for (let i = 0; i < results.length; i += 12) {
       pages.push(results.slice(i, i + 12));

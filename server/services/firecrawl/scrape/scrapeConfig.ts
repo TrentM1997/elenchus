@@ -1,4 +1,3 @@
-import Firecrawl from "@mendable/firecrawl-js";
 import type { ScrapeOptions } from "@mendable/firecrawl-js";
 
 export const schema = {

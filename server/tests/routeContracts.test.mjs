@@ -38,6 +38,20 @@ test("feedback validates the complete body and passes the inner feedback to the 
   assert.deepEqual(calls, [feedback]);
 });
 
+test("signup preserves the upstream failure without establishing a session", async () => {
+  const router = publicRoutes({ services: { api: { user: {
+    account: { signUp: async () => ({ ok: false, message: "Signup provider rejected the request" }) },
+  } } } }, Router());
+  let sessionEstablished = false;
+  await assert.rejects(invoke(router, "post", "/auth/signup", {
+    body: { email: "reader@example.com", password: "test-password" },
+    auth: { establishSession() { sessionEstablished = true; } },
+  }), error => error.statusCode === 400
+    && error.message === "Failed to create new user"
+    && error.details === "Signup provider rejected the request");
+  assert.equal(sessionEstablished, false);
+});
+
 test("search validates the query object and passes only q to the integration", async () => {
   const calls = [];
   const router = publicRoutes({ integrations: { wiki: {
@@ -108,7 +122,7 @@ test("extraction validates responses while retaining 202, polling snapshots, and
     error: null, createdAt: 1,
   };
   const router = publicRoutes({ services: { api: { articles: {
-    extract: () => ({ jobId: "job-1" }),
+    extract: async () => ({ jobId: "job-1" }),
     getExtractionJob: id => id === "job-1" ? job : undefined,
   } } } }, Router());
   assert.deepEqual(await invoke(router, "post", "/articles/extract", {

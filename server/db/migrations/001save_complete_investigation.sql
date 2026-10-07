@@ -48,7 +48,7 @@ begin
     raise exception 'Each note must contain a content object';
   end if;
 
-  -- 1. Save the investigation and obtain its generated ID.
+  -- 1) Save the investigation and obtain its generated ID.
   insert into public.investigations (
     user_id,
     idea,
@@ -77,7 +77,7 @@ begin
   )
   returning * into v_investigation;
 
-  -- 2. Link the existing articles to this investigation.
+  -- 2) link the existing articles to this investigation.
   insert into public.investigation_sources (
     user_id,
     investigation_id,
@@ -89,7 +89,7 @@ begin
     source.article_id
   from unnest(p_article_ids) as source(article_id);
 
-  -- 3. Save Wikipedia extracts.
+  -- 3) save wikipedia extracts.
   for v_extract in
     select value from jsonb_array_elements(p_extracts)
   loop
@@ -126,7 +126,7 @@ begin
     )
     returning id into v_extract_id;
 
-    -- 4. Save candidates for disambiguation extracts.
+    -- 4) save candidates for disambiguation extracts.
     if v_extract ->> 'kind' = 'disambiguation' then
       if jsonb_typeof(v_extract -> 'candidates') is distinct from 'array' then
         raise exception 'Disambiguation candidates must be an array';
@@ -158,7 +158,7 @@ begin
     end if;
   end loop;
 
-  -- 5. Save note documents; the database supplies IDs and creation timestamps.
+  -- 5) save note documents. the database supplies IDs and creation timestamps.
   insert into public.notes (user_id, investigation_id, content)
   select p_user_id, v_investigation.id, note.value -> 'content'
   from jsonb_array_elements(p_notes) as note(value);
@@ -223,7 +223,7 @@ begin
 end;
 $$;
 
--- Only the server's service-role client may invoke this function.
+-- Only the service-role may invoke this function.
 revoke execute on function public.save_complete_investigation(
   uuid, jsonb, bigint[], jsonb, jsonb
 ) from public, anon, authenticated;

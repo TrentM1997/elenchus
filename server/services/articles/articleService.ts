@@ -2,13 +2,16 @@ import { IDbClient } from "../../db/access/client/dbClient.js";
 import { ServerError } from "../../core/errors/ServerError.js";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import { InsertableArticleSchemaType } from "../../schemas/ArticleSchema.js";
-import { FcParam } from "../../types/types.js";
 import { IFirecrawlService } from "../firecrawl/firecrawlService.js";
 import { JobResult } from "../firecrawl/types.js";
 import { assertNever } from "../../core/asserts/assertNever.ts";
+import { ArticleToExtractSchemaType } from "@elenchus/contracts/schemas/articles/FirecrawlExtractionSchemas";
+import { dropParams } from "../firecrawl/scrape/scrapeConfig.ts";
+
+const JOB_CLEANUP_WINDOW = 10 * 60 * 1000;
 
 export interface IArticleService {
-  extract(articles: FcParam[]): { jobId: string };
+  extract(articles: ArticleToExtractSchemaType[]): Promise<{ jobId: string }>;
   getExtractionJob(jobId: string): JobResult | undefined;
 }
 
@@ -25,32 +28,101 @@ export class ArticleService implements IArticleService {
     return job ? structuredClone(job) : undefined;
   }
 
-  public extract(articles: FcParam[]): { jobId: string } {
-    return this.startExtraction(articles);
+  public async extract(
+    articles: ArticleToExtractSchemaType[],
+  ): Promise<{ jobId: string }> {
+    return this.getOrExtractArticles({ articles });
   }
 
-  private startExtraction(articles: FcParam[]): { jobId: string } {
+  private async findExistingArticles(articles: ArticleToExtractSchemaType[]) {
+    const cleansed = articles.map((article) => ({
+      ...article,
+      url: this.cleanUrl(article.url),
+    }));
+
+    const urls = cleansed.map((article) => article.url);
+    const result = await this.db.articles.byUrls(urls);
+
+    if (!result.ok) {
+      throw new ServerError(result.message, 500, result.details);
+    }
+
+    const persisted = result.data;
+    const persistedUrls = new Set(
+      persisted.map((article) => article.article_url),
+    );
+
+    const extractionCandidates = cleansed.filter(
+      (article) => !persistedUrls.has(article.url),
+    );
+
+    return {
+      persisted,
+      extractionCandidates,
+    };
+  }
+
+  private async getOrExtractArticles({
+    articles,
+  }: {
+    articles: ArticleToExtractSchemaType[];
+  }) {
+    const { persisted, extractionCandidates } =
+      await this.findExistingArticles(articles);
+
+    return this.startExtraction({ articles, extractionCandidates, persisted });
+  }
+
+  private startExtraction({
+    articles,
+    extractionCandidates,
+    persisted,
+  }: {
+    articles: ArticleToExtractSchemaType[];
+    extractionCandidates: ArticleToExtractSchemaType[];
+    persisted: ArticleSchemaType[];
+  }): {
+    jobId: string;
+  } {
     const jobId = crypto.randomUUID();
+
+    if (extractionCandidates.length === 0) {
+      this.jobs[jobId] = {
+        status: "fulfilled",
+        result: {
+          progress: `${articles.length}/${articles.length}`,
+          retrieved: persisted,
+          rejected: [],
+        },
+        error: null,
+        createdAt: Date.now(),
+      };
+
+      this.scheduleJobCleanup(jobId);
+
+      return { jobId };
+    }
 
     this.jobs[jobId] = {
       status: "pending",
       result: {
-        progress: `0/${articles.length}`,
-        retrieved: [],
+        progress: `${persisted.length}/${articles.length}`,
+        retrieved: persisted,
         rejected: [],
       },
       error: null,
       createdAt: Date.now(),
     };
 
-    void this.executeExtraction(jobId, articles);
+    void this.executeExtraction(jobId, extractionCandidates, persisted);
 
     return { jobId };
   }
 
   private async executeExtraction(
     jobId: string,
-    articles: FcParam[],
+    articles: ArticleToExtractSchemaType[],
+    initialRetrieved: ArticleSchemaType[],
   ): Promise<void> {
     try {
       const biases = await this.db.sources.getBiases(articles);
@@ -58,6 +130,7 @@ export class ArticleService implements IArticleService {
       await this.firecrawl.runFirecrawlJob({
         id: jobId,
         articles,
+        initialRetrieved,
         MBFC_DATA: biases,
         jobs: this.jobs,
         persistArticle: this.save.bind(this),
@@ -120,13 +193,24 @@ export class ArticleService implements IArticleService {
   }
 
   private scheduleJobCleanup(jobId: string): void {
-    const timer = setTimeout(
-      () => {
-        delete this.jobs[jobId];
-      },
-      10 * 60 * 1000,
-    );
+    const timer = setTimeout(() => {
+      delete this.jobs[jobId];
+    }, JOB_CLEANUP_WINDOW);
 
     timer.unref();
+  }
+
+  private cleanUrl(url: string): string {
+    try {
+      const u = new URL(url);
+
+      for (const key of dropParams) {
+        u.searchParams.delete(key);
+      }
+      u.hash = "";
+      return u.toString();
+    } catch {
+      return url;
+    }
   }
 }

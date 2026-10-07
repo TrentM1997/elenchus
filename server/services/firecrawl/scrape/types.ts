@@ -1,13 +1,14 @@
-import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import { ArticleToExtractSchemaType } from "@elenchus/contracts/schemas/articles/FirecrawlExtractionSchemas";
 import { InsertableArticleSchemaType } from "../../../schemas/ArticleSchema.js";
-import {
-  Article,
-  Bias,
-  FailedAttempt,
-  FcParam,
-  MBFC,
-  ScrapedArticle,
-} from "../../../types/types.js";
+import { BiasSchemaType } from "@elenchus/contracts/schemas/articles/BiasSchema";
+
+export interface BiasInfo {
+  bias: BiasSchemaType | null;
+  factual_reporting: string | null;
+  country: string | null;
+}
+
+export type MBFC = Map<string, BiasInfo>;
 
 export interface BatchItem {
   url: string;
@@ -17,22 +18,32 @@ export interface BatchItem {
   error?: string;
 }
 
-interface BiasInfo {
-  bias: Bias | null;
-  factual_reporting: string | null;
-  country: string | null;
+export interface FailedAttempt {
+  title: string;
+  summary: {
+    denied: string;
+    failedArticle: string;
+  }[];
+  logo: string;
+  source: string;
+  date: string;
+  article_url: string;
 }
 
 export type ScrapeParameters = {
-  article: FcParam;
+  article: ArticleToExtractSchemaType;
   MBFC_DATA: MBFC;
   pushRetrieved: (a: InsertableArticleSchemaType) => Promise<void>;
   pushFailed: (f: FailedAttempt) => void;
 };
 
-export type BatchScrapeParameters = {
-  articles: FcParam[];
-  failed: FailedAttempt[];
-  MBFC_DATA: MBFC;
-  retrieved: ScrapedArticle[];
-};
+export interface FirecrawlContent {
+  content_markdown: string;
+}
+
+export interface FirecrawlResponse {
+  metadata: {
+    /* massive meta tag map */
+  };
+  json: FirecrawlContent;
+}

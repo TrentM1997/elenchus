@@ -8,7 +8,7 @@ const apiTarget = process.env.API_PROXY_TARGET || "http://localhost:5001";
 
 export default defineConfig({
   server: {
-    port: 5173,
+    port: 4173,
   },
   vite: {
     resolve: {

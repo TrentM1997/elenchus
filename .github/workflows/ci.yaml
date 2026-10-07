@@ -30,7 +30,7 @@ jobs:
 
       - name: Install Dependencies
         run: npm ci
-
+      # TODO: add prod dependency audit when firecrawl axios SV is patched
       - name: Audit Development Dependencies
         continue-on-error: true
         run: npm audit

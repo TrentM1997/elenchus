@@ -1,5 +1,4 @@
--- Returns NULL when the investigation does not exist or belongs to another user.
--- Call only from the server with its authenticated user ID.
+-- returns null when the investigation is nonexistant or belongs to another user.
 create or replace function public.hydrate_investigation(
   p_user_id uuid,
   p_investigation_id bigint
