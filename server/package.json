@@ -10,6 +10,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json && node dist/scripts/generateLogoMap.js && tsc -p tsconfig.build.json",
+    "pretest": "npm run build --workspace=@elenchus/contracts && npm run build",
     "test": "node --test tests/*.test.mjs",
     "start": "node dist/src/app.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",

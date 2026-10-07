@@ -10,12 +10,12 @@ services:
       - ./server/.env
     environment:
       NODE_ENV: development
-      PORT: '5001'
+      PORT: "5001"
     ports:
       - 127.0.0.1:5001:5001
     command:
       - sh
-      - '-c'
+      - "-c"
       - npm exec --workspace=server -- nodemon --delay 1 --watch src --watch core --watch services --watch schemas --watch integrations --watch db --watch types --watch scripts --watch tsconfig.json --watch tsconfig.build.json --watch ../packages/contracts/src --watch ../packages/contracts/tsconfig.json --ext ts,json --exec "npm run build:server --prefix .. && npm start"
     develop:
       watch:
@@ -98,10 +98,10 @@ services:
       - path: ./client/.env
         required: false
     ports:
-      - 127.0.0.1:5173:5173
+      - 127.0.0.1:4173:4173
     command:
       - sh
-      - '-c'
+      - "-c"
       - npm run build:contracts && npm exec -- concurrently --kill-others "npm run build --workspace=@elenchus/contracts -- --watch --preserveWatchOutput" "npm run dev --workspace=elenchus -- --host 0.0.0.0"
     develop:
       watch:

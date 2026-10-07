@@ -1,6 +1,6 @@
 # Investigation persistence and database setup
 
-An investigation combines the user's before-and-after perspective, article sources, and Wikipedia context. Saving and opening it must preserve those pieces together. See [the architectural rationale](architecture.md#investigations-are-complete-research-records).
+An investigation combines the user's before-and-after perspective, article sources, Wikipedia context, and rich-text notes. Saving and opening it must preserve those pieces together. See [the architectural rationale](architecture.md#investigations-are-complete-research-records).
 
 ## Database objects
 
@@ -20,7 +20,7 @@ The SQL files below define functions and execution grants; they do not create th
 The `notes` table requires `content jsonb NOT NULL`, non-null investigation and user IDs, generated UUID and creation timestamp defaults, and the composite foreign key `(investigation_id, user_id)` referencing `investigations(id, user_id)`.
 ## Save RPC
 
-[001save_complete_investigation.sql](../server/db/access/migrations/001save_complete_investigation.sql) defines `public.save_complete_investigation`.
+[001save_complete_investigation.sql](../server/db/migrations/001save_complete_investigation.sql) defines `public.save_complete_investigation`.
 
 | Argument | Meaning |
 | --- | --- |
@@ -42,9 +42,9 @@ Application integration must forward `notes ?? []` as `p_notes`, include notes i
 
 ## Hydration RPC and payload
 
-[002hydrate_investigation.sql](../server/db/access/migrations/002hydrate_investigation.sql) defines `public.hydrate_investigation(p_user_id uuid, p_investigation_id bigint)`.
+[002hydrate_investigation.sql](../server/db/migrations/002hydrate_investigation.sql) defines `public.hydrate_investigation(p_user_id uuid, p_investigation_id bigint)`.
 
-It selects the investigation and assembles its sources and extracts in one SQL statement. Both RPCs return this JSON shape:
+It selects the investigation and assembles its sources, extracts, and notes in one SQL statement. Both RPCs return this JSON shape:
 
 ```ts
 {

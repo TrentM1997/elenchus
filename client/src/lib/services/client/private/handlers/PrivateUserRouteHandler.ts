@@ -18,7 +18,7 @@ export class PrivateUserRouteHandler implements IPrivateUserRouteHandler {
   public readonly write: IPrivateUserWritesHandler;
   public readonly select: IPrivateUserSelectHandler;
   constructor(
-    private readonly http: Pick<IHttpClient, "request">,
+    private readonly http: IHttpClient,
     private readonly routes: PrivateApiContract,
   ) {
     this.write = new PrivateUserWritesHandler(this.http, this.routes);

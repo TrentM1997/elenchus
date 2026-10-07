@@ -1,7 +1,6 @@
 import type { ExtractArticlesRouteHandler } from "./ExtractArticlesRouteHandler";
 import type { ExtractionResult } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import { ServerRequestError } from "../../errors/ServerRequestError";
-import { withTimeout, waitForNextPoll } from "../../../articles/pollingTiming";
 
 export const EXTRACTION_POLLING_POLICY = {
   deadlineMs: 5 * 60 * 1000,
@@ -37,7 +36,7 @@ export class PollExtractionHandler implements IPollExtractionHandler {
   private runExtractionAndPoll(
     params: PollExtractionParams,
   ): Promise<ExtractionResult> {
-    return withTimeout(
+    return this.withTimeout(
       (signal) => this.executeExtraction({ ...params, signal }),
       params.signal,
       EXTRACTION_POLLING_POLICY.deadlineMs,
@@ -52,8 +51,7 @@ export class PollExtractionHandler implements IPollExtractionHandler {
     signal,
     onProgress,
   }: PollExtractionParams) {
-    // Starting a job is never retried: the server may already have created it.
-    const { jobId } = await withTimeout(
+    const { jobId } = await this.withTimeout(
       (requestSignal) => this.client.extract(articles, requestSignal),
       signal,
       EXTRACTION_POLLING_POLICY.requestTimeoutMs,
@@ -69,14 +67,13 @@ export class PollExtractionHandler implements IPollExtractionHandler {
     onProgress: PollExtractionParams["onProgress"],
   ): Promise<ExtractionResult> {
     const policy = EXTRACTION_POLLING_POLICY;
-    // Per-run state: concurrent or subsequent runs do not share retry budgets.
     let consecutiveFailures = 0;
 
     while (true) {
       signal.throwIfAborted();
       let snapshot;
       try {
-        snapshot = await withTimeout(
+        snapshot = await this.withTimeout(
           (requestSignal) => this.client.poll({ jobId, signal: requestSignal }),
           signal,
           policy.requestTimeoutMs,
@@ -94,7 +91,7 @@ export class PollExtractionHandler implements IPollExtractionHandler {
           );
         }
         consecutiveFailures += 1;
-        await waitForNextPoll(signal, delay);
+        await this.waitForNextPoll(signal, delay);
         continue;
       }
 
@@ -110,8 +107,48 @@ export class PollExtractionHandler implements IPollExtractionHandler {
         return snapshot.result;
       }
       if (snapshot.result) onProgress(snapshot.result);
-      await waitForNextPoll(signal, policy.intervalMs);
+      await this.waitForNextPoll(signal, policy.intervalMs);
     }
+  }
+
+  private async withTimeout<T>(
+    run: (signal: AbortSignal) => Promise<T>,
+    parent: AbortSignal,
+    duration: number,
+    timeout: Error,
+  ): Promise<T> {
+    parent.throwIfAborted();
+    const controller = new AbortController();
+    const abort = () => controller.abort(parent.reason);
+    parent.addEventListener("abort", abort, { once: true });
+    const timer = setTimeout(() => controller.abort(timeout), duration);
+
+    try {
+      const result = await run(controller.signal);
+      controller.signal.throwIfAborted();
+      return result;
+    } catch (error) {
+      controller.signal.throwIfAborted();
+      throw error;
+    } finally {
+      clearTimeout(timer);
+      parent.removeEventListener("abort", abort);
+    }
+  }
+
+  private waitForNextPoll(signal: AbortSignal, delay: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      signal.throwIfAborted();
+      const abort = () => {
+        clearTimeout(timer);
+        reject(signal.reason);
+      };
+      const timer = setTimeout(() => {
+        signal.removeEventListener("abort", abort);
+        resolve();
+      }, delay);
+      signal.addEventListener("abort", abort, { once: true });
+    });
   }
 
   private isRetryable(error: unknown): boolean {

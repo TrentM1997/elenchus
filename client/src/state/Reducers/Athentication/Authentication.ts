@@ -29,7 +29,7 @@ export const AuthenticationSlice = createSlice({
     });
 
     builder.addCase(signUp.fulfilled, (state) => {
-      state.userKind === "authenticated";
+      state.userKind = "authenticated";
     });
 
     builder.addCase(deleteAccount.fulfilled, (state: Authentication) => {

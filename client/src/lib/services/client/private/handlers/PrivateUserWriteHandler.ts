@@ -29,8 +29,11 @@ export interface IPrivateUserWritesHandler {
 
 export class PrivateUserWritesHandler implements IPrivateUserWritesHandler {
   constructor(
-    private readonly http: Pick<IHttpClient, "request">,
-    private readonly routes: PrivateApiContract,
+    private readonly http: IHttpClient,
+    private readonly routes: Pick<
+      PrivateApiContract,
+      "bookmarks" | "investigations"
+    >,
   ) {}
 
   public async bookmark(

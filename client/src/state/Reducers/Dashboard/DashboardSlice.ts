@@ -149,6 +149,10 @@ const DashboardSlice = createSlice({
         const { articles, investigations } = action.payload;
 
         if (investigations.length === 0 && articles.length === 0) {
+          state.articles = { status: "empty", message: "No data found" };
+          state.investigations = { status: "empty", message: "No data found" };
+          state.metrics = { status: "empty", message: "No data found" };
+          return;
         }
 
         if (articles.length > 0) {

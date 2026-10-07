@@ -23,7 +23,7 @@ export class PrivateUserSelectHandler implements IPrivateUserSelectHandler {
   public readonly investigations: IInvestigationSelectHander;
   public readonly bookmarks: IBookmarkSelectHandler;
   constructor(
-    private readonly http: Pick<IHttpClient, "request">,
+    private readonly http: IHttpClient,
     private readonly routes: Pick<
       PrivateApiContract,
       "bookmarks" | "investigations"

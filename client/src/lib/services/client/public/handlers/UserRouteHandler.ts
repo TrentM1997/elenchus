@@ -18,7 +18,7 @@ export interface IUserRouteHandler {
 export class UserRouteHandler implements IUserRouteHandler {
   constructor(
     private readonly routes: Pick<PublicApiContract, "user">,
-    private readonly http: Pick<IHttpClient, "request">,
+    private readonly http: IHttpClient,
   ) {}
 
   public async resetPassword(

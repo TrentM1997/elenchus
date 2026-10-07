@@ -32,7 +32,7 @@ export const useCalculateMetrics = () => {
       dispatch(
         getMetrics({
           status: "failed",
-          details: "Could not calaculate metrics",
+          details: details,
         }),
       );
 

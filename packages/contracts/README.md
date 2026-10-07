@@ -24,6 +24,10 @@ import {
 
 Schema modules are also exported as namespaces from the package root. Use these exports rather than importing another workspace's source files.
 
+The root `workspaces` configuration includes `packages/contracts`, `client`, and `server`. npm links the contracts package by its `package.json` name, `@elenchus/contracts`, and both applications declare it as a dependency. Its `exports` field maps the imports above to compiled files in `dist/`.
+
+This package is a code dependency, not a running service or Docker container. Both applications need it at build time. The browser build bundles the runtime schemas it uses; the Express runtime must still be able to resolve the compiled package. TypeScript-only types are erased during compilation.
+
 The old client and server compatibility re-export files have been removed. Active server-specific schemas and validators remain in `server/schemas`, including article insertion (which omits the database-generated ID), authenticated-ID validation, and upstream response validation.
 
 ## Build
@@ -38,6 +42,8 @@ npm run build --workspace=@elenchus/contracts -- --watch
 
 The compiler emits JavaScript and declarations into `dist/`. Package exports resolve there, so rebuild after changes. Relative imports inside this ESM package use `.js` extensions for Node-compatible emitted imports.
 
-Root application builds compile contracts first. Docker development watches contracts. Client Jest uses source mappings for its test runner.
+Root `build:client` and `build:server` do not rebuild contracts automatically; run `build:contracts` first. Root `typecheck`, `dev:server:nodemon`, and the server's `pretest` hook do build contracts first. Client Jest uses source mappings for its test runner.
+
+Docker builds compile contracts into the development image. The client container also watches and recompiles them. The API watcher notices contracts source changes but currently rebuilds only Express, so rebuild/recreate the Docker services after changing contracts as described in the [root guide](../../README.md#docker-development).
 
 See [architecture and adding endpoints](../../docs/architecture.md) for how both applications consume these definitions.

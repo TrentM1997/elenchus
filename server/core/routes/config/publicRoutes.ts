@@ -143,7 +143,11 @@ export function createPublicRoutes({
       const result = await app.services.api.user.account.signUp(body);
 
       if (!result.ok || !result.data.session) {
-        throw new ServerError("Failed to create new user", 400);
+        throw new ServerError(
+          "Failed to create new user",
+          400,
+          result.ok ? "Signup returned no session" : result.message,
+        );
       }
 
       req.auth.establishSession(result.data.session, res);
