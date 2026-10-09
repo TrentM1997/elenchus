@@ -1,47 +1,21 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
 import ScrolltoTop from "@/lib/helpers/scroll/ScrollToTop";
 import LoginOperations from "@/components/React/session/forms/containers/LoginOperations";
-import { useCheckCredentials } from "@/lib/hooks/validation/useCheckCredentials";
-import { useSignIn } from "@/lib/hooks/auth/useSignIn";
-import { useSelector } from "react-redux";
-import { RootState } from "@/state/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, type RootState } from "@/state/store";
 import InvalidCredentials from "../fallbacks/InvalidCredentials";
+import { resetLoginState } from "@/state/Reducers/Athentication/Authentication";
 
 export default function Login(): JSX.Element {
-  const navigate = useNavigate();
-  const activeSession = useSelector(
-    (state: RootState) => state.auth.userKind === "authenticated",
-  );
-  const [userEmail, setUserEmail] = useState<string | null>(null);
-  const [userPassword, setUserPassword] = useState<string | null>(null);
-  const { setStatus, loginErr } = useSignIn(userEmail, userPassword);
-  const { acceptedInput, validEmail } = useCheckCredentials(
-    userEmail,
-    userPassword,
-  );
-
-  const submitAuth = async (
-    e: React.MouseEvent<HTMLButtonElement>,
-  ): Promise<void> => {
-    e.preventDefault();
-    if (acceptedInput === "valid" && userPassword) {
-      setStatus("pending");
-    }
-  };
+  const status = useSelector((s: RootState) => s.auth.loginState.status);
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    if (!activeSession) return;
-
-    const timer = window.setTimeout(() => {
-      navigate("/");
-    }, 2500);
-
     return () => {
-      clearTimeout(timer);
+      dispatch(resetLoginState());
     };
-  }, [activeSession]);
+  }, [dispatch]);
 
   return (
     <section className="lg:p-8 overflow-hidden bg-black animate-fade-in">
@@ -55,20 +29,14 @@ export default function Login(): JSX.Element {
             log in to manage your saved content.
           </p>
           <AnimatePresence>
-            {loginErr ? (
-              <InvalidCredentials error={loginErr} />
+            {status === "failed" ? (
+              <InvalidCredentials error="Invalid email or password" />
             ) : (
               <div className="h-16 w-full" />
             )}
           </AnimatePresence>
         </div>
-        <LoginOperations
-          submitAuth={submitAuth}
-          setUserEmail={setUserEmail}
-          setUserPassword={setUserPassword}
-          validEmail={validEmail === "valid"}
-          acceptedInput={acceptedInput === "valid"}
-        />
+        <LoginOperations />
       </div>
     </section>
   );

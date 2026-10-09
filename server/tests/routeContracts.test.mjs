@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { Router } from "express";
 import { createPublicRoutes } from "../dist/core/routes/config/publicRoutes.js";
 import { createPrivateRoutes } from "../dist/core/routes/config/privateRoutes.js";
-import { RouteRegistrar } from "../dist/core/routes/config/routeRegistrar.js";
+import { RouteRegistrar } from "../dist/core/routes/registrar/routeRegistrar.js";
 import { PUBLIC_API_CONFIG, PRIVATE_API_CONFIG } from "@elenchus/contracts";
 
 function publicRoutes(app, router) {

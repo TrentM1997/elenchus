@@ -2,7 +2,7 @@ import { Router } from "express";
 import { IAppServices } from "../../../services/appServices.js";
 import { requireAuth } from "../../middleware/requireAuth.js";
 import { authenticate } from "../../middleware/authenticate.js";
-import { IRouteRegistrar } from "./routeRegistrar.ts";
+import { IRouteRegistrar } from "../registrar/routeRegistrar.ts";
 import { createPublicRoutes } from "./publicRoutes.ts";
 import { createPrivateRoutes } from "./privateRoutes.ts";
 import { ApiContract } from "@elenchus/contracts";
@@ -28,8 +28,10 @@ export function configureMiddleware({
     router: publicRouter,
     contract: contract.public,
   });
+
   protectedRouter.use(authenticate);
   protectedRouter.use(requireAuth);
+
   createPrivateRoutes({
     app,
     registrar,

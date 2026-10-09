@@ -2,7 +2,7 @@ import { Router } from "express";
 import { IAppServices } from "../../services/appServices.js";
 import { configureMiddleware } from "./config/configureMiddleware.js";
 import { configSessionHandler } from "../middleware/configSessionHandler.js";
-import { RouteRegistrar } from "./config/routeRegistrar.ts";
+import { RouteRegistrar } from "./registrar/routeRegistrar.ts";
 import { ApiContract } from "@elenchus/contracts";
 
 export function createRouter({

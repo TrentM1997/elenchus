@@ -1,40 +1,26 @@
 import Email from "../InputFields/Email";
 import Password from "../InputFields/Password";
 import AuthFooterLinks from "../InputFields/AuthFooterLinks";
+import { useLoginForm } from "@/lib/hooks/auth/useLoginForm";
 
-export default function LoginForm({
-  acceptedInput,
-  setUserPassword,
-  setUserEmail,
-  validEmail,
-  submitAuth,
-  status,
-}: LoginFormProps) {
+export default function LoginForm() {
+  const { fields, errors, pending, login } = useLoginForm();
+
   return (
-    <form autoComplete="off">
-      {status === "failed" && (
-        <p className="text-zinc-400 font-light lg:text-2xl -translate-y-6">
-          The email or password you entered is incorrect. Please try again.
-        </p>
-      )}
-      <Email setUserEmail={setUserEmail} validEmail={validEmail} />
+    <form onSubmit={login} noValidate aria-busy={pending}>
+      <Email {...fields.email} error={errors.email?.message} />
       <div className="space-y-6">
-        <Password
-          setUserPassword={setUserPassword}
-          acceptedInput={acceptedInput}
-        />
+        <Password {...fields.password} error={errors.password?.message} />
         <div className="col-span-full">
           <button
-            onClick={(e) => {
-              submitAuth(e);
-            }}
+            disabled={pending}
             type="submit"
-            className="text-sm py-2 px-4 border focus:ring-2 h-10 rounded-full border-zinc-100 
-                            bg-white hover:bg-black text-black duration-200 focus:ring-offset-2 
-                            focus:ring-white hover:text-white w-full inline-flex items-center 
-                            justify-center ring-1 ring-transparent"
+            className="text-sm py-2 px-4 border focus:ring-2 h-10 rounded-full border-zinc-100
+                            bg-white hover:bg-black text-black duration-200 focus:ring-offset-2
+                            focus:ring-white hover:text-white w-full inline-flex items-center
+                            justify-center ring-1 ring-transparent disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Submit
+            {pending ? "Logging in…" : "Submit"}
           </button>
         </div>
         <AuthFooterLinks />

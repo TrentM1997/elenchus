@@ -19,6 +19,7 @@ import {
 import { CookieHandler, ICookieHandler } from "./cookieHandler.js";
 import type { LogOutResult, AuthenticateUserResult } from "./types.js";
 import { DbResult } from "../../../db/types/types.ts";
+import { AuthenticatedUserId } from "../authorization.ts";
 
 export interface ISessionHandler {
   recoverSession(
@@ -51,11 +52,34 @@ export class SessionHandler implements ISessionHandler {
     return await this.executeAuthenticateRequest(req);
   }
 
+  public establishSession(
+    session: Pick<Session, "access_token" | "refresh_token">,
+    res: Response,
+  ): void {
+    this.tokens.setAuthCookies(session, res);
+  }
+
+  public clearSessionCookies(res: Response): void {
+    this.tokens.removeAuthCookie(res, "sb-access-token");
+    this.tokens.removeAuthCookie(res, "sb-refresh-token");
+  }
+
   public async recoverSession(
     req: Request,
     res: Response,
   ): Promise<{ status: "anonymous" } | { status: "authenticated" }> {
     return await this.executeRecoverSession(req, res);
+  }
+
+  public async login(
+    req: Request,
+    res: Response,
+  ): Promise<AuthTokenResponsePassword> {
+    return await this.executeLogin(req, res);
+  }
+
+  public async logOut(req: Request, res: Response): Promise<LogOutResult> {
+    return await this.executeLogOut(req, res);
   }
 
   private async executeRecoverSession(
@@ -89,17 +113,6 @@ export class SessionHandler implements ISessionHandler {
 
       throw error;
     }
-  }
-
-  public async login(
-    req: Request,
-    res: Response,
-  ): Promise<AuthTokenResponsePassword> {
-    return await this.executeLogin(req, res);
-  }
-
-  public async logOut(req: Request, res: Response): Promise<LogOutResult> {
-    return await this.executeLogOut(req, res);
   }
 
   private async executeAuthenticateRequest(
@@ -137,7 +150,7 @@ export class SessionHandler implements ISessionHandler {
 
     return {
       status: "authenticated",
-      user_id: id,
+      user_id: id as AuthenticatedUserId,
     };
   }
 
@@ -178,18 +191,6 @@ export class SessionHandler implements ISessionHandler {
     }
   }
 
-  public establishSession(
-    session: Pick<Session, "access_token" | "refresh_token">,
-    res: Response,
-  ): void {
-    this.tokens.setAuthCookies(session, res);
-  }
-
-  public clearSessionCookies(res: Response): void {
-    this.tokens.removeAuthCookie(res, "sb-access-token");
-    this.tokens.removeAuthCookie(res, "sb-refresh-token");
-  }
-
   private async executeLogin(req: Request, res: Response) {
     const { email, password } = this.parser.parseCredentials(req);
     const result = await this.db.auth.signInWithPassword({ email, password });
@@ -202,7 +203,7 @@ export class SessionHandler implements ISessionHandler {
   }
 
   private createUserObject(req: Request, userId: string): void {
-    req.user = { userId: userId };
+    req.user = { userId: userId as AuthenticatedUserId };
   }
 
   private isCredentialError(error: AuthError): boolean {

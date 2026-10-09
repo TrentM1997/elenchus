@@ -35,15 +35,16 @@ export class ExtractArticlesRouteHandler implements IExtractArticlesRouteHandler
     signal?: AbortSignal;
   }) {
     const route = this.routes.articles.poll;
-    return await this.http.request(route, { params: { jobId: jobId }, signal });
+    const options = { params: { jobId: jobId }, signal };
+    return await this.http.request(route, options);
   }
 
   public async extract(articles: SelectedArticle[], signal?: AbortSignal) {
     const route = this.routes.articles.extract;
-
-    return await this.http.request(route, {
+    const options = {
       body: { articles },
       signal,
-    });
+    };
+    return await this.http.request(route, options);
   }
 }

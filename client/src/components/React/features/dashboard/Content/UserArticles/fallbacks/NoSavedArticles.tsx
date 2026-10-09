@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function NoSavedArticles() {
   return (
-    <div className="w-full  h-fit mx-auto border border-white/10 rounded-3xl py-16">
+    <div className="w-auto h-fit lg:mt-20 mx-auto border border-white/10 rounded-3xl py-16">
       <div className="w-fit flex flex-col items-center justify-start text-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"

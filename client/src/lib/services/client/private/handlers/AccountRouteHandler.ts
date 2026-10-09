@@ -20,9 +20,9 @@ export class AccountRouteHandler implements IAccountRouteHandler {
   public async deleteAccount(
     credentials: LoginCredentials,
     signal: AbortSignal,
-  ): Promise<DeleteAccountResponseSchemaType> {
+  ) {
     const route = this.routes.account.delete;
-
-    return await this.http.request(route, { body: credentials, signal });
+    const options = { body: credentials, signal };
+    return await this.http.request(route, options);
   }
 }

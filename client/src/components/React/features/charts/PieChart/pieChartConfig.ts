@@ -20,3 +20,29 @@ export const factualReportingRatingConfig = [
   rating: FactualReportingRating;
   color: string;
 }[];
+
+type GetPieChartParams = {
+  config: typeof factualReportingRatingConfig;
+  integrityRatings: IntegrityRatings;
+};
+
+export function getPieChartDataSet({
+  config,
+  integrityRatings,
+}: GetPieChartParams) {
+  const chartData = config.map(({ rating, color }) => ({
+    rating,
+    color,
+    value: integrityRatings[rating],
+  }));
+
+  const labels = chartData.map(({ rating }) => rating);
+  const colors = chartData.map(({ color }) => color);
+  const values = chartData.map(({ value }) => value);
+
+  return {
+    labels,
+    colors,
+    values,
+  };
+}
