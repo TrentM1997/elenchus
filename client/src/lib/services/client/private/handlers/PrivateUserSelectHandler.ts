@@ -48,9 +48,7 @@ class InvestigationSelectHander implements IInvestigationSelectHander {
     private readonly routes: Pick<PrivateApiContract, "investigations">,
   ) {}
 
-  public async all(
-    signal: AbortSignal,
-  ): Promise<InvestigationsSavedReponseSchemaType> {
+  public async all(signal: AbortSignal) {
     const route = this.routes.investigations.get.all;
 
     return await this.http.request(route, { signal });
@@ -59,7 +57,7 @@ class InvestigationSelectHander implements IInvestigationSelectHander {
   public async byId(
     investigation_id: InvestigationSchemaType["id"],
     signal?: AbortSignal,
-  ): Promise<InvestigationAndSourcesResponseSchemaType> {
+  ) {
     const route = this.routes.investigations.get.single;
 
     return await this.http.request(route, {
@@ -86,7 +84,6 @@ class BookmarkSelectHandler implements IBookmarkSelectHandler {
 
   public async all(signal: AbortSignal) {
     const route = this.routes.bookmarks.get.all;
-
     return await this.http.request(route, { signal });
   }
 

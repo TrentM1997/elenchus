@@ -13,7 +13,7 @@ export default function ResearchMetrics(): JSX.Element | null {
   return (
     <motion.section
       variants={variants}
-      initial={false}
+      initial={"closed"}
       animate="open"
       exit="closed"
       transition={{ type: "tween", duration: 0.2 }}

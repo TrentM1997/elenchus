@@ -17,7 +17,6 @@ export const PRIVATE_API_CONFIG = {
 export const PUBLIC_API_CONFIG = {
   auth: AUTH_API_CONTRACT,
   user: PUBLIC_USER_API_CONTRACT,
-
   integrations: INTEGRATIONS_API_CONTRACT,
   articles: PUBLIC_ARTICLES_API_CONTRACT,
 } as const;

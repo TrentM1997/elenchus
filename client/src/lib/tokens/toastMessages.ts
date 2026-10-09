@@ -27,7 +27,7 @@ export const toastMessageConfig = {
     idle: "idle",
     pending: "Saving your investigation...",
     failed: "Failed to save your investigation",
-    success: "Investigation saved successfully!",
+    success: "Investigation saved!",
   },
   "delete account": {
     idle: "idle",

@@ -7,7 +7,7 @@ type BodyOptions<R extends RouteConfigDefinition> = R extends {
   ? { body: Static<S> }
   : { body?: never };
 
-export type QueryOptions<R extends RouteConfigDefinition> = R extends {
+type QueryOptions<R extends RouteConfigDefinition> = R extends {
   querySchema: infer S extends TSchema;
 }
   ? { query: Static<S> }

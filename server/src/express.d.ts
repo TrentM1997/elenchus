@@ -1,7 +1,8 @@
 import type { ISessionHandler } from "../services/auth/handlers/sessionHandler.js";
+import type { AuthenticatedUserId } from "../services/auth/authorization.ts";
 
 interface AuthenticatedUser {
-  userId?: string;
+  userId?: AuthenticatedUserId;
 }
 
 declare global {
