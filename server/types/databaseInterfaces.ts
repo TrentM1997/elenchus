@@ -1,4 +1,4 @@
-﻿export type Json =
+export type Json =
   | string
   | number
   | boolean
@@ -425,6 +425,11 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_bookmarked_articles: { Args: { p_user_id: string }; Returns: Json }
+      hydrate_bookmarked_article: {
+        Args: { p_bookmark_id: string; p_user_id: string }
+        Returns: Json
+      }
       hydrate_investigation: {
         Args: { p_investigation_id: number; p_user_id: string }
         Returns: Json

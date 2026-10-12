@@ -46,11 +46,7 @@ export default function ArticleHeader({
             </div>
           )}
           <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] transition-colors hover:bg-white/10">
-            <MoreButton
-              open={open}
-              setOpen={setOpen}
-              articleData={articleData}
-            />
+            <MoreButton open={open} setOpen={setOpen} article={articleData} />
           </div>
         </div>
       </div>

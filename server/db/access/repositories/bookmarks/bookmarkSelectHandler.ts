@@ -1,20 +1,18 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "../../../../types/databaseInterfaces.ts";
 import { BookmarkValidator } from "./bookmarkValidator.ts";
-import type { AuthenticatedUserId } from "../../../../services/auth/authorization.ts";
 import { BookmarkSchemaType } from "@elenchus/contracts/schemas/articles/BookmarkSchema";
 import { DbResult } from "../../../types/types.ts";
+import { AuthenticatedUserId } from "../../../../services/auth/handlers/sessionHandler.ts";
+import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 
 export type BookmarkResponse = DbResult<BookmarkSchemaType>;
 
-export type BookmarkedArticlesResponse = DbResult<BookmarkSchemaType[]>;
-
 export interface IBookmarkSelectHandler {
-  single(
+  all(user_id: AuthenticatedUserId): Promise<DbResult<ArticleSchemaType[]>>;
+  records(
     user_id: AuthenticatedUserId,
-    article_id: number,
-  ): Promise<BookmarkResponse>;
-  all(user_id: AuthenticatedUserId): Promise<BookmarkedArticlesResponse>;
+  ): Promise<DbResult<BookmarkSchemaType[]>>;
 }
 
 export class BookmarkSelectHandler implements IBookmarkSelectHandler {
@@ -23,20 +21,40 @@ export class BookmarkSelectHandler implements IBookmarkSelectHandler {
     private readonly validator: BookmarkValidator,
   ) {}
 
+  public async records(
+    user_id: AuthenticatedUserId,
+  ): Promise<DbResult<BookmarkSchemaType[]>> {
+    return await this.getRecords(user_id);
+  }
+
   public async all(
     user_id: AuthenticatedUserId,
-  ): Promise<BookmarkedArticlesResponse> {
-    return await this.executeGetBookmarks(user_id);
+  ): Promise<DbResult<ArticleSchemaType[]>> {
+    return await this.getBookmarkedArticles(user_id);
   }
 
-  public async single(
+  private async getBookmarkedArticles(
     user_id: AuthenticatedUserId,
-    article_id: number,
-  ): Promise<BookmarkResponse> {
-    return await this.getBookmarkById(user_id, article_id);
+  ): Promise<DbResult<ArticleSchemaType[]>> {
+    const { data, error } = await this.db.rpc("get_bookmarked_articles", {
+      p_user_id: user_id,
+    });
+
+    if (error) {
+      return {
+        ok: false,
+        message: error.message,
+        details: error.details,
+      };
+    }
+
+    return {
+      ok: true,
+      data: this.validator.validateBookmarkedArticles(data),
+    };
   }
 
-  private async executeGetBookmarks(
+  private async getRecords(
     user_id: AuthenticatedUserId,
   ): Promise<DbResult<BookmarkSchemaType[]>> {
     const { data, error } = await this.db
@@ -58,30 +76,6 @@ export class BookmarkSelectHandler implements IBookmarkSelectHandler {
     return {
       ok: true,
       data: bookmarks,
-    };
-  }
-  public async getBookmarkById(
-    user_id: AuthenticatedUserId,
-    article_id: number,
-  ): Promise<DbResult<BookmarkSchemaType>> {
-    const { data, error } = await this.db
-      .from("bookmarks")
-      .select()
-      .eq("user_id", user_id)
-      .eq("article_id", article_id)
-      .single();
-
-    if (error) {
-      return {
-        ok: false,
-        message: error.message,
-        details: error.details,
-      };
-    }
-
-    return {
-      ok: true,
-      data: this.validator.validateBookmark(data),
     };
   }
 }

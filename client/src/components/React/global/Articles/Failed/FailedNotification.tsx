@@ -1,8 +1,13 @@
 import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { closeNotification } from "@/state/Reducers/Investigate/articles/ExtractedArticles";
+import { FailedAttempt } from "@/lib/services/types";
 
-export default function FailedNotification({ notification }) {
+export default function FailedNotification({
+  notification,
+}: {
+  notification: FailedAttempt;
+}) {
   const dispatch = useDispatch();
 
   const close = () => {

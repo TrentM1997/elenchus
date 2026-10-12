@@ -1,6 +1,6 @@
 import { InvestigationSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 
-interface InvestigationData {
+export interface InvestigationData {
   id: string;
   icon: string;
   title: string | null;

@@ -1,31 +1,23 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Help } from "@/env";
-import { getHelp } from "@/state/Reducers/Investigate/help/HelpModal";
-import { useDispatch, useSelector } from "react-redux";
+import { toggleHelp } from "@/state/Reducers/Investigate/help/HelpModal";
+import { useDispatch } from "react-redux";
 import { createPortal } from "react-dom";
 import { useEffect } from "react";
-import { RootState } from "@/state/store";
 import { variants } from "@/motion/variants";
 
 export default function HelpModal({
   info,
-  handleExpand,
-  isOpen,
   setActiveTab,
   activeTab,
 }: HelpModal) {
-  const investigateState = useSelector(
-    (state: RootState) => state.investigation,
-  );
-  const { stepper } = investigateState;
-  const { current: step } = stepper.wizardStep;
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (Array.isArray(info) && info.length > 0) {
+    if (info.length > 0) {
       setActiveTab(info[0]);
     }
-  }, [step]);
+  }, [info, setActiveTab]);
 
   const modal = (
     <motion.div
@@ -55,12 +47,7 @@ export default function HelpModal({
           <motion.div
             whileTap={{ scale: 0.9 }}
             transition={{ type: "tween", duration: 0.2 }}
-            onClick={() => {
-              handleExpand();
-              {
-                isOpen ? dispatch(getHelp(false)) : null;
-              }
-            }}
+            onClick={() => dispatch(toggleHelp("idle"))}
             className="w-8 h-8 cursor-pointer p-1.5 mr-4 rounded-lg 
                                             hover:bg-white/10 transition-all duration-200 ease-in-out absolute -right-3 top-1"
           >

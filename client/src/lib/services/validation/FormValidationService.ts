@@ -15,11 +15,12 @@ export class FormInputValidationService implements IFormInputValidationService {
   constructor(private readonly formats: FormatConfigType) {}
 
   public emailInput(input: string): { ok: boolean; data: string } {
-    const valid = this.formats.email.test(input);
-    return {
-      ok: valid,
-      data: input,
-    };
+    const validator = this.formats.email;
+
+    const valid =
+      validator instanceof RegExp ? validator.test(input) : validator(input);
+
+    return { ok: valid, data: input };
   }
 
   public passwordInput(input: string): { ok: boolean; data: string } {

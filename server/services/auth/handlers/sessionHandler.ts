@@ -19,7 +19,13 @@ import {
 import { CookieHandler, ICookieHandler } from "./cookieHandler.js";
 import type { LogOutResult, AuthenticateUserResult } from "./types.js";
 import { DbResult } from "../../../db/types/types.ts";
-import { AuthenticatedUserId } from "../authorization.ts";
+import { AuthenticatedUserIdSchemaType } from "@elenchus/contracts/schemas/auth/AuthenticatedUserIdSchema";
+
+declare const authenticatedUser: unique symbol;
+
+export type AuthenticatedUserId = AuthenticatedUserIdSchemaType & {
+  readonly [authenticatedUser]: true;
+};
 
 export interface ISessionHandler {
   recoverSession(
@@ -150,7 +156,7 @@ export class SessionHandler implements ISessionHandler {
 
     return {
       status: "authenticated",
-      user_id: id as AuthenticatedUserId,
+      user_id: this.parser.validateUserId(id),
     };
   }
 
@@ -203,7 +209,9 @@ export class SessionHandler implements ISessionHandler {
   }
 
   private createUserObject(req: Request, userId: string): void {
-    req.user = { userId: userId as AuthenticatedUserId };
+    req.user = {
+      userId: this.parser.validateUserId(userId),
+    };
   }
 
   private isCredentialError(error: AuthError): boolean {

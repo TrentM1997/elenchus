@@ -3,6 +3,10 @@ import {
   BookmarkSchemaType,
 } from "@elenchus/contracts/schemas/articles/BookmarkSchema";
 import { validateServerOrThrow } from "../../../../core/validation/validateOrThrow.js";
+import {
+  AritclesArraySchema,
+  ArticleSchemaType,
+} from "@elenchus/contracts/schemas/articles/ArticleSchema";
 
 export class BookmarkValidator {
   public validateSavedBookMarks(results: unknown[]) {
@@ -12,6 +16,10 @@ export class BookmarkValidator {
       bookmarks.push(bookmark);
     }
     return bookmarks;
+  }
+
+  public validateBookmarkedArticles(articles: unknown): ArticleSchemaType[] {
+    return validateServerOrThrow(AritclesArraySchema, articles);
   }
 
   public validateBookmark(bookmark: unknown): BookmarkSchemaType {

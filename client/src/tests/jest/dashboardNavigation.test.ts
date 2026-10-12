@@ -1,4 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
+import type { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import type { InvestigationSchemaType, SelectedInvestigationPayloadSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import reducer, {
   changeTab,
   clearOpenedArticle,
@@ -30,7 +32,7 @@ jest.mock("../../lib/services/client/serverClient", () => ({
 
 beforeEach(() => jest.resetAllMocks());
 
-const article = {
+const article: ArticleSchemaType = {
   id: 12,
   title: "Source",
   provider: "Publisher",
@@ -39,7 +41,7 @@ const article = {
   date_published: "2026-09-22",
   factual_reporting: null,
 };
-const investigation = {
+const investigation: InvestigationSchemaType = {
   id: 34,
   created_at: "2026-09-22",
   idea: "Question",
@@ -47,7 +49,7 @@ const investigation = {
   ending_perspective: null,
   expertise: null,
 };
-const openedInvestigation = {
+const openedInvestigation: SelectedInvestigationPayloadSchemaType = {
   investigation,
   extracts: [],
   sources: [article],

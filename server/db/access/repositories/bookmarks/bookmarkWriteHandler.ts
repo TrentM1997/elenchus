@@ -1,9 +1,9 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "../../../../types/databaseInterfaces.js";
 import { BookmarkValidator } from "./bookmarkValidator.js";
-import type { AuthenticatedUserId } from "../../../../services/auth/authorization.js";
 import { DbResult } from "../../../types/types.ts";
 import { BookmarkResponse } from "./bookmarkSelectHandler.ts";
+import { AuthenticatedUserId } from "../../../../services/auth/handlers/sessionHandler.ts";
 
 export type BookmarkDeleteResponse = DbResult<
   Database["public"]["Tables"]["bookmarks"]["Row"][]

@@ -59,7 +59,7 @@ export default function DataTable() {
             Had Merit
             <div className="absolute inset-x-8 mt-4 h-px bg-ebony/50" />
           </th>
-          <TableRow truthyValue={merit} />
+          <TableRow truthyValue={merit ?? false} />
         </tr>
         <tr className="h-full 2xl:min-h-20">
           <th
@@ -69,7 +69,7 @@ export default function DataTable() {
             Changed Opinion
             <div className="absolute inset-x-8 mt-4 h-px bg-ebony/50" />
           </th>
-          <TableRow truthyValue={changed} />
+          <TableRow truthyValue={changed ?? false} />
         </tr>
         <tr className="h-full 2xl:min-h-20">
           <th

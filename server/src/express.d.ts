@@ -1,5 +1,7 @@
-import type { ISessionHandler } from "../services/auth/handlers/sessionHandler.js";
-import type { AuthenticatedUserId } from "../services/auth/authorization.ts";
+import type {
+  AuthenticatedUserId,
+  ISessionHandler,
+} from "../services/auth/handlers/sessionHandler.js";
 
 interface AuthenticatedUser {
   userId?: AuthenticatedUserId;

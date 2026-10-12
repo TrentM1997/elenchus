@@ -11,7 +11,7 @@ export type BookmarkArticleIdSchemaType = Static<
 export const BookmarkSchema = Type.Object({
   article_id: BookmarkArticleIdSchema,
   created_at: Type.String(),
-  id: Type.String(),
+  id: Type.String({ format: "uuid" }),
   updated_at: Type.Union([Type.String(), Type.Null()]),
   user_id: Type.String(),
 });

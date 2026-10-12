@@ -51,7 +51,7 @@ export function createPrivateRoutes({
   registrar.register(router, bookmarkRecordsRoute, async (req, res) => {
     const userId = req.user.userId;
     const result: Static<typeof bookmarkRecordsRoute.outputSchema> =
-      await app.services.api.user.articles.bookmarkRecords(userId);
+      await app.services.api.user.articles.select.bookmarkRecords(userId);
 
     if (result.ok === false) {
       throw new ServerError(result.message, 500, result.details);
@@ -69,7 +69,9 @@ export function createPrivateRoutes({
 
   registrar.register(router, bookmarkedArticlesRoute, async (req, res) => {
     const results: Static<typeof bookmarkedArticlesRoute.outputSchema> =
-      await app.services.api.user.articles.articlesBookmarked(req.user?.userId);
+      await app.services.api.user.articles.select.articlesBookmarked(
+        req.user?.userId,
+      );
 
     if (results.ok === false) {
       throw new ServerError(results.message, 500, results.details);
@@ -94,7 +96,7 @@ export function createPrivateRoutes({
     const article_id = Number(articleId);
 
     const result: Static<typeof bookmarkedArticleRoute.outputSchema> =
-      await app.services.api.user.articles.articleById({
+      await app.services.api.user.articles.select.articleById({
         user_id: userId,
         article_id,
       });
@@ -117,7 +119,7 @@ export function createPrivateRoutes({
     const userId = req.user.userId;
     const { article_id } = validateOrThrow(bookmarkRoute.bodySchema, req.body);
     const result: Static<typeof bookmarkRoute.outputSchema> =
-      await app.services.api.user.articles.bookmark({
+      await app.services.api.user.articles.write.bookmark({
         user_id: userId,
         article_id,
       });
@@ -141,7 +143,7 @@ export function createPrivateRoutes({
     const article_id = Number(articleId);
 
     const result: Static<typeof deleteBookmarkRoute.outputSchema> =
-      await app.services.api.user.articles.removeBookmark({
+      await app.services.api.user.articles.write.removeBookmark({
         user_id: userId,
         article_id,
       });

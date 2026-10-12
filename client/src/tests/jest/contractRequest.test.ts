@@ -63,7 +63,9 @@ test.each([
 ] as const)("%s search encodes the raw query exactly once", async (method, path) => {
   const query = "climate change & policy #1 + 50%";
   const handler = new ThirdPartyRouteHandler(PUBLIC_API_CONFIG, client);
-  const responses = {
+  const responses: {
+    [Key in keyof typeof handler.search]: Awaited<ReturnType<typeof handler.search[Key]>>;
+  } = {
     wikipediaExtract: { kind: "error", message: "Not found" },
     blueSky: { firstHalf: [], secondHalf: [] },
     articles: [],

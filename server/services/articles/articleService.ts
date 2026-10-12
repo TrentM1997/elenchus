@@ -41,7 +41,7 @@ export class ArticleService implements IArticleService {
     }));
 
     const urls = cleansed.map((article) => article.url);
-    const result = await this.db.articles.byUrls(urls);
+    const result = await this.db.articles.select.byUrls(urls);
 
     if (!result.ok) {
       throw new ServerError(result.message, 500, result.details);
@@ -157,7 +157,7 @@ export class ArticleService implements IArticleService {
   private async save(
     article: InsertableArticleSchemaType,
   ): Promise<ArticleSchemaType> {
-    const result = await this.db.articles.saveArticle(article);
+    const result = await this.db.articles.write.article(article);
     if (!result.ok) {
       throw new ServerError(result.message, 500, result.details);
     }

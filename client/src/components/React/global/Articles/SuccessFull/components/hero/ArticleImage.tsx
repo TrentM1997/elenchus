@@ -1,18 +1,15 @@
 import React from "react";
-import type { ArticleSchemaType as Article } from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import type { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import type { ImgProps } from "@/components/React/features/investigate/phase2/results/components/links/LinkThumbnail";
+import fallback from "../../../../../../../../public/images/logos/fallbackImage.svg";
 
 interface ArticleThumbnail {
-  article: Article;
-}
-
-interface ThumnailProps {
-  imgProps: ImgProps;
+  article: ArticleSchemaType;
 }
 
 function ArticleImage({ article }: ArticleThumbnail): JSX.Element | null {
   const imgProps: ImgProps = {
-    src: article.image_url,
+    src: article.image_url ?? fallback.src,
     alt: article.title,
     loading: "lazy",
     decoding: "async",
@@ -30,7 +27,6 @@ function ArticleImage({ article }: ArticleThumbnail): JSX.Element | null {
         {...imgProps}
         className="absolute inset-0 w-full h-full object-cover"
       />
-
     </div>
   );
 }

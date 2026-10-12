@@ -1,4 +1,4 @@
-import { AuthenticatedUserId } from "../authorization.ts";
+import { AuthenticatedUserId } from "./sessionHandler.ts";
 
 export type LogOutResult =
   | { ok: false; message: string }
