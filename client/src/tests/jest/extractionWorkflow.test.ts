@@ -1,7 +1,8 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { TypeCompiler } from "@sinclair/typebox/compiler";
 import { ExtractionJobSchema } from "@elenchus/contracts/schemas/articles/ArticleSchema";
-import type { ArticleSchemaType, ExtractionResult } from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import type { ArticleSchemaType, ExtractionResult, ExtractionJobSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import type { WikiSummaryResponseSchemaType } from "@elenchus/contracts/schemas/integrations/WikipediaExtractSchemas";
 import { serverClient } from "../../lib/services/client/serverClient";
 import reducer, { closeNotification, resetReadingSlice, incrementStoryBy } from "../../state/Reducers/Investigate/articles/ExtractedArticles";
 import { extractionProgressReceived } from "../../state/Reducers/Investigate/articles/actions";
@@ -22,7 +23,10 @@ jest.mock("../../lib/services/client/serverClient", () => ({
 
 const client: jest.Mocked<ExtractionRequests> = { extract: jest.fn(), poll: jest.fn() };
 // Simulate a stalled fetch that rejects when its signal is aborted.
-function pendingUntilAborted(signal: AbortSignal): Promise<never> {
+function pendingUntilAborted(signal: AbortSignal | undefined): Promise<never> {
+  if (signal === undefined) {
+    throw new Error("Expected an AbortSignal for the stalled request");
+  }
   return new Promise((_, reject) => {
     signal.throwIfAborted();
     signal.addEventListener("abort", () => reject(signal.reason), { once: true });
@@ -39,7 +43,7 @@ const failure = {
 };
 const selected = [{ url: article.article_url }] as SelectedArticle[];
 const result: ExtractionResult = { progress: "2/2", retrieved: [article], rejected: [failure] };
-const snapshot = (status: "pending" | "fulfilled" | "rejected", data = result) => ({
+const snapshot = (status: "pending" | "fulfilled" | "rejected", data = result): ExtractionJobSchemaType => ({
   status, result: data, error: null, createdAt: 1,
 });
 const makeStore = () => {
@@ -78,7 +82,7 @@ test("extraction progress preserves Wikipedia context instead of replacing it wi
   client.poll.mockResolvedValueOnce(snapshot("pending"))
     .mockResolvedValueOnce(snapshot("fulfilled"));
   const task = store.dispatch(extractArticles(selected));
-  const extracts = [{
+  const extracts: WikiSummaryResponseSchemaType[] = [{
     kind: "summary" as const, title: "Existing research term", extract: "Summary",
     description: "A term", thumbnail: null,
     pageUrl: "https://en.wikipedia.org/wiki/Term", lastUpdated: null,
@@ -206,7 +210,10 @@ test.each(["network", "job", "missing snapshot", "missing result"])("%s failure 
   const store = makeStore();
   if (kind === "network") client.poll.mockRejectedValue(new Error("Network failed"));
   if (kind === "job") client.poll.mockResolvedValue({ ...snapshot("rejected"), error: "Job failed" });
-  if (kind === "missing snapshot") client.poll.mockResolvedValue(undefined);
+  if (kind === "missing snapshot") {
+    // @ts-expect-error Deliberately violate the response contract to test runtime handling.
+    client.poll.mockResolvedValue(undefined);
+  }
   if (kind === "missing result") client.poll.mockResolvedValue({ status: "fulfilled", createdAt: 1 });
   const action = await store.dispatch(extractArticles(selected));
   expect(extractArticles.rejected.match(action)).toBe(true);
@@ -474,7 +481,7 @@ test("hanging poll requests are aborted and retries are bounded", async () => {
   await jest.advanceTimersByTimeAsync(67000);
   await task;
   expect(client.poll).toHaveBeenCalledTimes(4);
-  expect(client.poll.mock.calls.every(([params]) => params.signal.aborted)).toBe(true);
+  expect(client.poll.mock.calls.every(([params]) => params.signal?.aborted === true)).toBe(true);
   expect(store.getState().investigation.read.articles.status).toBe("error");
   expect(jest.getTimerCount()).toBe(0);
 });
@@ -486,7 +493,7 @@ test("job creation times out without being retried", async () => {
   await jest.advanceTimersByTimeAsync(15000);
   await task;
   expect(client.extract).toHaveBeenCalledTimes(1);
-  expect(client.extract.mock.calls[0][1].aborted).toBe(true);
+  expect(client.extract.mock.calls[0][1]?.aborted).toBe(true);
   expect(client.poll).not.toHaveBeenCalled();
   expect(store.getState().investigation.read.articles).toMatchObject({ status: "error", details: "Starting extraction timed out" });
   expect(jest.getTimerCount()).toBe(0);
@@ -515,7 +522,7 @@ test("the overall deadline aborts an in-flight poll before its request timeout",
   await jest.advanceTimersByTimeAsync(300000);
   await task;
   const calls = client.poll.mock.calls;
-  expect(calls[calls.length - 1][0].signal.aborted).toBe(true);
+  expect(calls[calls.length - 1][0].signal?.aborted).toBe(true);
   expect(store.getState().investigation.read.articles).toMatchObject({
     status: "error", details: expect.stringContaining("5 minutes"),
     data: { retrieved: [article], failed: [failure] },

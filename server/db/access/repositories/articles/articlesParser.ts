@@ -3,9 +3,15 @@ import {
   validateOrThrow,
   validateServerOrThrow,
 } from "../../../../core/validation/validateOrThrow.js";
-import { ArticleSchemaType, ArticleSchema } from "@elenchus/contracts/schemas/articles/ArticleSchema";
-import { InsertableArticleSchema, InsertableArticleSchemaType } from "../../../../schemas/ArticleSchema.js";
-import type { AuthenticatedUserId } from "../../../../services/auth/authorization.js";
+import {
+  ArticleSchemaType,
+  ArticleSchema,
+} from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import {
+  InsertableArticleSchema,
+  InsertableArticleSchemaType,
+} from "../../../../schemas/ArticleSchema.js";
+import { AuthenticatedUserId } from "../../../../services/auth/handlers/sessionHandler.ts";
 
 export type InsertableArticleType =
   Database["public"]["Tables"]["articles"]["Insert"];

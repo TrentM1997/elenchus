@@ -12,7 +12,7 @@ jest.mock("../../components/React/global/fallbacks/DelayedFallback", () => ({
   __esModule: true, default: ({ children }: { children: React.ReactNode }) => children,
 }));
 jest.mock("../../components/React/features/dashboard/ProfileNavigation/mobile/DetailView", () => ({
-  __esModule: true, default: () => null,
+  __esModule: true, default: (): null => null,
 }));
 jest.mock("../../components/React/global/Articles/SuccessFull/containers/Article", () => ({
   __esModule: true,

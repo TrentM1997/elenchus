@@ -11,11 +11,11 @@ import {
   SelectedInvestigationPayloadSchemaType,
   SelectedInvestigationPayloadSchema,
 } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
-import type { AuthenticatedUserId } from "../../../../services/auth/authorization.js";
 import {
   NotesInputSchema,
   NotesInputSchemaType,
 } from "@elenchus/contracts/schemas/investigations/NoteSchema";
+import { AuthenticatedUserId } from "../../../../services/auth/handlers/sessionHandler.ts";
 
 export interface IInvestigationsRepositoryParser {
   toInsertableInvestigation(

@@ -4,7 +4,7 @@ import RenderPaginationNumberedButtons from "./RenderPaginationNumberedButtons";
 import { useSearchResultsPagination } from "@/lib/hooks/useSearchResultsPagination";
 
 interface LinkPaginationProps {
-  disabled: boolean | null;
+  disabled: boolean;
 }
 
 export default function LinkPagination({

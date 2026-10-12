@@ -1,19 +1,19 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { createPortal } from "react-dom";
-import { useDispatch } from "react-redux";
-import { getHelp } from "@/state/Reducers/Investigate/help/HelpModal";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleHelp } from "@/state/Reducers/Investigate/help/HelpModal";
 import HelpModal from "../modals/HelpModal";
 import HelpTooltip from "../tooltips/HelpTooltip";
+import { RootState } from "@/state/store";
 
-export default function HelpButton({ info }) {
+export default function HelpButton({ info }: { info: Help[] }) {
+  const status = useSelector((s: RootState) => s.investigation.help.status);
   const [activeTab, setActiveTab] = useState<Help>(info[0]);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const dispatch = useDispatch();
 
   const handleExpand = () => {
-    dispatch(getHelp(true));
-    setIsOpen((isOpen) => !isOpen);
+    dispatch(toggleHelp("active"));
   };
 
   return (
@@ -45,7 +45,6 @@ export default function HelpButton({ info }) {
             fontFamily="none"
             fontWeight="none"
             fontSize="none"
-            
             style={{ mixBlendMode: "normal" }}
           >
             <g transform="scale(5.12,5.12)">
@@ -57,13 +56,11 @@ export default function HelpButton({ info }) {
 
       {createPortal(
         <AnimatePresence mode="wait">
-          {isOpen && (
+          {status === "active" && (
             <HelpModal
               info={info}
-              handleExpand={handleExpand}
               activeTab={activeTab}
               setActiveTab={setActiveTab}
-              isOpen={isOpen}
             />
           )}
         </AnimatePresence>,

@@ -5,12 +5,12 @@ import {
 } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import { DbResult } from "../../db/types/types.ts";
 import { InvestigationSaveResult } from "../../db/access/repositories/investigations/investigationsRepository.ts";
-import { AuthenticatedUserId } from "../auth/authorization.ts";
 import { SavedExtractSchemaType } from "@elenchus/contracts/schemas/integrations/InvestigationExtractRowSchema";
 import { WikiResponseSchemaType } from "@elenchus/contracts/schemas/integrations/WikipediaExtractSchemas";
 import { IInvestigationServiceWriteHandler } from "./handlers/InvestigationServiceWriteHandler.ts";
 import { IInvestigationServiceSelectHandler } from "./handlers/InvestigationServiceSelectHandler.ts";
 import { NotesInputSchemaType } from "@elenchus/contracts/schemas/investigations/NoteSchema";
+import { AuthenticatedUserId } from "../auth/handlers/sessionHandler.ts";
 
 export type SaveSourcesAndExtractsArgs = {
   userId: AuthenticatedUserId;

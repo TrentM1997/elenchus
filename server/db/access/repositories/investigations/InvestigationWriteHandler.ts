@@ -1,12 +1,12 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "../../../../types/databaseInterfaces.js";
 import { IInvestigationsRepositoryParser } from "./InvestigationsRespositoryParser.ts";
-import type { AuthenticatedUserId } from "../../../../services/auth/authorization.js";
 import { DbResult } from "../../../types/types.ts";
 import { InvestigationExtractsToPersist } from "../../../../services/investigations/types.ts";
 import { SelectedInvestigationPayloadSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import { NotesInputSchemaType } from "@elenchus/contracts/schemas/investigations/NoteSchema";
+import { AuthenticatedUserId } from "../../../../services/auth/handlers/sessionHandler.ts";
 
 type PersistInvestigationParams = {
   userId: AuthenticatedUserId;

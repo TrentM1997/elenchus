@@ -1,34 +1,38 @@
 import React from "react";
 
-function KeyboardScroller({ playAnimation }): JSX.Element | null {
-
-    return (
-        <div
-            style={{ transform: 'translateZ(0)' }}
-            className={`
-        ${playAnimation
-                && 'animate-marquee will-change-transform transform-gpu backface-hidden [contain-intrinsic-size:180rem_12rem]'} 
+function KeyboardScroller({
+  playAnimation,
+}: {
+  playAnimation: boolean;
+}): JSX.Element | null {
+  return (
+    <div
+      style={{ transform: "translateZ(0)" }}
+      className={`
+        ${
+          playAnimation &&
+          "animate-marquee will-change-transform transform-gpu backface-hidden [contain-intrinsic-size:180rem_12rem]"
+        } 
         opacity-50 whitespace-nowrap gap-4 flex
         `}
-        >
-            {[
-                "/images/assets/lightKeyboard.svg",
-                "/images/assets/darkKeyboard.svg",
-                "/images/assets/lightKeyboard.svg",
-                "/images/assets/darkKeyboard.svg",
-                "/images/assets/lightKeyboard.svg",
-                "/images/assets/darkKeyboard.svg",
-            ].map((src, index) => (
-                <img
-                    key={index}
-                    src={src}
-                    alt="Keyboard thumbnail"
-                    className="lg:w-[30rem] lg:flex-none"
-                />
-            ))}
-        </div>
-    )
-};
-
+    >
+      {[
+        "/images/assets/lightKeyboard.svg",
+        "/images/assets/darkKeyboard.svg",
+        "/images/assets/lightKeyboard.svg",
+        "/images/assets/darkKeyboard.svg",
+        "/images/assets/lightKeyboard.svg",
+        "/images/assets/darkKeyboard.svg",
+      ].map((src, index) => (
+        <img
+          key={index}
+          src={src}
+          alt="Keyboard thumbnail"
+          className="lg:w-[30rem] lg:flex-none"
+        />
+      ))}
+    </div>
+  );
+}
 
 export default React.memo(KeyboardScroller);

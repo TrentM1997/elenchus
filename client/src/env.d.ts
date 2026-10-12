@@ -14,6 +14,7 @@ import { BrowsingOptionSchemaType } from "@elenchus/contracts/schemas/articles/B
 import type { DashboardTab } from "./state/Reducers/Dashboard/types";
 import type { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import { BookmarkState } from "./lib/hooks/dashboard/events/useBookmarkSavedArticles";
+import { InvestigationFramingHelpStatus } from "./state/Reducers/Investigate/help/HelpModal";
 
 declare global {
   interface ImportMetaEnv {
@@ -308,8 +309,8 @@ declare global {
 
   interface ChartFallbackProps {
     message: string;
+    direction: string;
     actionText?: string;
-    direction?: string;
     children?: ReactNode;
   }
 
@@ -350,8 +351,6 @@ declare global {
 
   interface HelpModal {
     info: Help[];
-    handleExpand: Function;
-    isOpen: boolean;
     activeTab: Help;
     setActiveTab: (activeTab: Help) => void;
   }
@@ -433,9 +432,9 @@ declare global {
   type ValidationStatus = "idle" | "valid" | "rejected";
 
   type SignupFields = {
-    email: string | null;
-    password: string | null;
-    confirmPw: string | null;
+    email: string;
+    password: string;
+    confirmPw: string;
   };
 
   type FieldStatus = {

@@ -87,7 +87,10 @@ class BookmarkSelectHandler implements IBookmarkSelectHandler {
     return await this.http.request(route, { signal });
   }
 
-  public async byId(article_id: ArticleSchemaType["id"], signal?: AbortSignal) {
+  public async byId(
+    article_id: ArticleSchemaType["id"],
+    signal?: AbortSignal,
+  ) {
     const route = this.routes.bookmarks.get.single;
 
     return await this.http.request(route, {

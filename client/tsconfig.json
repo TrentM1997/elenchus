@@ -11,6 +11,8 @@
     "moduleResolution": "bundler",
     "skipLibCheck": true,
     "resolveJsonModule": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
     "isolatedModules": true,
     "noEmit": true,
     "allowImportingTsExtensions": true,

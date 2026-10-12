@@ -1,9 +1,10 @@
+import type { BookmarkSchemaType } from "@elenchus/contracts/schemas/articles/BookmarkSchema";
 import dashboardReducer, { clearDashboardSlice } from "../../state/Reducers/Dashboard/DashboardSlice";
 import { hydrateBookmarkRecords } from "../../state/Reducers/Dashboard/thunks";
 
 jest.mock("../../lib/services/client/serverClient", () => ({ serverClient: {} }));
 
-const records = [{
+const records: BookmarkSchemaType[] = [{
   id: "bookmark-1", article_id: 42, user_id: "user-1",
   created_at: "2026-09-27", updated_at: null,
 }];

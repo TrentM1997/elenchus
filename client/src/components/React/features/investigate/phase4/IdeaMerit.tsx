@@ -1,7 +1,10 @@
 import { motion } from "framer-motion";
 import { updateReflection } from "@/state/Reducers/Investigate/research/ResearchSlice";
 import ChecksButton from "./buttons/ChecksButton";
-import { UserResearchType } from "@/state/Reducers/Investigate/research/types";
+import {
+  ResearchReflection,
+  UserResearchType,
+} from "@/state/Reducers/Investigate/research/types";
 
 const questions = [
   "Did the evidence support the idea?",
@@ -19,9 +22,9 @@ export default function IdeaMerit({
 }) {
   const data = research.data.reflection;
   const { had_merit: merit, changed_opinion: movedOnIdea } = data;
-  const getMerit = (had_merit: boolean) =>
+  const getMerit = (had_merit: ResearchReflection["had_merit"]) =>
     updateReflection({ ...data, had_merit });
-  const moved = (changed_opinion: boolean) =>
+  const moved = (changed_opinion: ResearchReflection["changed_opinion"]) =>
     updateReflection({ ...data, changed_opinion });
 
   return (
@@ -39,16 +42,8 @@ export default function IdeaMerit({
           {questions[0]}
         </h1>
         <div className="xs:w-full flex items-center gap-x-2">
-          <ChecksButton
-            boolOption={true}
-            question={merit}
-            setterFunction={getMerit}
-          />
-          <ChecksButton
-            boolOption={false}
-            question={merit}
-            setterFunction={getMerit}
-          />
+          <ChecksButton answer={true} merit={merit} action={getMerit} />
+          <ChecksButton answer={false} merit={merit} action={getMerit} />
         </div>
       </div>
       <div className="flex-col gap-y-4 md:py-5 items-center h-full mx-auto">
@@ -56,16 +51,8 @@ export default function IdeaMerit({
           {questions[1]}
         </h1>
         <div className="xs:w-full flex items-center gap-x-2">
-          <ChecksButton
-            boolOption={true}
-            question={movedOnIdea}
-            setterFunction={moved}
-          />
-          <ChecksButton
-            boolOption={false}
-            question={movedOnIdea}
-            setterFunction={moved}
-          />
+          <ChecksButton answer={true} merit={movedOnIdea} action={moved} />
+          <ChecksButton answer={false} merit={movedOnIdea} action={moved} />
         </div>
       </div>
     </motion.div>

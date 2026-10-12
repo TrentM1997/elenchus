@@ -10,6 +10,7 @@ import { createRouter } from "../core/routes/createRouter.js";
 import { AppServices } from "../services/appServices.js";
 import { apiContractConfig } from "@elenchus/contracts";
 import { corsOptions } from "./corsConfig.ts";
+import "@elenchus/contracts/schemas/typeBoxFormats";
 
 app.use(responseBinder);
 app.use(cors(corsOptions));

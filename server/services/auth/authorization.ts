@@ -1,11 +1,6 @@
 import { validateOrThrow } from "../../core/validation/validateOrThrow.js";
-import { AuthenticatedRequestSchema } from "../../schemas/AuthenticatedRequestSchema.js";
-
-declare const authenticatedUser: unique symbol;
-
-export type AuthenticatedUserId = string & {
-  readonly [authenticatedUser]: true;
-};
+import { AuthenticatedUserIdSchema } from "@elenchus/contracts/schemas/auth/AuthenticatedUserIdSchema";
+import { AuthenticatedUserId } from "./handlers/sessionHandler.ts";
 
 export interface IAuthorization {
   requireAuthenticated(user_id: string | undefined | null): AuthenticatedUserId;
@@ -16,7 +11,7 @@ export class Authorization implements IAuthorization {
     user_id: string | undefined | null,
   ): AuthenticatedUserId {
     return validateOrThrow(
-      AuthenticatedRequestSchema,
+      AuthenticatedUserIdSchema,
       user_id,
     ) as AuthenticatedUserId;
   }

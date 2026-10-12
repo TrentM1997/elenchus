@@ -5,6 +5,7 @@
     "target": "ES2022",
     "moduleResolution": "NodeNext",
     "noUncheckedIndexedAccess": true,
+    "noImplicitAny": true,
     "sourceMap": true,
     "rootDir": "./",
     "outDir": "./dist",

@@ -94,7 +94,9 @@ export const hydrateOpenInvestigation = createAsyncThunk(
         investigation: result.data.investigation,
         sources: result.data.sources,
         extracts: result.data.extracts,
-        ...(result.data.notes !== undefined ? { notes: result.data.notes } : {}),
+        ...(result.data.notes !== undefined
+          ? { notes: result.data.notes }
+          : {}),
       };
     } catch (err) {
       console.error(err);

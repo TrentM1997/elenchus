@@ -1,12 +1,12 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "../../../../types/databaseInterfaces.js";
 import { IInvestigationsRepositoryParser } from "./InvestigationsRespositoryParser.ts";
-import { AuthenticatedUserId } from "../../../../services/auth/authorization.ts";
 import { SavedInvestigationsResult } from "./investigationsRepository.ts";
 import {
   InvestigationAndSourcesResponseSchemaType,
   InvestigationSchemaType,
 } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
+import { AuthenticatedUserId } from "../../../../services/auth/handlers/sessionHandler.ts";
 
 export interface IInvestigationSelectHandler {
   all(user_id: AuthenticatedUserId): Promise<SavedInvestigationsResult>;

@@ -1,23 +1,28 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+export type InvestigationFramingHelpStatus = "idle" | "active";
 
 interface HelpModal {
-  gettingHelp: boolean;
+  status: InvestigationFramingHelpStatus;
 }
 
 const initialState: HelpModal = {
-  gettingHelp: false,
+  status: "idle",
 };
 
 export const HelpSlice = createSlice({
   name: "HelpModal",
   initialState: initialState,
   reducers: {
-    getHelp: (state, action) => {
-      state.gettingHelp = action.payload;
+    toggleHelp: (
+      state: HelpModal,
+      action: PayloadAction<InvestigationFramingHelpStatus>,
+    ) => {
+      state.status = action.payload;
     },
   },
 });
 
-export const { getHelp } = HelpSlice.actions;
+export const { toggleHelp } = HelpSlice.actions;
 
 export default HelpSlice.reducer;

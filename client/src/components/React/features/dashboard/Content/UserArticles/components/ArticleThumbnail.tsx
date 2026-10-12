@@ -15,7 +15,7 @@ interface SavedThumbnail {
 
 type FetchPriority = "high" | "low" | "auto";
 
-type ImgProps = React.ImgHTMLAttributes<HTMLImageElement> & {
+export type ImgProps = React.ImgHTMLAttributes<HTMLImageElement> & {
   fetchpriority?: FetchPriority; // lowercase HTML attr
 };
 

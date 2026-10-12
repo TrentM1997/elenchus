@@ -8,8 +8,6 @@ import {
   BookmarkResponse,
 } from "../../../db/access/repositories/bookmarks/bookmarksRepository.ts";
 import { BookmarkSchemaType } from "@elenchus/contracts/schemas/articles/BookmarkSchema";
-import { ServerError } from "../../../core/errors/ServerError.ts";
-import { BookmarkedArticlesResponse } from "../../../db/access/repositories/bookmarks/bookmarkSelectHandler.ts";
 
 type BookmarkOperation = {
   user_id: string | null | undefined;
@@ -19,11 +17,7 @@ type BookmarkOperation = {
 export interface IUserArticleHandler {
   bookmarkRecords(
     user_id: string | undefined | null,
-  ): Promise<BookmarkedArticlesResponse>;
-  bookmarkByArticleId(params: {
-    user_id: string | null | undefined;
-    article_id: ArticleSchemaType["id"];
-  }): Promise<DbResult<ArticleSchemaType>>;
+  ): Promise<DbResult<BookmarkSchemaType[]>>;
   articlesBookmarked(
     user_id: string | undefined | null,
   ): Promise<ArticlesFromBookmarks>;
@@ -43,13 +37,13 @@ export class UserArticleHandler implements IUserArticleHandler {
 
   public async bookmarkRecords(
     user_id: string | undefined | null,
-  ): Promise<BookmarkedArticlesResponse> {
+  ): Promise<DbResult<BookmarkSchemaType[]>> {
     return await this.getBookmarkRecords(user_id);
   }
 
   public async articlesBookmarked(
     user_id: string | undefined | null,
-  ): Promise<ArticlesFromBookmarks> {
+  ): Promise<DbResult<ArticleSchemaType[]>> {
     return this.articlesFromBookmarks(user_id);
   }
 
@@ -73,33 +67,11 @@ export class UserArticleHandler implements IUserArticleHandler {
     return await this.executeRemoveBookmark(params.user_id, params.article_id);
   }
 
-  public async bookmarkByArticleId(params: {
-    user_id: string | null | undefined;
-    article_id: ArticleSchemaType["id"];
-  }): Promise<DbResult<ArticleSchemaType>> {
-    return await this.executeBookmarkByArticleId(params);
-  }
-
   private async getBookmarkRecords(
     user_id: string | undefined | null,
-  ): Promise<BookmarkedArticlesResponse> {
+  ): Promise<DbResult<BookmarkSchemaType[]>> {
     const userId = this.policy.requireAuthenticated(user_id);
-    return await this.db.bookmarks.select.all(userId);
-  }
-
-  private async executeBookmarkByArticleId(params: {
-    user_id: string | null | undefined;
-    article_id: ArticleSchemaType["id"];
-  }): Promise<DbResult<ArticleSchemaType>> {
-    const userId = this.policy.requireAuthenticated(params.user_id);
-    const bookmark = await this.db.bookmarks.select.single(
-      userId,
-      params.article_id,
-    );
-    if (bookmark.ok === false) {
-      return bookmark;
-    }
-    return await this.fromArticleId(bookmark.data.article_id);
+    return await this.db.bookmarks.select.records(userId);
   }
 
   private async executeArticleById(params: {
@@ -112,63 +84,12 @@ export class UserArticleHandler implements IUserArticleHandler {
   }
 
   private async fromArticleId(article_id: ArticleSchemaType["id"]) {
-    return await this.db.articles.byId(article_id);
+    return await this.db.articles.select.byId(article_id);
   }
 
-  private async articlesFromBookmarks(
-    user_id: string | null | undefined,
-  ): Promise<ArticlesFromBookmarks> {
+  private async articlesFromBookmarks(user_id: string | null | undefined) {
     const userId = this.policy.requireAuthenticated(user_id);
-    const bookmarks = await this.db.bookmarks.select.all(userId);
-
-    if (!bookmarks.ok) {
-      throw new ServerError(
-        "Failed to retrieve bookmarked articles",
-        500,
-        bookmarks.details,
-      );
-    }
-
-    return this.getArticlesFromBookmarks(bookmarks.data);
-  }
-
-  private async getArticlesFromBookmarks(
-    bookmarks: BookmarkSchemaType[],
-  ): Promise<ArticlesFromBookmarks> {
-    const ids = bookmarks.map((bkm) => bkm.article_id);
-
-    if (ids.length === 0) {
-      return {
-        ok: true,
-        data: [],
-      };
-    }
-
-    const results = await this.db.articles.fromBookmarkIds(ids);
-
-    if (!results.ok) {
-      return results;
-    }
-
-    const sorted = this.sortBookmarkedArticles(results.data, ids);
-    return {
-      ok: true,
-      data: sorted,
-    };
-  }
-
-  private sortBookmarkedArticles(
-    results: ArticleSchemaType[],
-    ids: number[],
-  ): ArticleSchemaType[] {
-    const articlesById = new Map(
-      results.map((article) => [article.id, article]),
-    );
-
-    return ids.flatMap((id) => {
-      const article = articlesById.get(id);
-      return article ? [article] : [];
-    });
+    return await this.db.bookmarks.select.all(userId);
   }
 
   private async executeRemoveBookmark(

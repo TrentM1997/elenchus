@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+import type { InvestigationSchemaType, SelectedInvestigationPayloadSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import reducer, {
   clearOpenedInvestigation,
 } from "../../state/Reducers/Dashboard/DashboardSlice";
@@ -11,7 +12,7 @@ jest.mock("../../lib/services/client/serverClient", () => ({
   },
 }));
 
-const investigation = {
+const investigation: InvestigationSchemaType = {
   id: 34,
   created_at: "2026-09-22",
   idea: "Question",
@@ -19,7 +20,7 @@ const investigation = {
   ending_perspective: null,
   expertise: null,
 };
-const data = { investigation, sources: [], extracts: [] };
+const data: SelectedInvestigationPayloadSchemaType = { investigation, sources: [], extracts: [] };
 const response = {
   ok: true as const,
   data,

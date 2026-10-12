@@ -1,4 +1,4 @@
-import { createClient, User } from "@supabase/supabase-js";
+import { createClient } from "@supabase/supabase-js";
 import { Database } from "../../../../types/databaseInterfaces.js";
 import { CreatedUserSchemaType } from "@elenchus/contracts/schemas/auth/UserSchema";
 import { SupabaseSessionSchemaType } from "@elenchus/contracts/schemas/auth/SupabaseSchemas";
@@ -9,10 +9,10 @@ import {
   SUPABASE_URL,
 } from "../../../../src/Config.js";
 import type { LoginCredentialsSchemaType } from "@elenchus/contracts/schemas/auth/AuthSchemas";
-import type { AuthenticatedUserId } from "../../../../services/auth/authorization.js";
 import { ResetPasswordResponseSchemaType } from "@elenchus/contracts/schemas/auth/ResetPasswordSchema";
 import type { DbResult } from "../../../types/types.ts";
 import { DeleteAccountResponseSchemaType } from "@elenchus/contracts/schemas/auth/DeleteAccountResponseSchema";
+import { AuthenticatedUserId } from "../../../../services/auth/handlers/sessionHandler.ts";
 
 type CreateUserSuccessPayload = {
   user: CreatedUserSchemaType;

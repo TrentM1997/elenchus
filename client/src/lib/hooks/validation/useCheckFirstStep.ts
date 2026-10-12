@@ -2,10 +2,7 @@ import { selectPOVData } from "@/state/Reducers/Investigate/pov/selectors";
 import { useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/state/store";
-import {
-  PaginationStatus,
-  updatePaginateStatus,
-} from "@/state/Reducers/Investigate/pov/StepSlice";
+import { updatePaginateStatus } from "@/state/Reducers/Investigate/pov/StepSlice";
 
 export function useCheckFirstStep() {
   const dispatch = useDispatch<AppDispatch>();
@@ -14,28 +11,36 @@ export function useCheckFirstStep() {
   const min: number = 4;
 
   const wordCount = (statement: string): number => {
-    const trimmed: string[] = statement.trim().split(" ");
-    return trimmed.length;
+    return statement === "" ? 0 : statement.split(/\s+/).length;
   };
+
+  const guardFirstStep = (value: string) => {
+    const trimmed = value.trim();
+    const count = wordCount(trimmed);
+    const passes = count >= min;
+    if (passes) {
+      return "active";
+    } else {
+      return "idle";
+    }
+  };
+
+  const status = guardFirstStep(idea);
 
   const check = useCallback((): void => {
     timeRef.current = window.setTimeout(() => {
-      const count = wordCount(idea);
-      const passes = count >= min;
-      const removeStatusMessage: boolean = idea === "";
-      const statusUpdate: PaginationStatus = passes ? "active" : "idle";
-      if (!removeStatusMessage) {
-        dispatch(updatePaginateStatus(statusUpdate));
-      } else {
-        dispatch(updatePaginateStatus(null));
+      if (idea === "") {
+        dispatch(updatePaginateStatus("idle"));
+        timeRef.current = null;
+        return;
       }
+      dispatch(updatePaginateStatus(status));
+
       timeRef.current = null;
     }, 300);
-  }, [idea]);
+  }, [idea, status, dispatch]);
 
   useEffect(() => {
-    if (idea === null) return;
-
     check();
 
     return () => {
@@ -43,5 +48,5 @@ export function useCheckFirstStep() {
         clearTimeout(timeRef.current);
       }
     };
-  }, [idea]);
+  }, [check]);
 }

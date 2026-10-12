@@ -1,4 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
+import type { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
+import type { InvestigationSchemaType, SelectedInvestigationPayloadSchemaType } from "@elenchus/contracts/schemas/investigations/InvestigationSchema";
 import reducer, {
   clearOpenedArticle,
   clearOpenedInvestigation,
@@ -20,11 +22,11 @@ jest.mock("../../lib/services/client/serverClient", () => ({
 
 beforeEach(() => jest.resetAllMocks());
 
-const article = (id: number) => ({
+const article = (id: number): ArticleSchemaType => ({
   id, title: "Source", provider: "Publisher", article_url: `https://example.com/${id}`,
   full_text: "Article body", date_published: "2026-09-22", factual_reporting: null,
 });
-const investigation = (id: number) => ({
+const investigation = (id: number): InvestigationSchemaType => ({
   id, created_at: "2026-09-22", idea: "Question", initial_perspective: null,
   ending_perspective: null, expertise: null,
 });
@@ -49,7 +51,7 @@ test.each(["article", "investigation"] as const)(
     oldRequest.abort();
     expect(signal.aborted).toBe(true);
     store.dispatch(isArticle ? clearOpenedArticle() : clearOpenedInvestigation());
-    const response = (id: number) => isArticle
+    const response = (id: number): { ok: true; data: ArticleSchemaType | SelectedInvestigationPayloadSchemaType } => isArticle
       ? { ok: true, data: article(id) }
       : {
           ok: true,

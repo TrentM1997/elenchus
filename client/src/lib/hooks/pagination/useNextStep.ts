@@ -17,9 +17,7 @@ export const useNextStep = () => {
     shallowEqual,
   );
   const idea = useSelector((state: RootState) => selectPOVData(state).idea);
-  const gettingHelp = useSelector(
-    (state: RootState) => state.investigation.help.gettingHelp,
-  );
+  const helpStatus = useSelector((s: RootState) => s.investigation.help.status);
   const dispatch = useDispatch();
   const noInput = useMemo(() => {
     const noAction: boolean = idea === null;
@@ -28,7 +26,7 @@ export const useNextStep = () => {
   }, [idea]);
 
   const handleStep = () => {
-    if (step === "final" || gettingHelp) return;
+    if (step === "final" || helpStatus === "active") return;
     window.dispatchEvent(new CustomEvent("nextStepClick"));
     if (status === "active" && idea !== "") {
       dispatch(increment());
@@ -41,6 +39,6 @@ export const useNextStep = () => {
   return {
     handleStep,
     step,
-    gettingHelp,
+    helpStatus,
   };
 };

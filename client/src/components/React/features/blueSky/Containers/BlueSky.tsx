@@ -5,7 +5,7 @@ import CloseBlueSky from "../Components/buttons/CloseBlueSky";
 import FeedContainer from "./FeedContainer";
 import { useRedirectFromLandingPage } from "@/lib/hooks/blueSky/useRedirectFromLandingPage";
 
-interface BlueSkyProps {
+export interface BlueSkyProps {
   context: "home" | "investigate";
   shouldAnimate?: boolean;
 }

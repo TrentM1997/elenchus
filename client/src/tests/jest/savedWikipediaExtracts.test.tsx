@@ -4,7 +4,7 @@ import type { SavedExtractSchemaType } from "@elenchus/contracts/schemas/integra
 import TermListItem from "../../components/React/features/dashboard/Content/SavedInvestigations/Details/wiki/components/extract/items/TermListItem";
 import { SavedWikiDescription } from "../../components/React/features/dashboard/Content/SavedInvestigations/Details/wiki/components/extract/descriptions/SavedWikiDescription";
 
-const common = { id: "extract-1", user_id: "user-1", investigation_id: 1, title: "Term", pageUrl: "https://en.wikipedia.org/wiki/Term", lastUpdated: null };
+const common: Pick<SavedExtractSchemaType, "id" | "user_id" | "investigation_id" | "title" | "pageUrl" | "lastUpdated"> = { id: "extract-1", user_id: "user-1", investigation_id: 1, title: "Term", pageUrl: "https://en.wikipedia.org/wiki/Term", lastUpdated: null };
 const summary: SavedExtractSchemaType = { ...common, kind: "summary", extract: "Saved summary text", description: "Description", thumbnail: null };
 const disambiguation: SavedExtractSchemaType = { ...common, kind: "disambiguation", candidates: [
   { pageid: 1, title: "First meaning", extract: "First definition", thumbnail: null, url: "https://en.wikipedia.org/wiki/First", lastUpdated: null },
