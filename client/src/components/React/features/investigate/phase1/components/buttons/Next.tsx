@@ -3,7 +3,7 @@ import React from "react";
 import { useNextStep } from "@/lib/hooks/pagination/useNextStep";
 
 function NextButton(): JSX.Element {
-  const { handleStep, step, helpStatus } = useNextStep();
+  const { handleStep, step, helpModal } = useNextStep();
 
   return (
     <motion.div
@@ -12,10 +12,10 @@ function NextButton(): JSX.Element {
       exit={{ opacity: 0, scale: 0 }}
       whileHover={{ scale: 1.1 }}
       transition={{ type: "tween", duration: 0.2 }}
-      className={`relative ease-soft h-auto w-auto justify-self-end self-center ${step === "final" || helpStatus === "active" ? "pointer-events-none" : "pointer-events-auto"}`}
+      className={`relative ease-soft h-auto w-auto justify-self-end self-center ${step === "final" || helpModal === "open" ? "pointer-events-none" : "pointer-events-auto"}`}
     >
       <button
-        disabled={step === "final" || helpStatus === "active"}
+        disabled={step === "final" || helpModal === "open"}
         onClick={handleStep}
         className="text-slate-300 text-md font-light w-14 h-10
           lg:w-14 lg:h-12 p-1.5 transition-all mx-auto flex

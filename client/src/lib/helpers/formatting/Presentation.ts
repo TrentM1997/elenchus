@@ -25,11 +25,14 @@ export const limitString = (str: string, limit?: number): string => {
   let count: number = 0;
 
   for (let i = 0; i < temp.length; i++) {
+    const char = temp[i];
     if (count >= (limit ? limit : 75)) {
       break;
     } else {
-      arr.push(temp[i]);
-      count++;
+      if (char) {
+        arr.push(char);
+        count++;
+      }
     }
   }
 

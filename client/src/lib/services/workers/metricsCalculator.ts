@@ -48,8 +48,8 @@ class MetricsCalculator implements IMetricsCalculator {
     let counter = 0;
     let total = investigations.length;
     for (let i = 0; i < investigations.length; i++) {
-      let initial = investigations[i].initial_perspective;
-      let end = investigations[i].ending_perspective;
+      let initial = investigations[i]?.initial_perspective;
+      let end = investigations[i]?.ending_perspective;
 
       if (!initial && !end) {
         counter++;
@@ -62,7 +62,7 @@ class MetricsCalculator implements IMetricsCalculator {
     let counter = 0;
     let total = investigations.length;
     for (let i = 0; i < investigations.length; i++) {
-      let neutral = investigations[i].ending_perspective === "Neutral";
+      let neutral = investigations[i]?.ending_perspective === "Neutral";
 
       if (neutral) {
         counter++;
@@ -76,8 +76,8 @@ class MetricsCalculator implements IMetricsCalculator {
     let counter = 0;
     let total = investigations.length;
     for (let i = 0; i < investigations.length; i++) {
-      let initial = investigations[i].initial_perspective;
-      let end = investigations[i].ending_perspective;
+      let initial = investigations[i]?.initial_perspective;
+      let end = investigations[i]?.ending_perspective;
 
       if (initial && end && initial === end) {
         counter++;
@@ -93,8 +93,8 @@ class MetricsCalculator implements IMetricsCalculator {
     let counter = 0;
     const total = investigations.length;
     for (let i = 0; i < investigations.length; i++) {
-      const initial = investigations[i].initial_perspective;
-      const end = investigations[i].ending_perspective;
+      const initial = investigations[i]?.initial_perspective;
+      const end = investigations[i]?.ending_perspective;
       if (!initial || !end) continue;
       if (initial !== end) {
         counter++;
@@ -216,7 +216,7 @@ class MetricsCalculator implements IMetricsCalculator {
     let count = 0;
 
     for (let i = 0; i < articles.length; i++) {
-      const bias = articles[i].bias ?? "Unknown";
+      const bias = articles[i]?.bias ?? "Unknown";
 
       if (bias === leaningOne) {
         count++;

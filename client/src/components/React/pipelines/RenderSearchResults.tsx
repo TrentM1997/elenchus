@@ -41,7 +41,7 @@ export default function RenderSearchResults({
       return <NoSearchResults key="no-results" />;
     }
     case "ready": {
-      const page = state.data[currentPage];
+      const page = state.data[currentPage] ?? [];
 
       return (
         <Page

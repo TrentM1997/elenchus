@@ -1,4 +1,5 @@
-import HelpButton from "@/components/React/global/Help/buttons/Question";
+import type { WizardStepType } from "@/state/Reducers/Investigate/pov/types";
+import HelpButton from "@/components/React/global/Help/buttons/HelpButton";
 import { AnimatePresence, motion } from "framer-motion";
 import { headerTransitions } from "@/motion/variants";
 import React from "react";
@@ -7,7 +8,7 @@ import { useStepWizardHeader } from "@/lib/hooks/stepWizard/useStepWizardHeader"
 export interface StepHeader {
   title: string;
   subheader?: string | null;
-  info: Help[];
+  info: WizardStepType["help"];
 }
 
 function StepHeader({ title, subheader, info }: StepHeader) {

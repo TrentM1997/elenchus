@@ -350,9 +350,9 @@ declare global {
   }
 
   interface HelpModal {
-    info: Help[];
-    activeTab: Help;
-    setActiveTab: (activeTab: Help) => void;
+    info: import("./state/Reducers/Investigate/pov/types").WizardStepType["help"];
+    activeTab: "tabOne" | "tabTwo";
+    setActiveTab: (activeTab: "tabOne" | "tabTwo") => void;
   }
 
   interface RecoverUserResults {

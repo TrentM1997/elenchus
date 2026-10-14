@@ -1,26 +1,11 @@
 import { useDispatch } from "react-redux";
-import React from "react";
+import type { JSX } from "react";
 import {
   chooseIdeaSource,
   startFraming,
 } from "@/state/Reducers/Investigate/research/ResearchSlice";
 
-const actions = [
-  {
-    title: "Look into public discourse",
-    description: "browse BlueSky for ideas to challenge",
-
-    isPermanent: true,
-  },
-  {
-    title: "Got an idea in mind?",
-    description: "break down an idea you heard or thought",
-
-    isPermanent: false,
-  },
-];
-
-function InputOptions() {
+export default function InputOptions(): JSX.Element {
   const dispatch = useDispatch();
 
   const searchBS = () => {
@@ -39,8 +24,18 @@ function InputOptions() {
     );
   };
 
-  const importFromBlueSky = actions[0];
-  const writeOwnInput = actions[1];
+  const importFromBlueSky = {
+    title: "Look into public discourse",
+    description: "browse BlueSky for ideas to challenge",
+
+    isPermanent: true,
+  };
+  const writeOwnInput = {
+    title: "Got an idea in mind?",
+    description: "break down an idea you heard or thought",
+
+    isPermanent: false,
+  };
 
   return (
     <section className="lg:p-8 opacity-0 animate-fade-in animation-delay-300ms">
@@ -168,5 +163,3 @@ function InputOptions() {
     </section>
   );
 }
-
-export default React.memo(InputOptions);

@@ -493,7 +493,11 @@ test("job creation times out without being retried", async () => {
   await jest.advanceTimersByTimeAsync(15000);
   await task;
   expect(client.extract).toHaveBeenCalledTimes(1);
-  expect(client.extract.mock.calls[0][1]?.aborted).toBe(true);
+  const extractCall = client.extract.mock.calls[0];
+  if (!extractCall) {
+    throw new Error("Expected extraction to start before timing out");
+  }
+  expect(extractCall[1]?.aborted).toBe(true);
   expect(client.poll).not.toHaveBeenCalled();
   expect(store.getState().investigation.read.articles).toMatchObject({ status: "error", details: "Starting extraction timed out" });
   expect(jest.getTimerCount()).toBe(0);
@@ -522,7 +526,11 @@ test("the overall deadline aborts an in-flight poll before its request timeout",
   await jest.advanceTimersByTimeAsync(300000);
   await task;
   const calls = client.poll.mock.calls;
-  expect(calls[calls.length - 1][0].signal?.aborted).toBe(true);
+  const lastPollCall = calls[calls.length - 1];
+  if (!lastPollCall) {
+    throw new Error("Expected a poll request before the overall deadline");
+  }
+  expect(lastPollCall[0].signal?.aborted).toBe(true);
   expect(store.getState().investigation.read.articles).toMatchObject({
     status: "error", details: expect.stringContaining("5 minutes"),
     data: { retrieved: [article], failed: [failure] },

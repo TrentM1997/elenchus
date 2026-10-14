@@ -1,6 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Help } from "@/env";
-import { toggleHelp } from "@/state/Reducers/Investigate/help/HelpModal";
+import { getHelpModalStatus } from "@/state/Reducers/Investigate/pov/StepSlice";
 import { useDispatch } from "react-redux";
 import { createPortal } from "react-dom";
 import { useEffect } from "react";
@@ -14,11 +13,13 @@ export default function HelpModal({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (info.length > 0) {
-      setActiveTab(info[0]);
-    }
+    setActiveTab("tabOne");
   }, [info, setActiveTab]);
 
+  const selectedTab =
+    activeTab === "tabTwo" && "tabTwo" in info ? "tabTwo" : "tabOne";
+  const content =
+    selectedTab === "tabTwo" && "tabTwo" in info ? info.tabTwo : info.tabOne;
   const modal = (
     <motion.div
       variants={variants}
@@ -26,34 +27,27 @@ export default function HelpModal({
       animate="open"
       exit="closed"
       transition={{ type: "tween", duration: 0.3, ease: "easeInOut" }}
-      className="fixed inset-0 [z-900] flex justify-center items-end"
+      className="fixed inset-0 z-[900] flex items-end justify-center bg-black/40 px-3 pb-6 pt-6 backdrop-blur-sm sm:px-6 sm:pb-12"
     >
       <motion.div
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.8, opacity: 0 }}
         transition={{ type: "tween", duration: 0.2 }}
-        className="relative bg-gradient-to-tr from-ebony to-mirage 
-                opacity-100 h-auto
-                mb-12
-                         shadow-material rounded-xl 
-                         z-50 
-                         w-88
-                         sm:w-[33rem] 
-                         xl:w-[38rem] pb-6
-                         overflow-hidden"
+        className="relative flex max-h-[85dvh] w-full max-w-xl flex-col overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-mirage to-ebony shadow-[0_24px_80px_rgba(0,0,0,0.55)]"
       >
-        <header className="w-full h-auto relative flex items-start">
+        <header className="relative shrink-0 border-b border-white/10 px-5 pb-4 pt-6 sm:px-7">
+          <p className="mb-5 pr-12 text-xs font-medium uppercase tracking-[0.2em] text-sky-300">
+            A little guidance
+          </p>
           <motion.div
             whileTap={{ scale: 0.9 }}
             transition={{ type: "tween", duration: 0.2 }}
-            onClick={() => dispatch(toggleHelp("idle"))}
-            className="w-8 h-8 cursor-pointer p-1.5 mr-4 rounded-lg 
-                                            hover:bg-white/10 transition-all duration-200 ease-in-out absolute -right-3 top-1"
+            onClick={() => dispatch(getHelpModalStatus("closed"))}
+            className="absolute right-4 top-4 h-9 w-9 cursor-pointer rounded-full border border-white/10 bg-white/5 p-2.5 transition-colors duration-200 hover:bg-white/10 sm:right-5"
           >
             <svg
-              className="text-zinc-200 cursor-pointer opacity-55 hover:opacity-100 
-                                            transition-opacity duration-200 ease-in-out"
+              className="text-zinc-300"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 48 48"
               width="100%"
@@ -65,32 +59,41 @@ export default function HelpModal({
               />
             </svg>
           </motion.div>
-          <ul className="flex items-center justify-start h-fit cursor-pointer overflow-hidden">
-            {info.map((element: Help, index: number) => (
-              <motion.li
-                className={`p-1 `}
-                key={element.heading}
-                initial={false}
-                animate={{
-                  opacity: info[index] === activeTab ? 1 : 0.5,
-                }}
-                onClick={() => setActiveTab(info[index])}
-              >
-                <h1
-                  className={`font-light tracking-tight transition-all duration-200 ease-in-out text-sm md:text-xl p-2 rounded-md text-white  ${info[index] === activeTab ? " bg-black/30" : "bg-white/5 hover:bg-black/20"}`}
+          <ul className="flex flex-wrap items-stretch gap-2">
+            {(["tabOne", "tabTwo"] as const).map((tab) => {
+              const element =
+                tab === "tabOne"
+                  ? info.tabOne
+                  : "tabTwo" in info
+                    ? info.tabTwo
+                    : undefined;
+              if (!element) return null;
+              return (
+                <motion.li
+                  className="min-w-0 cursor-pointer"
+                  key={tab}
+                  initial={false}
+                  animate={{
+                    opacity: tab === selectedTab ? 1 : 0.5,
+                  }}
+                  onClick={() => setActiveTab(tab)}
                 >
-                  {element.heading}
-                </h1>
-              </motion.li>
-            ))}
+                  <h1
+                    className={`h-full rounded-xl border px-3.5 py-2.5 text-sm font-medium leading-snug transition-colors duration-200 sm:text-base ${tab === selectedTab ? "border-sky-300/25 bg-sky-300/10 text-sky-100" : "border-white/10 bg-white/5 text-zinc-200 hover:bg-white/10"}`}
+                  >
+                    {element.heading}
+                  </h1>
+                </motion.li>
+              );
+            })}
           </ul>
         </header>
 
-        <main className="w-full h-full flex flex-col min-h-60 max-h-60 relative bottom-0">
+        <main className="relative min-h-0 overflow-y-auto overscroll-contain px-5 py-6 sm:px-7 sm:py-7">
           <AnimatePresence mode="popLayout">
             <motion.div
               layout
-              key={activeTab.heading ? activeTab.heading : "empty"}
+              key={content.heading}
               initial={{ y: 100, opacity: 0 }}
               animate={{
                 y: 0,
@@ -99,8 +102,8 @@ export default function HelpModal({
               }}
               exit={{ y: 100, opacity: 0, transition: { duration: 0.2 } }}
             >
-              <p className="text-white font-light text-sm md:text-lg p-4 absolute-bottom-2 left-2">
-                {activeTab ? activeTab.explanation : null}
+              <p className="text-base font-normal leading-relaxed text-zinc-200 sm:text-lg sm:leading-relaxed">
+                {content.explanation}
               </p>
             </motion.div>
           </AnimatePresence>
