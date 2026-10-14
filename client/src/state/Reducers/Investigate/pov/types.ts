@@ -36,7 +36,36 @@ type StepProgress = "initial" | "proceed" | "halt";
 
 export type WizardStep = "idea" | "approach" | "biases" | "premises" | "final";
 
-export type WizardStepType = {
-  current: WizardStep;
-  status: StepProgress;
-};
+export type WizardHelpInfo = { heading: string; explanation: string };
+
+export type WizardStepType =
+  | {
+      current: "idea";
+      head: { title: "Tackle an idea"; subheader: "from the top down" };
+      status: StepProgress;
+      help: { tabOne: WizardHelpInfo; tabTwo: WizardHelpInfo };
+    }
+  | {
+      current: "approach";
+      head: { title: "Your angle of approach" };
+      status: StepProgress;
+      help: { tabOne: WizardHelpInfo; tabTwo: WizardHelpInfo };
+    }
+  | {
+      current: "biases";
+      head: { title: "Acknowledge biases" };
+      status: StepProgress;
+      help: { tabOne: WizardHelpInfo };
+    }
+  | {
+      current: "premises";
+      head: { title: "Underlying premises? (optional)" };
+      status: StepProgress;
+      help: { tabOne: WizardHelpInfo; tabTwo: WizardHelpInfo };
+    }
+  | {
+      current: "final";
+      head: { title: "Search for evidence" };
+      status: StepProgress;
+      help: { tabOne: WizardHelpInfo };
+    };

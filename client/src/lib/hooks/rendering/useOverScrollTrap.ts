@@ -15,11 +15,16 @@ export function useScrollTrap(ref: React.RefObject<HTMLElement>) {
 
     let startY = 0;
     function onTouchStart(e: TouchEvent) {
-      startY = e.touches[0].clientY;
+      const start = e.touches[0];
+      if (start) {
+        startY = start.clientY;
+      }
     }
 
     const onTouchMove = (e: TouchEvent) => {
-      const delta = e.touches[0].clientY - startY;
+      const touch = e.touches[0];
+      if (!touch) return;
+      const delta = touch.clientY - startY;
       const { scrollTop, scrollHeight, clientHeight } = el;
       const atTop = scrollTop === 0 && delta > 0;
       const atBottom = scrollTop + clientHeight >= scrollHeight && delta < 0;

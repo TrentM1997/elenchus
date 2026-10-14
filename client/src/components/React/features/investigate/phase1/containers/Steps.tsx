@@ -1,21 +1,12 @@
-import { selectWizardStepIndex } from "@/state/Reducers/Investigate/pov/selectors";
 import { useSelector } from "react-redux";
 import StepHeader from "../components/steps/StepHeader";
 import Stepper from "../components/steps/Stepper";
-import { titles } from "../components/tokens/titles";
-import { helpInfo } from "@/components/React/global/Help/tokens/helptokens";
 import { RootState } from "@/state/store";
-import { WizardStepType } from "@/state/Reducers/Investigate/pov/types";
-
-function getHelpInfo(step: WizardStepType) {
-  return helpInfo[step.current];
-}
 
 export default function Steps(): JSX.Element | null {
   const wizardStep = useSelector(
     (s: RootState) => s.investigation.stepper.wizardStep,
   );
-  const step = useSelector(selectWizardStepIndex);
 
   return (
     <section
@@ -31,9 +22,13 @@ export default function Steps(): JSX.Element | null {
         justify-start relative w-full h-full p-2"
       >
         <StepHeader
-          info={getHelpInfo(wizardStep)}
-          title={titles[step].title}
-          subheader={titles[step].subheader}
+          info={wizardStep.help}
+          title={wizardStep.head.title}
+          subheader={
+            wizardStep.current === "idea"
+              ? wizardStep.head.subheader
+              : undefined
+          }
         />
 
         <Stepper />

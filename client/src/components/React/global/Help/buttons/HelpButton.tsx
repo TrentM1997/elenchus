@@ -1,19 +1,22 @@
+import type { WizardStepType } from "@/state/Reducers/Investigate/pov/types";
 import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleHelp } from "@/state/Reducers/Investigate/help/HelpModal";
 import HelpModal from "../modals/HelpModal";
 import HelpTooltip from "../tooltips/HelpTooltip";
 import { RootState } from "@/state/store";
+import { getHelpModalStatus } from "@/state/Reducers/Investigate/pov/StepSlice";
 
-export default function HelpButton({ info }: { info: Help[] }) {
-  const status = useSelector((s: RootState) => s.investigation.help.status);
-  const [activeTab, setActiveTab] = useState<Help>(info[0]);
+export default function HelpButton({ info }: { info: WizardStepType["help"] }) {
+  const status = useSelector(
+    (s: RootState) => s.investigation.stepper.helpModal,
+  );
+  const [activeTab, setActiveTab] = useState<"tabOne" | "tabTwo">("tabOne");
   const dispatch = useDispatch();
 
   const handleExpand = () => {
-    dispatch(toggleHelp("active"));
+    dispatch(getHelpModalStatus("open"));
   };
 
   return (
@@ -56,7 +59,7 @@ export default function HelpButton({ info }: { info: Help[] }) {
 
       {createPortal(
         <AnimatePresence mode="wait">
-          {status === "active" && (
+          {status === "open" && (
             <HelpModal
               info={info}
               activeTab={activeTab}

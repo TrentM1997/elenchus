@@ -320,8 +320,13 @@ test.each([false, true])(
     const request = store.dispatch(hydrateDashboard());
     expect(state().dash.articles.status).toBe("pending");
     expect(state().dash.investigations.status).toBe("pending");
-    const signal = bookmarks.mock.calls[0][0];
-    expect(signal).toBe(investigations.mock.calls[0][0]);
+    const bookmarksCall = bookmarks.mock.calls[0];
+    const investigationsCall = investigations.mock.calls[0];
+    if (!bookmarksCall || !investigationsCall) {
+      throw new Error("Expected hydration to request both bookmarks and investigations");
+    }
+    const signal = bookmarksCall[0];
+    expect(signal).toBe(investigationsCall[0]);
     expect(signal.aborted).toBe(false);
 
     request.abort();

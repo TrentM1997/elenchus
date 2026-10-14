@@ -13,6 +13,8 @@ export const useObserveAnimationState = () => {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
+        if (!entry) return;
+
         if (entry.isIntersecting) {
           startTransition(() => {
             setShowBlueSky(true);
@@ -35,6 +37,8 @@ export const useObserveAnimationState = () => {
 
     const startObserver = new IntersectionObserver(
       ([entry]) => {
+        if (!entry) return;
+
         if (entry.isIntersecting) {
           startTransition(() => {
             setShouldAnimate(true);
@@ -46,6 +50,7 @@ export const useObserveAnimationState = () => {
 
     const stopObserver = new IntersectionObserver(
       ([entry]) => {
+        if (!entry) return;
         if (!entry.isIntersecting) {
           startTransition(() => {
             setShouldAnimate(false);

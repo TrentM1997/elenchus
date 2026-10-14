@@ -7,23 +7,18 @@ export default function AccountActions() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const actions = [
-    {
-      title: "Change Password",
-      description: "get a link for password reset",
+  const deleteAction = {
+    title: "Delete Account",
+    description: "permanently delete your account",
 
-      isPermanent: false,
-    },
-    {
-      title: "Delete Account",
-      description: "permanently delete your account",
+    isPermanent: true,
+  };
+  const changeAction = {
+    title: "Change Password",
+    description: "get a link for password reset",
 
-      isPermanent: true,
-    },
-  ];
-
-  const deleteAction = actions[1];
-  const changeAction = actions[0];
+    isPermanent: false,
+  };
 
   function getResetLink() {
     navigate("/emailForReset");

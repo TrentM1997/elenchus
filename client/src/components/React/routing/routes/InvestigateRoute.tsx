@@ -9,7 +9,9 @@ export default function InvestigateContainer() {
     (s: RootState) => s.investigation.research.research,
   );
   const guideTip = useSelector((s: RootState) => s.overlay.guideTip);
-  const helpStatus = useSelector((s: RootState) => s.investigation.help.status);
+  const helpModal = useSelector(
+    (s: RootState) => s.investigation.stepper.helpModal,
+  );
   const { removeTooltip } = useClearInvestigation();
   useBodyLock();
 
@@ -21,7 +23,7 @@ export default function InvestigateContainer() {
         transition-opacity duration-200 ease-in-out h-full mx-auto justify-center
         items-center relative box-border min-h-svh
         ${
-          helpStatus === "active"
+          helpModal === "open"
             ? "opacity-60 pointer-events-none"
             : "opacity-100 pointer-events-auto"
         }`}

@@ -21,11 +21,14 @@ export default function ArticleSurface({
   fastScroll,
   deleteBookmark,
 }: ArticleSurface) {
+  const bookmark = bookmarks[article.id];
+  if (!bookmark) return;
+
   return (
     <ArticleSaved>
       <Title article={article} handleArticleSelection={select} />
       <ArticleThumbnail
-        bookmark={bookmarks[article.id]}
+        bookmark={bookmark}
         isPriority={index <= 5}
         fastScroll={fastScroll}
         article={article}
