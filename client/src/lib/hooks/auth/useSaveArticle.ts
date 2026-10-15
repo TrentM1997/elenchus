@@ -35,12 +35,14 @@ export function useSaveArticle({
     try {
       if (bookmarked) {
         const result = await dispatch(deleteSavedArticle(articleId)).unwrap();
+        console.log(result);
         if (!result.ok) {
           throw new Error("Bookmark delete attempt failed");
         }
         setNotification("unbookmarked");
       } else {
         const result = await dispatch(saveThisArticle(articleId)).unwrap();
+        console.log(result);
         if (!result.ok) {
           throw new Error("Bookmark attempt failed");
         }

@@ -92,7 +92,14 @@ export const saveThisArticle = createAsyncThunk(
   "ExtractedArticles/saveThisArticle",
   async (article_id: ArticleSchemaType["id"], thunkAPI) => {
     try {
-      return await serverClient.privileged.user.write.bookmark(article_id);
+      const result =
+        await serverClient.privileged.user.write.bookmark(article_id);
+
+      if (result.ok === false) {
+        throw new Error(result.message);
+      }
+
+      return result;
     } catch (err) {
       return thunkAPI.rejectWithValue(
         err instanceof Error ? err.message : "Failed to save article",
