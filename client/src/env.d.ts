@@ -15,6 +15,7 @@ import type { DashboardTab } from "./state/Reducers/Dashboard/types";
 import type { ArticleSchemaType } from "@elenchus/contracts/schemas/articles/ArticleSchema";
 import { BookmarkState } from "./lib/hooks/dashboard/events/useBookmarkSavedArticles";
 import { InvestigationFramingHelpStatus } from "./state/Reducers/Investigate/help/HelpModal";
+import { WizardStepType } from "./state/Reducers/Investigate/pov/types";
 
 declare global {
   interface ImportMetaEnv {
@@ -350,7 +351,7 @@ declare global {
   }
 
   interface HelpModal {
-    info: import("./state/Reducers/Investigate/pov/types").WizardStepType["help"];
+    info: WizardStepType["help"];
     activeTab: "tabOne" | "tabTwo";
     setActiveTab: (activeTab: "tabOne" | "tabTwo") => void;
   }

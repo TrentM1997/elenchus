@@ -1,3 +1,4 @@
+import "@elenchus/contracts/schemas/typeBoxFormats";
 import type { Static, TSchema } from "@sinclair/typebox";
 import { TypeCompiler, TypeCheck } from "@sinclair/typebox/compiler";
 import {
